@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'products',
     'profiles',
     'salons',
-    'taxes'
+    'taxes',
+    'api',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -94,7 +96,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'kinujo_local_db',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'password',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -138,3 +140,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}

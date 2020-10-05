@@ -1,0 +1,101 @@
+from django.contrib.auth.models import User, Group
+from orders.models import Order, OrderProduct, OrderProductCommission, OrderReceipt, TotalSale, TotalCommission
+from policies.models import Policy
+from prefectures.models import Prefecture
+from products.models import ProductCategory, Product, ProductImage, ProductVariety, ProductVarietySelection, ProductJancode
+from profiles.models import Authority, Profile, UserSale, UserCommision, MonthlyPayment, Address
+from taxes.models import TaxRate
+from rest_framework import serializers
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ['url', 'username', 'email', 'groups']
+class GroupSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Group
+        fields = ['url', 'name']
+class OrderSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','create_date','update_date']
+class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = OrderProduct
+        fields = ['product_jan_code','order','amount','unit_price','total_price','tax','total_amount','is_hidden','create_date','update_date']
+class OrderProductCommissionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = OrderProductCommission
+        fields = ['order_product','user','amount','is_sales','is_food','shipping_fee','is_hidden','create_date','update_date']
+class OrderReceiptSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = OrderReceipt
+        fields = ['is_copy','to_name','amount','output_date','order_date','product_name','shop_name','address','payment','is_hidden','create_date','update_date']
+class TotalSaleSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = TotalSale
+        fields = ['year','month','sales_amount','tax','amount_tax_included','shipping_fee','total_amount','order_count','is_hidden','create_date','update_date']
+class TotalCommissionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = TotalCommission
+        fields = ['year','month','authority','order_count','amount','is_hidden','create_date','update_date']
+class PolicySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Policy
+        fields = ['privacy_policy','is_hidden','create_date','update_date']
+class PrefectureSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Prefecture
+        fields = ['name','is_hidden','create_date','update_date']
+class ProductCategorySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ProductCategory
+        fields = ['name','is_hidden','create_date','update_date']
+class ProductSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','create_date','update_date']
+class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['product','image','is_hidden','create_date','update_date',]
+class ProductVarietySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ProductVariety
+        fields = ['name','product','vertical_and_horizontal','is_hidden','create_date','update_date']
+class ProductVarietySelectionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ProductVarietySelection
+        fields = ['product_variety','selection','is_hidden','create_date','update_date']
+class ProductJancodeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ProductJancode
+        fields = ['horizontal','vertical','jan_code','stock','is_hidden','create_date','update_date']
+class AuthoritySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Authority
+        fields = ['name','reward_rate','official_reward_rate','is_hidden','create_date','update_date']
+class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification','other_notification','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','create_date','update_date']
+class UserSaleSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = UserSale
+        fields = ['year','month','user','order_count','sales_amount','tax','amount_tax_included','shipping_fee','total_amount','is_hidden','create_date','update_date']
+class UserCommisionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = UserCommision
+        fields = ['year','month','user','order_count','amount','tax','total_amount','is_hidden','create_date','update_date']
+class MonthlyPaymentSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = MonthlyPayment
+        fields = ['year','month','user','amount','paid_date','status','is_hidden','create_date','update_date']
+class AddressSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Address
+        fields = ['address_name','user','name','zip1','prefecture','address1','address2','tel','is_default','is_hidden','create_date','update_date']
+class TaxRateSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = TaxRate
+        fields = ['year','month','tax_rate','reduced_tax_rate','is_hidden','create_date','update_date']
