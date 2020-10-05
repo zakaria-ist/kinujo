@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-grid.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-reboot.min.css' %}">
+    <!--external css-->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/jquery-ui/jquery-ui.min.css' %}">
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}?{% now 'H' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style-responsive.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-confirm.min.css' %}"/>
+    <!-- Custom styles for checkbox -->
+    <link rel="stylesheet" href="{% static 'css/build.css' %}?{% now 'H' %}">
+    <!--right slidebar-->
+    <link href="{% static 'css/slidebars.css' %}" rel="stylesheet">
+    <!-- Datatables -->
+    <link href="{% static "assets/datatables/datatables.min.css" %}" rel="stylesheet">
+
+    <!--fontsize -overwrites the fontsize, make sure this is always the last one!!-->
+    <link href="{% static 'css/fontsize.css' %}?{% now 'H' %}" rel="stylesheet">
+
+    {% block extrahead %}{% endblock %}
+    <title>{% block title %}Kinujo{% endblock %}</title>
+</head>
+<body>
+<section id="container">
+    <!--header start-->
+    <header class="header white-bg">
+        <div class="sidebar-toggle-box">
+            <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+        </div>
+        <!--logo start-->
+        <a href="" class="logo">
+        KINUJO
+        </a>
+        <!--logo end-->
+        
+        <div class="top-nav ">
+            <!--search & user info start-->
+            <ul class="nav pull-right top-menu">
+                
+                <!-- user login dropdown start-->
+                <!--
+                
+                <!-- user login dropdown end -->
+            </ul>
+            <!--search & user info end-->
+        </div>
+    </header>
+    <!--header end-->
+
+    <!--sidebar start-->
+    <aside>
+        <div id="sidebar" class="nav-collapse ">
+            <!-- sidebar menu start-->
+            <ul class="sidebar-menu" id="nav-accordion">
+                <li class="sub-menu">
+                    <ul class="sub-menu">
+                        <li class="{% block dashboard_active %}{% endblock %}">
+                            <a href="{% url 'home_load' %}"><i class="fas fa-table fa-2x"></i>Dashboard</a>
+                        </li>
+                        <li class="{% block general_active %}{% endblock %}">
+                            <a href="{% url 'home_load' %}"><i class="far fa-star fa-2x"></i> 総卸店管理</a>
+                        </li>
+                        <li class="{% block account_active %}{% endblock %}">
+                            <a href="{% url 'home_load' %}" ><i class="far fa-user fa-2x"></i> アカウント管理</a>
+                        </li>
+                        <li class="{% block sales_active %}{% endblock %}">
+                            <a href="{% url 'home_load' %}"><i class="fas fa-dollar-sign fa-2x"></i> 売上管理</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </aside>
+    <!--sidebar end-->
+
+
+    <!--main content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <div id="loading"><img src="{% static 'img/loading.gif' %}" /></div>
+            <!-- Pop up dialog -->
+            {% block content %}{% endblock %}
+        </section>
+    </section>
+</section>
+<!--main content end-->
+
+</section>
+
+<!-- js placed at the end of the document so the pages load faster -->
+<script src="https://kit.fontawesome.com/93dc558558.js" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-confirm.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/common.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/ga.js' %}?{% now 'H' %}"></script>
+<script type="text/javascript" src="{% static 'assets/jquery-ui/jquery-ui.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+<!--right slidebar-->
+<script src="{% static 'js/slidebars.min.js' %}"></script>
+
+
+{% block extrafoot %}{% endblock %}
+{% block js_link %}{% endblock %}
+{% block js %}{% endblock %}
+
+</body>
+</html>

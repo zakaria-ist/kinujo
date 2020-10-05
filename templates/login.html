@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    {% load static %}
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-grid.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-reboot.min.css' %}">
+    <!--external css-->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/jquery-ui/jquery-ui.min.css' %}">
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}?{% now 'H' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style-responsive.css' %}"/>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+
+    <title>Kinujo login</title>
+</head>
+
+<body class="login-body">
+
+<div class="container">
+
+    <form class="form-signin" action="/login/" method="post" id="login_form">
+        {% csrf_token %}
+        <h2 class="form-signin-heading">KINUJO</h2>
+        <div class="login-wrap">
+            <input type="tel" class="form-control" placeholder="電話番号" name="username" id="username" autofocus required> 
+            <input type="password" class="form-control" placeholder="パスワード" name="password" required>
+
+            <div class="forget_pass">
+                <label class="checkbox">
+                    <span class="pull-right" style="">
+                        <a href="{% url 'pass_reset' %}">パスワードを忘れた</a>
+                    </span>
+                </label>
+            </div>
+            <button class="btn btn-lg btn-login btn-block" type="submit">Login</button>
+        </div>
+    </form>
+</div>
+
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script type="text/javascript" src="{% static 'assets/jquery-ui/jquery-ui.min.js' %}"></script>
+
+<!-- js placed at the end of the document so the pages load faster -->
+<script type="text/javascript">
+
+//phone pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+
+$(document).ready(function() {
+  $(window).keydown(function(event){
+    if((event.keyCode == 13) && ($(event.target)[0]==$("input")[1])) { // username
+        $('[name="password"]').focus();
+        $('[name="password"]').select();
+        event.preventDefault();
+        return false;
+    }
+    else if((event.keyCode == 13) && ($(event.target)[0]==$("input")[2])) { // password
+        setTimeout(function(){
+            $('.btn-login').focus(); // submit btn
+        }, 100);
+        event.preventDefault();
+        return false;
+    }
+  });
+});
+
+
+$(document).on('click', 'input[type="text"]', function(){
+    $(this).select();
+});
+
+$(document).on('click', 'input[type="number"]', function(){
+    $(this).select();
+});
+
+$(document).on('click', 'input[type="password"]', function(){
+    $(this).select();
+});
+
+</script>
+
+</body>
+</html>
