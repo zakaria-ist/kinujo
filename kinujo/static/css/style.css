@@ -175,7 +175,7 @@ a, a:hover, a:focus {
 /*sidebar navigation*/
 
 #sidebar {
-    width: 310px;
+    width: 245px;
     height: 100%;
     position: fixed;
     background: #43425D;
@@ -739,7 +739,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 }
 
 .sidebar-closed #sidebar {
-    margin-left: -310px;
+    margin-left: -245px;
 }
 
 /*state overview*/
