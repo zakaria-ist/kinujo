@@ -32,8 +32,8 @@
         {% csrf_token %}
         <h2 class="form-signin-heading">KINUJO</h2>
         <div class="login-wrap">
-            <input type="text" class="form-control" placeholder="電話番号" name="username" id="username" autofocus>
-            <input type="password" class="form-control" placeholder="パスワード" name="password">
+            <input type="tel" class="form-control" placeholder="電話番号" name="username" id="username" autofocus required> 
+            <input type="password" class="form-control" placeholder="パスワード" name="password" required>
 
             <div class="forget_pass">
                 <label class="checkbox">
@@ -51,12 +51,12 @@
 <script src="{% static 'js/jquery.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-{% comment %} <script type="text/javascript" src="{% static 'assets/jquery-ui/jquery-ui-1.10.1.custom.min.js' %}"></script> {% endcomment %}
+<script type="text/javascript" src="{% static 'assets/jquery-ui/jquery-ui.min.js' %}"></script>
 
 <!-- js placed at the end of the document so the pages load faster -->
 <script type="text/javascript">
 
-
+//phone pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
 
 $(document).ready(function() {
   $(window).keydown(function(event){
