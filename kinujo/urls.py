@@ -53,7 +53,7 @@ urlpatterns = [
     # url(r'^policies/', include('policies.urls')),
     # url(r'^prefectures/', include('prefectures.urls')),
     # url(r'^products/', include('products.urls')),
-    # url(r'^profiles/', include('profiles.urls')),
+    url(r'^profiles/', include('profiles.urls')),
     # url(r'^salons/', include('salons.urls')),
     # url(r'^taxes/', include('taxes.urls')),
     url(r'^$', views.home_load, name='home_load'),

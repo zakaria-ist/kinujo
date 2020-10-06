@@ -32,17 +32,19 @@
         {% csrf_token %}
         <h2 class="form-signin-heading">KINUJO</h2>
         <div class="login-wrap">
-            <input type="tel" class="form-control" placeholder="電話番号" name="username" id="username" autofocus required> 
-            <input type="password" class="form-control" placeholder="パスワード" name="password" required>
+            <input type="tel" class="form-control" placeholder="電話番号" name="username" id="username" autofocus required autocomplete="off"> 
+            <input type="password" class="form-control" placeholder="パスワード" name="password" required autocomplete="off">
 
-            <div class="forget_pass">
+            <div class="forget_pass text-center">
                 <label class="checkbox">
                     <span class="pull-right" style="">
                         <a href="{% url 'pass_reset' %}">パスワードを忘れた</a>
                     </span>
                 </label>
             </div>
-            <button class="btn btn-lg btn-login btn-block" type="submit">Login</button>
+            <div class="text-center">
+                <button class="btn btn-lg btn-login" type="submit">Login</button>
+            </div>
         </div>
     </form>
 </div>

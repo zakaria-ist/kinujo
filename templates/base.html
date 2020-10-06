@@ -60,18 +60,42 @@
             <!-- sidebar menu start-->
             <ul class="sidebar-menu" id="nav-accordion">
                 <li class="sub-menu">
-                    <ul class="sub-menu">
-                        <li class="{% block dashboard_active %}{% endblock %}">
-                            <a href="{% url 'home_load' %}"><i class="fas fa-table fa-2x"></i>Dashboard</a>
+                    <a href="{% url 'home_load' %}" class="{% block dashboard_a_active %}{% endblock %}">
+                        <i class="fas fa-table fa-2x {% block dashboard_i_active %}{% endblock %}"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="sub-menu">
+                    <a href="{% url 'home_load' %}" class="{% block general_a_active %}{% endblock %}">
+                        <i class="far fa-star fa-2x {% block general_i_active %}{% endblock %}"></i>
+                        総卸店管理
+                    </a>
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;" class="{% block account_a_active %}{% endblock %}">
+                        <i class="far fa-user fa-2x {% block account_i_active %}{% endblock %}"></i>
+                        アカウント管理
+                    </a>
+                    <ul class="sub">
+                        <li class="{% block account_list_active %}{% endblock %}">
+                            <a href="{% url 'profile_list' %}" >アカウント一覧</a>
                         </li>
-                        <li class="{% block general_active %}{% endblock %}">
-                            <a href="{% url 'home_load' %}"><i class="far fa-star fa-2x"></i> 総卸店管理</a>
+                        <li class="{% block accounr_add_active %}{% endblock %}">
+                            <a href="{% url 'profile_add' %}">アカウント登録</a>
                         </li>
-                        <li class="{% block account_active %}{% endblock %}">
-                            <a href="{% url 'home_load' %}" ><i class="far fa-user fa-2x"></i> アカウント管理</a>
+                    </ul>
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;" class="{% block sales_a_active %}{% endblock %}">
+                        <i class="fas fa-dollar-sign fa-2x {% block sales_i_active %}{% endblock %}"></i>
+                        売上管理
+                    </a>
+                    <ul class="sub">
+                        <li class="{% block sales_list_active %}{% endblock %}">
+                            <a href="{% url 'home_load' %}" >売上一覧</a>
                         </li>
-                        <li class="{% block sales_active %}{% endblock %}">
-                            <a href="{% url 'home_load' %}"><i class="fas fa-dollar-sign fa-2x"></i> 売上管理</a>
+                        <li class="{% block sales_add_active %}{% endblock %}">
+                            <a href="{% url 'home_load' %}">支払一覧</a>
                         </li>
                     </ul>
                 </li>
@@ -97,13 +121,14 @@
 <!-- js placed at the end of the document so the pages load faster -->
 <script src="https://kit.fontawesome.com/93dc558558.js" crossorigin="anonymous"></script>
 <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dcjqaccordion.2.7.js' %}" class="include"></script>
+<script type="text/javascript" src="{% static 'js/jquery.scrollTo.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/jquery-confirm.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/common.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/ga.js' %}?{% now 'H' %}"></script>
 <script type="text/javascript" src="{% static 'assets/jquery-ui/jquery-ui.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script type="text/javascript" src="{% static 'js/common.js' %}"></script>
 
 <!--right slidebar-->
 <script src="{% static 'js/slidebars.min.js' %}"></script>

@@ -9,8 +9,9 @@ from utilities.constants import GENDER_TYPE, SALON_TYPE, PAYMENT_STATUS
 
 class Authority(models.Model):
     name = models.CharField(max_length=128)
-    reward_rate = models.DecimalField(max_digits=4, decimal_places=2, default=0)
-    official_reward_rate = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+    commission_rate = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+    official_commission_rate = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+    is_enable = models.BooleanField(default=True)
 
     is_hidden = models.BooleanField(default=False)
     create_date = models.DateField(default=date.today)
@@ -25,11 +26,11 @@ class Profile(models.Model):
     tel = models.CharField(max_length=15)
     password = models.CharField(max_length=20)
     nickname = models.CharField(max_length=255)
-    user_code = models.CharField(max_length=255)
+    user_code = models.CharField(max_length=255, unique=True)
     email = models.CharField(max_length=255, default='')
-    introducer = models.ForeignKey('self', on_delete=models.CASCADE)
+    introducer = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     is_approved = models.BooleanField(default=False)
-    image = models.ForeignKey(Image, on_delete=models.CASCADE)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True)
     real_name = models.CharField(max_length=255, default='')
     gender = models.SmallIntegerField(null=True, choices=tuple([status[::-1] for status in GENDER_TYPE]))
     birthday = models.DateField(null=True)
