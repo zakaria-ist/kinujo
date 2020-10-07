@@ -24,7 +24,7 @@ class ProfileForm(forms.ModelForm):
     tel = forms.CharField(required=True,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'phone number'}))
     password = forms.CharField(required=True,
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'password'}))
+                            widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     nickname = forms.CharField(required=True,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'nickname'}))
     user_code = forms.CharField(required=True,

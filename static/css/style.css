@@ -6393,6 +6393,16 @@ div.dataTables_wrapper div.dataTables_filter label {
 
 .blue-btn {
     background-color: #3B86FF !important;
+    color: #ffffff !important;
+    min-width: 100px;
+    margin: 10px;
+}
+
+.gray-btn {
+    background-color: #A5A4BF !important;
+    color: #ffffff !important;
+    min-width: 100px;
+    margin: 10px;
 }
 
 #corporate_block {
