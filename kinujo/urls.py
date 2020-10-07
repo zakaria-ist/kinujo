@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.urls import include, path
 from profiles import views
+from products import views as product_views
 from api import views as api_views
 from rest_framework import routers
 
@@ -61,5 +62,6 @@ urlpatterns = [
     url(r'^reset_password/$', views.reset_password, name='reset_password'),
     url(r'^login/$', views.login_user, name='login_user'),
     url(r'^logout/$', views.logout_user, name='logout_user'),
+    url(r'^create-product/$', product_views.creae_product, name='create_product'),
 ]
 urlpatterns += router.urls
