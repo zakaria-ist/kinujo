@@ -341,7 +341,8 @@ ul.sidebar-menu li a.active i {
 /*main content*/
 
 #main-content {
-    margin-left: 310px;
+    margin-left: 280px;
+    margin-right: 40px;
 }
 
 .header, .footer {
@@ -4380,7 +4381,7 @@ td.details table tr td, .dataTable tr:last-child {
 }
 
 .adv-table .dataTables_filter label input {
-    float: right;
+    /* float: right; */
     margin-left: 10px;
     width: 78%;
 }
@@ -6368,5 +6369,36 @@ header.blue-bg .search:focus {
 
 .forget_pass {
     margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.checkbox-2x {
+    transform: scale(1.5);
+    -webkit-transform: scale(1.5);
+    padding-right: 5px !important;
+}
+
+.form-check-label {
+    font-size: 15px;
+    margin-right: 30px;
+}
+
+.table-section {
+    padding: 3%;
+}
+
+div.dataTables_wrapper div.dataTables_filter label {
+    text-align: right !important;
+}
+
+.blue-btn {
+    background-color: #3B86FF !important;
+}
+
+#corporate_block {
+    margin-top: 50px;
+}
+#corporate_block p{
+    font-size: 20px;
     margin-bottom: 20px;
 }

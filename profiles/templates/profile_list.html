@@ -22,62 +22,75 @@
     <br/>
     <div class="row">
         <div class="col-sm-12">
-            
             <section class="panel">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="panel-body">
-                            <header class="panel-heading" style="font-size: 20px">
+                            <header class="panel-heading" style="font-size: 25px">
                                     Account List
-                                
                             </header>
-                            <span class="tools pull-right">
-                                <a class="btn btn-success start" href="{% url 'profile_add' %}"> 
-                                    <i class="glyphicon glyphicon-plus"></i>
-                                    <span>Add</span>
-                                </a>
-                            </span>
-                            <div class="adv-table table-responsive">
-                                <table class="display table table-bordered table-striped table-condensed"
-                                       id="dynamic-table" style="width:100%">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Type</th>
-                                        <th>Name</th>
-                                        <th>Number of store account</th>
-                                        <th>Number of general users</th>
-                                        <th class="text-center" style="min-width:90px!important;">Options</th>
-                                    </tr>
-                                    </thead>
-                                </table>
+                            <div class="form-group form-check text-center">
+                                <input type="checkbox" class="form-check-input checkbox-2x" id="ambassador_check">
+                                <label class="form-check-label" for="ambassador_check">Ambassador</label>
+                                <input type="checkbox" class="form-check-input checkbox-2x" id="store_check">
+                                <label class="form-check-label" for="store_check">Store</label>
+                                <input type="checkbox" class="form-check-input checkbox-2x" id="general_check">
+                                <label class="form-check-label" for="general_check">General</label>
+                                <input type="checkbox" class="form-check-input checkbox-2x" id="master_check">
+                                <label class="form-check-label" for="master_check">Master</label>
+                                <input type="checkbox" class="form-check-input checkbox-2x" id="unapproved_check">
+                                <label class="form-check-label" for="unapproved_check">Unapproved</label>
                             </div>
-                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"
-                                 id="delete-order-dialog"
-                                 class="modal fade">
-                                <div class="modal-dialog modal-sm">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
-                                                ×
-                                            </button>
-                                            <h4 class="modal-title">Delete Confirm Dialog</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form role="form"
-                                                  method="post"
-                                                  id="delete-order-form">
-                                                {% csrf_token %}
-                                                <div class="form-group">
-                                                    <label for="exampleInputEmail1">Are you sure want to delete?</label>
-                                                </div>
-                                                <button type="submit" class="btn btn-success" id="btnDeleteOrder">OK
+                            <div class="table-section white-bg">
+                                <div class="text-right">
+                                    <span class="pull-right">
+                                        <a class="btn btn-primary blue-btn" href="{% url 'profile_add' %}"> 
+                                            <span>Add</span>
+                                        </a>
+                                    </span>
+                                </div>
+                                <div class="adv-table table-responsive">
+                                    <table class="display table table-bordered table-striped table-condensed"
+                                        id="dynamic-table" style="width:100%">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Type</th>
+                                            <th>Name</th>
+                                            <th>Number of store account</th>
+                                            <th>Number of general users</th>
+                                            <th class="text-center" style="min-width:90px!important;">Options</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"
+                                    id="delete-order-dialog"
+                                    class="modal fade">
+                                    <div class="modal-dialog modal-sm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
+                                                    ×
                                                 </button>
-                                                <button data-dismiss="modal" class="btn btn-default" type="button">
-                                                    Cancel
-                                                </button>
-                                            </form>
-                                            <input type="hidden" name="order_id" id="order_id" value=""/>
+                                                <h4 class="modal-title">Delete Confirm Dialog</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form role="form"
+                                                    method="post"
+                                                    id="delete-order-form">
+                                                    {% csrf_token %}
+                                                    <div class="form-group">
+                                                        <label for="exampleInputEmail1">Are you sure want to delete?</label>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-success" id="btnDeleteOrder">OK
+                                                    </button>
+                                                    <button data-dismiss="modal" class="btn btn-default" type="button">
+                                                        Cancel
+                                                    </button>
+                                                </form>
+                                                <input type="hidden" name="order_id" id="order_id" value=""/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

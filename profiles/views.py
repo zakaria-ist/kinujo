@@ -5,7 +5,11 @@ from django.template import RequestContext
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from .forms import ProfileForm, ImageUploadForm
 from .models import Profile
+from images.models import Image
+from django.conf import settings as s
 import datetime
 import json
 # @login_required
@@ -46,88 +50,101 @@ def ProfileList__asJson(request, order_type):
     length = request.GET['length']
     search = request.GET['search[value]']
     
-    #     order_list = Order.objects.filter(is_hidden=0, company_id=company_id, order_type=order_type).order_by('-document_number')
-
-    # records_total = order_list.count()
-
-    # if search:  # Filter data base on search
-    #     if int(order_type) == dict(ORDER_TYPE)['PURCHASE INVOICE']:
-    #         order_list = order_list.filter(Q(update_date__icontains=search) | Q(document_date__icontains=search) | Q(
-    #             document_number__icontains=search) | Q(update_date__contains=search) | Q(
-    #             customer__name__icontains=search) | Q(supplier__name__icontains=search) | Q(balance__icontains=search) | Q(
-    #             reference_number__icontains=search) | Q(total__icontains=search)).order_by('-document_date')
-
-    # All data
-    # records_filtered = order_list.count()
-    # # Order by list_limit base on order_dir and order_column
-    # order_column = request.GET['order[0][column]']
-    # column_name = ""
-    # if order_column == "1":
-    #     column_name = "update_date"
-    # elif order_column == "2":
-    #     column_name = "id"
-    # elif order_column == "3":
-    #     column_name = "document_date"
-    # elif order_column == "4":
-    #     column_name = "document_number"
-    # elif order_column == "5":
-    #     column_name = "reference_number"
-    # elif order_column == "6":
-    #     column_name = get_cust_supp_column_name(int(order_type))
-    # elif order_column == "7":
-    #     column_name = "total"
-    # elif order_column == "8":
-    #     column_name = "status"
-
-    # order_dir = request.GET['order[0][dir]']
-    # list = []
-    # if order_dir == "asc":
-    #     if int(order_type) == dict(ORDER_TYPE)['PURCHASE INVOICE']:
-    #         list = order_list.order_by('document_date', column_name)[int(start):(int(start) + int(length))]
-    #     else:
-    #         list = order_list.order_by('document_number', column_name)[int(start):(int(start) + int(length))]
-    # elif order_dir == "desc":
-    #     if int(order_type) == dict(ORDER_TYPE)['PURCHASE INVOICE']:
-    #         list = order_list.order_by('-document_date', '-' + column_name)[int(start):(int(start) + int(length))]
-    #     else:
-    #         list = order_list.order_by('-document_number', '-' + column_name)[int(start):(int(start) + int(length))]
-
-    # # Create data list
-    # array = []
-    # for field in list:
-    #     curr = field.currency.code if field.currency else ''
-    #     # money = round((field.total, field.subtotal)[int(order_type) == dict(ORDER_TYPE)['SALES ORDER'] or
-    #     #                                             int(order_type) == dict(ORDER_TYPE)['PURCHASE ORDER']], 6)
-    #     money = OrderItem.objects.filter(is_hidden=0, order_id=field.id) \
-    #             .aggregate(total=Sum('amount'))['total']
-    #     if field.currency.is_decimal:
-    #         separator = intcomma("%.2f" % money)
-    #     else:
-    #         separator = intcomma("%.0f" % money)
-    #     format_money = str(curr + ' ' + separator)
-
-    #     data = {"id": str(field.id),
-    #             "update_date": field.update_date.strftime("%d-%m-%Y"),
-    #             "document_date": field.document_date.strftime("%d-%m-%Y"),
-    #             "document_number": field.document_number,
-    #             "reference_number": field.reference_number,
-    #             "cust_supp_name": get_cust_supp_name(int(order_type), field),
-    #             "total": format_money,
-    #             "status": str(field.status)}
-    #     array.append(data)
 
     # content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
     # json_content = json.dumps(content, ensure_ascii=False)
     # return HttpResponse(json_content, content_type='application/json')
 
-@login_required
+# @login_required
+def upload_profile_image(request):
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            m = form.save(commit=False)
+            m.image = form.cleaned_data.get('profile_image')
+            m.save()
+            json_content = json.dumps({'image': m}, ensure_ascii=False)
+            return HttpResponse(json_content, content_type='application/json')
+
+# @login_required
 def profile_add(request):
-    return render(request, 'profile_list.html')
+    if request.method == 'POST':
+        form = ProfileForm(request.POST)
+        if form.is_valid:
+            user = User.objects.create_user(request.POST.get('tel'), 'test@test.com', request.POST.get('password'))
+            user.first_name = request.POST.get('user_code')
+            user.save()
+            profile = form.save(commit=False)
+            profile.save()
+
+            profile_image = request.FILES.get('profile_image', False)
+            if profile_image:
+                if profile.image:
+                    image = Image.objects.get(pk=profile.image_id)
+                    image.delete()
+
+                new_image = Image()
+                new_image.image.save(profile_image.name, profile_image)
+                new_image.save()
+
+                profile.image = new_image
+                profile.save()
+    else:
+        form = ProfileForm()
+    
+    store_list = [
+        ['1', 'Store A'],
+        ['2', 'Store B']
+    ]
+    profile_list = Profile.objects.all().values('id', 'nickname')
+    return render(request, 'profile_form.html', {'form': form, 
+                                                'media_url': s.MEDIA_URL, 
+                                                'store_list': store_list,
+                                                'profile_list': profile_list})
 
 @login_required
 def profile_edit(request, profile_id):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST)
+        if form.is_valid:
+            user = User.objects.create_user(username=request.POST.get('tel'))
+            if user:
+                user.first_name = request.POST.get('user_code')
+                user.set_password(request.POST.get('password'))
+                user.save()
+            profile = form.save(commit=False)
+            profile.user = user
+            profile.save()
+
+            profile_image = request.FILES.get('profile_image', False)
+            if profile_image:
+                if profile.image:
+                    image = Image.objects.get(pk=profile.image_id)
+                    image.delete()
+
+                new_image = Image()
+                new_image.image.save(profile_image.name, profile_image)
+                new_image.save()
+
+                profile.image = new_image
+                profile.save()
+            return render(request, 'profile_list.html')
+        else:
+            print(form.errors)
+
     profile = Profile.objects.get(pk=profile_id)
-    return render(request, 'profile_list.html')
+    form = ProfileForm(instance=profile)
+    
+    store_list = [
+        ['1', 'Store A'],
+        ['2', 'Store B']
+    ]
+    profile_list = Profile.objects.all().values('id', 'nickname')
+    return render(request, 'profile_form.html', {'form': form, 
+                                                'media_url': s.MEDIA_URL, 
+                                                'store_list': store_list,
+                                                'profile_list': profile_list,
+                                                'profile': profile})
 
 @login_required
 def profile_delete(request, profile_id):

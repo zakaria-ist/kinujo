@@ -41,15 +41,17 @@ var Script = function () {
 
     $(function() {
         function responsiveView() {
-            var wSize = $(window).width();
-            if (wSize <= 768) {
-                $('#container').addClass('sidebar-close');
-                $('#sidebar > ul').hide();
-            }
+            if ($('#sidebar').is(":visible") === true) {
+                var wSize = $(window).width();
+                if (wSize <= 768) {
+                    $('#container').addClass('sidebar-close');
+                    $('#sidebar > ul').hide();
+                }
 
-            if (wSize > 768) {
-                $('#container').removeClass('sidebar-close');
-                $('#sidebar > ul').show();
+                if (wSize > 768) {
+                    $('#container').removeClass('sidebar-close');
+                    $('#sidebar > ul').show();
+                }
             }
         }
         $(window).on('load', responsiveView);
@@ -62,31 +64,37 @@ var Script = function () {
                 'margin-left': '0px'
             });
             $('#sidebar').css({
-                'margin-left': '-310px'
+                'display': 'none'
             });
             try{
-                $('.table').DataTable().columns.adjust();
+                if ( $.fn.DataTable.isDataTable( '.table' ) ) {
+                    $('.table').DataTable().columns.adjust();
+                }
             }
             catch(error){
                 console.log(error);
             }
             $('#sidebar > ul').hide();
             $("#container").addClass("sidebar-closed");
+            window.sessionStorage.setItem('is_sidebar', '0');
         } else {
             $('#main-content').css({
                 'margin-left': '310px'
             });
             try{
-                $('.table').DataTable().columns.adjust();
+                if ( $.fn.DataTable.isDataTable( '.table' ) ) {
+                    $('.table').DataTable().columns.adjust();
+                }
             }
             catch(error){
                 console.log(error);
             }
             $('#sidebar > ul').show();
             $('#sidebar').css({
-                'margin-left': '0'
+                'display': 'block'
             });
             $("#container").removeClass("sidebar-closed");
+            window.sessionStorage.setItem('is_sidebar', '1');
         }
     });
 
@@ -137,3 +145,13 @@ var Script = function () {
     }
 
 }();
+
+jQuery.browser = {};
+(function () {
+    jQuery.browser.msie = false;
+    jQuery.browser.version = 0;
+    if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+        jQuery.browser.msie = true;
+        jQuery.browser.version = RegExp.$1;
+    }
+})();
