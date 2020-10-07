@@ -62,6 +62,6 @@ urlpatterns = [
     url(r'^reset_password/$', views.reset_password, name='reset_password'),
     url(r'^login/$', views.login_user, name='login_user'),
     url(r'^logout/$', views.logout_user, name='logout_user'),
-    url(r'^create-product/$', product_views.creae_product, name='create_product'),
+    url(r'^item-registration/$', product_views.item_registration, name='item_registration'),
 ]
 urlpatterns += router.urls
