@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from .shared_settings import *
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,59 +26,30 @@ SECRET_KEY = 'ro6hl1+%(r+oek3sz3j8x!dfyy+_3e+*so0q-zec9f-ycp5fox'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ALLOWED_HOSTS = ['kinujo-release.c2sg.asia', 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com' ]
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'kinujo_local_db',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'NAME': 'kinujo_release_db',
+        'USER': 'kinujo_release',
+        'PASSWORD': 'Pa55w0rd',
+        'HOST': 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com',
         'PORT': '3306',
     }
 }
 
+# s3 settings
+AWS_ACCESS_KEY_ID = 'AKIAI3VAZN6IG4F7I7SQ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'kinujo-release'
+S3_URL = 'https://%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
-# Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/3.0/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-STATIC_URL = '/static/'
-STATIC_ROOT = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-LOGIN_URL = '/login/'
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_FILE_STORAGE = 'utilities.s3utils.MediaS3BotoStorageRelease'
+MEDIA_DIRECTORY = '/release/media/'
+MEDIA_URL = S3_URL + MEDIA_DIRECTORY
+MEDIA_ROOT = MEDIA_URL
+WEB_URL = MEDIA_URL
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
