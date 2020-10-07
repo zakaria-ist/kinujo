@@ -31,9 +31,9 @@ class ProfileForm(forms.ModelForm):
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'user_code'}))
     real_name = forms.CharField(required=True,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'name'}))
-    corporate_name = forms.CharField(required=True,
+    corporate_name = forms.CharField(required=False,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'corporate name'}))
-    address1 = forms.CharField(required=True,
+    address1 = forms.CharField(required=False,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'address1'}))
     address2 = forms.CharField(required=False,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'address2'}))

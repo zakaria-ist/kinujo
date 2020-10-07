@@ -35,7 +35,7 @@ class Profile(models.Model):
     gender = models.SmallIntegerField(null=True, choices=tuple([status[::-1] for status in GENDER_TYPE]))
     birthday = models.DateField(null=True)
     zipcode = models.CharField(max_length=7, default='')
-    prefecture = models.ForeignKey(Prefecture, on_delete=models.CASCADE)
+    prefecture = models.ForeignKey(Prefecture, on_delete=models.CASCADE, null=True)
     city = models.CharField(max_length=100, default='')
     address1 = models.CharField(max_length=255, default='')
     address2 = models.CharField(max_length=255, default='')

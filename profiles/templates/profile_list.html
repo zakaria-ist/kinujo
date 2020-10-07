@@ -64,36 +64,6 @@
                                         </thead>
                                     </table>
                                 </div>
-                                <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"
-                                    id="delete-order-dialog"
-                                    class="modal fade">
-                                    <div class="modal-dialog modal-sm">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
-                                                    ×
-                                                </button>
-                                                <h4 class="modal-title">Delete Confirm Dialog</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form role="form"
-                                                    method="post"
-                                                    id="delete-order-form">
-                                                    {% csrf_token %}
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1">Are you sure want to delete?</label>
-                                                    </div>
-                                                    <button type="submit" class="btn btn-success" id="btnDeleteOrder">OK
-                                                    </button>
-                                                    <button data-dismiss="modal" class="btn btn-default" type="button">
-                                                        Cancel
-                                                    </button>
-                                                </form>
-                                                <input type="hidden" name="order_id" id="order_id" value=""/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -101,27 +71,54 @@
             </section>
         </div>
     </div>
+    {#Comfirm Delete journal#}
+    <div class="modal fade" id="comfirmDeleteProfileModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><strong>Delete Confirm Dialog</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body" style="padding-bottom: 0px!important; padding: 0 3%;">
+                    <form action="">
+                        <div class="form-group">
+                            <label>Are you sure want to delete?</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">No</button>
+                    <a id="comfirm-yes">
+                        <button class="btn btn-success" type="button">Yes</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {#End Comfirm delete journal#}
 {% endblock %}
 {% block js %}
-    <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script> 
+    <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script>
     <script type="text/javascript">
     (function () {
-        var my_order_type = $("#my_order_type").val();
         $(document).ready(function () {
             var campreto = $('#dynamic-table').DataTable({
-                "order": [[1, "desc"]],
+                "order": [[2, "asc"]],
                 "serverSide": true,
                 "scrollX": true,
                 stateSave: true,
                 "ajax": {
-                    "url": "{% url 'ProfileList__asJson' %}"
+                    "url": "{% url 'ProfileList__asJson' 1 %}"
                 },
                 "columns": [
-                    {"data": "no"},
-                    {"data": "type"},
-                    {"data": "name"},
-                    {"data": "store_total"},
-                    {"data": "user_total"},
+                    {"data": "no", "orderable": false},
+                    {"data": "type", "orderable": false},
+                    {"data": "nickname", "orderable": false},
+                    {"data": "store_total", "orderable": false},
+                    {"data": "user_total", "orderable": false},
                     
                     {
                         "sClass": "text-center",
@@ -129,84 +126,23 @@
                         "data": null,
                         "render": function (data, type, row, meta) {
                             var btn =
-                                    '<div class="btn-group dropdown">' +
-                                    '<button type="button"' +
-                                    'class="btn btn-primary btn-sm dropdown-toggle"' +
-                                    'data-toggle="dropdown" aria-haspopup="true"' +
-                                    'aria-expanded="false"' +
-                                    'style="min-width: 40px!important;">Action' +
-                                    '<span class="caret" style="margin-left:15px;"></span>' +
-                                    '<span class="sr-only">Toggle Dropdown</span>' +
-                                    '</button>' +
-                                    '<ul class="dropdown-menu dropdown-menu-right">' ;
-
-                           
-                            btn = btn + '<li><a href="{% url 'profile_edit' row.id %}">Edit</a></li>'; 
-                            btn = btn + '<li><a href="{% url 'profile_delete' row.id %}">Delete</a></li>'; 
-
-                            btn = btn + '</ul></div>';
+                                    '<div class="btn-group">' +
+                                    '<a class="btn-group-item" href="../profile_edit/' + row.id + '/' + '"><i class="fas fa-pencil-alt fa-2x text-info"></i></a>' + 
+                                    '<a class="btn-group-item" onclick="deleteProfile(' + row.id + ')"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + 
+                                    '</div>';
                             return btn;
                         }
                     }
                 ]
             });
         });
-
-        $(document).on("click", ".editEntry", function () {
-            $('#loading').show();
-        });
-
-        $(document).on("click", ".delete-order", function () {
-            currentRow = $(this).parents('tr');
-            var order_id = $(this).data('id');
-            $(".modal-body #order_id").val(order_id);
-            $('#delete-order-dialog').modal('show');
-        });
-        $('#btnDeleteOrder').on('click', function () {
-            $.ajax({
-                method: "POST",
-                url: '/orders/order_delete/',
-                dataType: 'JSON',
-                data: {
-                    'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
-                    'order_id': $('#order_id').val()
-                },
-                success: function (json) {
-                    $('#delete-order-dialog').modal('hide');
-                    if (json.type == 'success') {
-                        $('#results').html("<div class='alert alert-success'>" +
-                                "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button > " +
-                                "<span class='glyphicon glyphicon-ok'></span> <strong>Success Message</strong>" +
-                                "<hr class='message-inner-separator'>" +
-                                "<p>" + json.msg + "</p>");
-                    } else if (json.type == 'failed') {
-                        $('#results').html("<div class='alert alert-warning'>" +
-                                "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button > " +
-                                "<span class='glyphicon glyphicon-ok'></span> <strong>Warning Message</strong>" +
-                                "<hr class='message-inner-separator'>" +
-                                "<p>" + json.msg + "</p>");
-                    }
-                    location.reload();
-                },
-                error: function (xhr, errmsg, err) {
-                    $('#delete-order-dialog').modal('hide');
-                    $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: " + errmsg +
-                            " <a href='#' class='close'>&times;</a></div>");
-                }
-            });
-        });
-        $(document).ready(function () {
-            var mess = [];
-            $(".message-text error").each(function () {
-                mess.push($(this).text());
-            });
-            if (mess.length > 0) {
-                pop_info_dialog("Information", "Please add " + mess + " first!", "info");
-            }
-
-        })
         
     }());
+    function deleteProfile(id) {
+        var url = '../profile_delete/' + id + '/'
+        $("#comfirmDeleteProfileModal").modal("show");
+        $("#comfirm-yes").attr("href", url);
+    }
 
     $(document).click(function (event) {
         //hide al‘l our dropdowns

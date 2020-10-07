@@ -6342,12 +6342,12 @@ header.blue-bg .search:focus {
     margin-bottom: -5px !important;
 }
 
-.modal-dialog{
+/* .modal-dialog{
     height: 75%;
     width: 70%;
     margin-left: 18% !important;
     margin-top: 3% !important;
-}
+} */
 
 .control-disabled{
     cursor: not-allowed;
@@ -6408,7 +6408,13 @@ div.dataTables_wrapper div.dataTables_filter label {
 #corporate_block {
     margin-top: 50px;
 }
+
 #corporate_block p{
     font-size: 20px;
     margin-bottom: 20px;
+}
+
+.btn-group-item {
+    margin-left: 10px;
+    margin-right: 10px;
 }

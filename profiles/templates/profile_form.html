@@ -70,8 +70,8 @@
                                         <div class="col-md-8">
                                             <div class="fileupload fileupload-new" data-provides="fileupload">
                                                 <div class="fileupload-new thumbnail" style="width: 300px; height: 300px;">
-                                                    {% if profile.image %}
-                                                        <img src="{{ media_url }}{{ profile.image.image }}" alt="" name="profile_image"/>
+                                                    {% if profile.image_id %}
+                                                        <img src="{{ profile.image.image.url }}" alt="" name="profile_image"/>
                                                     {% else %}
                                                         <img src="{% static 'img/blank_male.png' %}" alt="" name="profile_image"/>
                                                     {% endif %}
@@ -105,6 +105,14 @@
                                         <div class="col-lg-4">
                                             {{ form.authority|default_if_none:"" }}
                                         </div>
+                                        <label id="type_label" for="type" class="col-lg-2 col-sm-2 control-label">Type</label>
+                                        <div class="col-lg-4" id="type_div">
+                                            <input class="form-control trs-field" type="text"
+                                                name="type"
+                                                id="type" placeholder="Salon Owner">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
                                         <label for="nickname" class="col-lg-2 col-sm-2 control-label">Nickname<span
                                                 class="span-required">(*)</span></label>
                                         <div class="col-lg-4">
@@ -137,14 +145,6 @@
                                                 {% endif %}
                                             </select>
                                         </div>
-                                        <label for="user_code" class="col-lg-2 col-sm-2 control-label">General WS</label>
-                                        <div class="col-lg-4">
-                                            <select name="general_store" id="general_store" class="form-control trs-field sended">
-                                                {% for store in store_list %}
-                                                <option value="{{store.0}}" >{{store.1}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="tel" class="col-lg-2 col-sm-2 control-label">Phone Number<span
@@ -158,30 +158,48 @@
                                             {{ form.password|default_if_none:"" }}
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label for="introducer" class="col-lg-2 col-sm-2 control-label">Introducer</label>
-                                        <div class="col-lg-4">
-                                            <select name="introducer" id="introducer" class="form-control trs-field sended">
-                                                {% for pr in profile_list %}
-                                                    {% if profile.introducer_id == pr.id %}
-                                                        <option value="{{pr.id}}" selected>{{pr.nickname}}</option>
-                                                    {% else %}
-                                                        <option value="{{pr.id}}">{{pr.nickname}}</option>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </select>
+                                    <div class="form-group">
+                                        <div id="introducer_div" class="row">
+                                            <label for="introducer" class="col-lg-2 col-sm-2 control-label">Introducer</label>
+                                            <div class="col-lg-4">
+                                                <select name="introducer" id="introducer" class="form-control trs-field sended">
+                                                    {% for pr in profile_list %}
+                                                        {% if profile.introducer_id == pr.id %}
+                                                            <option value="{{pr.id}}" selected>{{pr.nickname}}</option>
+                                                        {% else %}
+                                                            <option value="{{pr.id}}">{{pr.nickname}}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
                                         </div>
-                                        <label for="approval" class="col-lg-2 col-sm-2 control-label">Approval</label>
-                                        <div class="col-lg-4">
-                                            <select name="approval" id="approval" class="form-control trs-field sended">
-                                                {% if profile.is_seller %}
-                                                    <option value="1" seleceted>Yes</option>
-                                                    <option value="0">No</option>
-                                                {% else %}
-                                                    <option value="1">Yes</option>
-                                                    <option value="0" seleceted>No</option>
-                                                {% endif %}
-                                            </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <div id="approval_div" class="row">
+                                            <label for="approval" class="col-lg-2 col-sm-2 control-label">Approval</label>
+                                            <div class="col-lg-4">
+                                                <select name="approval" id="approval" class="form-control trs-field sended">
+                                                    {% if profile.is_seller %}
+                                                        <option value="1" seleceted>Yes</option>
+                                                        <option value="0">No</option>
+                                                    {% else %}
+                                                        <option value="1">Yes</option>
+                                                        <option value="0" seleceted>No</option>
+                                                    {% endif %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div id="general_ws_div" class="row">
+                                            <label for="user_code" class="col-lg-2 col-sm-2 control-label">General WS</label>
+                                            <div class="col-lg-4">
+                                                <select name="general_store" id="general_store" class="form-control trs-field sended">
+                                                    {% for store in store_list %}
+                                                    <option value="{{store.0}}" >{{store.1}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                     <div id="corporate_block">
@@ -302,29 +320,11 @@
     <script src="{% static "js/select2/select2.js" %}"></script>
     <!--dynamic table initialization -->
     <script type="text/javascript">
-        var tab_index = "";
         $(document).on('keyup', '.select2-selection.select2-selection--single', function (e) {
             var keycode = (e.keyCode ? e.keyCode : e.which);
             if(keycode == '9'){
                 $(this).closest(".select2-container").siblings('select:enabled').select2('open');
             }
-        });
-        $(document).ready(function () {
-            tab_index = "{{active_tab_index}}";
-            if (tab_index == '3') {
-                $('#items_location_a').trigger('click');
-            }
-            {% comment %} else if (tab_index == '2') {
-                $('#supplier_tab_a').trigger('click');
-            }
-            else if (tab_index == '1') {
-                $('#customer_tab_a').trigger('click');
-            }
-            else if (tab_index == '0') {
-                $('#item_tab_a').trigger('click');
-            } {% endcomment %}
-            
-
         });
         
 
@@ -344,7 +344,52 @@
                 placeholder: "Select Authority"
             });
 
+            $('#id_authority').trigger('change');
+
         });
+
+        $('#id_authority').on('change', function(){
+            if ($(this).val() == '1') { //master
+                $('#general_ws_div').css('display', 'none');
+                $('#introducer_div').css('display', 'none');
+                $('#approval_div').css('display', 'none');
+                $('#type_div').css('display', 'none');
+                $('#type_label').css('display', 'none');
+                $('#corporate_block').removeAttr('style');
+            }
+            else if ($(this).val() == '2') { //special
+                $('#general_ws_div').css('display', 'none');
+                $('#introducer_div').css('display', 'none');
+                $('#approval_div').css('display', 'none');
+                $('#type_div').css('display', 'none');
+                $('#type_label').css('display', 'none');
+                $('#corporate_block').removeAttr('style');
+            }
+            else if ($(this).val() == '3') { //ambassador
+                $('#general_ws_div').removeAttr('style');
+                $('#introducer_div').removeAttr('style');
+                $('#approval_div').css('display', 'none');
+                $('#type_div').css('display', 'none');
+                $('#type_label').css('display', 'none');
+                $('#corporate_block').removeAttr('style');
+            }
+            else if ($(this).val() == '4') { //store
+                $('#general_ws_div').css('display', 'none');
+                $('#type_div').removeAttr('style');
+                $('#type_label').removeAttr('style');
+                $('#introducer_div').removeAttr('style');
+                $('#approval_div').removeAttr('style');
+                $('#corporate_block').removeAttr('style');
+            }
+            else if ($(this).val() == '5') { //general
+                $('#general_ws_div').css('display', 'none');
+                $('#type_div').css('display', 'none');
+                $('#type_label').css('display', 'none');
+                $('#introducer_div').removeAttr('style');
+                $('#approval_div').css('display', 'none');
+                $('#corporate_block').css('display', 'none');
+            }
+        })
 
 
         

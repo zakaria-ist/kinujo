@@ -2,7 +2,7 @@ from datetime import date
 from django.db import models
 
 def image_container(instance, filename):
-    return '/'.join(['prifile', str(instance.id)+'/image', filename])
+    return '/'.join(['profile', '/image', filename])
 
 class Image(models.Model):
     image = models.ImageField(upload_to=image_container)
