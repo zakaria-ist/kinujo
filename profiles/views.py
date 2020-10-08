@@ -32,30 +32,74 @@ def reset_password(request):
     """
     Method to update new password.
     """
-    return render(request, 'login.html')
 
-def login_user(request):
+    if request.method == 'POST':
+        try:
+            username = request.POST.get('user_phone')
+            password = request.POST.get('new_pass')
+            user = User.objects.filter(username=username).first()
+            if user:
+                if password != '' and password != None:
+                    user.set_password(password)
+                    user.save()
+
+                    user = authenticate(username=username, password=password)
+                    if user is not None:
+                        login(request, user)
+                        return HttpResponsePermanentRedirect(reverse('home_load'))
+        except Exception as e:
+            print(e)
+
+    return render(request, 'password-reset.html')
+
+def login_master(request):
     """
-    Method to login.
+    Method to master login.
     """
-    if request.POST:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return HttpResponsePermanentRedirect(reverse('home_load'))
-        else:
-            return render(request, 'login.html')
-    else:
-        return render(request, 'login.html')
+
+    if request.method == 'POST':
+        try:
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return HttpResponsePermanentRedirect(reverse('home_load'))
+            else:
+                return render(request, 'master_login.html')
+        except Exception as e:
+            print(e)
+            return render(request, 'master_login.html')
+
+    return render(request, 'master_login.html')
+
+def login_sales(request):
+    """
+    Method to sales login.
+    """
+    
+    if request.method == 'POST':
+        try:
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return HttpResponsePermanentRedirect(reverse('home_load'))
+            else:
+                return render(request, 'sales_login.html')
+        except Exception as e:
+            print(e)
+            return render(request, 'sales_login.html')
+
+    return render(request, 'sales_login.html')
 
 def logout_user(request):
     """
     Method to logout.
     """
     logout(request)
-    return render(request, 'login.html')
+    return render(request, 'master_login.html')
 
 # @login_required
 def profile_list(request):

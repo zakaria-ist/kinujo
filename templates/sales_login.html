@@ -28,11 +28,12 @@
 
 <div class="container">
 
-    <form class="form-signin" action="/login/" method="post" id="login_form">
+    <form class="form-signin" action="/sales_login/" method="post" id="login_form">
         {% csrf_token %}
         <h2 class="form-signin-heading">KINUJO</h2>
-        <div class="login-wrap">
-            <input type="tel" class="form-control" placeholder="電話番号" name="username" id="username" autofocus required autocomplete="off"> 
+        <div class="text-center"><p>出品管理サイト</p></viv>
+        <p class="login-wrap">
+            <input type="tel" class="form-control" placeholder="+12345678" name="username" id="username" autofocus required autocomplete="off"> 
             <input type="password" class="form-control" placeholder="パスワード" name="password" required autocomplete="off">
 
             <div class="forget_pass text-center">
@@ -45,7 +46,7 @@
             <div class="text-center">
                 <button class="btn btn-lg btn-login" type="submit">Login</button>
             </div>
-        </div>
+        </p>
     </form>
 </div>
 
