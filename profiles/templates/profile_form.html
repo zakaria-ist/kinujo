@@ -27,7 +27,7 @@
         {% else %}
         action="{% url 'profile_add' %}" 
         {% endif %}
-        role="form" method="post" onsubmit="" enctype="multipart/form-data">
+        role="form" method="post" onsubmit="checkInput()" enctype="multipart/form-data">
         {% csrf_token %}
         <div id="content">
             <header class="panel-heading" style="font-size: 25px; margin-bottom: 20px;" >
@@ -38,19 +38,19 @@
                 <li class="nav-item" id="basic_tab_li">
                     <a href="#basic_tab" class="nav-link active" id="basic_tab_a" data-toggle="tab" role="tab" aria-controls="basic_tab" aria-selected="true">基本情報</a>
                 </li>
-                <li class="nav-item" id="item_tab_li">
+                <li class="nav-item" id="item_tab_li" style="display: none;">
                     <a href="#item_tab" class="nav-link" id="item_tab_a" data-toggle="tab" role="tab" aria-controls="item_tab" aria-selected="false">出品一覧</a>
                 </li>
-                <li class="nav-item" id="client_tab_li">
+                <li class="nav-item" id="client_tab_li" style="display: none;">
                     <a href="#client_tab" class="nav-link" id="client_tab_a" data-toggle="tab" role="tab" aria-controls="client_tab" aria-selected="false">顧客</a>
                 </li>
-                <li class="nav-item" id="account_info_tab_li">
+                <li class="nav-item" id="account_info_tab_li" style="display: none;">
                     <a href="#account_info_tab" class="nav-link" id="account_info_a" data-toggle="tab" role="tab" aria-controls="account_info_tab" aria-selected="false">口座情報</a>
                 </li>
-                <li class="nav-item" id="sales_info_tab_li">
+                <li class="nav-item" id="sales_info_tab_li" style="display: none;">
                     <a href="#sales_info_tab" class="nav-link" id="sales_info_a" data-toggle="tab" role="tab" aria-controls="sales_info_tab" aria-selected="false">サロン情報</a>
                 </li>
-                <li class="nav-item" id="shipping_info_tab_li">
+                <li class="nav-item" id="shipping_info_tab_li" style="display: none;">
                     <a href="#shipping_info_tab" class="nav-link" id="shipping_info_a" data-toggle="tab" role="tab" aria-controls="shipping_info_tab" aria-selected="false">送付先情報</a>
                 </li>
             </ul>
@@ -107,9 +107,7 @@
                                         </div>
                                         <label id="type_label" for="type" class="col-lg-2 col-sm-2 control-label">Type</label>
                                         <div class="col-lg-4" id="type_div">
-                                            <input class="form-control trs-field" type="text"
-                                                name="type"
-                                                id="type" placeholder="Salon Owner">
+                                            {{ form.salon_category|default_if_none:"" }}
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -152,10 +150,20 @@
                                         <div class="col-lg-4">
                                             {{ form.tel|default_if_none:"" }}
                                         </div>
-                                        <label for="password" class="col-lg-2 col-sm-2 control-label">Password<span
-                                                class="span-required">(*)</span></label>
+                                        <label for="password" class="col-lg-2 col-sm-2 control-label">Password</label>
                                         <div class="col-lg-4">
                                             {{ form.password|default_if_none:"" }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-lg-6">
+                                        </div>
+                                        <label for="password" class="col-lg-2 col-sm-2 control-label">Conf. Password</label>
+                                        <div class="col-lg-4">
+                                            <input class="form-control trs-field" type="password"
+                                                name="conf_pass"
+                                                id="conf_pass">
+                                            <span id="pass-error" class="span-required">If the password is blank it will not ne changed</span>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -179,7 +187,7 @@
                                             <label for="approval" class="col-lg-2 col-sm-2 control-label">Approval</label>
                                             <div class="col-lg-4">
                                                 <select name="approval" id="approval" class="form-control trs-field sended">
-                                                    {% if profile.is_seller %}
+                                                    {% if profile.is_approved %}
                                                         <option value="1" seleceted>Yes</option>
                                                         <option value="0">No</option>
                                                     {% else %}
@@ -212,9 +220,7 @@
                                             </div>
                                             <label for="representative_name" class="col-lg-2 col-sm-2 control-label">Representative Name</label>
                                             <div class="col-lg-4">
-                                                <input class="form-control trs-field" type="text"
-                                                    name="representative_name"
-                                                    id="representative_name" value={{profile.introducer.real_name}}>
+                                                {{ form.representative_name|default_if_none:"" }}
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -231,13 +237,11 @@
                                         <div class="form-group row">
                                             <label for="phone_number" class="col-lg-2 col-sm-2 control-label">Phone Number</label>
                                             <div class="col-lg-4">
-                                                <input class="form-control trs-field" type="text"
-                                                    name="phone_number"
-                                                    id="phone_number" value="">
+                                                {{ form.corporate_tel|default_if_none:"" }}
                                             </div>
                                         </div>
                                         <div class="form-group form-check text-left" style="margin-top: 30px;">
-                                            <input type="checkbox" class="form-check-input checkbox-2x" id="active" checked>
+                                            <input type="checkbox" class="form-check-input checkbox-2x" name="active_checkbox" id="active_checkbox" checked>
                                             <label class="form-check-label" for="active">Active</label>
                                         </div>
                                     </div>
@@ -327,9 +331,17 @@
             }
         });
         
+        var profile_id = "{{profile.id}}";
 
         $(document).ready(function () {
-            
+            if (profile_id == '' || profile_id == undefined || profile_id == null) {
+                profile_id = '';
+                $('#id_password').prop('required', true);
+                $('#conf_pass').prop('required', true);
+            } else {
+                $('#id_authority').trigger('change');
+                $('#id_authority').prop('disabled', true);
+            }
             $('#selling_auth').select2({});
             $('#approval').select2({});
             $('#introducer').select2({
@@ -343,51 +355,90 @@
             $('#id_authority').select2({
                 placeholder: "Select Authority"
             });
+            $('#id_salon_category').select2({});
 
             $('#id_authority').trigger('change');
 
         });
 
+        function checkInput() {
+            $('#id_authority').prop('disabled', false);
+        }
+
+        $('#conf_pass').on('change', function(){
+            var pass = $('#id_password').val();
+            var conf_pass = $(this).val();
+            if (pass != conf_pass) {
+                $('#pass-error').text("Password doesn't match");
+                $('#btnSave').prop('dsabled', true);
+            } else {
+                $('#pass-error').text("");
+                $('#btnSave').prop('dsabled', false);
+            }
+        })
+
         $('#id_authority').on('change', function(){
-            if ($(this).val() == '1') { //master
-                $('#general_ws_div').css('display', 'none');
-                $('#introducer_div').css('display', 'none');
-                $('#approval_div').css('display', 'none');
-                $('#type_div').css('display', 'none');
-                $('#type_label').css('display', 'none');
-                $('#corporate_block').removeAttr('style');
-            }
-            else if ($(this).val() == '2') { //special
-                $('#general_ws_div').css('display', 'none');
-                $('#introducer_div').css('display', 'none');
-                $('#approval_div').css('display', 'none');
-                $('#type_div').css('display', 'none');
-                $('#type_label').css('display', 'none');
-                $('#corporate_block').removeAttr('style');
-            }
-            else if ($(this).val() == '3') { //ambassador
-                $('#general_ws_div').removeAttr('style');
-                $('#introducer_div').removeAttr('style');
-                $('#approval_div').css('display', 'none');
-                $('#type_div').css('display', 'none');
-                $('#type_label').css('display', 'none');
-                $('#corporate_block').removeAttr('style');
-            }
-            else if ($(this).val() == '4') { //store
-                $('#general_ws_div').css('display', 'none');
-                $('#type_div').removeAttr('style');
-                $('#type_label').removeAttr('style');
-                $('#introducer_div').removeAttr('style');
-                $('#approval_div').removeAttr('style');
-                $('#corporate_block').removeAttr('style');
-            }
-            else if ($(this).val() == '5') { //general
-                $('#general_ws_div').css('display', 'none');
-                $('#type_div').css('display', 'none');
-                $('#type_label').css('display', 'none');
-                $('#introducer_div').removeAttr('style');
-                $('#approval_div').css('display', 'none');
-                $('#corporate_block').css('display', 'none');
+            if (profile_id) {
+                if ($(this).val() == '1') { //master
+                    $('#general_ws_div').css('display', 'none');
+                    $('#introducer_div').css('display', 'none');
+                    $('#approval_div').css('display', 'none');
+                    $('#type_div').css('display', 'none');
+                    $('#type_label').css('display', 'none');
+                    $('#corporate_block').removeAttr('style');
+
+                    $('#item_tab_li').removeAttr('style');
+                }
+                else if ($(this).val() == '2') { //special
+                    $('#general_ws_div').css('display', 'none');
+                    $('#introducer_div').css('display', 'none');
+                    $('#approval_div').css('display', 'none');
+                    $('#type_div').css('display', 'none');
+                    $('#type_label').css('display', 'none');
+                    $('#corporate_block').removeAttr('style');
+                    
+                    $('#item_tab_li').removeAttr('style');
+                    $('#account_info_tab_li').removeAttr('style');
+                }
+                else if ($(this).val() == '3') { //ambassador
+                    $('#general_ws_div').removeAttr('style');
+                    $('#introducer_div').removeAttr('style');
+                    $('#approval_div').css('display', 'none');
+                    $('#type_div').css('display', 'none');
+                    $('#type_label').css('display', 'none');
+                    $('#corporate_block').removeAttr('style');
+
+                    $('#item_tab_li').removeAttr('style');
+                    $('#client_tab_li').removeAttr('style');
+                    $('#account_info_tab_li').removeAttr('style');
+                }
+                else if ($(this).val() == '4') { //store
+                    $('#general_ws_div').css('display', 'none');
+                    $('#type_div').removeAttr('style');
+                    $('#type_label').removeAttr('style');
+                    $('#introducer_div').removeAttr('style');
+                    $('#approval_div').removeAttr('style');
+                    $('#corporate_block').removeAttr('style');
+
+                    $('#item_tab_li').removeAttr('style');
+                    $('#client_tab_li').removeAttr('style');
+                    $('#account_info_tab_li').removeAttr('style');
+                    $('#sales_info_tab_li').removeAttr('style');
+                    $('#shipping_info_tab_li').removeAttr('style');
+                }
+                else if ($(this).val() == '5') { //general
+                    $('#general_ws_div').css('display', 'none');
+                    $('#type_div').css('display', 'none');
+                    $('#type_label').css('display', 'none');
+                    $('#introducer_div').removeAttr('style');
+                    $('#approval_div').css('display', 'none');
+                    $('#corporate_block').css('display', 'none');
+
+                    $('#item_tab_li').removeAttr('style');
+                    $('#client_tab_li').removeAttr('style');
+                    $('#account_info_tab_li').removeAttr('style');
+                    $('#shipping_info_tab_li').removeAttr('style');
+                }
             }
         })
 
