@@ -1,4 +1,3 @@
-from datetime import date
 from django.db import models
 from images.models import Image
 from prefectures.models import Prefecture
@@ -9,12 +8,13 @@ from utilities.constants import GENDER_TYPE, SALON_TYPE, PAYMENT_STATUS
 
 class Authority(models.Model):
     name = models.CharField(max_length=128)
-    reward_rate = models.DecimalField(max_digits=4, decimal_places=2, default=0)
-    official_reward_rate = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+    commission_rate = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+    official_commission_rate = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+    is_enable = models.BooleanField(default=True)
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class Profile(models.Model):
@@ -25,16 +25,16 @@ class Profile(models.Model):
     tel = models.CharField(max_length=15)
     password = models.CharField(max_length=20)
     nickname = models.CharField(max_length=255)
-    user_code = models.CharField(max_length=255)
+    user_code = models.CharField(max_length=255, unique=True)
     email = models.CharField(max_length=255, default='')
-    introducer = models.ForeignKey('self', on_delete=models.CASCADE)
+    introducer = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     is_approved = models.BooleanField(default=False)
-    image = models.ForeignKey(Image, on_delete=models.CASCADE)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True)
     real_name = models.CharField(max_length=255, default='')
     gender = models.SmallIntegerField(null=True, choices=tuple([status[::-1] for status in GENDER_TYPE]))
     birthday = models.DateField(null=True)
     zipcode = models.CharField(max_length=7, default='')
-    prefecture = models.ForeignKey(Prefecture, on_delete=models.CASCADE)
+    prefecture = models.ForeignKey(Prefecture, on_delete=models.CASCADE, null=True)
     city = models.CharField(max_length=100, default='')
     address1 = models.CharField(max_length=255, default='')
     address2 = models.CharField(max_length=255, default='')
@@ -47,9 +47,9 @@ class Profile(models.Model):
     salon_category = models.SmallIntegerField(null=True, choices=tuple([status[::-1] for status in SALON_TYPE]))
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
-    
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
+
 
 class UserSale(models.Model):
     year = models.IntegerField()
@@ -63,8 +63,8 @@ class UserSale(models.Model):
     total_amount = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class UserCommision(models.Model):
@@ -77,8 +77,8 @@ class UserCommision(models.Model):
     total_amount = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class MonthlyPayment(models.Model):
@@ -90,8 +90,8 @@ class MonthlyPayment(models.Model):
     status = models.SmallIntegerField(null=True, choices=tuple([status[::-1] for status in PAYMENT_STATUS]))
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class Address(models.Model):
@@ -106,5 +106,5 @@ class Address(models.Model):
     is_default = models.BooleanField(default=False)
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
