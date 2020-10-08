@@ -10,5 +10,5 @@ class TaxRate(models.Model):
     is_enable = models.BooleanField(default=True)
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)

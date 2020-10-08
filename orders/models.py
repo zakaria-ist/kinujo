@@ -24,8 +24,8 @@ class Order(models.Model):
     remark = models.TextField(default='')
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class OrderProduct(models.Model):
@@ -38,8 +38,8 @@ class OrderProduct(models.Model):
     total_amount = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class OrderProductCommission(models.Model):
@@ -51,8 +51,8 @@ class OrderProductCommission(models.Model):
     shipping_fee = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class OrderReceipt(models.Model):
@@ -68,8 +68,8 @@ class OrderReceipt(models.Model):
     payment = models.TextField()
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class TotalSale(models.Model):
@@ -83,8 +83,8 @@ class TotalSale(models.Model):
     order_count = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class TotalCommission(models.Model):
@@ -95,5 +95,5 @@ class TotalCommission(models.Model):
     amount = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)

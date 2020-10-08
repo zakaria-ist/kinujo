@@ -8,8 +8,8 @@ class ProductCategory(models.Model):
     name = models.CharField(max_length=255)
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 class Product(models.Model):
     name = models.CharField(max_length=128)
@@ -30,17 +30,17 @@ class Product(models.Model):
     is_food = models.BooleanField(default=False)
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     image = models.ForeignKey(Image, on_delete=models.CASCADE)
-    
+
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class ProductVariety(models.Model):
@@ -49,8 +49,8 @@ class ProductVariety(models.Model):
     vertical_and_horizontal = models.SmallIntegerField(null=True, choices=tuple([status[::-1] for status in PRODUCT_VARIETY]))
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class ProductVarietySelection(models.Model):
@@ -58,8 +58,8 @@ class ProductVarietySelection(models.Model):
     selection = models.CharField(max_length=255, default='')
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class ProductJancode(models.Model):
@@ -69,5 +69,5 @@ class ProductJancode(models.Model):
     stock = models.BigIntegerField(validators=[MaxValueValidator(99999999999)], default=0)
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)

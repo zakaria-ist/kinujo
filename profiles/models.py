@@ -1,4 +1,3 @@
-from datetime import date
 from django.db import models
 from images.models import Image
 from prefectures.models import Prefecture
@@ -14,8 +13,8 @@ class Authority(models.Model):
     is_enable = models.BooleanField(default=True)
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class Profile(models.Model):
@@ -48,9 +47,9 @@ class Profile(models.Model):
     salon_category = models.SmallIntegerField(null=True, choices=tuple([status[::-1] for status in SALON_TYPE]))
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
-    
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
+
 
 class UserSale(models.Model):
     year = models.IntegerField()
@@ -64,8 +63,8 @@ class UserSale(models.Model):
     total_amount = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class UserCommision(models.Model):
@@ -78,8 +77,8 @@ class UserCommision(models.Model):
     total_amount = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class MonthlyPayment(models.Model):
@@ -91,8 +90,8 @@ class MonthlyPayment(models.Model):
     status = models.SmallIntegerField(null=True, choices=tuple([status[::-1] for status in PAYMENT_STATUS]))
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
 
 class Address(models.Model):
@@ -107,5 +106,5 @@ class Address(models.Model):
     is_default = models.BooleanField(default=False)
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
