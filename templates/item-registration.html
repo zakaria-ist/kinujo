@@ -75,72 +75,77 @@
           <div class="col-md-7">
 
             <div class="form-group row">
-              <label class="col-md-6 p-2" for="name">Official Product Name:</label>
-              <input type="text" class="form-control col-md-6" id="name">
+              <label class="col-md-4 p-2" for="name">Official Product Name:</label>
+              <input name="name" type="text" class="form-control col-md-8" id="name">
             </div>
 
             <div class="form-group row">
-              <label class="col-md-6 p-2" for="name">Brand or manufacturer name:</label>
-              <input type="text" class="form-control col-md-6" id="name">
+              <label class="col-md-4 p-2" for="name">Brand or manufacturer name:</label>
+              <input name="brand_name" type="text" class="form-control col-md-8" id="brand-name">
             </div>
 
             <div class="form-group row">
-              <label class="col-md-6 p-2" for="name">Product ID(URL):</label>
-              <input type="text" class="form-control col-md-6" id="name">
+              <label class="col-md-4 p-2" for="name">Product ID(URL):</label>
+              <input name="url_str" type="text" class="form-control col-md-8" id="url-str">
             </div>
             
             <div class="form-group row">
-              <label class="col-md-6 p-2" for="name">Product Category:</label>
-              <select class="form-control col-md-6 custom-select" id="name">
-                <option>Category 1</option>
-                <option>Category 2</option>
+              <label class="col-md-4 p-2" for="name">Product Category:</label>
+              <select name="category" class="form-control col-md-8 custom-select" id="category">
+                <option disabled selected>Select</option>
+                <option value="">Category 1</option>
+                <option value="">Category 2</option>
               </select>
             </div>
 
-            <div class="form-group row">
-              <label class="col-md-4 p-2" for="name">Variations:</label>
+      
+
+            <div class="form-group row form-check form-check-inline">
+              <label class="col-md-4" for="variety">Variations:</label>
               <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
-                <label class="custom-control-label p-2" for="customRadioInline1">1 Item</label>
+                <input type="radio" id="one" name="variety" class="custom-control-input form-check-input">
+                <label class="form-check-label custom-control-label" for="one">1 Item</label>
               </div>
               <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
-                <label class="custom-control-label p-2" for="customRadioInline2">2 Item</label>
+                <input type="radio" id="two" name="variety" class="custom-control-input form-check-input">
+                <label class="form-check-label custom-control-label" for="two">2 Items</label>
               </div>
               <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="customRadioInline3" name="customRadioInline1" class="custom-control-input">
-                <label class="custom-control-label p-2" for="customRadioInline3">None</label>
+                <input type="radio" id="none" name="variety" class="custom-control-input form-check-input">
+                <label class="form-check-label custom-control-label" for="none">None</label>
               </div>
             </div>
 
+
             <div class="form-group row">
-              <label class="col-md-6 p-2" for="name">JAN code:</label>
-              <input type="text" class="form-control col-md-6" id="name">
+              <label class="col-md-4 p-2" for="name">JAN code:</label>
+              <input type="text" class="form-control col-md-8" id="name">
             </div>
 
             <div class="form-group row">
-              <label class="col-md-6 p-2" for="name">Stock Quantity:</label>
+              <label class="col-md-4 p-2" for="name">Stock Quantity:</label>
               <input type="text" class="form-control col-md-3" id="name">
             </div>
 
-            <div class="form-group row">
-              <label class="col-md-4 p-2" for="name">Status:</label>
+            <div class="form-group row form-check form-check-inline">
+              <label class="col-md-4" for="status">Status:</label>
               <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="customRadioInline4" name="customRadioInline1" class="custom-control-input">
-                <label class="custom-control-label p-2" for="customRadioInline4">Published</label>
+                <input type="radio" id="published" name="status" class="custom-control-input form-check-input">
+                <label class="form-check-label custom-control-label" for="published">1 Item</label>
               </div>
-              <div class="custom-control custom-radio custom-control-inline col-md-4">
-                <input type="radio" id="customRadioInline5" name="customRadioInline2" class="custom-control-input">
-                <label class="custom-control-label p-2" for="customRadioInline5">Non Published</label>
+              <div class="custom-control custom-radio custom-control-inline col-md-2">
+                <input type="radio" id="non-published" name="status" class="custom-control-input form-check-input">
+                <label class="form-check-label custom-control-label" for="non-published">2 Items</label>
               </div>
+             
             </div>
 
             
             <div class="form-group row">
-              <label class="col-md-6" for="name">Published Date:</label>
+              <label class="col-md-4" for="opened_date">Published Date:</label>
 
-              <div class="col-md-6 input-group" id="datetimepicker">
-                <input type="date" class="form-control">
+              <div class="col-md-6 input-group" id="datetimepicker" style="padding-left: 0px;">
+                <input name="opened_date" type="date" class="form-control">
                 <div class="input-group-append">
                   <span class="input-group-text">
                     <i class="far">&#xf073;</i>
@@ -150,37 +155,37 @@
                   
                   
               </div>
-              <p class="text-danger">* Before the release date, it will not be published even if it is set to “Publish”.</p >
+              <p class="text-danger col-md-12" style="text-align: right; padding: 15px 20px 0">* Before the release date, it will not be published <br/> even if it is set to “Publish”.</p >
             </div>
 
             <div class="form-group row form-check form-check-inline">
-              <label class="col-md-5" for="name">Product COndition:</label>
+              <label class="col-md-4" for="is-used">Product COndition:</label>
               <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="customRadioInline4" name="customRadioInline1" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="customRadioInline4">New</label>
+                <input type="radio" id="new" name="is_used" class="custom-control-input form-check-input">
+                <label class="form-check-label custom-control-label" for="new">New</label>
               </div>
               <div class="custom-control custom-radio custom-control-inline col-md-4">
-                <input type="radio" id="customRadioInline5" name="customRadioInline2" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="customRadioInline5">Second Hand Goods</label>
+                <input type="radio" id="second-hand" name="is_used" class="custom-control-input form-check-input">
+                <label class="form-check-label custom-control-label" for="second-hand">Second Hand Goods</label>
               </div>
 
             </div>
 
             <div class="form-group row form-check form-check-inline">
-              <label class="col-md-5" for="name">For Sale:</label>
+              <label class="col-md-4" for="target">For Sale:</label>
               <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="customRadioInline4" name="customRadioInline1" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="customRadioInline4">All Users</label>
+                <input type="radio" id="all-users" name="target" class="custom-control-input form-check-input">
+                <label class="form-check-label custom-control-label" for="all-users">All Users</label>
               </div>
               <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="customRadioInline5" name="customRadioInline2" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="customRadioInline5">General Only</label>
+                <input type="radio" id="general-only" name="target" class="custom-control-input form-check-input">
+                <label class="form-check-label custom-control-label" for="general-only">General Only</label>
               </div>
               <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="customRadioInline5" name="customRadioInline2" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="customRadioInline5">Store Only</label>
+                <input type="radio" id="story-only" name="target" class="custom-control-input form-check-input">
+                <label class="form-check-label custom-control-label" for="story-only">Store Only</label>
               </div>
-              <p class="text-danger">* Displayed only to target users</p>
+              <p class="text-danger col-md-12" style="text-align: right; padding: 15px 20px 0">* Displayed only to target users</p>
             </div>
             
             
@@ -191,37 +196,31 @@
           <div class="col-md-5">
             <div class="form-group row">
               <label class="col-md-6 text-center p-2" for="price">General Price:</label>
-              <input type="text" class="form-control col-md-6" id="price">
+              <input name="price" type="text" class="form-control col-md-6" id="price">
               
             </div>
 
             <div class="form-group row">
-              <label class="col-md-6 text-center p-2" for="price">Store Price:</label>
-              <input type="text" class="form-control col-md-6" id="price">
+              <label class="col-md-6 text-center p-2" for="store_price">Store Price:</label>
+              <input name="store_price" type="text" class="form-control col-md-6" id="store_price">
               
             </div>
 
             <div class="form-group row">
-              <label class="col-md-6 text-center p-2" for="price">Store Price:</label>
-              <input type="text" class="form-control col-md-6" id="price">
-              
-            </div>
-
-            <div class="form-group row">
-              <label class="col-md-6 text-center p-2" for="price">Shipping:</label>
-              <input type="text" class="form-control col-md-6" id="price">
+              <label class="col-md-6 text-center p-2" for="shipping_fee">Shipping:</label>
+              <input name="shipping_fee" type="text" class="form-control col-md-6" id="shipping_fee">
               
             </div>
 
             <div class="form-group row">
               <label class="col-md-6 text-center p-2" for="price">PR Statement:</label>
-              <input type="text" class="form-control col-md-6" id="price">
+              <input name="pr" type="text" class="form-control col-md-6" id="pr">
               
             </div>
 
             <div class="form-group row">
-              <label class="col-md-6 text-center p-2" for="price">Product Description:</label>
-              <textarea class="form-control col-md-6" id="price" rows="6"></textarea>
+              <label class="col-md-6 text-center p-2" for="description">Product Description:</label>
+              <textarea name="description" class="form-control col-md-6" id="description" rows="6"></textarea>
               
             </div>
 
@@ -231,8 +230,8 @@
                   <span style="padding: 3px" class="input-group-text">Upload</span>
                 </div>
                 <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="inputGroupFile01">
-                  <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                  <input name="image" type="file" class="custom-file-input" id="image">
+                  <label class="custom-file-label" for="image">Choose file</label>
                 </div>
               </div>
               
