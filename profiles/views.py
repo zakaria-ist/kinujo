@@ -110,7 +110,7 @@ def profile_list(request):
     return render(request, 'profile_list.html')
 
 # @login_required
-def ProfileList__asJson(request, auth_type=None):
+def ProfileList__asJson(request):
     """
     Method to get profile list as JSON.
     """
@@ -119,10 +119,13 @@ def ProfileList__asJson(request, auth_type=None):
     start = request.GET['start']
     length = request.GET['length']
     search = request.GET['search[value]']
-    if auth_type == None:
-        auth_type = 1;
 
-    profile_list = Profile.objects.filter(authority_id__in=auth_type).order_by('authority_id')
+    auth_type = eval(request.GET.get('filter_str'))
+
+    profile_list = Profile.objects.filter(authority_id__in=auth_type, is_hidden=False).order_by('authority_id')
+    if 0 in auth_type:
+        profile_list = profile_list.filter(is_approved=False)
+        
     records_total = profile_list.count()
 
     if search:  # Filter data base on search
