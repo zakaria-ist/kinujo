@@ -53,13 +53,14 @@ urlpatterns = [
     # url(r'^policies/', include('policies.urls')),
     # url(r'^prefectures/', include('prefectures.urls')),
     # url(r'^products/', include('products.urls')),
-    # url(r'^profiles/', include('profiles.urls')),
+    url(r'^profiles/', include('profiles.urls')),
     # url(r'^salons/', include('salons.urls')),
     # url(r'^taxes/', include('taxes.urls')),
     url(r'^$', views.home_load, name='home_load'),
     url(r'^pass_reset/$', views.pass_reset, name='pass_reset'),
     url(r'^reset_password/$', views.reset_password, name='reset_password'),
-    url(r'^login/$', views.login_user, name='login_user'),
+    url(r'^master_login/$', views.login_master, name='login_master'),
+    url(r'^sales_login/$', views.login_sales, name='login_sales'),
     url(r'^logout/$', views.logout_user, name='logout_user'),
 ]
 urlpatterns += router.urls
