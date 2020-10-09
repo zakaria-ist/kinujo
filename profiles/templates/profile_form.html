@@ -203,8 +203,12 @@
                                             <label for="user_code" class="col-lg-2 col-sm-2 control-label">General WS</label>
                                             <div class="col-lg-4">
                                                 <select name="general_store" id="general_store" class="form-control trs-field sended">
-                                                    {% for store in store_list %}
-                                                    <option value="{{store.0}}" >{{store.1}}</option>
+                                                    {% for pr in store_list %}
+                                                        {% if profile.introducer_id == pr.id %}
+                                                            <option value="{{pr.id}}" selected>{{pr.nickname}}</option>
+                                                        {% else %}
+                                                            <option value="{{pr.id}}">{{pr.nickname}}</option>
+                                                        {% endif %}
                                                     {% endfor %}
                                                 </select>
                                             </div>

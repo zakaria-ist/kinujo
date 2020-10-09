@@ -214,11 +214,8 @@ def profile_add(request):
     else:
         form = ProfileForm()
     
-    store_list = [
-        ['1', 'Store A'],
-        ['2', 'Store B']
-    ]
-    profile_list = Profile.objects.all().values('id', 'nickname')
+    store_list = Profile.objects.filter(id_hidden=False, authority_id=2).values('id', 'nickname') #authority_id=2 ambassador
+    profile_list = Profile.objects.filter(id_hidden=False).values('id', 'nickname')
     return render(request, 'profile_form.html', {'form': form, 
                                                 'media_url': s.MEDIA_URL, 
                                                 'store_list': store_list,
@@ -284,11 +281,8 @@ def profile_edit(request, profile_id):
     profile = Profile.objects.get(pk=profile_id)
     form = ProfileForm(instance=profile)
     
-    store_list = [
-        ['1', 'Store A'],
-        ['2', 'Store B']
-    ]
-    profile_list = Profile.objects.all().values('id', 'nickname')
+    store_list = Profile.objects.filter(id_hidden=False, authority_id=2).exclude(id=profile_id).values('id', 'nickname') #authority_id=2 ambassador
+    profile_list = Profile.objects.filter(id_hidden=False).exclude(id=profile_id).values('id', 'nickname')
     return render(request, 'profile_form.html', {'form': form, 
                                                 'media_url': s.MEDIA_URL, 
                                                 'store_list': store_list,
