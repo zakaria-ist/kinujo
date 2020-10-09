@@ -31,7 +31,7 @@ class Order(models.Model):
 class OrderProduct(models.Model):
     product_jan_code = models.ForeignKey(ProductJancode, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    amount = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])
+    quantity = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])
     unit_price = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])
     total_price = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])
     tax = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])

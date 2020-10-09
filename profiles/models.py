@@ -39,6 +39,8 @@ class Profile(models.Model):
     address1 = models.CharField(max_length=255, default='')
     address2 = models.CharField(max_length=255, default='')
     corporate_name = models.CharField(max_length=255, default='')
+    corporate_tel = models.CharField(max_length=255, default='')
+    representative_name = models.CharField(max_length=255, default='')
     message_notification = models.BooleanField(default=False)
     other_notification = models.BooleanField(default=False)
     allowed_by_id = models.BooleanField(default=False)

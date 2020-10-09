@@ -9,6 +9,11 @@ SALON_TYPE = (
     ('STYLISTS', 2)
 )
 
+SALON_CATEGORY = (
+    (1, 'SALONS'),
+    (2, 'STYLISTS')
+)
+
 PRODUCT_VARIETY = (
     ('NONE', 0),
     ('HOROZONTAL', 1),

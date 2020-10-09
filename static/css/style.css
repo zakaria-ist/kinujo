@@ -3941,6 +3941,10 @@ table.sliders tr td {
     /*color: #b8bac6;*/
 }
 
+.pull-right {
+    float: right;
+    padding-top: 10px;
+}
 .pull-right.chat-features {
     margin-top: 10px;
 }

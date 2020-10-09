@@ -21,43 +21,43 @@
 {% endblock %}
 
 {% block content %}
-    <form class="form-horizontal" 
-        {% if profile.id %}
-        action="{% url 'profile_edit' profile.id %}" 
-        {% else %}
-        action="{% url 'profile_add' %}" 
-        {% endif %}
-        role="form" method="post" onsubmit="" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div id="content">
-            <header class="panel-heading" style="font-size: 25px; margin-bottom: 20px;" >
-                    Account Details
-            </header>
-            <ul id="tabs" class="nav nav-tabs" data-tabs="tabs" role="tablist"
-                style="padding-left: 20px; margin-left: 18px; margin-right: 24px;">
-                <li class="nav-item" id="basic_tab_li">
-                    <a href="#basic_tab" class="nav-link active" id="basic_tab_a" data-toggle="tab" role="tab" aria-controls="basic_tab" aria-selected="true">基本情報</a>
-                </li>
-                <li class="nav-item" id="item_tab_li">
-                    <a href="#item_tab" class="nav-link" id="item_tab_a" data-toggle="tab" role="tab" aria-controls="item_tab" aria-selected="false">出品一覧</a>
-                </li>
-                <li class="nav-item" id="client_tab_li">
-                    <a href="#client_tab" class="nav-link" id="client_tab_a" data-toggle="tab" role="tab" aria-controls="client_tab" aria-selected="false">顧客</a>
-                </li>
-                <li class="nav-item" id="account_info_tab_li">
-                    <a href="#account_info_tab" class="nav-link" id="account_info_a" data-toggle="tab" role="tab" aria-controls="account_info_tab" aria-selected="false">口座情報</a>
-                </li>
-                <li class="nav-item" id="sales_info_tab_li">
-                    <a href="#sales_info_tab" class="nav-link" id="sales_info_a" data-toggle="tab" role="tab" aria-controls="sales_info_tab" aria-selected="false">サロン情報</a>
-                </li>
-                <li class="nav-item" id="shipping_info_tab_li">
-                    <a href="#shipping_info_tab" class="nav-link" id="shipping_info_a" data-toggle="tab" role="tab" aria-controls="shipping_info_tab" aria-selected="false">送付先情報</a>
-                </li>
-            </ul>
-            <div class="table-section white-bg">
-                <div id="my-tab-content" class="tab-content">
-                    <div id="basic_tab" role="tabpanel"
-                        class="tab-pane active">
+    <div id="content">
+        <header class="panel-heading" style="font-size: 25px; margin-bottom: 20px;" >
+                Account Details
+        </header>
+        <ul id="tabs" class="nav nav-tabs" data-tabs="tabs" role="tablist"
+            style="padding-left: 20px; margin-left: 18px; margin-right: 24px;">
+            <li class="nav-item" id="basic_tab_li">
+                <a href="#basic_tab" class="nav-link active" id="basic_tab_a" data-toggle="tab" role="tab" aria-controls="basic_tab" aria-selected="true">基本情報</a>
+            </li>
+            <li class="nav-item" id="item_tab_li" style="display: none;">
+                <a href="#item_tab" class="nav-link" id="item_tab_a" data-toggle="tab" role="tab" aria-controls="item_tab" aria-selected="false">出品一覧</a>
+            </li>
+            <li class="nav-item" id="client_tab_li" style="display: none;">
+                <a href="#client_tab" class="nav-link" id="client_tab_a" data-toggle="tab" role="tab" aria-controls="client_tab" aria-selected="false">顧客</a>
+            </li>
+            <li class="nav-item" id="account_info_tab_li" style="display: none;">
+                <a href="#account_info_tab" class="nav-link" id="account_info_a" data-toggle="tab" role="tab" aria-controls="account_info_tab" aria-selected="false">口座情報</a>
+            </li>
+            <li class="nav-item" id="sales_info_tab_li" style="display: none;">
+                <a href="#sales_info_tab" class="nav-link" id="sales_info_a" data-toggle="tab" role="tab" aria-controls="sales_info_tab" aria-selected="false">サロン情報</a>
+            </li>
+            <li class="nav-item" id="shipping_info_tab_li" style="display: none;">
+                <a href="#shipping_info_tab" class="nav-link" id="shipping_info_a" data-toggle="tab" role="tab" aria-controls="shipping_info_tab" aria-selected="false">送付先情報</a>
+            </li>
+        </ul>
+        <div class="table-section white-bg">
+            <div id="my-tab-content" class="tab-content">
+                <div id="basic_tab" role="tabpanel"
+                    class="tab-pane active">
+                    <form class="form-horizontal" 
+                        {% if profile.id %}
+                        action="{% url 'profile_edit' profile.id %}" 
+                        {% else %}
+                        action="{% url 'profile_add' %}" 
+                        {% endif %}
+                        role="form" method="post" onsubmit="checkInput()" enctype="multipart/form-data">
+                        {% csrf_token %}
                         <section class="panel">
                             <header class="panel-heading" style="font-size: 25px">
                                 <strong>Profile</strong>
@@ -107,9 +107,7 @@
                                         </div>
                                         <label id="type_label" for="type" class="col-lg-2 col-sm-2 control-label">Type</label>
                                         <div class="col-lg-4" id="type_div">
-                                            <input class="form-control trs-field" type="text"
-                                                name="type"
-                                                id="type" placeholder="Salon Owner">
+                                            {{ form.salon_category|default_if_none:"" }}
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -152,10 +150,20 @@
                                         <div class="col-lg-4">
                                             {{ form.tel|default_if_none:"" }}
                                         </div>
-                                        <label for="password" class="col-lg-2 col-sm-2 control-label">Password<span
-                                                class="span-required">(*)</span></label>
+                                        <label for="password" class="col-lg-2 col-sm-2 control-label">Password</label>
                                         <div class="col-lg-4">
                                             {{ form.password|default_if_none:"" }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-lg-6">
+                                        </div>
+                                        <label for="password" class="col-lg-2 col-sm-2 control-label">Conf. Password</label>
+                                        <div class="col-lg-4">
+                                            <input class="form-control trs-field" type="password"
+                                                name="conf_pass"
+                                                id="conf_pass">
+                                            <span id="pass-error" class="span-required">If the password is blank it will not ne changed</span>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -179,7 +187,7 @@
                                             <label for="approval" class="col-lg-2 col-sm-2 control-label">Approval</label>
                                             <div class="col-lg-4">
                                                 <select name="approval" id="approval" class="form-control trs-field sended">
-                                                    {% if profile.is_seller %}
+                                                    {% if profile.is_approved %}
                                                         <option value="1" seleceted>Yes</option>
                                                         <option value="0">No</option>
                                                     {% else %}
@@ -212,9 +220,7 @@
                                             </div>
                                             <label for="representative_name" class="col-lg-2 col-sm-2 control-label">Representative Name</label>
                                             <div class="col-lg-4">
-                                                <input class="form-control trs-field" type="text"
-                                                    name="representative_name"
-                                                    id="representative_name" value={{profile.introducer.real_name}}>
+                                                {{ form.representative_name|default_if_none:"" }}
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -231,13 +237,11 @@
                                         <div class="form-group row">
                                             <label for="phone_number" class="col-lg-2 col-sm-2 control-label">Phone Number</label>
                                             <div class="col-lg-4">
-                                                <input class="form-control trs-field" type="text"
-                                                    name="phone_number"
-                                                    id="phone_number" value="">
+                                                {{ form.corporate_tel|default_if_none:"" }}
                                             </div>
                                         </div>
                                         <div class="form-group form-check text-left" style="margin-top: 30px;">
-                                            <input type="checkbox" class="form-check-input checkbox-2x" id="active" checked>
+                                            <input type="checkbox" class="form-check-input checkbox-2x" name="active_checkbox" id="active_checkbox" checked>
                                             <label class="form-check-label" for="active">Active</label>
                                         </div>
                                     </div>
@@ -250,46 +254,127 @@
                                 </div>
                             </div>
                         </section>
-                    </div>
-                    <div id="item_tab" class="tab-pane" role="tabpanel">
-                        <div class="col-sm-12">
-                            <section class="panel">
-                                
-                            </section>
+                    </form>
+                </div>
+                <div id="item_tab" class="tab-pane" role="tabpanel">
+                    <header class="panel-heading" style="font-size: 25px">
+                        <strong>Item Information</strong>
+                    </header>
+                    <div class="table-section white-bg">
+                        <div class="adv-table table-responsive">
+                            <table class="display table table-bordered table-striped table-condensed"
+                                id="item-table" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Type</th>
+                                    <th>Name</th>
+                                    <th>Number of store account</th>
+                                    <th>Number of general users</th>
+                                    <th class="text-center" style="min-width:90px!important;">Options</th>
+                                </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
-                    <div id="client_tab" class="tab-pane" role="tabpanel">
-                        <div class="col-sm-12">
-                            <section class="panel">
-                                
-                            </section>
+                </div>
+                <div id="client_tab" class="tab-pane" role="tabpanel">
+                    <header class="panel-heading" style="font-size: 25px">
+                        <strong>Client Information</strong>
+                    </header>
+                    <div class="form-group form-check text-center">
+                        <input type="checkbox" class="form-check-input checkbox-2x" id="general_check">
+                        <label class="form-check-label" for="general_check">General</label>
+                        <input type="checkbox" class="form-check-input checkbox-2x" id="store_check">
+                        <label class="form-check-label" for="store_check">Store</label>
+                    </div>
+                    <div class="form-group text-right">
+                        <strong>Customers Number: </strong>
+                    </div>
+                    <div class="table-section white-bg">
+                        <div class="adv-table table-responsive">
+                            <table class="display table table-bordered table-striped table-condensed"
+                                id="client-table" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Type</th>
+                                    <th>Name</th>
+                                    <th>Number of store account</th>
+                                    <th>Number of general users</th>
+                                    <th class="text-center" style="min-width:90px!important;">Options</th>
+                                </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
-                    <div id="account_info_tab" class="tab-pane" role="tabpanel">
-                        <div class="col-sm-12">
-                            <section class="panel">
-                                
-                            </section>
+                </div>
+                <div id="account_info_tab" class="tab-pane" role="tabpanel">
+                    <section class="panel">
+                        <header class="panel-heading pb-5" style="font-size: 25px">
+                            <strong>Account Information</strong>
+                        </header>
+                        <div class="col-lg-12">
+                            <div class="form-group row">
+                                <label for="bank_code" class="col-lg-3 control-label">Bank Code<span
+                                        class="span-required">(*)</span></label>
+                                <div class="col-lg-6">
+                                    {{ form.bank_code|default_if_none:"" }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="branch_code" class="col-lg-3 control-label">Branch Code</label>
+                                <div class="col-lg-6">
+                                    {{ form.branch_code|default_if_none:"" }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="account_type" class="col-lg-3 control-label">Account Type</label>
+                                <div class="col-lg-6">
+                                    {{ form.account_type|default_if_none:"" }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="account_number" class="col-lg-3 control-label">Account Number<span
+                                        class="span-required">(*)</span></label>
+                                <div class="col-lg-6">
+                                    {{ form.account_number|default_if_none:"" }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="account_holder" class="col-lg-3 control-label">Account Holder<span
+                                        class="span-required">(*)</span></label>
+                                <div class="col-lg-6">
+                                    {{ form.account_holder|default_if_none:"" }}
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row">
+                                <div class="text-center">
+                                    <button type="button" name="btnPaymentSave" id="btnPaymentSave" class="btn btn-primary blue-btn">Save</button>
+                                    <a class="btn btn-default gray-btn" href="{% url 'profile_list' %}">Cancel</a>
+                                </div>
+                            </div>
                         </div>
+                    </section>
+                </div>
+                <div id="sales_info_tab" class="tab-pane" role="tabpanel">
+                    <div class="col-sm-12">
+                        <section class="panel">
+                            
+                        </section>
                     </div>
-                    <div id="sales_info_tab" class="tab-pane" role="tabpanel">
-                        <div class="col-sm-12">
-                            <section class="panel">
-                                
-                            </section>
-                        </div>
-                    </div>
-                    <div id="shipping_info_tab_li" class="tab-pane" role="tabpanel">
-                        <div class="col-sm-12">
-                            <section class="panel">
-                                
-                            </section>
-                        </div>
+                </div>
+                <div id="shipping_info_tab_li" class="tab-pane" role="tabpanel">
+                    <div class="col-sm-12">
+                        <section class="panel">
+                            
+                        </section>
                     </div>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
     <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="delete-dialog"
          class="modal fade">
         <div class="modal-dialog modal-sm">
@@ -327,9 +412,17 @@
             }
         });
         
+        var profile_id = "{{profile.id}}";
 
         $(document).ready(function () {
-            
+            if (profile_id == '' || profile_id == undefined || profile_id == null) {
+                profile_id = '';
+                $('#id_password').prop('required', true);
+                $('#conf_pass').prop('required', true);
+            } else {
+                $('#id_authority').trigger('change');
+                $('#id_authority').prop('disabled', true);
+            }
             $('#selling_auth').select2({});
             $('#approval').select2({});
             $('#introducer').select2({
@@ -343,51 +436,173 @@
             $('#id_authority').select2({
                 placeholder: "Select Authority"
             });
+            $('#id_salon_category').select2({});
 
             $('#id_authority').trigger('change');
 
         });
 
+        $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+            var target = $(e.target).attr("href");
+            if ((target == '#item_tab')) {
+                loadItemTableData();
+            } if ((target == '#client_tab')) {
+                loadClientTableData();
+            }
+        });
+
+        function loadItemTableData() {
+            $('#item-table').DataTable().destroy();
+            $('#item-table').DataTable({
+                "order": [[2, "asc"]],
+                "serverSide": true,
+                "scrollX": true,
+                stateSave: true,
+                "ajax": {
+                    "url": "{% url 'ProfileList__asJson' %}",
+                    "data": {
+                        "filter_str": '[]'
+                    }
+                },
+                "columns": [
+                    {"data": "no", "orderable": false},
+                    {"data": "type", "orderable": false},
+                    {"data": "nickname", "orderable": false},
+                    {"data": "store_total", "orderable": false},
+                    {"data": "user_total", "orderable": false},
+                    
+                    {
+                        "sClass": "text-center",
+                        "orderable": false,
+                        "data": null,
+                        "render": function (data, type, row, meta) {
+                            var btn =
+                                    '<div class="btn-group">' +
+                                    '<a class="btn-group-item" href="../profile_edit/' + row.id + '/' + '"><i class="fas fa-pencil-alt fa-2x text-info"></i></a>' + 
+                                    '<a class="btn-group-item" onclick="deleteProfile(' + row.id + ')"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + 
+                                    '</div>';
+                            return btn;
+                        }
+                    }
+                ]
+            });
+        }
+
+        function loadClientTableData() {
+            $('#client-table').DataTable().destroy();
+            $('#client-table').DataTable({
+                "order": [[2, "asc"]],
+                "serverSide": true,
+                "scrollX": true,
+                stateSave: true,
+                "ajax": {
+                    "url": "{% url 'ProfileList__asJson' %}",
+                    "data": {
+                        "filter_str": '[]'
+                    }
+                },
+                "columns": [
+                    {"data": "no", "orderable": false},
+                    {"data": "type", "orderable": false},
+                    {"data": "nickname", "orderable": false},
+                    {"data": "store_total", "orderable": false},
+                    {"data": "user_total", "orderable": false},
+                    
+                    {
+                        "sClass": "text-center",
+                        "orderable": false,
+                        "data": null,
+                        "render": function (data, type, row, meta) {
+                            var btn =
+                                    '<div class="btn-group">' +
+                                    '<a class="btn-group-item" href="../profile_edit/' + row.id + '/' + '"><i class="fas fa-pencil-alt fa-2x text-info"></i></a>' + 
+                                    '<a class="btn-group-item" onclick="deleteProfile(' + row.id + ')"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + 
+                                    '</div>';
+                            return btn;
+                        }
+                    }
+                ]
+            });
+        }
+
+        function checkInput() {
+            $('#id_authority').prop('disabled', false);
+        }
+
+        $('#conf_pass').on('change', function(){
+            var pass = $('#id_password').val();
+            var conf_pass = $(this).val();
+            if (pass != conf_pass) {
+                $('#pass-error').text("Password doesn't match");
+                $('#btnSave').prop('dsabled', true);
+            } else {
+                $('#pass-error').text("");
+                $('#btnSave').prop('dsabled', false);
+            }
+        })
+
         $('#id_authority').on('change', function(){
-            if ($(this).val() == '1') { //master
-                $('#general_ws_div').css('display', 'none');
-                $('#introducer_div').css('display', 'none');
-                $('#approval_div').css('display', 'none');
-                $('#type_div').css('display', 'none');
-                $('#type_label').css('display', 'none');
-                $('#corporate_block').removeAttr('style');
-            }
-            else if ($(this).val() == '2') { //special
-                $('#general_ws_div').css('display', 'none');
-                $('#introducer_div').css('display', 'none');
-                $('#approval_div').css('display', 'none');
-                $('#type_div').css('display', 'none');
-                $('#type_label').css('display', 'none');
-                $('#corporate_block').removeAttr('style');
-            }
-            else if ($(this).val() == '3') { //ambassador
-                $('#general_ws_div').removeAttr('style');
-                $('#introducer_div').removeAttr('style');
-                $('#approval_div').css('display', 'none');
-                $('#type_div').css('display', 'none');
-                $('#type_label').css('display', 'none');
-                $('#corporate_block').removeAttr('style');
-            }
-            else if ($(this).val() == '4') { //store
-                $('#general_ws_div').css('display', 'none');
-                $('#type_div').removeAttr('style');
-                $('#type_label').removeAttr('style');
-                $('#introducer_div').removeAttr('style');
-                $('#approval_div').removeAttr('style');
-                $('#corporate_block').removeAttr('style');
-            }
-            else if ($(this).val() == '5') { //general
-                $('#general_ws_div').css('display', 'none');
-                $('#type_div').css('display', 'none');
-                $('#type_label').css('display', 'none');
-                $('#introducer_div').removeAttr('style');
-                $('#approval_div').css('display', 'none');
-                $('#corporate_block').css('display', 'none');
+            if (profile_id) {
+                if ($(this).val() == '1') { //master
+                    $('#general_ws_div').css('display', 'none');
+                    $('#introducer_div').css('display', 'none');
+                    $('#approval_div').css('display', 'none');
+                    $('#type_div').css('display', 'none');
+                    $('#type_label').css('display', 'none');
+                    $('#corporate_block').removeAttr('style');
+
+                    $('#item_tab_li').removeAttr('style');
+                }
+                else if ($(this).val() == '2') { //special
+                    $('#general_ws_div').css('display', 'none');
+                    $('#introducer_div').css('display', 'none');
+                    $('#approval_div').css('display', 'none');
+                    $('#type_div').css('display', 'none');
+                    $('#type_label').css('display', 'none');
+                    $('#corporate_block').removeAttr('style');
+                    
+                    $('#item_tab_li').removeAttr('style');
+                    $('#account_info_tab_li').removeAttr('style');
+                }
+                else if ($(this).val() == '3') { //ambassador
+                    $('#general_ws_div').removeAttr('style');
+                    //$('#introducer_div').removeAttr('style');
+                    $('#approval_div').css('display', 'none');
+                    $('#type_div').css('display', 'none');
+                    $('#type_label').css('display', 'none');
+                    $('#corporate_block').removeAttr('style');
+
+                    $('#item_tab_li').removeAttr('style');
+                    $('#client_tab_li').removeAttr('style');
+                    $('#account_info_tab_li').removeAttr('style');
+                }
+                else if ($(this).val() == '4') { //store
+                    $('#general_ws_div').css('display', 'none');
+                    $('#type_div').removeAttr('style');
+                    $('#type_label').removeAttr('style');
+                    $('#introducer_div').removeAttr('style');
+                    $('#approval_div').removeAttr('style');
+                    $('#corporate_block').removeAttr('style');
+
+                    $('#item_tab_li').removeAttr('style');
+                    $('#client_tab_li').removeAttr('style');
+                    $('#account_info_tab_li').removeAttr('style');
+                    $('#sales_info_tab_li').removeAttr('style');
+                    $('#shipping_info_tab_li').removeAttr('style');
+                }
+                else if ($(this).val() == '5') { //general
+                    $('#general_ws_div').css('display', 'none');
+                    $('#type_div').css('display', 'none');
+                    $('#type_label').css('display', 'none');
+                    $('#introducer_div').removeAttr('style');
+                    $('#approval_div').css('display', 'none');
+                    $('#corporate_block').css('display', 'none');
+
+                    $('#item_tab_li').removeAttr('style');
+                    $('#client_tab_li').removeAttr('style');
+                    $('#account_info_tab_li').removeAttr('style');
+                    $('#shipping_info_tab_li').removeAttr('style');
+                }
             }
         })
 

@@ -111,7 +111,10 @@
                 "scrollX": true,
                 stateSave: true,
                 "ajax": {
-                    "url": "{% url 'ProfileList__asJson' 1 %}"
+                    "url": "{% url 'ProfileList__asJson' %}",
+                    "data": {
+                        "filter_str": '[1, 3, 4, 5]'
+                    }
                 },
                 "columns": [
                     {"data": "no", "orderable": false},
@@ -143,6 +146,64 @@
         $("#comfirmDeleteProfileModal").modal("show");
         $("#comfirm-yes").attr("href", url);
     }
+
+    var filter_list = [];
+    $('input[type="checkbox"]').click(function(){
+        filter_list.length = 0;
+        if($('#ambassador_check').prop("checked") == true){
+            filter_list.push(3); // 3 is ambassador authority id 
+        }
+        if($('#store_check').prop("checked") == true){
+            filter_list.push(4); // 4 is store authority id 
+        }
+        if($('#general_check').prop("checked") == true){
+            filter_list.push(5); // 5 is general authority id 
+        }
+        if($('#master_check').prop("checked") == true){
+            filter_list.push(1); // 1 is master authority id 
+        }
+        if($('#unapproved_check').prop("checked") == true){
+            filter_list.push(0); // 0 is for unapproved user list
+        }
+
+        filter_str = JSON.stringify(filter_list);
+        console.log('filter_str', filter_str);
+
+        $('#dynamic-table').DataTable().destroy();
+        $('#dynamic-table').DataTable({
+            "order": [[2, "asc"]],
+            "serverSide": true,
+            "scrollX": true,
+            stateSave: true,
+            "ajax": {
+                "url": "{% url 'ProfileList__asJson' %}",
+                "data": {
+                    "filter_str": filter_str
+                }
+            },
+            "columns": [
+                {"data": "no", "orderable": false},
+                {"data": "type", "orderable": false},
+                {"data": "nickname", "orderable": false},
+                {"data": "store_total", "orderable": false},
+                {"data": "user_total", "orderable": false},
+                
+                {
+                    "sClass": "text-center",
+                    "orderable": false,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        var btn =
+                                '<div class="btn-group">' +
+                                '<a class="btn-group-item" href="../profile_edit/' + row.id + '/' + '"><i class="fas fa-pencil-alt fa-2x text-info"></i></a>' + 
+                                '<a class="btn-group-item" onclick="deleteProfile(' + row.id + ')"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + 
+                                '</div>';
+                        return btn;
+                    }
+                }
+            ]
+        });
+    });
 
     $(document).click(function (event) {
         //hide al‘l our dropdowns

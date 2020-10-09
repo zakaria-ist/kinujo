@@ -32,30 +32,74 @@ def reset_password(request):
     """
     Method to update new password.
     """
-    return render(request, 'login.html')
 
-def login_user(request):
+    if request.method == 'POST':
+        try:
+            username = request.POST.get('user_phone')
+            password = request.POST.get('new_pass')
+            user = User.objects.filter(username=username).first()
+            if user:
+                if password != '' and password != None:
+                    user.set_password(password)
+                    user.save()
+
+                    user = authenticate(username=username, password=password)
+                    if user is not None:
+                        login(request, user)
+                        return HttpResponsePermanentRedirect(reverse('home_load'))
+        except Exception as e:
+            print(e)
+
+    return render(request, 'password-reset.html')
+
+def login_master(request):
     """
-    Method to login.
+    Method to master login.
     """
-    if request.POST:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return HttpResponsePermanentRedirect(reverse('home_load'))
-        else:
-            return render(request, 'login.html')
-    else:
-        return render(request, 'login.html')
+
+    if request.method == 'POST':
+        try:
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return HttpResponsePermanentRedirect(reverse('home_load'))
+            else:
+                return render(request, 'master_login.html')
+        except Exception as e:
+            print(e)
+            return render(request, 'master_login.html')
+
+    return render(request, 'master_login.html')
+
+def login_sales(request):
+    """
+    Method to sales login.
+    """
+    
+    if request.method == 'POST':
+        try:
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return HttpResponsePermanentRedirect(reverse('home_load'))
+            else:
+                return render(request, 'sales_login.html')
+        except Exception as e:
+            print(e)
+            return render(request, 'sales_login.html')
+
+    return render(request, 'sales_login.html')
 
 def logout_user(request):
     """
     Method to logout.
     """
     logout(request)
-    return render(request, 'login.html')
+    return render(request, 'master_login.html')
 
 # @login_required
 def profile_list(request):
@@ -66,7 +110,7 @@ def profile_list(request):
     return render(request, 'profile_list.html')
 
 # @login_required
-def ProfileList__asJson(request, auth_type=None):
+def ProfileList__asJson(request):
     """
     Method to get profile list as JSON.
     """
@@ -75,10 +119,13 @@ def ProfileList__asJson(request, auth_type=None):
     start = request.GET['start']
     length = request.GET['length']
     search = request.GET['search[value]']
-    if auth_type == None:
-        auth_type = 1;
 
-    profile_list = Profile.objects.filter(authority_id__in=auth_type).order_by('authority_id')
+    auth_type = eval(request.GET.get('filter_str'))
+
+    profile_list = Profile.objects.filter(authority_id__in=auth_type, is_hidden=False).order_by('authority_id')
+    if 0 in auth_type:
+        profile_list = profile_list.filter(is_approved=False)
+        
     records_total = profile_list.count()
 
     if search:  # Filter data base on search
@@ -117,18 +164,22 @@ def ProfileList__asJson(request, auth_type=None):
     return HttpResponse(json_content, content_type='application/json')
 
 # @login_required
-def upload_profile_image(request):
-    if request.method == 'POST':
-        form = ImageUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            m = form.save(commit=False)
-            m.image = form.cleaned_data.get('profile_image')
-            m.save()
-            json_content = json.dumps({'image': m}, ensure_ascii=False)
-            return HttpResponse(json_content, content_type='application/json')
+# def upload_profile_image(request):
+#     if request.method == 'POST':
+#         form = ImageUploadForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             m = form.save(commit=False)
+#             m.image = form.cleaned_data.get('profile_image')
+#             m.save()
+#             json_content = json.dumps({'image': m}, ensure_ascii=False)
+#             return HttpResponse(json_content, content_type='application/json')
 
 # @login_required
 def profile_add(request):
+    """
+    Method to add new user profile.
+    """
+
     if request.method == 'POST':
         form = ProfileForm(request.POST)
         if form.is_valid:
@@ -138,6 +189,10 @@ def profile_add(request):
                 user.save()
                 profile = form.save(commit=False)
                 profile.user = user
+                if request.POST.get('selling_auth'):
+                    profile.is_seller = int(request.POST.get('selling_auth'))
+                if request.POST.get('approval'):
+                    profile.is_approved = int(request.POST.get('approval'))
                 profile.save()
 
                 profile_image = request.FILES.get('profile_image', False)
@@ -170,22 +225,32 @@ def profile_add(request):
 
 # @login_required
 def profile_edit(request, profile_id):
+    """
+    Method to edit a user profile.
+    """
+
     if request.method == 'POST':
         form = ProfileForm(request.POST)
         if form.is_valid:
             try:
                 user = User.objects.filter(username=request.POST.get('tel')).first()
                 if user:
-                    user.first_name = request.POST.get('user_code')
-                    user.set_password(request.POST.get('password'))
-                    user.save()
+                    if request.POST.get('password') != '' and request.POST.get('password') != None:
+                        user.first_name = request.POST.get('user_code')
+                        user.set_password(request.POST.get('password'))
+                        user.save()
                 else:
-                    user = User.objects.create_user(request.POST.get('tel'), 'test@test.com', request.POST.get('password'))
-                    user.first_name = request.POST.get('user_code')
-                    user.save()
+                    if request.POST.get('password') != '' and request.POST.get('password') != None:
+                        user = User.objects.create_user(request.POST.get('tel'), 'test@test.com', request.POST.get('password'))
+                        user.first_name = request.POST.get('user_code')
+                        user.save()
 
                 profile = form.save(commit=False)
                 profile.user = user
+                if request.POST.get('selling_auth'):
+                    profile.is_seller = int(request.POST.get('selling_auth'))
+                if request.POST.get('approval'):
+                    profile.is_approved = int(request.POST.get('approval'))
                 profile.save()
 
                 profile_image = request.FILES.get('profile_image', False)
@@ -200,6 +265,14 @@ def profile_edit(request, profile_id):
 
                     profile.image = new_image
                     profile.save()
+
+                    active = request.POST.get('active_checkbox', '') == 'on'
+                    if not active:
+                        profile.is_hidden = True
+                    
+                    profile.modified = datetime.datetime.now()
+                    profile.save()
+
                     return render(request, 'profile_list.html')
             except Exception as e:
                 print(e)
@@ -223,10 +296,14 @@ def profile_edit(request, profile_id):
 
 @login_required
 def profile_delete(request, profile_id):
+    """
+    Method to delete a user profile.
+    """
+
     try:
         profile = Profile.objects.get(pk=profile_id)
         profile.is_hidden = 1
-        profile.update_date = datetime.datetime.today()
+        profile.modified = datetime.datetime.now()
         profile.save()
     except Exception as e:
         print(e)
