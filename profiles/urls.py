@@ -7,5 +7,7 @@ urlpatterns = [
     url(r'^profile_add/$', views.profile_add, name='profile_add'),
     url(r'^profile_edit/(?P<profile_id>.*)/$', views.profile_edit, name='profile_edit'),
     url(r'^profile_delete/(?P<profile_id>.*)/$', views.profile_delete, name='profile_delete'),
+    url(r'^get_financial_info/$', views.get_financial_info, name='get_financial_info'),
+    url(r'^update_financial_info/$', views.update_financial_info, name='update_financial_info'),
     # url(r'^upload_profile_image/$', views.upload_profile_image, name='upload_profile_image'),
 ]

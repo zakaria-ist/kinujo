@@ -53,6 +53,21 @@ class Profile(models.Model):
     modified = models.DateTimeField(auto_now_add=True)
 
 
+class FinancialAccount(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    financial_name = models.CharField(max_length=100)
+    financial_code = models.CharField(max_length=4)
+    account_type = models.IntegerField(validators=[MaxValueValidator(9999)])
+    branch_code = models.CharField(max_length=3)
+    branch_name = models.CharField(max_length=100)
+    account_number = models.CharField(max_length=7)
+    account_name = models.CharField(max_length=100)
+
+    is_hidden = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
+
+
 class UserSale(models.Model):
     year = models.IntegerField()
     month = models.IntegerField()

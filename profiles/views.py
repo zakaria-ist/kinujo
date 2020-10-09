@@ -5,9 +5,10 @@ from django.template import RequestContext
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .forms import ProfileForm, ImageUploadForm
-from .models import Profile
+from .models import Profile, FinancialAccount
 from images.models import Image
 from django.conf import settings as s
 import datetime
@@ -308,3 +309,93 @@ def profile_delete(request, profile_id):
     except Exception as e:
         print(e)
     return render(request, 'profile_list.html')
+
+    
+# @login_required
+@csrf_exempt
+def get_financial_info(request):
+    """
+    Method get a user profile account information.
+    """
+
+    context = {
+        'bank_name': '',
+        'bank_code': '',
+        'account_type': '',
+        'branch_code': '',
+        'branch_name': '',
+        'account_holder': '',
+        'account_number': '',
+    }
+    if request.method == 'POST':
+        try:
+            profile_id = request.POST.get('profile_id')
+            financial_info = FinancialAccount.objects.filter(user_id=profile_id, is_hidden=False)
+            if financial_info:
+                financial_info = financial_info.last()
+                context = {
+                    'bank_name': str(financial_info.financial_name),
+                    'bank_code': str(financial_info.financial_code),
+                    'account_type': str(financial_info.account_type),
+                    'branch_code': str(financial_info.branch_code),
+                    'branch_name': str(financial_info.branch_name),
+                    'account_holder': str(financial_info.account_name),
+                    'account_number': str(financial_info.account_number),
+                }
+        except Exception as e:
+            print(e)
+
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+
+# @login_required
+@csrf_exempt
+def update_financial_info(request):
+    """
+    Method get a user profile account information.
+    """
+
+    message = 'Error'
+    if request.method == 'POST':
+        try:
+            profile_id = request.POST.get('profile_id')
+            bank_name = request.POST.get('bank_name')
+            bank_code = request.POST.get('bank_code')
+            branch_code = request.POST.get('branch_code')
+            branch_name = request.POST.get('branch_name')
+            account_holder = request.POST.get('account_holder')
+            account_number = request.POST.get('account_number')
+            account_type = int(request.POST.get('account_type'))
+
+            financial_info = FinancialAccount.objects.filter(user_id=profile_id, is_hidden=False)
+            if financial_info:
+                financial_info = financial_info.last()
+                financial_info.financial_name = bank_name
+                financial_info.financial_code = bank_code
+                financial_info.branch_code = branch_code
+                financial_info.branch_name = branch_name
+                financial_info.account_number = account_number
+                financial_info.account_name = account_holder
+                financial_info.account_type = account_type
+
+                financial_info.modified = datetime.datetime.now()
+                financial_info.save()
+            else:
+                financial_info = FinancialAccount()
+                financial_info.user_id = profile_id
+                financial_info.financial_name = bank_name
+                financial_info.financial_code = bank_code
+                financial_info.branch_code = branch_code
+                financial_info.branch_name = branch_name
+                financial_info.account_number = account_number
+                financial_info.account_name = account_holder
+                financial_info.account_type = account_type
+
+                financial_info.save()
+
+            message = 'Success'
+        except Exception as e:
+            print(e)
+
+    context = { 'message': message }
+    return HttpResponse(json.dumps(context), content_type="application/json")

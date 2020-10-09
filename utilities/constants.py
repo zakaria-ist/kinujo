@@ -4,6 +4,12 @@ GENDER_TYPE = (
     ('FEMALE', 2)
 )
 
+ACCOUNT_TYPE = (
+    (1, 'Normal'),
+    (2, 'Current'),
+    (3, 'Savings')
+)
+
 SALON_TYPE = (
     ('SALONS', 1),
     ('STYLISTS', 2)
