@@ -6422,3 +6422,7 @@ div.dataTables_wrapper div.dataTables_filter label {
     margin-left: 10px;
     margin-right: 10px;
 }
+
+.pointer { 
+    cursor: pointer; 
+}

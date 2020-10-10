@@ -171,6 +171,7 @@
                 placeholder: "Select Authority"
             });
             $('#id_salon_category').select2({});
+            $('#id_gender').select2({});
 
             $('#id_authority').trigger('change');
 
@@ -216,62 +217,71 @@
 
         // view filter according to authority
         $('#id_authority').on('change', function(){
-            if (profile_id) {
-                if ($(this).val() == '1') { //master
-                    $('#general_ws_div').css('display', 'none');
-                    $('#introducer_div').css('display', 'none');
-                    $('#approval_div').css('display', 'none');
-                    $('#type_div').css('display', 'none');
-                    $('#type_label').css('display', 'none');
-                    $('#corporate_block').removeAttr('style');
+            
+            if ($(this).val() == '1') { //master
+                $('#general_ws_div').css('display', 'none');
+                $('#introducer_div').css('display', 'none');
+                $('#approval_div').css('display', 'none');
+                $('#type_div').css('display', 'none');
+                $('#type_label').css('display', 'none');
+                $('#corporate_block').removeAttr('style');
 
+                if (profile_id) {
                     $('#item_tab_li').removeAttr('style');
                 }
-                else if ($(this).val() == '2') { //special
-                    $('#general_ws_div').css('display', 'none');
-                    $('#introducer_div').css('display', 'none');
-                    $('#approval_div').css('display', 'none');
-                    $('#type_div').css('display', 'none');
-                    $('#type_label').css('display', 'none');
-                    $('#corporate_block').removeAttr('style');
-                    
+            }
+            else if ($(this).val() == '2') { //special
+                $('#general_ws_div').css('display', 'none');
+                $('#introducer_div').css('display', 'none');
+                $('#approval_div').css('display', 'none');
+                $('#type_div').css('display', 'none');
+                $('#type_label').css('display', 'none');
+                $('#corporate_block').removeAttr('style');
+                
+                if (profile_id) {
                     $('#item_tab_li').removeAttr('style');
                     $('#account_info_tab_li').removeAttr('style');
                 }
-                else if ($(this).val() == '3') { //ambassador
-                    $('#general_ws_div').removeAttr('style');
-                    //$('#introducer_div').removeAttr('style');
-                    $('#approval_div').css('display', 'none');
-                    $('#type_div').css('display', 'none');
-                    $('#type_label').css('display', 'none');
-                    $('#corporate_block').removeAttr('style');
+            }
+            else if ($(this).val() == '3') { //ambassador
+                $('#general_ws_div').removeAttr('style');
+                //$('#introducer_div').removeAttr('style');
+                $('#approval_div').css('display', 'none');
+                $('#type_div').css('display', 'none');
+                $('#type_label').css('display', 'none');
+                $('#corporate_block').removeAttr('style');
 
+                if (profile_id) {
                     $('#item_tab_li').removeAttr('style');
                     $('#client_tab_li').removeAttr('style');
                     $('#account_info_tab_li').removeAttr('style');
                 }
-                else if ($(this).val() == '4') { //store
-                    $('#general_ws_div').css('display', 'none');
-                    $('#type_div').removeAttr('style');
-                    $('#type_label').removeAttr('style');
-                    $('#introducer_div').removeAttr('style');
-                    $('#approval_div').removeAttr('style');
-                    $('#corporate_block').removeAttr('style');
+            }
+            else if ($(this).val() == '4') { //store
+                $('#general_ws_div').css('display', 'none');
+                $('#type_div').removeAttr('style');
+                $('#type_label').removeAttr('style');
+                $('#introducer_div').removeAttr('style');
+                $('#approval_div').removeAttr('style');
+                $('#corporate_block').removeAttr('style');
 
+                if (profile_id) {
                     $('#item_tab_li').removeAttr('style');
                     $('#client_tab_li').removeAttr('style');
                     $('#account_info_tab_li').removeAttr('style');
                     $('#salon_info_tab_li').removeAttr('style');
                     $('#shipping_info_tab_li').removeAttr('style');
                 }
-                else if ($(this).val() == '5') { //general
-                    $('#general_ws_div').css('display', 'none');
-                    $('#type_div').css('display', 'none');
-                    $('#type_label').css('display', 'none');
-                    $('#introducer_div').removeAttr('style');
-                    $('#approval_div').css('display', 'none');
-                    $('#corporate_block').css('display', 'none');
+            }
+            else if ($(this).val() == '5') { //general
+                $('#general_ws_div').css('display', 'none');
+                $('#type_div').css('display', 'none');
+                $('#type_label').css('display', 'none');
+                $('#introducer_div').removeAttr('style');
+                $('#approval_div').css('display', 'none');
+                $('#corporate_block').css('display', 'none');
 
+                if (profile_id) {
                     $('#item_tab_li').removeAttr('style');
                     $('#client_tab_li').removeAttr('style');
                     $('#account_info_tab_li').removeAttr('style');
@@ -279,9 +289,6 @@
                 }
             }
         })
-
-
-        
 
     </script>
 {% endblock %}

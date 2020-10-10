@@ -135,8 +135,8 @@ function loadSalonTableData() {
                 "render": function (data, type, row, meta) {
                     var btn =
                             '<div class="btn-group">' +
-                            '<a class="btn-group-item" onclick="showSalonForm('+ row.id +')"><i class="fas fa-pencil-alt fa-2x text-info"></i></a>' + 
-                            '<a class="btn-group-item" onclick="deleteSalon(' + row.id + ')"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + 
+                            '<a class="btn-group-item pointer" onclick="showSalonForm('+ row.id +')"><i class="fas fa-pencil-alt fa-2x text-info"></i></a>' + 
+                            '<a class="btn-group-item pointer" onclick="deleteSalon(' + row.id + ')"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + 
                             '</div>';
                     return btn;
                 }

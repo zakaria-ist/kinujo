@@ -574,3 +574,20 @@ def ShippingList__asJson(request):
     content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
     json_content = json.dumps(content, ensure_ascii=False)
     return HttpResponse(json_content, content_type='application/json')
+
+
+def validate_user_phone(request, profile_id):
+    """
+    Method to delete a shipping info.
+    """
+
+    message = 'Error'
+    try:
+        user = User.objects.filter(username=profile_id).first()
+        if user:
+            message = 'Success'
+    except Exception as e:
+        print(e)
+
+    context = { 'message': message }
+    return HttpResponse(json.dumps(context), content_type="application/json")
