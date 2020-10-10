@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load i18n %}
 <html lang="en">
 <head>
   <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,7 +52,7 @@
                         <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu extended logout">
-                        <li><a href="{% url 'logout_user' %}"><i class="fa fa-key"></i> Log Out</a></li>
+                        <li><a href="{% url 'logout_user' %}"><i class="fa fa-key"></i>{% trans 'Log Out' %}</a></li>
                     </ul>
                 </li>
                 <!-- user login dropdown end -->
@@ -69,34 +70,34 @@
                 <li class="sub-menu">
                     <a href="{% url 'home_load' %}" class="{% block dashboard_a_active %}{% endblock %}">
                         <img src="{% static 'img/dashboard_icon.png' %}" class="mr-2 {% block dashboard_i_active %}{% endblock %}"></img>
-                        Dashboard
+                        {% trans 'Dashboard' %}
                     </a>
                 </li>
                 <li class="sub-menu">
                     <a href="javascript:;" class="{% block account_a_active %}{% endblock %}">
                         <i class="far fa-user fa-2x {% block account_i_active %}{% endblock %}"></i>
-                        アカウント管理
+                        {% trans 'account management' %}
                     </a>
                     <ul class="sub">
                         <li class="{% block account_list_active %}{% endblock %}">
-                            <a href="{% url 'profile_list' %}" >アカウント一覧</a>
+                            <a href="{% url 'profile_list' %}" >{% trans 'Account list' %}</a>
                         </li>
                         <li class="{% block account_add_active %}{% endblock %}">
-                            <a href="{% url 'profile_add' %}">アカウント登録</a>
+                            <a href="{% url 'profile_add' %}">{% trans 'Account registration' %}</a>
                         </li>
                     </ul>
                 </li>
                 <li class="sub-menu">
                     <a href="javascript:;" class="{% block sales_a_active %}{% endblock %}">
                         <i class="fas fa-dollar-sign fa-2x {% block sales_i_active %}{% endblock %}"></i>
-                        売上管理
+                        {% trans 'Sales management' %}
                     </a>
                     <ul class="sub">
                         <li class="{% block sales_list_active %}{% endblock %}">
-                            <a href="{% url 'home_load' %}" >売上一覧</a>
+                            <a href="{% url 'home_load' %}" >{% trans 'Sales list' %}</a>
                         </li>
                         <li class="{% block sales_add_active %}{% endblock %}">
-                            <a href="{% url 'home_load' %}">支払一覧</a>
+                            <a href="{% url 'home_load' %}">{% trans 'Payment list' %}</a>
                         </li>
                     </ul>
                 </li>

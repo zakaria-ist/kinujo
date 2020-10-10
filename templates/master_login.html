@@ -4,6 +4,7 @@
   <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     {% load static %}
+    {% load i18n %}
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}"/>
@@ -27,11 +28,10 @@
 <body class="login-body">
 
 <div class="container">
-
     <form class="form-signin" action="/master_login/" method="post" id="login_form">
         {% csrf_token %}
         <h2 class="form-signin-heading">KINUJO</h2>
-        <div class="text-center"><p>管理システム</p></viv>
+        <div class="text-center"><p>{% trans "Management system" %}</p></viv>
         <p class="login-wrap">
             <input type="tel" class="form-control" placeholder="+12345678" name="username" id="username" autofocus required autocomplete="off"> 
             <input type="password" class="form-control" placeholder="パスワード" name="password" required autocomplete="off">
@@ -39,7 +39,7 @@
             <div class="forget_pass text-center">
                 <label class="checkbox">
                     <span class="pull-right" style="">
-                        <a href="{% url 'pass_reset' %}">パスワードを忘れた</a>
+                        <a href="{% url 'pass_reset' %}">{% trans "I forgot the password"%}</a>
                     </span>
                 </label>
             </div>
