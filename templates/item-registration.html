@@ -94,6 +94,7 @@
           transform: translate(-50%, -50%);
           -ms-transform: translate(-50%, -50%);
           text-align: center;
+          height: 100%;
         }
 
         .img-container:hover .image {
@@ -106,15 +107,38 @@
 
         .rmv-img-btn {
           background-color: rgba(255, 255, 255, .7);
-          color: #444;
           font-size: 16px;
           padding: 6px;
           cursor: pointer;
+          height: 100%;
         }
         .img-h {
-          height: 70%;
-          align-content: center;
+          
+          margin-right: -19px;
         }
+        .img-input{
+          font-size: 2rem;
+          padding: 15px 0;
+          color: #999;
+          background-color: #e0e2e3;
+          border-color: #babfc4;
+          width: 100px;
+          margin-left: 15px;
+        }
+        .img-input:hover{
+          background-color: #007bff ;
+          color: #fff;
+          border: 1px solid steelblue;
+        }
+
+        #oneItemVariant input, #oneItemVariant label{
+          margin: 5px 5px;
+         
+        }
+        .form-inline label {
+          justify-content: left;
+        }
+        
       </style>
 
   </head>
@@ -198,13 +222,13 @@
 
             
             <div class="form-group row">
-              <label class="col-md-4 p-2" for="opened_date">Published Date:</label>
+              <label class="col-md-4 m-2" for="opened_date">Published Date:</label>
 
               <div class="col-md-6 input-group" id="datetimepicker" style="padding-left: 0px;">
                 <input name="opened_date" type="date" class="form-control">
                 <div class="input-group-append">
                   <span class="input-group-text">
-                    <i class="far">&#xf073;</i>
+                    <i class="far">&#xf073;</i> 
                   </span>
                 </div>
                 
@@ -287,8 +311,8 @@
             <div id="img-wrapper" class="row" style=" margin: 150px 0 0 0;">
               <div class="col-md-4">
                 <div class="row img-h">
-                  <label for="file" id="add-img-btn-0" class="btn btn-secondary text-center col-md-12" style="margin-left: 70px; margin-right: 70px;"  onclick="document.getElementById('file').click()">
-                    Add a image 
+                  <label for="file" id="add-img-btn-0" class="btn btn-secondary text-center col-md-12 img-input" style="margin-left: 70px; margin-right: 70px;"  onclick="document.getElementById('file').click()">
+                    + 
                     <input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)"  style="display: none">
                   </label>
                   <div class="col-md-12 img-container" id="images-0">
@@ -297,6 +321,28 @@
               </div>
             </div>
           </div>
+
+          <!--MAx 5 error message-->
+          <button id="max-img-btn" style="display: none;" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Error Max Images</button>
+          <!-- Max image Error message modal -->
+          <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-sm" style="margin-left: auto !important">
+              <div class="modal-content">
+                <div class="modal-header" style="border-bottom: 0px;">
+                  
+                  <p class="modal-title text-danger text-center" style="width: 100%;">Warning!</p>
+                  <button type="button" class="close" data-dismiss="modal" style="width: 100%;">&times;</button>
+                </div>
+                <div class="modal-body">
+                  <p class="text-danger">Maximum of 5 images are allowed only.</p>
+                </div>
+                <div class="modal-footer" style="border-top: 0px;">
+                  <button type="button" class="btn btn-default body1" data-dismiss="modal" style="margin: 0 auto;font-size: 0.80rem;">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <!--Ends left side inputs-->
           
           <div class="col-md-6">
@@ -308,8 +354,63 @@
     </div>
 
 
-    <!-- starts --Modal for variant -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- starts --Modal for 1 item variant -->
+    <div class="modal fade" id="oneItemVariant" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header" style="border-bottom: 0px;">
+            <h6 class="modal-title font-weight-bold" id="exampleModalLabel">Variation item registration</h6>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form class="form-inline">
+              <div class="form-group">
+                <label for="title" class="col-form-label">Title:</label>
+                <input type="text" class="form-control" id="title" placeholder="Color, Size, etc">
+              </div>
+              <div class="form-group">
+                <p style="width: 50px;" class="m-2"> </p>
+                <label for="message-text" class="col-form-label" style="width: 200px;">Choices:</label>
+                <label for="message-text" class="col-form-label" style="width: 100px;">JAN Code:</label>
+                <label for="message-text" class="col-form-label" style="width: 50px;">Stock:</label>
+                <p class="m-2" style="width: 50px;"> </p>
+              </div>
+              <div class="form-group">
+                <p class="m-2" style="width: 20px;">1</p>
+                <input type="text" class="form-control" id="message-text" placeholder="" style="width: 200px;">
+                
+                <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
+                
+                <input type="text" class="form-control" id="message-text" placeholder="" style="width: 50px;">
+                <p class="m-2" style="width: 10px; cursor: pointer;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode)"><i class="fas fa-trash-alt" style="color: #9f111f;"></i> </p>
+              </div>
+              <div id="oneItemGroup">
+                <div class="form-group">
+                  <p class="m-2" style="width: 20px;">2</p>
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 200px;">
+                  
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
+                  
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 50px;">
+                  <p class="m-2" style="width: 10px; cursor: pointer;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode)"><i class="fas fa-trash-alt" style="color: #9f111f;"></i> </p>
+                </div>
+              </div>
+
+              <div style="width: 100%;" class="text-left"><p id="addToOneItemVariant" class="btn btn-primary">+</p></div>
+            </form>
+          </div>
+          <div class="modal-footer" style="border-top: 0px;">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- starts --Modal for 2 items variant -->
+    <div class="modal fade" id="twoItemsVariant" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -355,9 +456,9 @@
     const image = document.getElementById(`images-${counter}`);
 
     if(imgWrapper.childElementCount < 6){ 
-      image.innerHTML = `<img class="images" src="${URL.createObjectURL(event.target.files[0])}" width="100" /> 
+      image.innerHTML = `<img class="images" src="${URL.createObjectURL(event.target.files[0])}" width="120" /> 
                   <div class="overlay">
-                    <div onClick="this.parentNode.parentNode.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode.parentNode.parentNode)" class="rmv-img-btn">Remove</div>
+                    <div onClick="this.parentNode.parentNode.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode.parentNode.parentNode)" class="rmv-img-btn"><i class="fas fa-trash-alt" style="margin-top: 22%;margin-left: 10%; color: #9f111f;"></i> </div>
                   </div>
       `;
       addImgBtn.style.display = 'none';
@@ -365,14 +466,15 @@
       //increase counter for next
       counter ++;
       
-      imgWrapper.innerHTML += `<div class="col-md-4"><div class="row img-h"><label for="file" id="add-img-btn-${counter}" class="btn btn-secondary text-center col-md-12" onclick="document.getElementById('file-${counter}').click()">
-                  Add a image 
+      imgWrapper.innerHTML += `<div class="col-md-4"><div class="row img-h"><label for="file" id="add-img-btn-${counter}" class="btn btn-secondary text-center col-md-12 img-input" onclick="document.getElementById('file-${counter}').click()">
+                  + 
                   <input type="file"  accept="image/*" name="image" id="file-${counter}"  onchange="loadFile(event)" style="display: none">
                 </label>
                 <div class="col-md-12 img-container" id="images-${counter}"> </div> </div></div>` 
     } else{
       document.getElementById(`file-${counter}`).value='';
       console.log(document.getElementById(`file-${counter}`).value);
+      document.getElementById('max-img-btn').click();
     }
 
     
@@ -397,12 +499,12 @@
 
     one.addEventListener('click', (event)=> {
       // event.preventDefault();
-      varietyContent.innerHTML = `<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="Add 1 variant">+ Item / Option</button>`;
+      varietyContent.innerHTML = `<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#oneItemVariant">+ Item / Option</button>`;
     })
 
     two.addEventListener('click', (event)=> {
       // event.preventDefault();
-      varietyContent.innerHTML = `<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="Add 2 variants">+ Items / Options</button>`;
+      varietyContent.innerHTML = `<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#twoItemsVariant">+ Items / Options</button>`;
     })
 
     none.addEventListener('click', (event)=> {
@@ -411,16 +513,42 @@
     })
 
 
-    //modal for variant
-    $('#exampleModal').on('show.bs.modal', function (event) {
+    //modal for i item variant
+    $('#oneItemsVariant').on('show.bs.modal', function (event) {
+  // var button = $(event.relatedTarget) // Button that triggered the modal
+  // var recipient = button.data('whatever') // Extract info from data-* attributes
+  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+  // var modal = $(this)
+  // modal.find('.modal-title').text(recipient)
+  // modal.find('.modal-body input').val(recipient)
+  })
+  //modal for 2 items variable
+    $('#twoItemsVariant').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget) // Button that triggered the modal
   var recipient = button.data('whatever') // Extract info from data-* attributes
   // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
   // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-  var modal = $(this)
-  modal.find('.modal-title').text(recipient)
-  modal.find('.modal-body input').val(recipient)
-})
+  // var modal = $(this)
+  // modal.find('.modal-title').text(recipient)
+  // modal.find('.modal-body input').val(recipient)
+  })
+
+  //one item variant code for adding more option
+  let optCounter = 3
+  document.getElementById('addToOneItemVariant').addEventListener('click', ()=>{
+    document.getElementById('oneItemGroup').innerHTML += `<div class="form-group">
+                  <p class="m-2" style="width: 20px;">${optCounter}</p>
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 200px;">
+                  
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
+                  
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 50px;">
+                  <p class="m-2" style="width: 10px; cursor: pointer;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode)"><i class="fas fa-trash-alt" style="color: #9f111f;"></i> </p>
+                </div>`;
+    optCounter++;
+  })
+
     //ends variant code
   
 
