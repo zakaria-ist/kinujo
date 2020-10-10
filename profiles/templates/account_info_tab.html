@@ -1,0 +1,89 @@
+<section class="panel">
+    <header class="panel-heading pb-5" style="font-size: 25px">
+        <strong>Account Information</strong>
+    </header>
+    <div class="col-lg-12">
+        <div class="form-group row">
+            <label for="bank_code" class="col-lg-2 control-label">Bank Code<span
+                    class="span-required">(*)</span></label>
+            <div class="col-lg-6">
+                <input class="form-control trs-field" type="text"
+                    name="bank_code"
+                    id="bank_code"
+                    maxlength="4"
+                    placeholder="code">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="bank_name" class="col-lg-2 control-label">Bank Name<span
+                    class="span-required">(*)</span></label>
+            <div class="col-lg-6">
+                <input class="form-control trs-field" type="text"
+                    name="bank_name"
+                    id="bank_name"
+                    placeholder="Bank Name">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="branch_code" class="col-lg-2 control-label">Branch Code<span
+                    class="span-required">(*)</span></label>
+            <div class="col-lg-6">
+                <input class="form-control trs-field" type="text"
+                    name="branch_code"
+                    id="branch_code"
+                    maxlength="3"
+                    placeholder="123">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="branch_name" class="col-lg-2 control-label">Branch Name<span
+                    class="span-required">(*)</span></label>
+            <div class="col-lg-6">
+                <input class="form-control trs-field" type="text" readonly
+                    name="branch_name"
+                    id="branch_name"
+                    placeholder="Branch Name">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="account_type" class="col-lg-2 control-label">Account Type<span
+                    class="span-required">(*)</span></label>
+            <div class="col-lg-6">
+                <select name="account_type" id="account_type" class="form-control trs-field">
+                    <option value="0">Normal</option>
+                    <option value="1">Current</option>
+                    <option value="2">Savings</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="account_number" class="col-lg-2 control-label">Account Number<span
+                    class="span-required">(*)</span></label>
+            <div class="col-lg-6">
+                <input class="form-control trs-field" type="text"
+                    name="account_number"
+                    id="account_number"
+                    maxlength="7"
+                    placeholder="1234567">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="account_holder" class="col-lg-2 control-label">Account Holder<span
+                    class="span-required">(*)</span></label>
+            <div class="col-lg-6">
+                {{ form.account_holder|default_if_none:"" }}
+                <input class="form-control trs-field" type="text"
+                    name="account_holder"
+                    id="account_holder"
+                    placeholder="Account Hoder name">
+            </div>
+        </div>
+        
+        <div class="form-group row">
+            <div class="text-center">
+                <button type="button" name="btnPaymentSave" id="btnPaymentSave" class="btn btn-primary blue-btn">Save</button>
+                <a class="btn btn-default gray-btn" href="{% url 'profile_list' %}">Cancel</a>
+            </div>
+        </div>
+    </div>
+</section>

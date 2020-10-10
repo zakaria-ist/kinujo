@@ -314,95 +314,7 @@
                     </div>
                 </div>
                 <div id="account_info_tab" class="tab-pane" role="tabpanel">
-                    <section class="panel">
-                        <header class="panel-heading pb-5" style="font-size: 25px">
-                            <strong>Account Information</strong>
-                        </header>
-                        <div class="col-lg-12">
-                            <div class="form-group row">
-                                <label for="bank_code" class="col-lg-3 control-label">Bank Code<span
-                                        class="span-required">(*)</span></label>
-                                <div class="col-lg-6">
-                                    <input class="form-control trs-field" type="text"
-                                        name="bank_code"
-                                        id="bank_code"
-                                        maxlength="4"
-                                        placeholder="code">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="bank_name" class="col-lg-3 control-label">Bank Name<span
-                                        class="span-required">(*)</span></label>
-                                <div class="col-lg-6">
-                                    <input class="form-control trs-field" type="text"
-                                        name="bank_name"
-                                        id="bank_name"
-                                        placeholder="Bank Name">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="branch_code" class="col-lg-3 control-label">Branch Code<span
-                                        class="span-required">(*)</span></label>
-                                <div class="col-lg-6">
-                                    <input class="form-control trs-field" type="text"
-                                        name="branch_code"
-                                        id="branch_code"
-                                        maxlength="3"
-                                        placeholder="123">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="branch_name" class="col-lg-3 control-label">Branch Name<span
-                                        class="span-required">(*)</span></label>
-                                <div class="col-lg-6">
-                                    <input class="form-control trs-field" type="text" readonly
-                                        name="branch_name"
-                                        id="branch_name"
-                                        placeholder="Branch Name">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="account_type" class="col-lg-3 control-label">Account Type<span
-                                        class="span-required">(*)</span></label>
-                                <div class="col-lg-6">
-                                    <select name="account_type" id="account_type" class="form-control trs-field">
-                                        <option value="0">Normal</option>
-                                        <option value="1">Current</option>
-                                        <option value="2">Savings</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="account_number" class="col-lg-3 control-label">Account Number<span
-                                        class="span-required">(*)</span></label>
-                                <div class="col-lg-6">
-                                    <input class="form-control trs-field" type="text"
-                                        name="account_number"
-                                        id="account_number"
-                                        maxlength="7"
-                                        placeholder="1234567">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="account_holder" class="col-lg-3 control-label">Account Holder<span
-                                        class="span-required">(*)</span></label>
-                                <div class="col-lg-6">
-                                    {{ form.account_holder|default_if_none:"" }}
-                                    <input class="form-control trs-field" type="text"
-                                        name="account_holder"
-                                        id="account_holder"
-                                        placeholder="Account Hoder name">
-                                </div>
-                            </div>
-                            
-                            <div class="form-group row">
-                                <div class="text-center">
-                                    <button type="button" name="btnPaymentSave" id="btnPaymentSave" class="btn btn-primary blue-btn">Save</button>
-                                    <a class="btn btn-default gray-btn" href="{% url 'profile_list' %}">Cancel</a>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+                    {% include 'account_info_tab.html' %}
                 </div>
                 <div id="sales_info_tab" class="tab-pane" role="tabpanel">
                     <div class="col-sm-12">
@@ -450,6 +362,7 @@
     <script type="text/javascript" src="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.js' %}"></script>
     <script src="https://zipaddr.github.io/bankautob.js" charset="UTF-8"> </script>
     <script src="{% static "js/select2/select2.js" %}"></script>
+    <script src="{% static "js/profile/financial.js" %}"></script>
     
     <script type="text/javascript">
         $(document).on('keyup', '.select2-selection.select2-selection--single', function (e) {
@@ -489,49 +402,6 @@
 
         });
 
-        // Update user's financial info 
-        $('#btnPaymentSave').on('click', function() {
-            $.ajax({
-                method: "POST",
-                url: '/profiles/update_financial_info/',
-                dataType: 'JSON',
-                data: {
-                    'profile_id': profile_id,
-                    'bank_name': $('#bank_name').val(),
-                    'bank_code': $('#bank_code').val(),
-                    'branch_name': $('#branch_name').val(),
-                    'branch_code': $('#branch_code').val(),
-                    'account_holder': $('#account_holder').val(),
-                    'account_number': $('#account_number').val(),
-                    'account_type': $('#account_type').val(),
-                },
-                success: function (json) {
-                    $.confirm({
-                        title: 'Update Successfull',
-                        content: 'Account information is updated.',
-                        buttons: {
-                            Ok: {
-                                btnClass: 'btn-success',
-                                action: function(){}
-                                }
-                            }
-                    });
-                },
-                error: function (e) {
-                    $.confirm({
-                        title: 'Error',
-                        content: e.message,
-                        buttons: {
-                            Ok: {
-                                btnClass: 'btn-success',
-                                action: function(){}
-                                }
-                            }
-                    });
-                }
-            });
-        })
-
         // Detect tab change event
         $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
             var target = $(e.target).attr("href");
@@ -540,25 +410,11 @@
             } else if ((target == '#client_tab')) {
                 loadClientTableData();
             } else if ((target == '#account_info_tab')) {
-                $('#account_type').select2({});
-                $.ajax({
-                    method: "POST",
-                    url: '/profiles/get_financial_info/',
-                    dataType: 'JSON',
-                    data: {
-                        'profile_id': profile_id,
-                    },
-                    success: function (json) {
-                        console.log(json);
-                        $('#bank_name').val(json.bank_name);
-                        $('#bank_code').val(json.bank_code);
-                        $('#branch_name').val(json.branch_name);
-                        $('#branch_code').val(json.branch_code);
-                        $('#account_holder').val(json.account_holder);
-                        $('#account_number').val(json.account_number);
-                        $('#account_type').val(json.account_type).trigger('change');
-                    }
-                });
+                if (!$('#account_type').data('select2')) {
+                    //$('#account_type').select2('destroy');
+                    $('#account_type').select2({});
+                }
+                load_financial_info();
             }
         });
 
