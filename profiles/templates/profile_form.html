@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.css' %}"/>
 {% endblock %}
 
-{% block title %}Account Add{% endblock %}
+{% block title %}Profile Add/Edit{% endblock %}
 
 {% block account_a_active %}
     active
@@ -23,7 +23,7 @@
 {% block content %}
     <div id="content">
         <header class="panel-heading" style="font-size: 25px; margin-bottom: 20px;" >
-                Account Details
+                Profile Details
         </header>
         <ul id="tabs" class="nav nav-tabs" data-tabs="tabs" role="tablist"
             style="padding-left: 20px; margin-left: 18px; margin-right: 24px;">
@@ -39,8 +39,8 @@
             <li class="nav-item" id="account_info_tab_li" style="display: none;">
                 <a href="#account_info_tab" class="nav-link" id="account_info_a" data-toggle="tab" role="tab" aria-controls="account_info_tab" aria-selected="false">口座情報</a>
             </li>
-            <li class="nav-item" id="sales_info_tab_li" style="display: none;">
-                <a href="#sales_info_tab" class="nav-link" id="sales_info_a" data-toggle="tab" role="tab" aria-controls="sales_info_tab" aria-selected="false">サロン情報</a>
+            <li class="nav-item" id="salon_info_tab_li" style="display: none;">
+                <a href="#salon_info_tab" class="nav-link" id="salon_info_a" data-toggle="tab" role="tab" aria-controls="salon_info_tab" aria-selected="false">サロン情報</a>
             </li>
             <li class="nav-item" id="shipping_info_tab_li" style="display: none;">
                 <a href="#shipping_info_tab" class="nav-link" id="shipping_info_a" data-toggle="tab" role="tab" aria-controls="shipping_info_tab" aria-selected="false">送付先情報</a>
@@ -50,290 +50,28 @@
             <div id="my-tab-content" class="tab-content">
                 <div id="basic_tab" role="tabpanel"
                     class="tab-pane active">
-                    <form class="form-horizontal" 
-                        {% if profile.id %}
-                        action="{% url 'profile_edit' profile.id %}" 
-                        {% else %}
-                        action="{% url 'profile_add' %}" 
-                        {% endif %}
-                        role="form" method="post" onsubmit="checkInput()" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <section class="panel">
-                            <header class="panel-heading" style="font-size: 25px">
-                                <strong>Profile</strong>
-                            </header>
-                            <div class="row">
-                                <div class="col-lg-4" style="margin-top: 4%">
-                                    <div class="form-group">
-                                        {# Profile Image #}
-                                        <label class="control-label col-lg-12 col-sm-12">Profile Image</label>
-                                        <div class="col-md-8">
-                                            <div class="fileupload fileupload-new" data-provides="fileupload">
-                                                <div class="fileupload-new thumbnail" style="width: 300px; height: 300px;">
-                                                    {% if profile.image_id %}
-                                                        <img src="{{ profile.image.image.url }}" alt="" name="profile_image"/>
-                                                    {% else %}
-                                                        <img src="{% static 'img/blank_male.png' %}" alt="" name="profile_image"/>
-                                                    {% endif %}
-                                                </div>
-                                                <div class="fileupload-preview fileupload-exists thumbnail"
-                                                    style="max-width: 300px; max-height: 300px; line-height: 20px;"></div>
-                                                <div class="text-right">
-                                                    <span class="btn btn-white btn-file">
-                                                        <span class="fileupload-new"><i class="fas fa-pencil-alt fa-2x"></i></span>
-                                                        <span class="fileupload-exists"><i class="fas fa-undo fa-2x"></i></span>
-                                                        <input name="profile_image" type="file" class="default"/>
-                                                    </span>
-                                                    <a href="javascript:void(0)" class="btn btn-danger fileupload-exists btnRemoveLogo"
-                                                    data-dismiss="fileupload"><i class="fas fa-trash-alt fa-2x"></i> </a>
-                                                    <input style="display: none;" name="rm_profile_image" class="hidethis">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group ">
-                                        <div class="col-lg-offset-2 col-lg-8">
-                                            {{ form.word|default_if_none:"" }}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-8">
-                                    <div class="form-group row">
-                                        <label for="authority" class="col-lg-2 control-label">Authority<span
-                                                class="span-required">(*)</span></label>
-                                        <div class="col-lg-4">
-                                            {{ form.authority|default_if_none:"" }}
-                                        </div>
-                                        <label id="type_label" for="type" class="col-lg-2 col-sm-2 control-label">Type</label>
-                                        <div class="col-lg-4" id="type_div">
-                                            {{ form.salon_category|default_if_none:"" }}
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="nickname" class="col-lg-2 col-sm-2 control-label">Nickname<span
-                                                class="span-required">(*)</span></label>
-                                        <div class="col-lg-4">
-                                            {{ form.nickname|default_if_none:"" }}
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="real_name" class="col-lg-2 col-sm-2 control-label">Name<span
-                                                class="span-required">(*)</span></label>
-                                        <div class="col-lg-4">
-                                            {{ form.real_name|default_if_none:"" }}
-                                        </div>
-                                        <label for="user_code" class="col-lg-2 col-sm-2 control-label">ID<span
-                                                class="span-required">(*)</span></label>
-                                        <div class="col-lg-4">
-                                            {{ form.user_code|default_if_none:"" }}
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="selling_auth" class="col-lg-2 col-sm-2 control-label">Selling Authority<span
-                                                class="span-required">(*)</span></label>
-                                        <div class="col-lg-4">
-                                            <select name="selling_auth" id="selling_auth" class="form-control trs-field sended">
-                                                {% if profile.is_seller %}
-                                                    <option value="1" seleceted>Yes</option>
-                                                    <option value="0">No</option>
-                                                {% else %}
-                                                    <option value="1">Yes</option>
-                                                    <option value="0" seleceted>No</option>
-                                                {% endif %}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="tel" class="col-lg-2 col-sm-2 control-label">Phone Number<span
-                                                class="span-required">(*)</span></label>
-                                        <div class="col-lg-4">
-                                            {{ form.tel|default_if_none:"" }}
-                                        </div>
-                                        <label for="password" class="col-lg-2 col-sm-2 control-label">Password</label>
-                                        <div class="col-lg-4">
-                                            {{ form.password|default_if_none:"" }}
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-lg-6">
-                                        </div>
-                                        <label for="password" class="col-lg-2 col-sm-2 control-label">Conf. Password</label>
-                                        <div class="col-lg-4">
-                                            <input class="form-control trs-field" type="password"
-                                                name="conf_pass"
-                                                id="conf_pass">
-                                            <span id="pass-error" class="span-required">If the password is blank it will not ne changed</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div id="introducer_div" class="row">
-                                            <label for="introducer" class="col-lg-2 col-sm-2 control-label">Introducer</label>
-                                            <div class="col-lg-4">
-                                                <select name="introducer" id="introducer" class="form-control trs-field sended">
-                                                    {% for pr in profile_list %}
-                                                        {% if profile.introducer_id == pr.id %}
-                                                            <option value="{{pr.id}}" selected>{{pr.nickname}}</option>
-                                                        {% else %}
-                                                            <option value="{{pr.id}}">{{pr.nickname}}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div id="approval_div" class="row">
-                                            <label for="approval" class="col-lg-2 col-sm-2 control-label">Approval</label>
-                                            <div class="col-lg-4">
-                                                <select name="approval" id="approval" class="form-control trs-field sended">
-                                                    {% if profile.is_approved %}
-                                                        <option value="1" seleceted>Yes</option>
-                                                        <option value="0">No</option>
-                                                    {% else %}
-                                                        <option value="1">Yes</option>
-                                                        <option value="0" seleceted>No</option>
-                                                    {% endif %}
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div id="general_ws_div" class="row">
-                                            <label for="user_code" class="col-lg-2 col-sm-2 control-label">General WS</label>
-                                            <div class="col-lg-4">
-                                                <select name="general_store" id="general_store" class="form-control trs-field sended">
-                                                    {% for pr in store_list %}
-                                                        {% if profile.introducer_id == pr.id %}
-                                                            <option value="{{pr.id}}" selected>{{pr.nickname}}</option>
-                                                        {% else %}
-                                                            <option value="{{pr.id}}">{{pr.nickname}}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="corporate_block">
-                                        <p><strong>Corporate Information</strong></p>
-                                        <div class="form-group row">
-                                            <label for="corporate_name" class="col-lg-2 col-sm-2 control-label">Corporate Name<span
-                                                    class="span-required">(*)</span></label>
-                                            <div class="col-lg-4">
-                                                {{ form.corporate_name|default_if_none:"" }}
-                                            </div>
-                                            <label for="representative_name" class="col-lg-2 col-sm-2 control-label">Representative Name</label>
-                                            <div class="col-lg-4">
-                                                {{ form.representative_name|default_if_none:"" }}
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="address1" class="col-lg-2 col-sm-2 control-label">Address One<span
-                                                    class="span-required">(*)</span></label>
-                                            <div class="col-lg-4">
-                                                {{ form.address1|default_if_none:"" }}
-                                            </div>
-                                            <label for="address2" class="col-lg-2 col-sm-2 control-label">Address Two</label>
-                                            <div class="col-lg-4">
-                                                {{ form.address2|default_if_none:"" }}
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="phone_number" class="col-lg-2 col-sm-2 control-label">Phone Number</label>
-                                            <div class="col-lg-4">
-                                                {{ form.corporate_tel|default_if_none:"" }}
-                                            </div>
-                                        </div>
-                                        <div class="form-group form-check text-left" style="margin-top: 30px;">
-                                            <input type="checkbox" class="form-check-input checkbox-2x" name="active_checkbox" id="active_checkbox" checked>
-                                            <label class="form-check-label" for="active">Active</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="text-center">
-                                    <button type="submit" name="btnSave" id="btnSave" class="btn btn-primary blue-btn">Save</button>
-                                    <a class="btn btn-default gray-btn" href="{% url 'profile_list' %}">Cancel</a>
-                                </div>
-                            </div>
-                        </section>
-                    </form>
+                    {% include 'basic_info_tab.html' %}
                 </div>
                 <div id="item_tab" class="tab-pane" role="tabpanel">
-                    <header class="panel-heading" style="font-size: 25px">
-                        <strong>Item Information</strong>
-                    </header>
-                    <div class="table-section white-bg">
-                        <div class="adv-table table-responsive">
-                            <table class="display table table-bordered table-striped table-condensed"
-                                id="item-table" style="width:100%">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Type</th>
-                                    <th>Name</th>
-                                    <th>Number of store account</th>
-                                    <th>Number of general users</th>
-                                    <th class="text-center" style="min-width:90px!important;">Options</th>
-                                </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
+                    {% include 'item_info_tab.html' %}
                 </div>
                 <div id="client_tab" class="tab-pane" role="tabpanel">
-                    <header class="panel-heading" style="font-size: 25px">
-                        <strong>Client Information</strong>
-                    </header>
-                    <div class="form-group form-check text-center">
-                        <input type="checkbox" class="form-check-input checkbox-2x" id="general_check">
-                        <label class="form-check-label" for="general_check">General</label>
-                        <input type="checkbox" class="form-check-input checkbox-2x" id="store_check">
-                        <label class="form-check-label" for="store_check">Store</label>
-                    </div>
-                    <div class="form-group text-right">
-                        <strong>Customers Number: </strong>
-                    </div>
-                    <div class="table-section white-bg">
-                        <div class="adv-table table-responsive">
-                            <table class="display table table-bordered table-striped table-condensed"
-                                id="client-table" style="width:100%">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Type</th>
-                                    <th>Name</th>
-                                    <th>Number of store account</th>
-                                    <th>Number of general users</th>
-                                    <th class="text-center" style="min-width:90px!important;">Options</th>
-                                </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
+                    {% include 'client_info_tab.html' %}
                 </div>
                 <div id="account_info_tab" class="tab-pane" role="tabpanel">
                     {% include 'account_info_tab.html' %}
                 </div>
-                <div id="sales_info_tab" class="tab-pane" role="tabpanel">
-                    <div class="col-sm-12">
-                        <section class="panel">
-                            
-                        </section>
-                    </div>
+                <div id="salon_info_tab" class="tab-pane" role="tabpanel">
+                    {% include 'salon_info_tab.html' %}
                 </div>
-                <div id="shipping_info_tab_li" class="tab-pane" role="tabpanel">
-                    <div class="col-sm-12">
-                        <section class="panel">
-                            
-                        </section>
-                    </div>
+                <div id="shipping_info_tab" class="tab-pane" role="tabpanel">
+                    {% include 'shipping_info_tab.html' %}
                 </div>
             </div>
         </div>
     </div>
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="delete-dialog"
+     {# Delete confirm modal #}
+    {% comment %} <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="delete-dialog"
          class="modal fade">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -345,15 +83,42 @@
                     <form role="form" action="{% url 'profile_delete' profile.id %}" method="post">
                         {% csrf_token %}
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Are you sure want to delete?</label>
+                            <label>Are you sure want to delete?</label>
                         </div>
                         <button type="submit" class="btn btn-success">OK</button>
-                        <a class="btn btn-default" href="{% url 'profile_edit' profile.id %}">Cancel</a> {# ITEM_TABS['Item'] #}
+                        <a class="btn btn-default" href="{% url 'profile_edit' profile.id %}">Cancel</a>
                     </form>
                 </div>
             </div>
         </div>
+    </div> {% endcomment %}
+    {# Delete confirm modal end #}
+    {#Comfirm Delete#}
+    <div class="modal fade" id="comfirmDeleteAllModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><strong>Delete Confirm Dialog</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body" style="padding-bottom: 0px!important; padding: 0 3%;">
+                    <form action="">
+                        <div class="form-group">
+                            <label>Are you sure want to delete?</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">No</button>
+                    <button class="btn btn-success" type="button" data-dismiss="modal" id="modal_btn_delete">Yes</button>
+                </div>
+            </div>
+        </div>
     </div>
+    {#End Comfirm delete#}
 {% endblock %}
 
 {% block js %}
@@ -363,6 +128,10 @@
     <script src="https://zipaddr.github.io/bankautob.js" charset="UTF-8"> </script>
     <script src="{% static "js/select2/select2.js" %}"></script>
     <script src="{% static "js/profile/financial.js" %}"></script>
+    <script src="{% static "js/profile/item.js" %}"></script>
+    <script src="{% static "js/profile/client.js" %}"></script>
+    <script src="{% static "js/profile/shipping.js" %}"></script>
+    <script src="{% static "js/profile/salon.js" %}"></script>
     
     <script type="text/javascript">
         $(document).on('keyup', '.select2-selection.select2-selection--single', function (e) {
@@ -371,6 +140,11 @@
                 $(this).closest(".select2-container").siblings('select:enabled').select2('open');
             }
         });
+
+        var prefecture_list = [];
+        {% for item in prefecture_list %}
+            prefecture_list.push([{{ item.0 }}, "{{ item.1 }}"])
+        {% endfor %}
         
         var profile_id = "{{profile.id}}";
 
@@ -415,82 +189,14 @@
                     $('#account_type').select2({});
                 }
                 load_financial_info();
+            } else if ((target == '#salon_info_tab')) {
+                loadSalonTableData();
+            } else if ((target == '#shipping_info_tab')) {
+                loadShippingTableData();
             }
         });
 
-        function loadItemTableData() {
-            $('#item-table').DataTable().destroy();
-            $('#item-table').DataTable({
-                "order": [[2, "asc"]],
-                "serverSide": true,
-                "scrollX": true,
-                stateSave: true,
-                "ajax": {
-                    "url": "{% url 'ProfileList__asJson' %}",
-                    "data": {
-                        "filter_str": '[]'
-                    }
-                },
-                "columns": [
-                    {"data": "no", "orderable": false},
-                    {"data": "type", "orderable": false},
-                    {"data": "nickname", "orderable": false},
-                    {"data": "store_total", "orderable": false},
-                    {"data": "user_total", "orderable": false},
-                    
-                    {
-                        "sClass": "text-center",
-                        "orderable": false,
-                        "data": null,
-                        "render": function (data, type, row, meta) {
-                            var btn =
-                                    '<div class="btn-group">' +
-                                    '<a class="btn-group-item" href="../profile_edit/' + row.id + '/' + '"><i class="fas fa-pencil-alt fa-2x text-info"></i></a>' + 
-                                    '<a class="btn-group-item" onclick="deleteProfile(' + row.id + ')"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + 
-                                    '</div>';
-                            return btn;
-                        }
-                    }
-                ]
-            });
-        }
-
-        function loadClientTableData() {
-            $('#client-table').DataTable().destroy();
-            $('#client-table').DataTable({
-                "order": [[2, "asc"]],
-                "serverSide": true,
-                "scrollX": true,
-                stateSave: true,
-                "ajax": {
-                    "url": "{% url 'ProfileList__asJson' %}",
-                    "data": {
-                        "filter_str": '[]'
-                    }
-                },
-                "columns": [
-                    {"data": "no", "orderable": false},
-                    {"data": "type", "orderable": false},
-                    {"data": "nickname", "orderable": false},
-                    {"data": "store_total", "orderable": false},
-                    {"data": "user_total", "orderable": false},
-                    
-                    {
-                        "sClass": "text-center",
-                        "orderable": false,
-                        "data": null,
-                        "render": function (data, type, row, meta) {
-                            var btn =
-                                    '<div class="btn-group">' +
-                                    '<a class="btn-group-item" href="../profile_edit/' + row.id + '/' + '"><i class="fas fa-pencil-alt fa-2x text-info"></i></a>' + 
-                                    '<a class="btn-group-item" onclick="deleteProfile(' + row.id + ')"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + 
-                                    '</div>';
-                            return btn;
-                        }
-                    }
-                ]
-            });
-        }
+        
 
         function checkInput() {
             $('#id_authority').prop('disabled', false);
@@ -555,7 +261,7 @@
                     $('#item_tab_li').removeAttr('style');
                     $('#client_tab_li').removeAttr('style');
                     $('#account_info_tab_li').removeAttr('style');
-                    $('#sales_info_tab_li').removeAttr('style');
+                    $('#salon_info_tab_li').removeAttr('style');
                     $('#shipping_info_tab_li').removeAttr('style');
                 }
                 else if ($(this).val() == '5') { //general

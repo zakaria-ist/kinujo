@@ -1,0 +1,212 @@
+{% block extrahead %}
+    {% load static %}
+{% endblock %}
+<form class="form-horizontal" 
+    {% if profile.id %}
+    action="{% url 'profile_edit' profile.id %}" 
+    {% else %}
+    action="{% url 'profile_add' %}" 
+    {% endif %}
+    role="form" method="post" onsubmit="checkInput()" enctype="multipart/form-data">
+    {% csrf_token %}
+    <section class="panel">
+        <header class="panel-heading" style="font-size: 25px">
+            <strong>Profile</strong>
+        </header>
+        <div class="row">
+            <div class="col-lg-4" style="margin-top: 4%">
+                <div class="form-group">
+                    {# Profile Image #}
+                    <label class="control-label col-lg-12 col-sm-12">Profile Image</label>
+                    <div class="col-md-8">
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <div class="fileupload-new thumbnail" style="width: 300px; height: 300px;">
+                                {% if profile.image_id %}
+                                    <img src="{{ profile.image.image.url }}" alt="" name="profile_image"/>
+                                {% else %}
+                                    <img src="{% static 'img/blank_male.png' %}" alt="" name="profile_image"/>
+                                {% endif %}
+                            </div>
+                            <div class="fileupload-preview fileupload-exists thumbnail"
+                                style="max-width: 300px; max-height: 300px; line-height: 20px;"></div>
+                            <div class="text-right">
+                                <span class="btn btn-white btn-file">
+                                    <span class="fileupload-new"><i class="fas fa-pencil-alt fa-2x"></i></span>
+                                    <span class="fileupload-exists"><i class="fas fa-undo fa-2x"></i></span>
+                                    <input name="profile_image" type="file" class="default"/>
+                                </span>
+                                <a href="javascript:void(0)" class="btn btn-danger fileupload-exists btnRemoveLogo"
+                                data-dismiss="fileupload"><i class="fas fa-trash-alt fa-2x"></i> </a>
+                                <input style="display: none;" name="rm_profile_image" class="hidethis">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="col-lg-offset-2 col-lg-8">
+                        {{ form.word|default_if_none:"" }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="form-group row">
+                    <label for="authority" class="col-lg-2 control-label">Authority<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        {{ form.authority|default_if_none:"" }}
+                    </div>
+                    <label id="type_label" for="type" class="col-lg-2 col-sm-2 control-label">Type</label>
+                    <div class="col-lg-4" id="type_div">
+                        {{ form.salon_category|default_if_none:"" }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="nickname" class="col-lg-2 col-sm-2 control-label">Nickname<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        {{ form.nickname|default_if_none:"" }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="real_name" class="col-lg-2 col-sm-2 control-label">Name<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        {{ form.real_name|default_if_none:"" }}
+                    </div>
+                    <label for="user_code" class="col-lg-2 col-sm-2 control-label">ID<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        {{ form.user_code|default_if_none:"" }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="selling_auth" class="col-lg-2 col-sm-2 control-label">Selling Authority<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        <select name="selling_auth" id="selling_auth" class="form-control trs-field sended">
+                            {% if profile.is_seller %}
+                                <option value="1" seleceted>Yes</option>
+                                <option value="0">No</option>
+                            {% else %}
+                                <option value="1">Yes</option>
+                                <option value="0" seleceted>No</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="tel" class="col-lg-2 col-sm-2 control-label">Phone Number<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        {{ form.tel|default_if_none:"" }}
+                    </div>
+                    <label for="password" class="col-lg-2 col-sm-2 control-label">Password</label>
+                    <div class="col-lg-4">
+                        {{ form.password|default_if_none:"" }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                    </div>
+                    <label for="password" class="col-lg-2 col-sm-2 control-label">Conf. Password</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="password"
+                            name="conf_pass"
+                            id="conf_pass">
+                        <span id="pass-error" class="span-required">If the password is blank it will not ne changed</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="introducer_div" class="row">
+                        <label for="introducer" class="col-lg-2 col-sm-2 control-label">Introducer</label>
+                        <div class="col-lg-4">
+                            <select name="introducer" id="introducer" class="form-control trs-field sended">
+                                {% for pr in profile_list %}
+                                    {% if profile.introducer_id == pr.id %}
+                                        <option value="{{pr.id}}" selected>{{pr.nickname}}</option>
+                                    {% else %}
+                                        <option value="{{pr.id}}">{{pr.nickname}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="approval_div" class="row">
+                        <label for="approval" class="col-lg-2 col-sm-2 control-label">Approval</label>
+                        <div class="col-lg-4">
+                            <select name="approval" id="approval" class="form-control trs-field sended">
+                                {% if profile.is_approved %}
+                                    <option value="1" seleceted>Yes</option>
+                                    <option value="0">No</option>
+                                {% else %}
+                                    <option value="1">Yes</option>
+                                    <option value="0" seleceted>No</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="general_ws_div" class="row">
+                        <label for="user_code" class="col-lg-2 col-sm-2 control-label">General WS</label>
+                        <div class="col-lg-4">
+                            <select name="general_store" id="general_store" class="form-control trs-field sended">
+                                {% for pr in store_list %}
+                                    {% if profile.introducer_id == pr.id %}
+                                        <option value="{{pr.id}}" selected>{{pr.nickname}}</option>
+                                    {% else %}
+                                        <option value="{{pr.id}}">{{pr.nickname}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="corporate_block">
+                    <p><strong>Corporate Information</strong></p>
+                    <div class="form-group row">
+                        <label for="corporate_name" class="col-lg-2 col-sm-2 control-label">Corporate Name<span
+                                class="span-required">(*)</span></label>
+                        <div class="col-lg-4">
+                            {{ form.corporate_name|default_if_none:"" }}
+                        </div>
+                        <label for="representative_name" class="col-lg-2 col-sm-2 control-label">Representative Name</label>
+                        <div class="col-lg-4">
+                            {{ form.representative_name|default_if_none:"" }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="address1" class="col-lg-2 col-sm-2 control-label">Address One<span
+                                class="span-required">(*)</span></label>
+                        <div class="col-lg-4">
+                            {{ form.address1|default_if_none:"" }}
+                        </div>
+                        <label for="address2" class="col-lg-2 col-sm-2 control-label">Address Two</label>
+                        <div class="col-lg-4">
+                            {{ form.address2|default_if_none:"" }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="phone_number" class="col-lg-2 col-sm-2 control-label">Phone Number</label>
+                        <div class="col-lg-4">
+                            {{ form.corporate_tel|default_if_none:"" }}
+                        </div>
+                    </div>
+                    <div class="form-group form-check text-left" style="margin-top: 30px;">
+                        <input type="checkbox" class="form-check-input checkbox-2x" name="active_checkbox" id="active_checkbox" checked>
+                        <label class="form-check-label" for="active">Active</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="text-center">
+                <button type="submit" name="btnSave" id="btnSave" class="btn btn-primary blue-btn">Save</button>
+                <a class="btn btn-default gray-btn" href="{% url 'profile_list' %}">Cancel</a>
+            </div>
+        </div>
+    </section>
+</form>

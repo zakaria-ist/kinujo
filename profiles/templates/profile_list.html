@@ -42,8 +42,8 @@
                                 <label class="form-check-label" for="unapproved_check">Unapproved</label>
                             </div>
                             <div class="table-section white-bg">
-                                <div class="text-right">
-                                    <span class="pull-right">
+                                <div class="text-right pb-3">
+                                    <span class="">
                                         <a class="btn btn-primary blue-btn" href="{% url 'profile_add' %}"> 
                                             <span>Add</span>
                                         </a>
@@ -71,7 +71,7 @@
             </section>
         </div>
     </div>
-    {#Comfirm Delete journal#}
+    {#Comfirm Delete#}
     <div class="modal fade" id="comfirmDeleteProfileModal" tabindex="-1" role="dialog"
         aria-labelledby="myModalLabel"
         aria-hidden="true">
@@ -98,7 +98,7 @@
             </div>
         </div>
     </div>
-    {#End Comfirm delete journal#}
+    {#End Comfirm delete#}
 {% endblock %}
 {% block js %}
     <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script>

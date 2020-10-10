@@ -3,7 +3,7 @@ from prefectures.models import Prefecture
 from profiles.models import Profile
 
 
-class Salons(models.Model):
+class Salon(models.Model):
     name = models.CharField(max_length=128)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     zip1 = models.CharField(max_length=8)
