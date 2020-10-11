@@ -3,7 +3,7 @@ import datetime
 from django import forms
 from django.forms import ModelChoiceField
 from images.models import Image
-from utilities.constants import SALON_CATEGORY
+from utilities.constants import SALON_CATEGORY, GENDER_TYPE
 
 class CodeNameChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
@@ -23,7 +23,7 @@ class NameChoiceField(ModelChoiceField):
 
 class ProfileForm(forms.ModelForm):
     tel = forms.CharField(required=True,
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'phone number'}))
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'phone number', 'maxlength': '15'}))
     password = forms.CharField(required=False,
                             widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     nickname = forms.CharField(required=True,
@@ -48,10 +48,16 @@ class ProfileForm(forms.ModelForm):
                                    widget=forms.Select(attrs={'class': 'form-control', 'required': 'required'}))
     salon_category = forms.ChoiceField(required=False, choices=SALON_CATEGORY,
                                       widget=forms.Select(attrs={'class': 'form-control'}))
+    gender = forms.ChoiceField(required=False, choices=GENDER_TYPE,
+                                      widget=forms.Select(attrs={'class': 'form-control'}))
+    zipcode = forms.CharField(required=False,
+                                      widget=forms.TextInput(attrs={'class': 'form-control', 'maxlength': '7'}))
+    birthday = forms.DateField(required=False,
+                                      widget=forms.DateInput(attrs={'class': 'form-control'}))
     class Meta:
         model = Profile
         fields = ('tel', 'password', 'nickname', 'user_code', 'real_name', 'corporate_name', 'address1', 'address2', 'word', 'authority',
-                    'representative_name', 'corporate_tel', 'salon_category')
+                    'representative_name', 'corporate_tel', 'salon_category', 'zipcode', 'birthday', 'gender')
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
