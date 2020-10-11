@@ -3,11 +3,11 @@
 {% endblock %}
 <section class="panel">
     <header class="panel-heading pb-5" style="font-size: 25px">
-        <strong>Shipping Information</strong>
+        <strong>{% trans 'Shipping Information' %}</strong>
     </header>
     <div class="col-lg-12">
         <div class="form-group row">
-            <label for="destination_name" class="col-lg-2 control-label">Destination Name<span
+            <label for="destination_name" class="col-lg-2 control-label">{% trans 'Destination Name' %}<span
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <input class="form-control trs-field" type="text"
@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="full_name" class="col-lg-2 control-label">Full Name<span
+            <label for="full_name" class="col-lg-2 control-label">{% trans 'Full Name' %}<span
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <input class="form-control trs-field" type="text"
@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="zip_code" class="col-lg-2 control-label">Zip Code<span
+            <label for="zip_code" class="col-lg-2 control-label">{% trans 'Zip Code' %}<span
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <input class="form-control trs-field" type="text"
@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="prefecture" class="col-lg-2 control-label">Prefecture<span
+            <label for="prefecture" class="col-lg-2 control-label">{% trans 'Address One' %}<span
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <select name="prefecture" id="prefecture" class="form-control trs-field">
@@ -47,7 +47,7 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="address1" class="col-lg-2 control-label">Address One<span
+            <label for="address1" class="col-lg-2 control-label">{% trans 'Address One' %}<span
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <input class="form-control trs-field" type="text"
@@ -57,7 +57,7 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="address2" class="col-lg-2 control-label">Address Two<span
+            <label for="address2" class="col-lg-2 control-label">{% trans 'Address Two' %}<span
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <input class="form-control trs-field" type="text"
@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="add_tel" class="col-lg-2 control-label">Phone Number<span
+            <label for="add_tel" class="col-lg-2 control-label">{% trans 'Phone Number' %}<span
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <input class="form-control trs-field" type="text"
@@ -78,12 +78,12 @@
         </div>
         <div class="form-group form-check text-left" style="margin-top: 30px;">
             <input type="checkbox" class="form-check-input checkbox-2x" name="default_checkbox" id="default_checkbox" checked>
-            <label class="form-check-label" for="active">Is Default</label>
+            <label class="form-check-label" for="active">{% trans 'Is Default' %}</label>
         </div>
         <div class="form-group row">
             <div class="text-center">
-                <button type="button" onclick="saveShippingInfo()" name="btnAddressSave" id="btnAddressSave" class="btn btn-primary blue-btn">Save</button>
-                <a class="btn btn-default gray-btn" onclick="cancelShippingForm()">Cancel</a>
+                <button type="button" onclick="saveShippingInfo()" name="btnAddressSave" id="btnAddressSave" class="btn btn-primary blue-btn">{% trans 'Save' %}</button>
+                <a class="btn btn-default gray-btn" onclick="cancelShippingForm()">{% trans 'Cancel' %}</a>
             </div>
         </div>
     </div>

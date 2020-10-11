@@ -5,7 +5,7 @@
     {% load i18n %}
 {% endblock %}
 
-{% block title %}Account List{% endblock %}
+{% block title %}{% trans 'Profile List' %}{% endblock %}
 
 {% block account_a_active %}
     active
@@ -28,25 +28,25 @@
                     <div class="col-lg-12">
                         <div class="panel-body">
                             <header class="panel-heading" style="font-size: 25px">
-                                    Account List
+                                    {% trans 'Profile List' %}
                             </header>
                             <div class="form-group form-check text-center">
                                 <input type="checkbox" class="form-check-input checkbox-2x" id="ambassador_check">
-                                <label class="form-check-label" for="ambassador_check">Ambassador</label>
+                                <label class="form-check-label" for="ambassador_check">{% trans 'Ambassador' %}</label>
                                 <input type="checkbox" class="form-check-input checkbox-2x" id="store_check">
-                                <label class="form-check-label" for="store_check">Store</label>
+                                <label class="form-check-label" for="store_check">{% trans 'Store' %}</label>
                                 <input type="checkbox" class="form-check-input checkbox-2x" id="general_check">
-                                <label class="form-check-label" for="general_check">General</label>
+                                <label class="form-check-label" for="general_check">{% trans 'General' %}</label>
                                 <input type="checkbox" class="form-check-input checkbox-2x" id="master_check">
-                                <label class="form-check-label" for="master_check">Master</label>
+                                <label class="form-check-label" for="master_check">{% trans 'Master' %}</label>
                                 <input type="checkbox" class="form-check-input checkbox-2x" id="unapproved_check">
-                                <label class="form-check-label" for="unapproved_check">Unapproved</label>
+                                <label class="form-check-label" for="unapproved_check">{% trans 'Unapproved' %}</label>
                             </div>
                             <div class="table-section white-bg">
                                 <div class="text-right pb-3">
                                     <span class="">
                                         <a class="btn btn-primary blue-btn" href="{% url 'profile_add' %}"> 
-                                            <span>Add</span>
+                                            <span>{% trans 'Add' %}</span>
                                         </a>
                                     </span>
                                 </div>
@@ -56,11 +56,11 @@
                                         <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Type</th>
-                                            <th>Name</th>
-                                            <th>Number of store account</th>
-                                            <th>Number of general users</th>
-                                            <th class="text-center" style="min-width:90px!important;">Options</th>
+                                            <th>{% trans 'Type' %}</th>
+                                            <th>{% trans 'Name' %}</th>
+                                            <th>{% trans 'Number of store accounts' %}</th>
+                                            <th>{% trans 'Number of general users' %}</th>
+                                            <th class="text-center" style="min-width:90px!important;">{% trans 'Options' %}</th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -79,21 +79,21 @@
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"><strong>Delete Confirm Dialog</strong></h5>
+                    <h5 class="modal-title"><strong>{% trans 'Delete Confirm Dialog' %}</strong></h5>
                     <button type="button" class="close" data-dismiss="modal"
                             aria-hidden="true">&times;</button>
                 </div>
                 <div class="modal-body" style="padding-bottom: 0px!important; padding: 0 3%;">
                     <form action="">
                         <div class="form-group">
-                            <label>Are you sure want to delete?</label>
+                            <label>{% trans 'Are you sure want to delete?' %}</label>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button class="btn btn-default" type="button" data-dismiss="modal">No</button>
+                    <button class="btn btn-default" type="button" data-dismiss="modal">{% trans 'No' %}</button>
                     <a id="comfirm-yes">
-                        <button class="btn btn-success" type="button">Yes</button>
+                        <button class="btn btn-success" type="button">{% trans 'Yes' %}</button>
                     </a>
                 </div>
             </div>

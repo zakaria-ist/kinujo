@@ -6,6 +6,10 @@ from products.models import ProductCategory, Product, ProductImage, ProductVarie
 from profiles.models import Authority, Profile, UserSale, UserCommision, MonthlyPayment, Address
 from taxes.models import TaxRate
 from rest_framework import viewsets
+from django.http import HttpResponseRedirect
+from django.utils import translation
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import activate, deactivate_all
 from .serializers import UserSerializer, GroupSerializer,  OrderSerializer, OrderProductSerializer, OrderProductCommissionSerializer, OrderReceiptSerializer, TotalSaleSerializer, TotalCommissionSerializer, PolicySerializer, PrefectureSerializer, ProductCategorySerializer, ProductSerializer, ProductImageSerializer, ProductVarietySerializer, ProductVarietySelectionSerializer, ProductJancodeSerializer, AuthoritySerializer, ProfileSerializer, UserSaleSerializer, UserCommisionSerializer, MonthlyPaymentSerializer, AddressSerializer, TaxRateSerializer
 
 
@@ -170,3 +174,15 @@ class TaxRateViewSet(viewsets.ModelViewSet):
     """
     queryset = TaxRate.objects.all()
     serializer_class = TaxRateSerializer
+
+@csrf_exempt
+def change_language(request):
+    """
+    API to change language.
+    """
+
+    language = request.POST['language']
+    deactivate_all()
+    activate(language)
+    request.session[translation.LANGUAGE_SESSION_KEY] = language
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

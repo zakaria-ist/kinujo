@@ -48,6 +48,7 @@ router.register(r'api/tax_rates', api_views.TaxRateViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^api/', include('api.urls')),
     # url(r'^orders/', include('orders.urls')),
     # url(r'^images/', include('images.urls')),
     # url(r'^policies/', include('policies.urls')),

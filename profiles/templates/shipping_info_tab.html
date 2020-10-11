@@ -2,13 +2,13 @@
     {% load i18n %}
 {% endblock %}
 <header class="panel-heading" style="font-size: 25px">
-    <strong>Shipping Information</strong>
+    <strong>{% trans 'Shipping Information' %}</strong>
 </header>
 <div class="table-section white-bg">
     <div class="text-right pb-3">
         <span class="">
             <a type="button" class="btn btn-primary blue-btn" onclick="showShippingForm()"> 
-                <span>Add</span>
+                <span>{% trans 'Add' %}</span>
             </a>
         </span>
     </div>
@@ -18,11 +18,11 @@
             <thead>
             <tr>
                 <th>#</th>
-                <th>Salon Name</th>
-                <th>Representative's Name</th>
-                <th>Address</th>
-                <th>Phone Number</th>
-                <th class="text-center" style="min-width:90px!important;">Options</th>
+                <th>{% trans 'Address Name' %}</th>
+                <th>{% trans 'Full Name' %}</th>
+                <th>{% trans 'Address' %}</th>
+                <th>{% trans 'Phone Number' %}</th>
+                <th class="text-center" style="min-width:90px!important;">{% trans 'Options' %}</th>
             </tr>
             </thead>
         </table>

@@ -3,32 +3,32 @@
 {% endblock %}
 <section class="panel">
     <header class="panel-heading pb-5" style="font-size: 25px">
-        <strong>Account Information</strong>
+        <strong>{% trans 'Account Information' %}</strong>
     </header>
     <div class="col-lg-12">
         <div class="form-group row">
-            <label for="bank_code" class="col-lg-2 control-label">Bank Code<span
+            <label for="bank_code" class="col-lg-2 control-label">{% trans 'Bank Code' %}<span
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <input class="form-control trs-field" type="text"
                     name="bank_code"
                     id="bank_code"
                     maxlength="4"
-                    placeholder="code">
+                    placeholder="0123">
             </div>
         </div>
         <div class="form-group row">
-            <label for="bank_name" class="col-lg-2 control-label">Bank Name<span
+            <label for="bank_name" class="col-lg-2 control-label">{% trans 'Bank Name' %}<span
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <input class="form-control trs-field" type="text"
                     name="bank_name"
                     id="bank_name"
-                    placeholder="Bank Name">
+                    placeholder="">
             </div>
         </div>
         <div class="form-group row">
-            <label for="branch_code" class="col-lg-2 control-label">Branch Code<span
+            <label for="branch_code" class="col-lg-2 control-label">{% trans 'Branch Code' %}<span
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <input class="form-control trs-field" type="text"
@@ -39,28 +39,28 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="branch_name" class="col-lg-2 control-label">Branch Name<span
+            <label for="branch_name" class="col-lg-2 control-label">{% trans 'Branch Name' %}<span
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <input class="form-control trs-field" type="text" readonly
                     name="branch_name"
                     id="branch_name"
-                    placeholder="Branch Name">
+                    placeholder="">
             </div>
         </div>
         <div class="form-group row">
-            <label for="account_type" class="col-lg-2 control-label">Account Type<span
+            <label for="account_type" class="col-lg-2 control-label">{% trans 'Account Type' %}<span
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <select name="account_type" id="account_type" class="form-control trs-field">
-                    <option value="0">Normal</option>
-                    <option value="1">Current</option>
-                    <option value="2">Savings</option>
+                    <option value="0">{% trans 'Normal' %}</option>
+                    <option value="1">{% trans 'Current' %}</option>
+                    <option value="2">{% trans 'Savings' %}</option>
                 </select>
             </div>
         </div>
         <div class="form-group row">
-            <label for="account_number" class="col-lg-2 control-label">Account Number<span
+            <label for="account_number" class="col-lg-2 control-label">{% trans 'Account Number' %}<span
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <input class="form-control trs-field" type="text"
@@ -71,20 +71,20 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="account_holder" class="col-lg-2 control-label">Account Holder<span
+            <label for="account_holder" class="col-lg-2 control-label">{% trans 'Account Holder' %}<span
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <input class="form-control trs-field" type="text"
                     name="account_holder"
                     id="account_holder"
-                    placeholder="Account Hoder name">
+                    placeholder="">
             </div>
         </div>
         
         <div class="form-group row">
             <div class="text-center">
-                <button type="button" name="btnPaymentSave" id="btnPaymentSave" class="btn btn-primary blue-btn">Save</button>
-                <a class="btn btn-default gray-btn" href="{% url 'profile_list' %}">Cancel</a>
+                <button type="button" name="btnPaymentSave" id="btnPaymentSave" class="btn btn-primary blue-btn">{% trans 'Save' %}</button>
+                <a class="btn btn-default gray-btn" href="{% url 'profile_list' %}">{% trans 'Cancel' %}</a>
             </div>
         </div>
     </div>

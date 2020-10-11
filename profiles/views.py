@@ -191,10 +191,11 @@ def profile_add(request):
                 user.save()
                 profile = form.save(commit=False)
                 profile.user = user
-                if request.POST.get('selling_auth'):
-                    profile.is_seller = int(request.POST.get('selling_auth'))
-                if request.POST.get('approval'):
-                    profile.is_approved = int(request.POST.get('approval'))
+                if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
+                    profile.indroducer = int(request.POST.get('introducer'))
+                if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
+                    profile.indroducer = int(request.POST.get('general_store'))
+                profile.user_code = request.POST.get('user_code')
                 profile.save()
 
                 profile_image = request.FILES.get('profile_image', False)
@@ -229,27 +230,31 @@ def profile_edit(request, profile_id):
     """
 
     if request.method == 'POST':
-        form = ProfileForm(request.POST)
+        profile = Profile.objects.get(pk=profile_id)
+        form = ProfileForm(request.POST, instance=profile)
         if form.is_valid:
             try:
                 user = User.objects.filter(username=request.POST.get('tel')).first()
                 if user:
                     if request.POST.get('password') != '' and request.POST.get('password') != None:
-                        user.first_name = request.POST.get('user_code')
+                        user.first_name = request.POST.get('nickname')
                         user.set_password(request.POST.get('password'))
                         user.save()
                 else:
                     if request.POST.get('password') != '' and request.POST.get('password') != None:
                         user = User.objects.create_user(request.POST.get('tel'), 'test@test.com', request.POST.get('password'))
-                        user.first_name = request.POST.get('user_code')
+                        user.first_name = request.POST.get('nickname')
                         user.save()
-
+                
                 profile = form.save(commit=False)
-                profile.user = user
-                if request.POST.get('selling_auth'):
-                    profile.is_seller = int(request.POST.get('selling_auth'))
-                if request.POST.get('approval'):
-                    profile.is_approved = int(request.POST.get('approval'))
+                if user:
+                    profile.user_id = user.id
+                else:
+                    profile.user_id = request.POST.get('user_id')
+                if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
+                    profile.indroducer = int(request.POST.get('introducer'))
+                if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
+                    profile.indroducer = int(request.POST.get('general_store'))
                 profile.save()
 
                 profile_image = request.FILES.get('profile_image', False)

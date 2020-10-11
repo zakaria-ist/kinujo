@@ -1,4 +1,6 @@
 from django.conf.urls import url
+from django.conf import settings
+from django.conf.urls.static import static
 from profiles import views
 
 urlpatterns = [
@@ -15,4 +17,4 @@ urlpatterns = [
     url(r'^shipping_list_json/$', views.ShippingList__asJson, name='ShippingList__asJson'),
     url(r'^validate_user_phone/(?P<profile_id>.*)/$', views.validate_user_phone, name='validate_user_phone'),
     # url(r'^upload_profile_image/$', views.upload_profile_image, name='upload_profile_image'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_LOCAL)

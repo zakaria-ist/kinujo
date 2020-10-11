@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.css' %}"/>
 {% endblock %}
 
-{% block title %}Profile Add/Edit{% endblock %}
+{% block title %}{% trans 'Profile Add/Edit'%}{% endblock %}
 
 {% block account_a_active %}
     active
@@ -24,27 +24,27 @@
 {% block content %}
     <div id="content">
         <header class="panel-heading" style="font-size: 25px; margin-bottom: 20px;" >
-                Profile Details
+                {% trans 'Profile Details' %}
         </header>
         <ul id="tabs" class="nav nav-tabs" data-tabs="tabs" role="tablist"
             style="padding-left: 20px; margin-left: 18px; margin-right: 24px;">
             <li class="nav-item" id="basic_tab_li">
-                <a href="#basic_tab" class="nav-link active" id="basic_tab_a" data-toggle="tab" role="tab" aria-controls="basic_tab" aria-selected="true">基本情報</a>
+                <a href="#basic_tab" class="nav-link active" id="basic_tab_a" data-toggle="tab" role="tab" aria-controls="basic_tab" aria-selected="true">{% trans 'Basic Information' %}</a>
             </li>
             <li class="nav-item" id="item_tab_li" style="display: none;">
-                <a href="#item_tab" class="nav-link" id="item_tab_a" data-toggle="tab" role="tab" aria-controls="item_tab" aria-selected="false">出品一覧</a>
+                <a href="#item_tab" class="nav-link" id="item_tab_a" data-toggle="tab" role="tab" aria-controls="item_tab" aria-selected="false">{% trans 'Item List' %}</a>
             </li>
             <li class="nav-item" id="client_tab_li" style="display: none;">
-                <a href="#client_tab" class="nav-link" id="client_tab_a" data-toggle="tab" role="tab" aria-controls="client_tab" aria-selected="false">顧客</a>
+                <a href="#client_tab" class="nav-link" id="client_tab_a" data-toggle="tab" role="tab" aria-controls="client_tab" aria-selected="false">{% trans 'Client' %}</a>
             </li>
             <li class="nav-item" id="account_info_tab_li" style="display: none;">
-                <a href="#account_info_tab" class="nav-link" id="account_info_a" data-toggle="tab" role="tab" aria-controls="account_info_tab" aria-selected="false">口座情報</a>
+                <a href="#account_info_tab" class="nav-link" id="account_info_a" data-toggle="tab" role="tab" aria-controls="account_info_tab" aria-selected="false">{% trans 'Account Information' %}</a>
             </li>
             <li class="nav-item" id="salon_info_tab_li" style="display: none;">
-                <a href="#salon_info_tab" class="nav-link" id="salon_info_a" data-toggle="tab" role="tab" aria-controls="salon_info_tab" aria-selected="false">サロン情報</a>
+                <a href="#salon_info_tab" class="nav-link" id="salon_info_a" data-toggle="tab" role="tab" aria-controls="salon_info_tab" aria-selected="false">{% trans 'Salon Information' %}</a>
             </li>
             <li class="nav-item" id="shipping_info_tab_li" style="display: none;">
-                <a href="#shipping_info_tab" class="nav-link" id="shipping_info_a" data-toggle="tab" role="tab" aria-controls="shipping_info_tab" aria-selected="false">送付先情報</a>
+                <a href="#shipping_info_tab" class="nav-link" id="shipping_info_a" data-toggle="tab" role="tab" aria-controls="shipping_info_tab" aria-selected="false">{% trans 'Shipping Information' %}</a>
             </li>
         </ul>
         <div class="table-section white-bg">
@@ -101,20 +101,20 @@
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"><strong>Delete Confirm Dialog</strong></h5>
+                    <h5 class="modal-title"><strong>{% trans 'Delete Confirm Dialog' %}</strong></h5>
                     <button type="button" class="close" data-dismiss="modal"
                             aria-hidden="true">&times;</button>
                 </div>
                 <div class="modal-body" style="padding-bottom: 0px!important; padding: 0 3%;">
                     <form action="">
                         <div class="form-group">
-                            <label>Are you sure want to delete?</label>
+                            <label>{% trans 'Are you sure want to delete?' %}</label>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button class="btn btn-default" type="button" data-dismiss="modal">No</button>
-                    <button class="btn btn-success" type="button" data-dismiss="modal" id="modal_btn_delete">Yes</button>
+                    <button class="btn btn-default" type="button" data-dismiss="modal">{% trans 'No' %}</button>
+                    <button class="btn btn-success" type="button" data-dismiss="modal" id="modal_btn_delete">{% trans 'Yes' %}</button>
                 </div>
             </div>
         </div>
@@ -148,6 +148,8 @@
         {% endfor %}
         
         var profile_id = "{{profile.id}}";
+        var is_seller = "{{profile.is_seller}}";
+        var is_approved = "{{profile.is_approved}}";
 
         $(document).ready(function () {
             if (profile_id == '' || profile_id == undefined || profile_id == null) {
@@ -157,9 +159,10 @@
             } else {
                 $('#id_authority').trigger('change');
                 $('#id_authority').prop('disabled', true);
+                $('#id_user_code').prop('disabled', true);
             }
-            $('#selling_auth').select2({});
-            $('#approval').select2({});
+            $('#id_is_seller').select2({});
+            $('#id_is_approved').select2({});
             $('#introducer').select2({
                 placeholder: "Select Introducer",
                 allowClear: true
@@ -175,6 +178,13 @@
             $('#id_gender').select2({});
 
             $('#id_authority').trigger('change');
+
+            if (is_seller == 'True') {
+                $('#id_is_seller').val('1').trigger('change');
+            } 
+            if (is_approved == 'True') {
+                $('#id_is_approved').val('1').trigger('change');
+            } 
 
         });
 
@@ -203,6 +213,19 @@
         function checkInput() {
             $('#id_authority').prop('disabled', false);
         }
+
+        $('#profile_form').on('submit', function(e) {
+            var pass = $('#id_password').val();
+            var conf_pass = $('#conf_pass').val();
+            if (pass != conf_pass) {
+                $('#pass-error').text("Password doesn't match");
+                $('#btnSave').prop('dsabled', true);
+                e.preventDefault();
+            } else {
+                $('#pass-error').text("");
+                $('#btnSave').prop('dsabled', false);
+            }
+        })
 
         $('#conf_pass').on('change', function(){
             var pass = $('#id_password').val();

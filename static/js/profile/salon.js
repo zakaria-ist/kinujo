@@ -196,6 +196,9 @@ var g_salon_id = '';
 function showSalonForm(salon_id='') {
     $('#salon_info_tab').html('');
     $('#salon_info_tab').html(salon_form);
+    // $.get("../../templates/salon_form.html", function(data){
+    //     $('#salon_info_tab').html(data);
+    // });
     var options = '';
     $.each(prefecture_list, function(i, v) {
         options += "<option value='"+v[0]+"'>"+v[1]+"</option>";
