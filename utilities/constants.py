@@ -1,7 +1,7 @@
 GENDER_TYPE = (
-    ('NONE', 0),
-    ('MALE', 1),
-    ('FEMALE', 2)
+    (0, 'NONE'),
+    (1, 'MALE'),
+    (2, 'FEMALE')
 )
 
 ACCOUNT_TYPE = (

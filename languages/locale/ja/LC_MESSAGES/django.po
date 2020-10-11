@@ -1,0 +1,99 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-10-10 12:33+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: templates/base.html:55
+msgid "Log Out"
+msgstr "ログアウト"
+
+#: templates/base.html:73
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: templates/base.html:79
+msgid "account management"
+msgstr "アカウント管理"
+
+#: templates/base.html:83
+msgid "Account list"
+msgstr "アカウント一覧"
+
+#: templates/base.html:86
+msgid "Account registration"
+msgstr "アカウント登録"
+
+#: templates/base.html:93
+msgid "Sales management"
+msgstr "売上管理"
+
+#: templates/base.html:97
+msgid "Sales list"
+msgstr "売上一覧"
+
+#: templates/base.html:100
+msgid "Payment list"
+msgstr "支払一覧"
+
+#: templates/master_login.html:34
+msgid "Management system"
+msgstr "管理システム"
+
+#: templates/master_login.html:42 templates/sales_login.html:42
+msgid "I forgot the password"
+msgstr "パスワードを忘れた"
+
+#: templates/password-reset.html:38
+msgid "We will send you an authorization code."
+msgstr "認証コードを送付します。"
+
+#: templates/password-reset.html:39
+msgid "Please enter your phone number and press send."
+msgstr "電話番号を入力して送信を押してください。"
+
+#: templates/password-reset.html:41
+msgid "cell phone number"
+msgstr "携帯電話番号"
+
+#: templates/password-reset.html:44
+msgid "Send"
+msgstr "送信"
+
+#: templates/password-reset.html:47
+msgid "Please enter the verification code"
+msgstr "認証コードを入力してください"
+
+#: templates/password-reset.html:51
+msgid "New password setting"
+msgstr "新しいパスワード設定"
+
+#: templates/password-reset.html:53
+msgid "new password"
+msgstr "新しいパスワード"
+
+#: templates/password-reset.html:56
+msgid "New password (re-enter)"
+msgstr "新しいパスワード(再入力)"
+
+#: templates/password-reset.html:59
+msgid "Change the password"
+msgstr "パスワードを変更する"
+
+#: templates/sales_login.html:34
+msgid "Listing management site"
+msgstr "出品管理サイト"

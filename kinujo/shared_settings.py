@@ -120,6 +120,10 @@ USE_TZ = True
 
 DEFAULT_CHARSET = 'utf-8'
 
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'languages/locale'),
+)
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
