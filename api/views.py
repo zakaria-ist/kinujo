@@ -5,7 +5,9 @@ from prefectures.models import Prefecture
 from products.models import ProductCategory, Product, ProductImage, ProductVariety, ProductVarietySelection, ProductJancode
 from profiles.models import Authority, Profile, UserSale, UserCommision, MonthlyPayment, Address
 from taxes.models import TaxRate
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from .serializers import UserSerializer, GroupSerializer,  OrderSerializer, OrderProductSerializer, OrderProductCommissionSerializer, OrderReceiptSerializer, TotalSaleSerializer, TotalCommissionSerializer, PolicySerializer, PrefectureSerializer, ProductCategorySerializer, ProductSerializer, ProductImageSerializer, ProductVarietySerializer, ProductVarietySelectionSerializer, ProductJancodeSerializer, AuthoritySerializer, ProfileSerializer, UserSaleSerializer, UserCommisionSerializer, MonthlyPaymentSerializer, AddressSerializer, TaxRateSerializer
 
 
@@ -170,3 +172,15 @@ class TaxRateViewSet(viewsets.ModelViewSet):
     """
     queryset = TaxRate.objects.all()
     serializer_class = TaxRateSerializer
+
+class TextView(viewsets.ModelViewSet):
+    queryset = TaxRate.objects.all()
+    serializer_class = TaxRateSerializer
+
+    def send_the_mail(self, request):
+        recipient = request.data['recipient']  # json array
+        return Response("mail sent successfully")
+
+class UserCreate(APIView):
+    def post(self, request, format='json'):
+        return Response('hello')

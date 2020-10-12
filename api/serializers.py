@@ -6,11 +6,27 @@ from products.models import ProductCategory, Product, ProductImage, ProductVarie
 from profiles.models import Authority, Profile, UserSale, UserCommision, MonthlyPayment, Address
 from taxes.models import TaxRate
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    email = serializers.EmailField(
+            required=True,
+            validators=[UniqueValidator(queryset=User.objects.all())]
+            )
+    username = serializers.CharField(
+            validators=[UniqueValidator(queryset=User.objects.all())]
+            )
+    password = serializers.CharField(min_length=8)
+
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'groups']
+        fields = ['url', 'username', 'email', 'password', 'groups']
+
+    def create(self, validated_data):
+        user = User.objects.create_user(validated_data['username'], validated_data['email'],
+                validated_data['password'])
+        return user
+    
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
