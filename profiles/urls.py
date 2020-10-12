@@ -18,6 +18,10 @@ urlpatterns = [
     url(r'^validate_user_phone/(?P<profile_id>.*)/$', views.validate_user_phone, name='validate_user_phone'),
     # url(r'^upload_profile_image/$', views.upload_profile_image, name='upload_profile_image'),
 
+    # for sales section
+    url(r'^sales_list/$', views.sales_list, name='sales_list'),
+    url(r'^payment_list/$', views.payment_list, name='payment_list'),
+
     # for dynamic template rendering
     url(r'^templates/salon_form/$', views.salon_form, name='salon_form'),
     url(r'^templates/salon_table/$', views.salon_table, name='salon_table'),

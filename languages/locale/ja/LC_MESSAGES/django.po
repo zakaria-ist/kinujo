@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-11 04:49+0000\n"
+"POT-Creation-Date: 2020-10-12 12:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: profiles/templates/account_info_tab.html:6
-#: profiles/templates/profile_form.html:41
+#: profiles/templates/profile_form.html:42
 msgid "Account Information"
 msgstr "口座情報"
 
@@ -27,100 +27,103 @@ msgstr "口座情報"
 msgid "Bank Code"
 msgstr "銀行番号"
 
-#: profiles/templates/account_info_tab.html:21
+#: profiles/templates/account_info_tab.html:22
 msgid "Bank Name"
 msgstr "銀行名"
 
-#: profiles/templates/account_info_tab.html:31
+#: profiles/templates/account_info_tab.html:33
 msgid "Branch Code"
 msgstr "支店コード"
 
-#: profiles/templates/account_info_tab.html:42
+#: profiles/templates/account_info_tab.html:45
 msgid "Branch Name"
 msgstr "支店名"
 
-#: profiles/templates/account_info_tab.html:52
+#: profiles/templates/account_info_tab.html:55
 msgid "Account Type"
 msgstr "口座の種類"
 
-#: profiles/templates/account_info_tab.html:56
+#: profiles/templates/account_info_tab.html:59
 msgid "Normal"
 msgstr "正常"
 
-#: profiles/templates/account_info_tab.html:57
+#: profiles/templates/account_info_tab.html:60
 msgid "Current"
 msgstr "電流"
 
-#: profiles/templates/account_info_tab.html:58
+#: profiles/templates/account_info_tab.html:61
 msgid "Savings"
 msgstr "節約"
 
-#: profiles/templates/account_info_tab.html:63
+#: profiles/templates/account_info_tab.html:66
+#: profiles/templates/payment_list.html:60
 msgid "Account Number"
 msgstr "口座番号"
 
-#: profiles/templates/account_info_tab.html:74
+#: profiles/templates/account_info_tab.html:77
+#: profiles/templates/payment_list.html:61
 msgid "Account Holder"
 msgstr "口座名義人"
 
-#: profiles/templates/account_info_tab.html:86
-#: profiles/templates/basic_info_tab.html:207
+#: profiles/templates/account_info_tab.html:89
+#: profiles/templates/basic_info_tab.html:208
 #: profiles/templates/salon_form.html:81
 #: profiles/templates/shipping_form.html:85
 msgid "Save"
 msgstr "保存する"
 
-#: profiles/templates/account_info_tab.html:87
-#: profiles/templates/basic_info_tab.html:208
+#: profiles/templates/account_info_tab.html:90
+#: profiles/templates/basic_info_tab.html:209
 #: profiles/templates/salon_form.html:82
 #: profiles/templates/shipping_form.html:86
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: profiles/templates/basic_info_tab.html:15
+#: profiles/templates/basic_info_tab.html:16
 msgid "Profile"
 msgstr "プロフィール"
 
-#: profiles/templates/basic_info_tab.html:21
+#: profiles/templates/basic_info_tab.html:22
 msgid "Profile Image"
 msgstr "プロフィール画像"
 
-#: profiles/templates/basic_info_tab.html:55
+#: profiles/templates/basic_info_tab.html:56
 msgid "Authority"
 msgstr "権限"
 
-#: profiles/templates/basic_info_tab.html:60
+#: profiles/templates/basic_info_tab.html:61
 #: profiles/templates/profile_list.html:59
 msgid "Type"
 msgstr "タイプ"
 
-#: profiles/templates/basic_info_tab.html:66
+#: profiles/templates/basic_info_tab.html:67
 msgid "Nickname"
 msgstr "ニックネーム"
 
-#: profiles/templates/basic_info_tab.html:73
+#: profiles/templates/basic_info_tab.html:74
+#: profiles/templates/payment_list.html:57
 #: profiles/templates/profile_list.html:60
 msgid "Name"
 msgstr "名前"
 
-#: profiles/templates/basic_info_tab.html:78
+#: profiles/templates/basic_info_tab.html:79
 msgid "ID"
 msgstr "ID"
 
-#: profiles/templates/basic_info_tab.html:85
+#: profiles/templates/basic_info_tab.html:86
 msgid "Selling Authority"
 msgstr "販売機関"
 
-#: profiles/templates/basic_info_tab.html:92
+#: profiles/templates/basic_info_tab.html:93
 msgid "Gender"
 msgstr "性別"
 
-#: profiles/templates/basic_info_tab.html:97
+#: profiles/templates/basic_info_tab.html:98
 msgid "Birthday"
 msgstr "お誕生日"
 
-#: profiles/templates/basic_info_tab.html:103
-#: profiles/templates/basic_info_tab.html:193
+#: profiles/templates/basic_info_tab.html:104
+#: profiles/templates/basic_info_tab.html:194
 #: profiles/templates/salon_form.html:70
 #: profiles/templates/salon_info_tab.html:24
 #: profiles/templates/shipping_form.html:70
@@ -128,64 +131,63 @@ msgstr "お誕生日"
 msgid "Phone Number"
 msgstr "電話番号"
 
-#: profiles/templates/basic_info_tab.html:108
+#: profiles/templates/basic_info_tab.html:109
 msgid "Password"
 msgstr "パスワード"
 
-#: profiles/templates/basic_info_tab.html:116
+#: profiles/templates/basic_info_tab.html:117
 msgid "Confirm Password"
 msgstr "パスワードを認証する"
 
-#: profiles/templates/basic_info_tab.html:121
+#: profiles/templates/basic_info_tab.html:122
 msgid "If the password is blank it will not be changed"
 msgstr "パスワードが空白の場合、パスワードは変更されません"
 
-#: profiles/templates/basic_info_tab.html:126
+#: profiles/templates/basic_info_tab.html:127
 msgid "Introducer"
 msgstr "イントロデューサー"
 
-#: profiles/templates/basic_info_tab.html:142
+#: profiles/templates/basic_info_tab.html:143
 msgid "Approval"
 msgstr "承認"
 
-#: profiles/templates/basic_info_tab.html:150
+#: profiles/templates/basic_info_tab.html:151
 msgid "General Store"
 msgstr "雑貨店"
 
-#: profiles/templates/basic_info_tab.html:165
+#: profiles/templates/basic_info_tab.html:166
 msgid "Corporate Information"
 msgstr "企業情報"
 
-#: profiles/templates/basic_info_tab.html:167
+#: profiles/templates/basic_info_tab.html:168
 msgid "Corporate Name"
 msgstr "会社名"
 
-#: profiles/templates/basic_info_tab.html:172
+#: profiles/templates/basic_info_tab.html:173
 #: profiles/templates/salon_form.html:19
 #: profiles/templates/salon_info_tab.html:22
 msgid "Representative's Name"
 msgstr "代表者の名前"
 
-#: profiles/templates/basic_info_tab.html:178
+#: profiles/templates/basic_info_tab.html:179
 #: profiles/templates/salon_form.html:50
-#: profiles/templates/shipping_form.html:39
 #: profiles/templates/shipping_form.html:50
 msgid "Address One"
 msgstr "アドレス1"
 
-#: profiles/templates/basic_info_tab.html:183
+#: profiles/templates/basic_info_tab.html:184
 #: profiles/templates/salon_form.html:60
 #: profiles/templates/shipping_form.html:60
 msgid "Address Two"
 msgstr "アドレス2"
 
-#: profiles/templates/basic_info_tab.html:189
+#: profiles/templates/basic_info_tab.html:190
 #: profiles/templates/salon_form.html:28
 #: profiles/templates/shipping_form.html:28
 msgid "Zip Code"
 msgstr "郵便番号"
 
-#: profiles/templates/basic_info_tab.html:200
+#: profiles/templates/basic_info_tab.html:201
 msgid "Active"
 msgstr "アクティブ"
 
@@ -199,6 +201,7 @@ msgid "General"
 msgstr "一般"
 
 #: profiles/templates/client_info_tab.html:11
+#: profiles/templates/payment_list.html:44
 #: profiles/templates/profile_list.html:37
 msgid "Store"
 msgstr "お店"
@@ -215,57 +218,130 @@ msgstr "顧客番号"
 msgid "Options"
 msgstr "オプション"
 
+#: profiles/templates/commission_info_tab.html:5
+#, fuzzy
+#| msgid "Client Information"
+msgid "Commission Information"
+msgstr "クライアント情報"
+
+#: profiles/templates/commission_info_tab.html:13
+#: profiles/templates/sales_info_tab.html:13
+msgid "Date"
+msgstr ""
+
+#: profiles/templates/commission_info_tab.html:14
+#: profiles/templates/sales_info_tab.html:14
+msgid "Product"
+msgstr ""
+
+#: profiles/templates/commission_info_tab.html:15
+msgid "Seller"
+msgstr ""
+
+#: profiles/templates/commission_info_tab.html:16
+#, fuzzy
+#| msgid "Selling Authority"
+msgid "Selling Price"
+msgstr "販売機関"
+
+#: profiles/templates/commission_info_tab.html:17
+#: profiles/templates/sales_list.html:55
+msgid "Commission"
+msgstr ""
+
 #: profiles/templates/item_info_tab.html:5
 msgid "Item Information"
 msgstr "アイテム情報"
 
-#: profiles/templates/profile_form.html:10
+#: profiles/templates/payment_list.html:8
+#: profiles/templates/payment_list.html:31
+#, fuzzy
+#| msgid "Sales Management"
+msgid "Payment Management"
+msgstr "売上管理"
+
+#: profiles/templates/payment_list.html:42
+#: profiles/templates/profile_list.html:35
+msgid "Ambassador"
+msgstr "大使"
+
+#: profiles/templates/payment_list.html:46
+msgid "Paid"
+msgstr ""
+
+#: profiles/templates/payment_list.html:48
+msgid "Not Yet"
+msgstr ""
+
+#: profiles/templates/payment_list.html:58
+#, fuzzy
+#| msgid "Bank Code"
+msgid "Bank"
+msgstr "銀行番号"
+
+#: profiles/templates/payment_list.html:59
+#, fuzzy
+#| msgid "Branch Code"
+msgid "Branch"
+msgstr "支店コード"
+
+#: profiles/templates/payment_list.html:62
+msgid "Amount"
+msgstr ""
+
+#: profiles/templates/payment_list.html:63
+#, fuzzy
+#| msgid "Payment list"
+msgid "Payment Date"
+msgstr "支払一覧"
+
+#: profiles/templates/profile_form.html:11
 msgid "Profile Add/Edit"
 msgstr "プロファイルの追加/編集"
 
-#: profiles/templates/profile_form.html:27
+#: profiles/templates/profile_form.html:28
 msgid "Profile Details"
 msgstr "プロファイルの詳細"
 
-#: profiles/templates/profile_form.html:32
+#: profiles/templates/profile_form.html:33
 msgid "Basic Information"
 msgstr "基本情報"
 
-#: profiles/templates/profile_form.html:35
+#: profiles/templates/profile_form.html:36
 msgid "Item List"
 msgstr "出品一覧"
 
-#: profiles/templates/profile_form.html:38
+#: profiles/templates/profile_form.html:39
 msgid "Client"
 msgstr "顧客"
 
-#: profiles/templates/profile_form.html:44 profiles/templates/salon_form.html:6
+#: profiles/templates/profile_form.html:45 profiles/templates/salon_form.html:6
 #: profiles/templates/salon_info_tab.html:5
 msgid "Salon Information"
 msgstr "サロン情報"
 
-#: profiles/templates/profile_form.html:47
+#: profiles/templates/profile_form.html:48
 #: profiles/templates/shipping_form.html:6
 #: profiles/templates/shipping_info_tab.html:5
 msgid "Shipping Information"
 msgstr "送付先情報"
 
-#: profiles/templates/profile_form.html:105
+#: profiles/templates/profile_form.html:106
 #: profiles/templates/profile_list.html:82
 msgid "Delete Confirm Dialog"
 msgstr "確認ダイアログの削除"
 
-#: profiles/templates/profile_form.html:112
+#: profiles/templates/profile_form.html:113
 #: profiles/templates/profile_list.html:89
 msgid "Are you sure want to delete?"
 msgstr "削除してもよろしいですか？"
 
-#: profiles/templates/profile_form.html:117
+#: profiles/templates/profile_form.html:118
 #: profiles/templates/profile_list.html:94
 msgid "No"
 msgstr "番号"
 
-#: profiles/templates/profile_form.html:118
+#: profiles/templates/profile_form.html:119
 #: profiles/templates/profile_list.html:96
 msgid "Yes"
 msgstr "はい"
@@ -274,10 +350,6 @@ msgstr "はい"
 #: profiles/templates/profile_list.html:31
 msgid "Profile List"
 msgstr "プロファイルリスト"
-
-#: profiles/templates/profile_list.html:35
-msgid "Ambassador"
-msgstr "大使"
 
 #: profiles/templates/profile_list.html:41
 msgid "Master"
@@ -301,12 +373,35 @@ msgstr "ストアアカウント数"
 msgid "Number of general users"
 msgstr "一般ユーザー数"
 
+#: profiles/templates/sales_info_tab.html:5
+#, fuzzy
+#| msgid "Salon Information"
+msgid "Sales Information"
+msgstr "サロン情報"
+
+#: profiles/templates/sales_info_tab.html:15
+#, fuzzy
+#| msgid "Sales Management"
+msgid "Sales Amount"
+msgstr "売上管理"
+
+#: profiles/templates/sales_list.html:8 profiles/templates/sales_list.html:31
+#, fuzzy
+#| msgid "Sales list"
+msgid "Sales List"
+msgstr "売上一覧"
+
+#: profiles/templates/sales_list.html:52
+msgid "Product Sales"
+msgstr ""
+
 #: profiles/templates/salon_form.html:10
 #: profiles/templates/salon_info_tab.html:21
 msgid "Salon Name"
 msgstr "サロン名"
 
 #: profiles/templates/salon_form.html:39
+#: profiles/templates/shipping_form.html:39
 msgid "Prefecture"
 msgstr "県"
 
@@ -423,4 +518,3 @@ msgstr "パスワードを変更する"
 #: templates/sales_login.html:34
 msgid "Listing management site"
 msgstr "出品管理サイト"
-

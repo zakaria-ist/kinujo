@@ -5,6 +5,7 @@
     {% load i18n %}
     <link href="{% static "css/select2/select2.css" %}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.css' %}"/>
+    <script src="https://zipaddr.github.io/bankautob.js" charset="UTF-8"> </script>
 {% endblock %}
 
 {% block title %}{% trans 'Profile Add/Edit'%}{% endblock %}
@@ -126,7 +127,6 @@
     <!-- Datatables -->
     <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script> 
     <script type="text/javascript" src="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.js' %}"></script>
-    <script src="https://zipaddr.github.io/bankautob.js" charset="UTF-8"> </script>
     <script src="{% static "js/select2/select2.js" %}"></script>
     <script src="{% static "js/profile/financial.js" %}"></script>
     <script src="{% static "js/profile/item.js" %}"></script>

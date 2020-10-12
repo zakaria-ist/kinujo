@@ -614,13 +614,29 @@ def salon_table(request):
 # @login_required
 def shipping_form(request):
     """
-    Method to redirect to salon entry form.
+    Method to redirect to shipping entry form.
     """
     return render(request, 'shipping_form.html')
 
 # @login_required
 def shipping_table(request):
     """
-    Method to redirect to salon.
+    Method to redirect to shipping.
     """
     return render(request, 'shipping_info_tab.html')
+
+# @login_required
+def sales_list(request):
+    """
+    Method to redirect to sales list page.
+    """
+
+    return render(request, 'sales_list.html')
+
+# @login_required
+def payment_list(request):
+    """
+    Method to redirect to payment list page.
+    """
+
+    return render(request, 'payment_list.html')

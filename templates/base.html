@@ -127,10 +127,10 @@
                     </a>
                     <ul class="sub">
                         <li class="{% block sales_list_active %}{% endblock %}">
-                            <a href="{% url 'home_load' %}" >{% trans 'Sales list' %}</a>
+                            <a href="{% url 'sales_list' %}" >{% trans 'Sales list' %}</a>
                         </li>
-                        <li class="{% block sales_add_active %}{% endblock %}">
-                            <a href="{% url 'home_load' %}">{% trans 'Payment list' %}</a>
+                        <li class="{% block payment_list_active %}{% endblock %}">
+                            <a href="{% url 'payment_list' %}">{% trans 'Payment list' %}</a>
                         </li>
                     </ul>
                 </li>
@@ -164,7 +164,7 @@
 <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/ga.js' %}?{% now 'H' %}"></script>
 <script type="text/javascript" src="{% static 'assets/jquery-ui/jquery-ui.min.js' %}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script src="{% static "js/moment.min.js" %}"></script>
 <script type="text/javascript" src="{% static 'js/common.js' %}"></script>
 
 <!--right slidebar-->
