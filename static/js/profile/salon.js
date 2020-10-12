@@ -1,113 +1,4 @@
 
-var salon_form = `<section class="panel">
-                    <header class="panel-heading pb-5" style="font-size: 25px">
-                        <strong>Salon Information</strong>
-                    </header>
-                    <div class="col-lg-12">
-                        <div class="form-group row">
-                            <label for="salon_name" class="col-lg-2 control-label">Salon Name<span
-                                    class="span-required">(*)</span></label>
-                            <div class="col-lg-6">
-                                <input class="form-control trs-field" type="text"
-                                    name="salon_name"
-                                    id="salon_name">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="pic_name" class="col-lg-2 control-label">Representative Name<span
-                                    class="span-required">(*)</span></label>
-                            <div class="col-lg-6">
-                                <input class="form-control trs-field" type="text"
-                                    name="pic_name"
-                                    id="pic_name">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="salon_zip_code" class="col-lg-2 control-label">Zip Code<span
-                                    class="span-required">(*)</span></label>
-                            <div class="col-lg-6">
-                                <input class="form-control trs-field" type="text"
-                                    name="salon_zip_code"
-                                    id="salon_zip_code"
-                                    maxlength="8"
-                                    placeholder="">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="salon_prefecture" class="col-lg-2 control-label">Prefecture<span
-                                    class="span-required">(*)</span></label>
-                            <div class="col-lg-6">
-                                <select name="salon_prefecture" id="salon_prefecture" class="form-control trs-field">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="salon_address1" class="col-lg-2 control-label">Address One<span
-                                    class="span-required">(*)</span></label>
-                            <div class="col-lg-6">
-                                <input class="form-control trs-field" type="text"
-                                    name="salon_address1"
-                                    id="salon_address1"
-                                    placeholder="">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="salon_address2" class="col-lg-2 control-label">Address Two<span
-                                    class="span-required">(*)</span></label>
-                            <div class="col-lg-6">
-                                <input class="form-control trs-field" type="text"
-                                    name="salon_address2"
-                                    id="salon_address2"
-                                    placeholder="">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="pic_tel" class="col-lg-2 control-label">Phone Number<span
-                                    class="span-required">(*)</span></label>
-                            <div class="col-lg-6">
-                                <input class="form-control trs-field" type="text"
-                                    name="pic_tel"
-                                    id="pic_tel"
-                                    placeholder="">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="text-center">
-                                <button type="button" onclick="saveSalonInfo()" name="btnSalonSave" id="btnSalonSave" class="btn btn-primary blue-btn">Save</button>
-                                <a class="btn btn-default gray-btn" onclick="cancelSalonForm()">Cancel</a>
-                            </div>
-                        </div>
-                    </div>
-                    </section>`;
-
-var salon_table = `<header class="panel-heading" style="font-size: 25px">
-                    <strong>Salon Information</strong>
-                    </header>
-                    <div class="table-section white-bg">
-                    <div class="text-right pb-3">
-                        <span class="">
-                            <a type="button" class="btn btn-primary blue-btn" onclick="showSalonForm()"> 
-                                <span>Add</span>
-                            </a>
-                        </span>
-                    </div>
-                    <div class="adv-table table-responsive">
-                        <table class="display table table-bordered table-striped table-condensed"
-                            id="salon-table" style="width:100%">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Salon Name</th>
-                                <th>Representative's Name</th>
-                                <th>Address</th>
-                                <th>Phone Number</th>
-                                <th class="text-center" style="min-width:90px!important;">Options</th>
-                            </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    </div>`;
-
 function loadSalonTableData() {
     $('#salon-table').DataTable().destroy();
     $('#salon-table').DataTable({
@@ -195,19 +86,18 @@ function deleteSalonConfirm(id) {
 var g_salon_id = '';
 function showSalonForm(salon_id='') {
     $('#salon_info_tab').html('');
-    $('#salon_info_tab').html(salon_form);
-    // $.get("../../templates/salon_form.html", function(data){
-    //     $('#salon_info_tab').html(data);
-    // });
-    var options = '';
-    $.each(prefecture_list, function(i, v) {
-        options += "<option value='"+v[0]+"'>"+v[1]+"</option>";
+    $.get("/profiles/templates/salon_form/", function(data){
+        $('#salon_info_tab').html(data);
+        var options = '';
+        $.each(prefecture_list, function(i, v) {
+            options += "<option value='"+v[0]+"'>"+v[1]+"</option>";
+        });
+        $('#salon_prefecture').html(options);
+        if (!$('#salon_prefecture').data('select2')) {
+            //$('#prefecture').select2('destroy');
+            $('#salon_prefecture').select2({});
+        }
     });
-    $('#salon_prefecture').html(options);
-    if (!$('#salon_prefecture').data('select2')) {
-        //$('#prefecture').select2('destroy');
-        $('#salon_prefecture').select2({});
-    }
     if (salon_id != '') {
         g_salon_id = salon_id;
         $.ajax({
@@ -262,9 +152,7 @@ function saveSalonInfo() {
                         }
                 });
 
-                $('#salon_info_tab').html('');
-                $('#salon_info_tab').html(salon_table);
-                loadSalonTableData();
+                cancelSalonForm();
             },
             error: function (e) {
                 $.confirm({
@@ -295,6 +183,9 @@ function saveSalonInfo() {
 
 function cancelSalonForm() {
     $('#salon_info_tab').html('');
-    $('#salon_info_tab').html(salon_table);
-    loadSalonTableData();
+    $.get("/profiles/templates/salon_table/", function(data){
+        $('#salon_info_tab').html(data);
+        loadSalonTableData();
+    });
+    
 }

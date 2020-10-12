@@ -308,7 +308,7 @@ msgstr "サロン名"
 
 #: profiles/templates/salon_form.html:39
 msgid "Prefecture"
-msgstr ""
+msgstr "県"
 
 #: profiles/templates/salon_info_tab.html:23
 #: profiles/templates/shipping_info_tab.html:23

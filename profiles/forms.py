@@ -27,21 +27,21 @@ class ProfileForm(forms.ModelForm):
     password = forms.CharField(required=False,
                             widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     nickname = forms.CharField(required=True,
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'nickname'}))
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     real_name = forms.CharField(required=True,
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'name'}))
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     representative_name = forms.CharField(required=False,
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'representative name'}))
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     corporate_name = forms.CharField(required=False,
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'corporate name'}))
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     corporate_tel = forms.CharField(required=False,
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'corporate phone'}))
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     address1 = forms.CharField(required=False,
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'address1'}))
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     address2 = forms.CharField(required=False,
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'address2'}))
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     word = forms.CharField(required=True,
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'One word'}))
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     authority = NameChoiceField(queryset=None, empty_label=None, required=True,
                                    widget=forms.Select(attrs={'class': 'form-control', 'required': 'required'}))
     salon_category = forms.ChoiceField(required=False, choices=SALON_CATEGORY,

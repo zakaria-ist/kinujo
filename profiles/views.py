@@ -17,7 +17,7 @@ import json
 from django.contrib import messages
 from django.db.models import Q
 
-# @login_required
+# @login_required    
 def home_load(request):
     """
     Method to redirect to home/dashboard.
@@ -596,3 +596,31 @@ def validate_user_phone(request, profile_id):
 
     context = { 'message': message }
     return HttpResponse(json.dumps(context), content_type="application/json")
+
+# @login_required
+def salon_form(request):
+    """
+    Method to redirect to salon entry form.
+    """
+    return render(request, 'salon_form.html')
+
+# @login_required
+def salon_table(request):
+    """
+    Method to redirect to salon.
+    """
+    return render(request, 'salon_info_tab.html')
+
+# @login_required
+def shipping_form(request):
+    """
+    Method to redirect to salon entry form.
+    """
+    return render(request, 'shipping_form.html')
+
+# @login_required
+def shipping_table(request):
+    """
+    Method to redirect to salon.
+    """
+    return render(request, 'shipping_info_tab.html')
