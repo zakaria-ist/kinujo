@@ -4,6 +4,11 @@ GENDER_TYPE = (
     (2, 'FEMALE')
 )
 
+YES_NO = (
+    (0, 'NO'),
+    (1, 'YES')
+)
+
 ACCOUNT_TYPE = (
     (1, 'Normal'),
     (2, 'Current'),

@@ -2,20 +2,17 @@
     {% load i18n %}
 {% endblock %}
 <header class="panel-heading" style="font-size: 25px">
-    <strong>{% trans 'Item Information' %}</strong>
+    <strong>{% trans 'Sales Information' %}</strong>
 </header>
 <div class="table-section white-bg">
     <div class="adv-table table-responsive">
         <table class="display table table-bordered table-striped table-condensed"
-            id="item-table" style="width:100%">
+            id="sales-table" style="width:100%">
             <thead>
             <tr>
-                <th>#</th>
-                <th>Type</th>
-                <th>Name</th>
-                <th>Number of store account</th>
-                <th>Number of general users</th>
-                <th class="text-center" style="min-width:90px!important;">{% trans 'Options' %}</th>
+                <th>{% trans 'Date' %}</th>
+                <th>{% trans 'Product' %}</th>
+                <th>{% trans "Sales Amount" %}</th>
             </tr>
             </thead>
         </table>

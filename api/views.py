@@ -8,6 +8,10 @@ from taxes.models import TaxRate
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.http import HttpResponseRedirect
+from django.utils import translation
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import activate, deactivate_all
 from .serializers import UserSerializer, GroupSerializer,  OrderSerializer, OrderProductSerializer, OrderProductCommissionSerializer, OrderReceiptSerializer, TotalSaleSerializer, TotalCommissionSerializer, PolicySerializer, PrefectureSerializer, ProductCategorySerializer, ProductSerializer, ProductImageSerializer, ProductVarietySerializer, ProductVarietySelectionSerializer, ProductJancodeSerializer, AuthoritySerializer, ProfileSerializer, UserSaleSerializer, UserCommisionSerializer, MonthlyPaymentSerializer, AddressSerializer, TaxRateSerializer
 
 
@@ -184,3 +188,15 @@ class TextView(viewsets.ModelViewSet):
 class UserCreate(APIView):
     def post(self, request, format='json'):
         return Response('hello')
+        
+@csrf_exempt
+def change_language(request):
+    """
+    API to change language.
+    """
+
+    language = request.POST['language']
+    deactivate_all()
+    activate(language)
+    request.session[translation.LANGUAGE_SESSION_KEY] = language
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

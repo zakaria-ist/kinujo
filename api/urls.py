@@ -29,4 +29,6 @@ router.register(r'tax_rates', views.TaxRateViewSet)
 
 urlpatterns = [
     url(r'test', views.UserCreate.as_view(), name='account-create'),
+    url(r'^change-language/$', views.change_language, name='change_language'),
 ]
+urlpatterns += router.urls

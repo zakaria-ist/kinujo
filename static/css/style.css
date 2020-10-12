@@ -6426,3 +6426,17 @@ div.dataTables_wrapper div.dataTables_filter label {
 .pointer { 
     cursor: pointer; 
 }
+
+#sales_summary {
+    border-style: solid;
+    font-size: 30px;
+    border-color: #000;
+    color: #000;
+}
+
+.changable_date {
+    vertical-align: middle;
+    border-radius: 1px;
+    font-size: 25px;
+    color: #000;
+}

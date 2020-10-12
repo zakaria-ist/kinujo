@@ -31,7 +31,7 @@ class Profile(models.Model):
     is_approved = models.BooleanField(default=False)
     image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True)
     real_name = models.CharField(max_length=255, default='')
-    gender = models.SmallIntegerField(null=True, choices=tuple([status[::-1] for status in GENDER_TYPE]))
+    gender = models.SmallIntegerField(null=True, choices=GENDER_TYPE)
     birthday = models.DateField(null=True)
     zipcode = models.CharField(max_length=7, default='')
     prefecture = models.ForeignKey(Prefecture, on_delete=models.CASCADE, null=True)

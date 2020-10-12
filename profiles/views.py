@@ -17,7 +17,7 @@ import json
 from django.contrib import messages
 from django.db.models import Q
 
-# @login_required
+# @login_required    
 def home_load(request):
     """
     Method to redirect to home/dashboard.
@@ -191,10 +191,11 @@ def profile_add(request):
                 user.save()
                 profile = form.save(commit=False)
                 profile.user = user
-                if request.POST.get('selling_auth'):
-                    profile.is_seller = int(request.POST.get('selling_auth'))
-                if request.POST.get('approval'):
-                    profile.is_approved = int(request.POST.get('approval'))
+                if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
+                    profile.indroducer = int(request.POST.get('introducer'))
+                if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
+                    profile.indroducer = int(request.POST.get('general_store'))
+                profile.user_code = request.POST.get('user_code')
                 profile.save()
 
                 profile_image = request.FILES.get('profile_image', False)
@@ -229,27 +230,31 @@ def profile_edit(request, profile_id):
     """
 
     if request.method == 'POST':
-        form = ProfileForm(request.POST)
+        profile = Profile.objects.get(pk=profile_id)
+        form = ProfileForm(request.POST, instance=profile)
         if form.is_valid:
             try:
                 user = User.objects.filter(username=request.POST.get('tel')).first()
                 if user:
                     if request.POST.get('password') != '' and request.POST.get('password') != None:
-                        user.first_name = request.POST.get('user_code')
+                        user.first_name = request.POST.get('nickname')
                         user.set_password(request.POST.get('password'))
                         user.save()
                 else:
                     if request.POST.get('password') != '' and request.POST.get('password') != None:
                         user = User.objects.create_user(request.POST.get('tel'), 'test@test.com', request.POST.get('password'))
-                        user.first_name = request.POST.get('user_code')
+                        user.first_name = request.POST.get('nickname')
                         user.save()
-
+                
                 profile = form.save(commit=False)
-                profile.user = user
-                if request.POST.get('selling_auth'):
-                    profile.is_seller = int(request.POST.get('selling_auth'))
-                if request.POST.get('approval'):
-                    profile.is_approved = int(request.POST.get('approval'))
+                if user:
+                    profile.user_id = user.id
+                else:
+                    profile.user_id = request.POST.get('user_id')
+                if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
+                    profile.indroducer = int(request.POST.get('introducer'))
+                if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
+                    profile.indroducer = int(request.POST.get('general_store'))
                 profile.save()
 
                 profile_image = request.FILES.get('profile_image', False)
@@ -591,3 +596,47 @@ def validate_user_phone(request, profile_id):
 
     context = { 'message': message }
     return HttpResponse(json.dumps(context), content_type="application/json")
+
+# @login_required
+def salon_form(request):
+    """
+    Method to redirect to salon entry form.
+    """
+    return render(request, 'salon_form.html')
+
+# @login_required
+def salon_table(request):
+    """
+    Method to redirect to salon.
+    """
+    return render(request, 'salon_info_tab.html')
+
+# @login_required
+def shipping_form(request):
+    """
+    Method to redirect to shipping entry form.
+    """
+    return render(request, 'shipping_form.html')
+
+# @login_required
+def shipping_table(request):
+    """
+    Method to redirect to shipping.
+    """
+    return render(request, 'shipping_info_tab.html')
+
+# @login_required
+def sales_list(request):
+    """
+    Method to redirect to sales list page.
+    """
+
+    return render(request, 'sales_list.html')
+
+# @login_required
+def payment_list(request):
+    """
+    Method to redirect to payment list page.
+    """
+
+    return render(request, 'payment_list.html')
