@@ -28,7 +28,9 @@ router.register(r'addresses', views.AddressViewSet)
 router.register(r'tax_rates', views.TaxRateViewSet)
 
 urlpatterns = [
-    url(r'test', views.UserCreate.as_view(), name='account-create'),
+    url(r'user/register', views.UserRegister.as_view(), name='user-register'),
+    url(r'user/login', views.UserLogin.as_view(), name='user-login'),
+    url(r'app/config', views.AppCongif.as_view(), name='app-config'),
     url(r'^change-language/$', views.change_language, name='change_language'),
 ]
 urlpatterns += router.urls

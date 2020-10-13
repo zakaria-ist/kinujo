@@ -9,7 +9,7 @@ class AccountsTest(APITestCase):
         self.test_user = User.objects.create_user('testuser', 'test@example.com', 'testpassword')
 
         # URL for creating an account.
-        self.create_url = reverse('account-create', kwargs={})
+        self.create_url = reverse('user-register', kwargs={})
 
     def test_create_user(self):
         """
@@ -18,7 +18,8 @@ class AccountsTest(APITestCase):
         data = {
             'username': 'foobar',
             'email': 'foobar@example.com',
-            'password': 'somepassword'
+            'password': 'somepassword',
+            'tel': 'somepassword'
         }
 
         response = self.client.post(self.create_url , data, format='json')

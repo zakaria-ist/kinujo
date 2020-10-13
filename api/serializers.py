@@ -16,7 +16,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(
             validators=[UniqueValidator(queryset=User.objects.all())]
             )
-    password = serializers.CharField(min_length=8)
+    password = serializers.CharField(min_length=8, write_only=True)
 
     class Meta:
         model = User
@@ -115,3 +115,5 @@ class TaxRateSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TaxRate
         fields = ['start_date','end_date','tax_rate','reduced_tax_rate','is_hidden','created','modified']
+
+

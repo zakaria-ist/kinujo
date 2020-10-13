@@ -6,6 +6,7 @@ from products.models import ProductCategory, Product, ProductImage, ProductVarie
 from profiles.models import Authority, Profile, UserSale, UserCommision, MonthlyPayment, Address
 from taxes.models import TaxRate
 from rest_framework import viewsets, status
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import HttpResponseRedirect
@@ -13,6 +14,7 @@ from django.utils import translation
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import activate, deactivate_all
 from .serializers import UserSerializer, GroupSerializer,  OrderSerializer, OrderProductSerializer, OrderProductCommissionSerializer, OrderReceiptSerializer, TotalSaleSerializer, TotalCommissionSerializer, PolicySerializer, PrefectureSerializer, ProductCategorySerializer, ProductSerializer, ProductImageSerializer, ProductVarietySerializer, ProductVarietySelectionSerializer, ProductJancodeSerializer, AuthoritySerializer, ProfileSerializer, UserSaleSerializer, UserCommisionSerializer, MonthlyPaymentSerializer, AddressSerializer, TaxRateSerializer
+from rest_framework.test import APIRequestFactory
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -185,9 +187,55 @@ class TextView(viewsets.ModelViewSet):
         recipient = request.data['recipient']  # json array
         return Response("mail sent successfully")
 
-class UserCreate(APIView):
+class UserRegister(APIView):
     def post(self, request, format='json'):
-        return Response('hello')
+        factory = APIRequestFactory()
+        n = factory.get('/')
+        context = {
+            'request': Request(APIRequestFactory().get('/')),
+        }
+        userSerializer = UserSerializer(data=request.data, context=context)
+        if userSerializer.is_valid():
+            user = userSerializer.save()
+            profileSerializer = ProfileSerializer(data={
+                'user' : userSerializer.data['url'],
+                'tel' : request.data['tel'],
+                'password' : request.data['password'],
+                'email' : request.data['email'],
+                'nickname' : request.data['username'],
+                'user_code' : user.id,
+                'authority' : 1
+            }, context={
+                'request': Request(APIRequestFactory().get('/')),
+            })
+            if profileSerializer.is_valid():
+                profile = profileSerializer.save()
+                if user:
+                    return Response({"success": True, "data" : {
+                        "user" : userSerializer.data
+                    }}, status=status.HTTP_201_CREATED)
+            else:
+                print(profileSerializer.errors)
+                return Response({"success" : False}, status=status.HTTP_200_OK)
+        else:
+            print(userSerializer.errors)
+            return Response({"success" : False}, status=status.HTTP_200_OK)
+        
+class UserLogin(APIView):
+    def post(self, request, format='json'):
+        factory = APIRequestFactory()
+        n = factory.get('/')
+        serializer = UserSerializer(data=request.data, context={
+            'request': Request(n),
+        })
+        if serializer.is_valid():
+            user = serializer.save()
+            if user:
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class AppConfig(APIView):
+    def post(self, request, format='json')
+        return Response({"success" : True}, status=status.HTTP_200_OK)
         
 @csrf_exempt
 def change_language(request):
