@@ -234,7 +234,7 @@ class UserLogin(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class AppConfig(APIView):
-    def post(self, request, format='json')
+    def post(self, request, format='json'):
         return Response({"success" : True}, status=status.HTTP_200_OK)
         
 @csrf_exempt
