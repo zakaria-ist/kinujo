@@ -27,4 +27,9 @@ urlpatterns = [
     url(r'^templates/salon_table/$', views.salon_table, name='salon_table'),
     url(r'^templates/shipping_form/$', views.shipping_form, name='shipping_form'),
     url(r'^templates/shipping_table/$', views.shipping_table, name='shipping_table'),
+
+
+    # for listing user
+    url(r'^listing_sales_list/$', views.listing_sales_list, name='listing_sales_list'),
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

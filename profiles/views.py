@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponsePermanentRedirect
 from django.urls import reverse
 from django.template import RequestContext
@@ -23,6 +23,13 @@ def home_load(request):
     Method to redirect to home/dashboard.
     """
     return render(request, 'base.html')
+
+# @login_required 
+def listing_home_load(request):
+    """
+    Method to redirect to listing home/dashboard.
+    """
+    return render(request, 'listing_base.html')
 
 def pass_reset(request):
     """
@@ -87,7 +94,7 @@ def login_sales(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return HttpResponsePermanentRedirect(reverse('home_load'))
+                return redirect('listing_home_load')
             else:
                 return render(request, 'sales_login.html')
         except Exception as e:
@@ -640,3 +647,12 @@ def payment_list(request):
     """
 
     return render(request, 'payment_list.html')
+
+
+# @login_required
+def listing_sales_list(request):
+    """
+    Method to redirect to sales list page.
+    """
+
+    return render(request, 'listing_sales_list.html')
