@@ -119,3 +119,6 @@ def product_delete(request, product_id):
     except Exception as e:
         print(e)
     return render(request, 'product_list.html')
+
+def item_registration(request):
+    return render(request, 'item-registration.html')

@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^product_add/$', views.product_add, name='product_add'),
     url(r'^product_edit/(?P<product_id>.*)/$', views.product_edit, name='product_edit'),
     url(r'^product_delete/(?P<product_id>.*)/$', views.product_delete, name='product_delete'),
+    # url(r'^item-registration/$', views.item_registration, name='item_registration'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
