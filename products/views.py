@@ -17,13 +17,6 @@ from django.contrib import messages
 from django.db.models import Q
 
 
-def get_product_form(request):
-    """
-    Method to get product form page.
-    """
-
-    return render(request, 'product_form.html')
-
 # @login_required
 def product_list(request):
     """
@@ -31,6 +24,7 @@ def product_list(request):
     """
 
     return render(request, 'product_list.html')
+
 
 # @login_required
 def ProductList__asJson(request):
@@ -43,16 +37,20 @@ def ProductList__asJson(request):
     length = request.GET['length']
     search = request.GET['search[value]']
 
-    auth_type = eval(request.GET.get('filter_str'))
-
-    product_list = Product.objects.filter(authority_id__in=auth_type, is_hidden=False).order_by('authority_id')
-    if 0 in auth_type:
-        product_list = product_list.filter(is_approved=False)
+    product_list = Product.objects.filter(is_hidden=False).order_by('name')
+    filter_array = eval(request.GET.get('filter_str'))
+    if len(filter_array):
+        if 1 not in filter_array:
+            product_list = product_list.exclude(is_opened=True)
+        if 2 not in filter_array:
+            product_list = product_list.exclude(is_opened=False)
+        if 3 not in filter_array:
+            product_list = product_list.exclude(is_draft=True)
         
     records_total = product_list.count()
 
     if search:  # Filter data base on search
-        product_list = product_list.filter(Q(nickname__icontains=search)).order_by('-nickname')
+        product_list = product_list.filter(Q(name__icontains=search)).order_by('name')
 
     # All data
     records_filtered = product_list.count()
@@ -60,7 +58,7 @@ def ProductList__asJson(request):
     order_column = request.GET['order[0][column]']
     column_name = ""
     if order_column == "2":
-        column_name = "nickname"
+        column_name = "name"
     
     order_dir = request.GET['order[0][dir]']
     list = []
@@ -73,18 +71,35 @@ def ProductList__asJson(request):
     i = 0
     for field in list:
         i = i + 1
-        data = {"no": str(i),
-                "id": str(field.id),
-                "type": field.authority.name,
-                "nickname": field.nickname,
-                "store_total": '0',
-                "user_total": '0'
-                }
+
+        productImage = ProductImage.objects.filter(product_id=field.id, is_hidden=False).first()
+        image_path = ''
+        if productImage:
+            image_path = productImage.image.image.url
+        data = {
+            "no": str(i),
+            "id": str(field.id),
+            "name": str(field.name),
+            "opened_date": str(field.opened_date),
+            "image_path": str(image_path),
+            "jan_code": '',
+            "stock": ''
+        }
+        productVarieties = ProductVariety.objects.filter(product_id=field.id)
+        for productVariety in productVarieties:
+            productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id=productVariety.id)
+            for productVarietySelection in productVarietySelections:
+                productJancodes = ProductJancode.objects.filter(horizontal_id=productVarietySelection.id)
+                for productJancode in productJancodes:
+                    data["jan_code"] = str(productJancode.jan_code)
+                    data["stock"] = str(productJancode.stock)
+        
         array.append(data)
 
     content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
     json_content = json.dumps(content, ensure_ascii=False)
     return HttpResponse(json_content, content_type='application/json')
+
 
 # @login_required
 def product_add(request):
@@ -171,8 +186,9 @@ def product_add(request):
             print(e)
             messages.add_message(request, messages.ERROR, e, extra_tags='product_add')
 
-    
-    return render(request, 'product_form.html', {'media_url': s.MEDIA_URL})
+    category_list = list(ProductCategory.objects.filter(is_hidden=False).values_list('id', 'name'))
+    return render(request, 'product_form.html', {'category_list': category_list, 'media_url': s.MEDIA_URL})
+
 
 # @login_required
 def product_edit(request, product_id):
@@ -271,8 +287,9 @@ def product_edit(request, product_id):
             messages.add_message(request, messages.ERROR, e, extra_tags='product_edit')
 
     product = Product.objects.get(pk=product_id)
-
+    category_list = list(ProductCategory.objects.filter(is_hidden=False).values_list('id', 'name'))
     return render(request, 'product_form.html', {"product": product,
+                                                'category_list': category_list,
                                                 'media_url': s.MEDIA_URL})
 
 # @login_required

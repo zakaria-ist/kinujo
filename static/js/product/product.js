@@ -11,7 +11,7 @@
     if(imgWrapper.childElementCount < 6){ 
       image.innerHTML = `<img class="images" src="${URL.createObjectURL(event.target.files[0])}" width="120" /> 
                   <div class="overlay">
-                    <div onClick="this.parentNode.parentNode.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode.parentNode.parentNode)" class="rmv-img-btn"><i class="fas fa-trash-alt" style="margin-top: 22%;margin-left: 10%; color: #9f111f;"></i> </div>
+                    <div onClick="this.parentNode.parentNode.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode.parentNode.parentNode)" class="rmv-img-btn"><i class="fas fa-trash-alt" style="font-size: 2rem;margin-top: 20%;margin-left: 10%; color: #9f111f;"></i> </div>
                   </div>
       `;
       addImgBtn.style.display = 'none';
@@ -52,12 +52,12 @@
 
     one.addEventListener('click', (event)=> {
       // event.preventDefault();
-      varietyContent.innerHTML = `<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#oneItemVariant">+ Item / Option</button>`;
+      varietyContent.innerHTML = `<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant">+ Item / Option</button>`;
     })
 
     two.addEventListener('click', (event)=> {
       // event.preventDefault();
-      varietyContent.innerHTML = `<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#twoItemsVariant">+ Items / Options</button>`;
+      varietyContent.innerHTML = `<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant">+ Items / Options</button>`;
     })
 
     none.addEventListener('click', (event)=> {
@@ -88,19 +88,125 @@
   })
 
   //one item variant code for adding more option
-  let optCounter = 3
+  function deleteOptions(){
+    console.log('deleted');
+
+    let optionArray = document.getElementsByClassName('one-variant-counter');
+
+    for(let i = 0; i < optionArray.length; i++){
+      optionArray[i].innerHTML = i + 1;
+    }
+
+  }
+  
   document.getElementById('addToOneItemVariant').addEventListener('click', ()=>{
-    document.getElementById('oneItemGroup').innerHTML += `<div class="form-group">
-                  <p class="m-2" style="width: 20px;">${optCounter}</p>
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 200px;">
+    let optionArray = document.getElementsByClassName('one-variant-counter');
+    let optCounter = optionArray.length + 1;
+
+    let newContent = document.createElement('div');
+    newContent.innerHTML = `<div class='form-group'>
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 160px;">
                   
                   <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
                   
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 50px;">
-                  <p class="m-2" style="width: 10px; cursor: pointer;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode)"><i class="fas fa-trash-alt" style="color: #9f111f;"></i> </p>
-                </div>`;
-    optCounter++;
+                  <input type="number" class="form-control" id="message-text" placeholder="" style="width: 70px;">
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>`;
+    
+    while (newContent.firstChild) {
+      document.getElementById('oneItemGroup').appendChild(newContent.firstChild);
+    }
+
+   
   })
+
+  //two item variants
+
+  //first of two items variant
+  function deleteOptionsFirstOfTwo(){
+    console.log('deleted');
+
+    let firstOfTwooptionArray = document.getElementsByClassName('first-of-two-variant-counter');
+
+    for(let i = 0; i < firstOfTwooptionArray.length; i++){
+      firstOfTwooptionArray[i].innerHTML = i + 1;
+    }
+
+  }
+
+  document.getElementById('addToFirstOfTwoItemVariant').addEventListener('click', ()=>{
+    let firstOfTwooptionArray = document.getElementsByClassName('first-of-two-variant-counter');
+    let firstOfTwoOptCounter = firstOfTwooptionArray.length + 1;
+
+    let firstOfTwoNewContent = document.createElement('div');
+    firstOfTwoNewContent.innerHTML = `<div class='form-group'>
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 first-of-two-variant-counter" style="width: 20px;">${firstOfTwoOptCounter}</p>
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 280px;">
+                  
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>`;
+    
+    while (firstOfTwoNewContent.firstChild) {
+      document.getElementById('firstOfTwoItemGroup').appendChild(firstOfTwoNewContent.firstChild);
+    }
+
+   
+  })
+
+
+  //last of two items variant
+  function deleteOptionsLastOfTwo(){
+    console.log('deleted');
+
+    let lastOfTwooptionArray = document.getElementsByClassName('last-of-two-variant-counter');
+
+    for(let i = 0; i < lastOfTwooptionArray.length; i++){
+      lastOfTwooptionArray[i].innerHTML = i + 1;
+    }
+
+  }
+
+  document.getElementById('addToLastOfTwoItemVariant').addEventListener('click', ()=>{
+    let lastOfTwooptionArray = document.getElementsByClassName('last-of-two-variant-counter');
+    let lastOfTwoOptCounter = lastOfTwooptionArray.length + 1;
+
+    let lastOfTwoNewContent = document.createElement('div');
+    lastOfTwoNewContent.innerHTML = `<div class='form-group'>
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 last-of-two-variant-counter" style="width: 20px;">${lastOfTwoOptCounter}</p>
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 280px;">
+                  
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>`;
+    
+    while (lastOfTwoNewContent.firstChild) {
+      document.getElementById('lastOfTwoItemGroup').appendChild(lastOfTwoNewContent.firstChild);
+    }
+
+   
+  })
+
+    //ends variant code
+  
+
+  /*
+  *
+  *save variant data to the form 
+  *
+  */
+
+  function saveOneItemData(){
+    console.log('clicked 1')
+}
+
+  function saveTwoItemsData(){
+
+    console.log('clicked 2')
+
+  }
 
     //ends variant code
 

@@ -6,6 +6,9 @@
     <style>
         .images{
           padding-bottom: 30px;
+          object-fit: cover;
+          height: 120px;
+          width: 120px;
         }
         .img-container {
           position: relative;
@@ -54,12 +57,14 @@
         }
         .img-input{
           font-size: 2rem;
-          padding: 15px 0;
+          padding: 20px 0;
           color: #999;
           background-color: #e0e2e3;
           border-color: #babfc4;
-          width: 100px;
+          width: 120px;
+          height: 90px;
           margin-left: 15px;
+          position: absolute;
         }
         .img-input:hover{
           background-color: #007bff ;
@@ -67,228 +72,253 @@
           border: 1px solid steelblue;
         }
 
-        #oneItemVariant input, #oneItemVariant label{
+        #oneItemVariant input, #oneItemVariant label, #twoItemsVariant input, #twoItemsVariant label{
           margin: 5px 5px;
          
         }
         .form-inline label {
           justify-content: left;
         }
+        .cross-btn {
+          width: 100%;
+          text-align: right;
+          color: #dd0f0f;
+          font-size: 2rem;
+          padding: 12px;
+        }
         
+        #addToOneItemVariant, #addToFirstOfTwoItemVariant, #addToLastOfTwoItemVariant{
+          margin-top: -54px;
+          border-radius: 50%;
+          padding: 0px 7px;
+          font-size: 1.5rem;
+          font-weight: bold;
+          line-height: 26px;
+        }
+        /* two item variation*/
+        #firstOfTwoItem, #lastOfTwoItem {
+          border: 2px solid #ccc;
+          padding: 15px;
+          margin: 10px auto;
+        }
       </style>
 {% endblock %}
 
       <header class="panel-heading m-4" style="font-size: 25px;" >
               {% trans 'Product Details' %}
       </header>
-      {% comment %} <form action="/api/products" class="bg-light m-2 p-5"> {% endcomment %}
-        <div class="row">
+      <div class="table-section white-bg">
+        {% comment %} <form action="/products/product_add/" class="m-2 p-5">  {% endcomment %}
+          <div class="row">
 
-          <!--Starts left side inputs-->
-          <div class="col-md-7">
+            <!--Starts left side inputs-->
+            <div class="col-md-7">
 
-            <div class="form-group row">
-              <label class="col-md-4 p-2" for="name">Official Product Name:</label>
-              <input name="name" type="text" class="form-control col-md-8" id="name">
-            </div>
-
-            <div class="form-group row">
-              <label class="col-md-4 p-2" for="name">Brand or manufacturer name:</label>
-              <input name="brand_name" type="text" class="form-control col-md-8" id="brand-name">
-            </div>
-
-            <div class="form-group row">
-              <label class="col-md-4 p-2" for="name">Product ID(URL):</label>
-              <input name="url_str" type="text" class="form-control col-md-8" id="url-str">
-            </div>
-            
-            <div class="form-group row">
-              <label class="col-md-4 p-2" for="name">Product Category:</label>
-              <select name="category" class="form-control col-md-8 custom-select" id="category">
-                <option disabled selected>Select</option>
-                <option value="">Category 1</option>
-                <option value="">Category 2</option>
-              </select>
-            </div>
-
-      
-
-            <div class="form-group row form-check form-check-inline">
-              <label class="col-md-4" for="variety">Variations:</label>
-              <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="one" name="variety" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="one">1 Item</label>
+              <div class="form-group row">
+                <label class="col-md-4 p-2" for="name">{% trans 'Official Product Name' %}</label>
+                <input name="name" type="text" class="form-control col-md-8" id="name">
               </div>
-              <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="two" name="variety" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="two">2 Items</label>
+
+              <div class="form-group row">
+                <label class="col-md-4 p-2" for="name">{% trans 'Brand or manufacturer name' %}</label>
+                <input name="brand_name" type="text" class="form-control col-md-8" id="brand-name">
               </div>
-              <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="none" name="variety" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="none">None</label>
+
+              <div class="form-group row">
+                <label class="col-md-4 p-2" for="name">{% trans 'Product ID(URL)' %}</label>
+                <input name="url_str" type="text" class="form-control col-md-8" id="url-str">
               </div>
-            </div>
-
-            <div id="variety-content" class="form-group row">
-
-            </div>
-
-            <div class="form-group row">
-              <label class="col-md-4 p-2" for="name">JAN code:</label>
-              <input type="text" class="form-control col-md-8" id="name">
-            </div>
-
-            <div class="form-group row">
-              <label class="col-md-4 p-2" for="name">Stock Quantity:</label>
-              <input type="text" class="form-control col-md-3" id="name">
-            </div>
-
-            <div class="form-group row form-check form-check-inline">
-              <label class="col-md-4" for="status">Status:</label>
-              <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="published" name="status" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="published">Published</label>
-              </div>
-              <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="non-published" name="status" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="non-published">Non Published</label>
-              </div>
-             
-            </div>
-
-            
-            <div class="form-group row">
-              <label class="col-md-4 m-2" for="opened_date">Published Date:</label>
-
-              <div class="col-md-6 input-group" id="datetimepicker" style="padding-left: 0px;">
-                <input name="opened_date" type="date" class="form-control">
-                <div class="input-group-append">
-                  <span class="input-group-text">
-                    <i class="far">&#xf073;</i> 
-                  </span>
+              
+              <div class="form-group row">
+                <label class="col-md-4 p-2" for="category">{% trans 'Product Category' %}</label>
+                <div class="col-md-8">
+                  <select name="category" class="form-control" id="category">
+                    <option disabled selected>Select</option>
+                    <option value="">Category 1</option>
+                    <option value="">Category 2</option>
+                  </select>
                 </div>
+              </div>
+
+        
+
+              <div class="form-group row form-check form-check-inline">
+                <label class="col-md-4" for="variety">{% trans 'Variations' %}</label>
+                <div class="custom-control custom-radio custom-control-inline col-md-2">
+                  <input type="radio" id="one" name="variety" class="custom-control-input form-check-input">
+                  <label class="form-check-label custom-control-label" for="one">{% trans '1 Item' %}</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline col-md-2">
+                  <input type="radio" id="two" name="variety" class="custom-control-input form-check-input">
+                  <label class="form-check-label custom-control-label" for="two">{% trans '2 Items' %}</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline col-md-2">
+                  <input type="radio" id="none" name="variety" class="custom-control-input form-check-input">
+                  <label class="form-check-label custom-control-label" for="none">{% trans 'None' %}</label>
+                </div>
+              </div>
+
+              <div id="variety-content" class="form-group row">
+
+              </div>
+
+              <div class="form-group row">
+                <label class="col-md-4 p-2" for="name">{% trans 'JAN code' %}</label>
+                <input type="text" class="form-control col-md-8" id="name">
+              </div>
+
+              <div class="form-group row">
+                <label class="col-md-4 p-2" for="name">{% trans 'Stock Quantity' %}</label>
+                <input type="text" class="form-control col-md-3" id="name">
+              </div>
+
+              <div class="form-group row form-check form-check-inline">
+                <label class="col-md-4" for="status">{% trans 'Status' %}</label>
+                <div class="custom-control custom-radio custom-control-inline col-md-2">
+                  <input type="radio" id="published" name="status" class="custom-control-input form-check-input">
+                  <label class="form-check-label custom-control-label" for="published">{% trans 'Published' %}</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline col-md-2">
+                  <input type="radio" id="non-published" name="status" class="custom-control-input form-check-input">
+                  <label class="form-check-label custom-control-label" for="non-published">{% trans 'Non Published' %}</label>
+                </div>
+              
+              </div>
+
+              
+              <div class="form-group row">
+                <label class="col-md-4 m-2" for="opened_date">{% trans 'Published Date' %}</label>
+
+                <div class="col-md-6 input-group" id="datetimepicker" style="padding-left: 0px;">
+                  <input name="opened_date" type="date" class="form-control">
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <i class="far">&#xf073;</i> 
+                    </span>
+                  </div>
+                  
+                    
+                    
+                </div>
+                <p class="text-danger col-md-12" style="text-align: right; padding: 15px 20px 0">{% trans '* Before the release date, it will not be published <br/> even if it is set to Publish' %}</p >
+              </div>
+
+              <div class="form-group row form-check form-check-inline">
+                <label class="col-md-4" for="is-used">{% trans 'Product COndition' %}</label>
+                <div class="custom-control custom-radio custom-control-inline col-md-2">
+                  <input type="radio" id="new" name="is_used" class="custom-control-input form-check-input">
+                  <label class="form-check-label custom-control-label" for="new">{% trans 'New' %}</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline col-md-4">
+                  <input type="radio" id="second-hand" name="is_used" class="custom-control-input form-check-input">
+                  <label class="form-check-label custom-control-label" for="second-hand">{% trans 'Second Hand Goods' %}</label>
+                </div>
+
+              </div>
+
+              <div class="form-group row form-check form-check-inline">
+                <label class="col-md-4" for="target">For Sale:</label>
+                <div class="custom-control custom-radio custom-control-inline col-md-2">
+                  <input type="radio" id="all-users" name="target" class="custom-control-input form-check-input">
+                  <label class="form-check-label custom-control-label" for="all-users">{% trans 'All Users' %}</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline col-md-2">
+                  <input type="radio" id="general-only" name="target" class="custom-control-input form-check-input">
+                  <label class="form-check-label custom-control-label" for="general-only">{% trans 'General Only' %}</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline col-md-2">
+                  <input type="radio" id="story-only" name="target" class="custom-control-input form-check-input">
+                  <label class="form-check-label custom-control-label" for="story-only">{% trans 'Store Only' %}</label>
+                </div>
+                <p class="text-danger col-md-12" style="text-align: right; padding: 15px 20px 0">{% trans '* Displayed only to target users' %}</p>
+              </div>
+              
+              
+            </div>
+            <!--Ends left side inputs-->
+
+            <!--Starts right side inputs-->
+            <div class="col-md-5">
+              <div class="form-group row">
+                <label class="col-md-6 text-center p-2" for="price">{% trans 'General Price' %}</label>
+                <input name="price" type="text" class="form-control col-md-6" id="price">
                 
-                  
-                  
-              </div>
-              <p class="text-danger col-md-12" style="text-align: right; padding: 15px 20px 0">* Before the release date, it will not be published <br/> even if it is set to “Publish”.</p >
-            </div>
-
-            <div class="form-group row form-check form-check-inline">
-              <label class="col-md-4" for="is-used">Product COndition:</label>
-              <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="new" name="is_used" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="new">New</label>
-              </div>
-              <div class="custom-control custom-radio custom-control-inline col-md-4">
-                <input type="radio" id="second-hand" name="is_used" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="second-hand">Second Hand Goods</label>
               </div>
 
-            </div>
+              <div class="form-group row">
+                <label class="col-md-6 text-center p-2" for="store_price">{% trans 'Store Price' %}</label>
+                <input name="store_price" type="text" class="form-control col-md-6" id="store_price">
+                
+              </div>
 
-            <div class="form-group row form-check form-check-inline">
-              <label class="col-md-4" for="target">For Sale:</label>
-              <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="all-users" name="target" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="all-users">All Users</label>
+              <div class="form-group row">
+                <label class="col-md-6 text-center p-2" for="shipping_fee">{% trans 'Shipping' %}</label>
+                <input name="shipping_fee" type="text" class="form-control col-md-6" id="shipping_fee">
+                
               </div>
-              <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="general-only" name="target" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="general-only">General Only</label>
-              </div>
-              <div class="custom-control custom-radio custom-control-inline col-md-2">
-                <input type="radio" id="story-only" name="target" class="custom-control-input form-check-input">
-                <label class="form-check-label custom-control-label" for="story-only">Store Only</label>
-              </div>
-              <p class="text-danger col-md-12" style="text-align: right; padding: 15px 20px 0">* Displayed only to target users</p>
-            </div>
-            
-            
-          </div>
-          <!--Ends left side inputs-->
 
-          <!--Starts right side inputs-->
-          <div class="col-md-5">
-            <div class="form-group row">
-              <label class="col-md-6 text-center p-2" for="price">General Price:</label>
-              <input name="price" type="text" class="form-control col-md-6" id="price">
+              <div class="form-group row">
+                <label class="col-md-6 text-center p-2" for="price">{% trans 'PR Statement' %}</label>
+                <input name="pr" type="text" class="form-control col-md-6" id="pr">
+                
+              </div>
+
+              <div class="form-group row">
+                <label class="col-md-6 text-center p-2" for="description">{% trans 'Product Description' %}</label>
+                <textarea name="description" class="form-control col-md-6" id="description" rows="6"></textarea>
+                
+              </div>
+
+              <!--Image upload-->
+
               
-            </div>
-
-            <div class="form-group row">
-              <label class="col-md-6 text-center p-2" for="store_price">Store Price:</label>
-              <input name="store_price" type="text" class="form-control col-md-6" id="store_price">
               
-            </div>
-
-            <div class="form-group row">
-              <label class="col-md-6 text-center p-2" for="shipping_fee">Shipping:</label>
-              <input name="shipping_fee" type="text" class="form-control col-md-6" id="shipping_fee">
-              
-            </div>
-
-            <div class="form-group row">
-              <label class="col-md-6 text-center p-2" for="price">PR Statement:</label>
-              <input name="pr" type="text" class="form-control col-md-6" id="pr">
-              
-            </div>
-
-            <div class="form-group row">
-              <label class="col-md-6 text-center p-2" for="description">Product Description:</label>
-              <textarea name="description" class="form-control col-md-6" id="description" rows="6"></textarea>
-              
-            </div>
-
-            <!--Image upload-->
-
-            
-            
-            <div id="img-wrapper" class="row" style=" margin: 150px 0 0 0;">
-              <div class="col-md-4">
-                <div class="row img-h">
-                  <label for="file" id="add-img-btn-0" class="btn btn-secondary text-center col-md-12 img-input" style="margin-left: 70px; margin-right: 70px;"  onclick="document.getElementById('file').click()">
-                    + 
-                    <input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)"  style="display: none">
-                  </label>
-                  <div class="col-md-12 img-container" id="images-0">
+              <div id="img-wrapper" class="row" style=" margin: 150px 0 0 0;">
+                <div class="col-md-4">
+                  <div class="row img-h">
+                    <label for="file" id="add-img-btn-0" class="btn btn-secondary text-center col-md-12 img-input" style="margin-left: 70px; margin-right: 70px;"  onclick="document.getElementById('file').click()">
+                      + 
+                      <input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)"  style="display: none">
+                    </label>
+                    <div class="col-md-12 img-container" id="images-0">
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!--MAx 5 error message-->
-          <button id="max-img-btn" style="display: none;" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Error Max Images</button>
-          <!-- Max image Error message modal -->
-          <div class="modal fade" id="myModal" role="dialog">
-            <div class="modal-dialog modal-sm" style="margin-left: auto !important">
-              <div class="modal-content">
-                <div class="modal-header" style="border-bottom: 0px;">
-                  
-                  <p class="modal-title text-danger text-center" style="width: 100%;">Warning!</p>
-                  <button type="button" class="close" data-dismiss="modal" style="width: 100%;">&times;</button>
-                </div>
-                <div class="modal-body">
-                  <p class="text-danger">Maximum of 5 images are allowed only.</p>
-                </div>
-                <div class="modal-footer" style="border-top: 0px;">
-                  <button type="button" class="btn btn-default body1" data-dismiss="modal" style="margin: 0 auto;font-size: 0.80rem;">Close</button>
+            <!--MAx 5 error message-->
+            <button id="max-img-btn" style="display: none;" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">{% trans 'Error Max Images' %}</button>
+            <!-- Max image Error message modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+              <div class="modal-dialog modal-sm" style="margin-left: auto !important">
+                <div class="modal-content">
+                  <div class="modal-header" style="border-bottom: 0px;">
+                    
+                    <p class="modal-title text-danger text-center" style="width: 100%;">{% trans 'Warning' %}</p>
+                    <button type="button" class="close cross-btn" data-dismiss="modal" style="padding: 12px;">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                    <p class="text-center">{% trans 'Maximum of 5 images are allowed only.' %}</p>
+                  </div>
+                  <div class="modal-footer" style="border-top: 0px;">
+                    <button type="button" class="btn btn-default body1 btn-outline-secondary" data-dismiss="modal" style="margin: 0 auto;font-size: 1rem; border-radius: 15px; border: 2px solid #acacac;">{% trans 'Close' %}</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+            
+            <!--Ends left side inputs-->
+            
+            <div class="col-md-6">
+              {% comment %} <input type="submit" class="btn btn-default blue-btn col-md-2 bg-primary m-5 text-white" value="Save">
+              <p class="btn btn-default gray-btn m-2 text-white">{% trans 'Cancel' %}</p> {% endcomment %}
+              <button type="button" onclick="saveProductInfo()" name="btnProductSave" id="btnProductSave" class="btn btn-primary blue-btn">{% trans 'Save' %}</button>
+              <a class="btn btn-default gray-btn" onclick="cancelProductForm()">{% trans 'Cancel' %}</a>
+            </div>
           
-          <!--Ends left side inputs-->
-          
-          <div class="col-md-6">
-            {% comment %} <input type="button" class="btn btn-default col-md-2 bg-primary m-5 text-white" value="Save">
-            <p class="btn btn-default bg-secondary m-2 text-white" onclick="cancelProductForm()">Cancel</p> {% endcomment %}
-            <button type="button" onclick="saveProductInfo()" name="btnProductSave" id="btnProductSave" class="btn btn-primary blue-btn">{% trans 'Save' %}</button>
-            <a class="btn btn-default gray-btn" onclick="cancelProductForm()">{% trans 'Cancel' %}</a>
-          </div>
-         
-      {% comment %} </form>  {% endcomment %}
+        {% comment %} </form> {% endcomment %}
+      </div>
     </div>
 
 
@@ -297,7 +327,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header" style="border-bottom: 0px;">
-            <h6 class="modal-title font-weight-bold" id="exampleModalLabel">Variation item registration</h6>
+            <h6 class="modal-title font-weight-bold" id="exampleModalLabel">{% trans 'Variation item registration' %}</h6>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -305,43 +335,52 @@
           <div class="modal-body">
             <form class="form-inline">
               <div class="form-group">
-                <label for="title" class="col-form-label">Title:</label>
-                <input type="text" class="form-control" id="title" placeholder="Color, Size, etc">
+                <label for="one-item-title" class="col-form-label">Title:</label>
+                <input type="text" class="form-control" id="one-item-title" placeholder="Color, Size, etc">
               </div>
               <div class="form-group">
-                <p style="width: 50px;" class="m-2"> </p>
-                <label for="message-text" class="col-form-label" style="width: 200px;">Choices:</label>
-                <label for="message-text" class="col-form-label" style="width: 100px;">JAN Code:</label>
-                <label for="message-text" class="col-form-label" style="width: 50px;">Stock:</label>
+                <p style="width: 20px;" class="m-2"> </p>
+                <p style="width: 20px;" class="m-2"> </p>
+                <label for="message-text" class="col-form-label" style="width: 160px;">{% trans 'Choices' %}</label>
+                <label for="message-text" class="col-form-label" style="width: 100px;">{% trans 'JAN Code' %}</label>
+                <label for="message-text" class="col-form-label" style="width: 50px;">{% trans 'Stock' %}%'</label>
                 <p class="m-2" style="width: 50px;"> </p>
               </div>
-              <div class="form-group">
-                <p class="m-2" style="width: 20px;">1</p>
-                <input type="text" class="form-control" id="message-text" placeholder="" style="width: 200px;">
-                
-                <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
-                
-                <input type="text" class="form-control" id="message-text" placeholder="" style="width: 50px;">
-                <p class="m-2" style="width: 10px; cursor: pointer;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode)"><i class="fas fa-trash-alt" style="color: #9f111f;"></i> </p>
-              </div>
+              
               <div id="oneItemGroup">
                 <div class="form-group">
-                  <p class="m-2" style="width: 20px;">2</p>
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 200px;">
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 160px;">
                   
                   <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
                   
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 50px;">
-                  <p class="m-2" style="width: 10px; cursor: pointer;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode)"><i class="fas fa-trash-alt" style="color: #9f111f;"></i> </p>
+                  <input type="number" class="form-control" id="message-text" placeholder="" style="width: 70px;">
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                </div>
+                <div class="form-group">
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 160px;">
+                  
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
+                  
+                  <input type="number" class="form-control" id="message-text" placeholder="" style="width: 70px;">
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
               </div>
 
-              <div style="width: 100%;" class="text-left"><p id="addToOneItemVariant" class="btn btn-primary">+</p></div>
+              <div style="width: 100%;" class="text-left"><p id="addToOneItemVariant" class="btn btn-secondary">+</p></div>
             </form>
           </div>
           <div class="modal-footer" style="border-top: 0px;">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Add</button>
+            <div>
+              <p>
+                {% trans '* If you delete the option, the registered JAN code and inventory information will also be deleted' %}
+              </p>
+            </div>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="display: none;">{% trans 'Close' %}</button>
+            <button type="button" id="one-item-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="saveOneItemData();">{% trans 'Save' %}</button>
           </div>
         </div>
       </div>
@@ -352,29 +391,93 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+            <h5 class="modal-title font-weight-bold" id="exampleModalLabel">{% trans 'Variant Items Registration' %}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="recipient-name" class="col-form-label">Title:</label>
-                <input type="text" class="form-control" id="recipient-name">
+            <form class="form-inline">
+              <div id="firstOfTwoItem">
+                <div class="form-group">
+                  <label for="first-of-two-items-title" class="col-form-label">{% trans 'Title' %%}</label>
+                  <input type="text" class="form-control" id="first-of-two-items-title" placeholder="Color, Size, etc">
+                </div>
+                
+                <div class="form-group">
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <label for="message-text" class="col-form-label" style="width: 160px;">{% trans 'Choices' %}</label>
+                  
+                  
+                </div>
+                
+                <div id="firstOfTwoItemGroup">
+                  <div class="form-group">
+                  
+                    <p style="width: 20px;" class="m-2"> </p>
+                    <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
+                    <input type="text" class="form-control" id="message-text" placeholder="" style="width: 280px;">
+                    
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>
+                  <div class="form-group">
+                    <p style="width: 20px;" class="m-2"> </p>
+                    <p class="m-2 first-of-two-variant-counter" style="width: 20px;">2</p>
+                    <input type="text" class="form-control" id="message-text" placeholder="" style="width: 280px;">
+                    
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>
+                </div>
+
+                <div style="width: 100%;" class="text-left"><p id="addToFirstOfTwoItemVariant" class="btn btn-secondary">+</p></div>
               </div>
-              <div class="form-group">
-                <label for="message-text" class="col-form-label">Choices:</label>
-                <input type="text" class="form-control" id="message-text">
+
+              <div id="lastOfTwoItem">
+                <div class="form-group">
+                  <label for="last-of-two-items-title" class="col-form-label">{% trans 'Title' %}</label>
+                  <input type="text" class="form-control" id="last-of-two-items-title" placeholder="Color, Size, etc">
+                </div>
+                
+                <div class="form-group">
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <label for="message-text" class="col-form-label" style="width: 280px;">{% trans 'Choices' %}</label>
+                  
+                  
+                </div>
+                
+                <div id="lastOfTwoItemGroup">
+                  <div class="form-group">
+                    <p style="width: 20px;" class="m-2"> </p>
+                    <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
+                    <input type="text" class="form-control" id="message-text" placeholder="" style="width: 280px;">
+                    
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>
+                  
+                  <div class="form-group">
+                    <p style="width: 20px;" class="m-2"> </p>
+                    <p class="m-2 last-of-two-variant-counter" style="width: 20px;">2</p>
+                    <input type="text" class="form-control" id="message-text" placeholder="" style="width: 280px;">
+                    
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>
+                </div>
+
+                <div style="width: 100%;" class="text-left"><p id="addToLastOfTwoItemVariant" class="btn btn-secondary">+</p></div>
               </div>
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Add</button>
+            <div>
+              <p>{% trans '* If you delete the option, the registered JAN code and inventory
+                information will also be deleted' %}</p>
+            </div>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="display: none;">{% trans 'Close' %}</button>
+            <button type="button" id="two-items-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="saveTwoItemsData();">{% trans 'Save' %}</button>
           </div>
         </div>
       </div>
     </div>
-
     <!--Ends moal for variant-->
