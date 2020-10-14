@@ -70,6 +70,9 @@
       <style>
         .images{
           padding-bottom: 30px;
+          object-fit: cover;
+          height: 120px;
+          width: 120px;
         }
         .img-container {
           position: relative;
@@ -118,12 +121,14 @@
         }
         .img-input{
           font-size: 2rem;
-          padding: 15px 0;
+          padding: 20px 0;
           color: #999;
           background-color: #e0e2e3;
           border-color: #babfc4;
-          width: 100px;
+          width: 120px;
+          height: 90px;
           margin-left: 15px;
+          position: absolute;
         }
         .img-input:hover{
           background-color: #007bff ;
@@ -131,14 +136,35 @@
           border: 1px solid steelblue;
         }
 
-        #oneItemVariant input, #oneItemVariant label{
+        #oneItemVariant input, #oneItemVariant label, #twoItemsVariant input, #twoItemsVariant label{
           margin: 5px 5px;
          
         }
         .form-inline label {
           justify-content: left;
         }
+        .cross-btn {
+          width: 100%;
+          text-align: right;
+          color: #dd0f0f;
+          font-size: 2rem;
+          padding: 12px;
+        }
         
+        #addToOneItemVariant, #addToFirstOfTwoItemVariant, #addToLastOfTwoItemVariant{
+          margin-top: -54px;
+          border-radius: 50%;
+          padding: 0px 7px;
+          font-size: 1.5rem;
+          font-weight: bold;
+          line-height: 26px;
+        }
+        /* two item variation*/
+        #firstOfTwoItem, #lastOfTwoItem {
+          border: 2px solid #ccc;
+          padding: 15px;
+          margin: 10px auto;
+        }
       </style>
 
   </head>
@@ -330,14 +356,14 @@
               <div class="modal-content">
                 <div class="modal-header" style="border-bottom: 0px;">
                   
-                  <p class="modal-title text-danger text-center" style="width: 100%;">Warning!</p>
-                  <button type="button" class="close" data-dismiss="modal" style="width: 100%;">&times;</button>
+                  <p class="modal-title text-danger text-center" style="width: 100%;">Warning</p>
+                  <button type="button" class="close cross-btn" data-dismiss="modal" style="padding: 12px;">&times;</button>
                 </div>
                 <div class="modal-body">
-                  <p class="text-danger">Maximum of 5 images are allowed only.</p>
+                  <p class="text-center">Maximum of 5 images are allowed only.</p>
                 </div>
                 <div class="modal-footer" style="border-top: 0px;">
-                  <button type="button" class="btn btn-default body1" data-dismiss="modal" style="margin: 0 auto;font-size: 0.80rem;">Close</button>
+                  <button type="button" class="btn btn-default body1 btn-outline-secondary" data-dismiss="modal" style="margin: 0 auto;font-size: 1rem; border-radius: 15px; border: 2px solid #acacac;">Close</button>
                 </div>
               </div>
             </div>
@@ -367,43 +393,53 @@
           <div class="modal-body">
             <form class="form-inline">
               <div class="form-group">
-                <label for="title" class="col-form-label">Title:</label>
-                <input type="text" class="form-control" id="title" placeholder="Color, Size, etc">
+                <label for="one-item-title" class="col-form-label">Title:</label>
+                <input type="text" class="form-control" id="one-item-title" placeholder="Color, Size, etc">
               </div>
               <div class="form-group">
-                <p style="width: 50px;" class="m-2"> </p>
-                <label for="message-text" class="col-form-label" style="width: 200px;">Choices:</label>
+                <p style="width: 20px;" class="m-2"> </p>
+                <p style="width: 20px;" class="m-2"> </p>
+                <label for="message-text" class="col-form-label" style="width: 160px;">Choices:</label>
                 <label for="message-text" class="col-form-label" style="width: 100px;">JAN Code:</label>
                 <label for="message-text" class="col-form-label" style="width: 50px;">Stock:</label>
                 <p class="m-2" style="width: 50px;"> </p>
               </div>
-              <div class="form-group">
-                <p class="m-2" style="width: 20px;">1</p>
-                <input type="text" class="form-control" id="message-text" placeholder="" style="width: 200px;">
-                
-                <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
-                
-                <input type="text" class="form-control" id="message-text" placeholder="" style="width: 50px;">
-                <p class="m-2" style="width: 10px; cursor: pointer;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode)"><i class="fas fa-trash-alt" style="color: #9f111f;"></i> </p>
-              </div>
+              
               <div id="oneItemGroup">
                 <div class="form-group">
-                  <p class="m-2" style="width: 20px;">2</p>
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 200px;">
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 160px;">
                   
                   <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
                   
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 50px;">
-                  <p class="m-2" style="width: 10px; cursor: pointer;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode)"><i class="fas fa-trash-alt" style="color: #9f111f;"></i> </p>
+                  <input type="number" class="form-control" id="message-text" placeholder="" style="width: 70px;">
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                </div>
+                <div class="form-group">
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 160px;">
+                  
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
+                  
+                  <input type="number" class="form-control" id="message-text" placeholder="" style="width: 70px;">
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
               </div>
 
-              <div style="width: 100%;" class="text-left"><p id="addToOneItemVariant" class="btn btn-primary">+</p></div>
+              <div style="width: 100%;" class="text-left"><p id="addToOneItemVariant" class="btn btn-secondary">+</p></div>
             </form>
           </div>
           <div class="modal-footer" style="border-top: 0px;">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Add</button>
+            <div>
+              <p>
+                * If you delete the option, the registered JAN code and inventory
+information will also be deleted
+              </p>
+            </div>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="display: none;">Close</button>
+            <button type="button" id="one-item-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="saveOneItemData();">Save</button>
           </div>
         </div>
       </div>
@@ -414,26 +450,91 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+            <h5 class="modal-title font-weight-bold" id="exampleModalLabel">Variant Items Registration</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="recipient-name" class="col-form-label">Title:</label>
-                <input type="text" class="form-control" id="recipient-name">
+            <form class="form-inline">
+              <div id="firstOfTwoItem">
+                <div class="form-group">
+                  <label for="first-of-two-items-title" class="col-form-label">Title:</label>
+                  <input type="text" class="form-control" id="first-of-two-items-title" placeholder="Color, Size, etc">
+                </div>
+                
+                <div class="form-group">
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <label for="message-text" class="col-form-label" style="width: 160px;">Choices:</label>
+                  
+                  
+                </div>
+                
+                <div id="firstOfTwoItemGroup">
+                  <div class="form-group">
+                  
+                    <p style="width: 20px;" class="m-2"> </p>
+                    <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
+                    <input type="text" class="form-control" id="message-text" placeholder="" style="width: 280px;">
+                    
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>
+                  <div class="form-group">
+                    <p style="width: 20px;" class="m-2"> </p>
+                    <p class="m-2 first-of-two-variant-counter" style="width: 20px;">2</p>
+                    <input type="text" class="form-control" id="message-text" placeholder="" style="width: 280px;">
+                    
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>
+                </div>
+
+                <div style="width: 100%;" class="text-left"><p id="addToFirstOfTwoItemVariant" class="btn btn-secondary">+</p></div>
               </div>
-              <div class="form-group">
-                <label for="message-text" class="col-form-label">Choices:</label>
-                <input type="text" class="form-control" id="message-text">
+
+              <div id="lastOfTwoItem">
+                <div class="form-group">
+                  <label for="last-of-two-items-title" class="col-form-label">Title:</label>
+                  <input type="text" class="form-control" id="last-of-two-items-title" placeholder="Color, Size, etc">
+                </div>
+                
+                <div class="form-group">
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <label for="message-text" class="col-form-label" style="width: 280px;">Choices:</label>
+                  
+                  
+                </div>
+                
+                <div id="lastOfTwoItemGroup">
+                  <div class="form-group">
+                    <p style="width: 20px;" class="m-2"> </p>
+                    <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
+                    <input type="text" class="form-control" id="message-text" placeholder="" style="width: 280px;">
+                    
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>
+                  
+                  <div class="form-group">
+                    <p style="width: 20px;" class="m-2"> </p>
+                    <p class="m-2 last-of-two-variant-counter" style="width: 20px;">2</p>
+                    <input type="text" class="form-control" id="message-text" placeholder="" style="width: 280px;">
+                    
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>
+                </div>
+
+                <div style="width: 100%;" class="text-left"><p id="addToLastOfTwoItemVariant" class="btn btn-secondary">+</p></div>
               </div>
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Add</button>
+            <div>
+              <p>* If you delete the option, the registered JAN code and inventory
+                information will also be deleted</p>
+            </div>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="display: none;">Close</button>
+            <button type="button" id="two-items-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="saveTwoItemsData();">Save</button>
           </div>
         </div>
       </div>
@@ -458,7 +559,7 @@
     if(imgWrapper.childElementCount < 6){ 
       image.innerHTML = `<img class="images" src="${URL.createObjectURL(event.target.files[0])}" width="120" /> 
                   <div class="overlay">
-                    <div onClick="this.parentNode.parentNode.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode.parentNode.parentNode)" class="rmv-img-btn"><i class="fas fa-trash-alt" style="margin-top: 22%;margin-left: 10%; color: #9f111f;"></i> </div>
+                    <div onClick="this.parentNode.parentNode.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode.parentNode.parentNode)" class="rmv-img-btn"><i class="fas fa-trash-alt" style="font-size: 2rem;margin-top: 20%;margin-left: 10%; color: #9f111f;"></i> </div>
                   </div>
       `;
       addImgBtn.style.display = 'none';
@@ -499,12 +600,12 @@
 
     one.addEventListener('click', (event)=> {
       // event.preventDefault();
-      varietyContent.innerHTML = `<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#oneItemVariant">+ Item / Option</button>`;
+      varietyContent.innerHTML = `<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant">+ Item / Option</button>`;
     })
 
     two.addEventListener('click', (event)=> {
       // event.preventDefault();
-      varietyContent.innerHTML = `<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#twoItemsVariant">+ Items / Options</button>`;
+      varietyContent.innerHTML = `<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant">+ Items / Options</button>`;
     })
 
     none.addEventListener('click', (event)=> {
@@ -535,22 +636,130 @@
   })
 
   //one item variant code for adding more option
-  let optCounter = 3
+  function deleteOptions(){
+    console.log('deleted');
+
+    let optionArray = document.getElementsByClassName('one-variant-counter');
+
+    for(let i = 0; i < optionArray.length; i++){
+      optionArray[i].innerHTML = i + 1;
+    }
+
+  }
+  
   document.getElementById('addToOneItemVariant').addEventListener('click', ()=>{
-    document.getElementById('oneItemGroup').innerHTML += `<div class="form-group">
-                  <p class="m-2" style="width: 20px;">${optCounter}</p>
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 200px;">
+    let optionArray = document.getElementsByClassName('one-variant-counter');
+    let optCounter = optionArray.length + 1;
+
+    let newContent = document.createElement('div');
+    newContent.innerHTML = `<div class='form-group'>
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 160px;">
                   
                   <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
                   
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 50px;">
-                  <p class="m-2" style="width: 10px; cursor: pointer;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode)"><i class="fas fa-trash-alt" style="color: #9f111f;"></i> </p>
-                </div>`;
-    optCounter++;
+                  <input type="number" class="form-control" id="message-text" placeholder="" style="width: 70px;">
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>`;
+    
+    while (newContent.firstChild) {
+      document.getElementById('oneItemGroup').appendChild(newContent.firstChild);
+    }
+
+   
+  })
+
+  //two item variants
+
+  //first of two items variant
+  function deleteOptionsFirstOfTwo(){
+    console.log('deleted');
+
+    let firstOfTwooptionArray = document.getElementsByClassName('first-of-two-variant-counter');
+
+    for(let i = 0; i < firstOfTwooptionArray.length; i++){
+      firstOfTwooptionArray[i].innerHTML = i + 1;
+    }
+
+  }
+
+  document.getElementById('addToFirstOfTwoItemVariant').addEventListener('click', ()=>{
+    let firstOfTwooptionArray = document.getElementsByClassName('first-of-two-variant-counter');
+    let firstOfTwoOptCounter = firstOfTwooptionArray.length + 1;
+
+    let firstOfTwoNewContent = document.createElement('div');
+    firstOfTwoNewContent.innerHTML = `<div class='form-group'>
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 first-of-two-variant-counter" style="width: 20px;">${firstOfTwoOptCounter}</p>
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 280px;">
+                  
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>`;
+    
+    while (firstOfTwoNewContent.firstChild) {
+      document.getElementById('firstOfTwoItemGroup').appendChild(firstOfTwoNewContent.firstChild);
+    }
+
+   
+  })
+
+
+  //last of two items variant
+  function deleteOptionsLastOfTwo(){
+    console.log('deleted');
+
+    let lastOfTwooptionArray = document.getElementsByClassName('last-of-two-variant-counter');
+
+    for(let i = 0; i < lastOfTwooptionArray.length; i++){
+      lastOfTwooptionArray[i].innerHTML = i + 1;
+    }
+
+  }
+
+  document.getElementById('addToLastOfTwoItemVariant').addEventListener('click', ()=>{
+    let lastOfTwooptionArray = document.getElementsByClassName('last-of-two-variant-counter');
+    let lastOfTwoOptCounter = lastOfTwooptionArray.length + 1;
+
+    let lastOfTwoNewContent = document.createElement('div');
+    lastOfTwoNewContent.innerHTML = `<div class='form-group'>
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 last-of-two-variant-counter" style="width: 20px;">${lastOfTwoOptCounter}</p>
+                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 280px;">
+                  
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>`;
+    
+    while (lastOfTwoNewContent.firstChild) {
+      document.getElementById('lastOfTwoItemGroup').appendChild(lastOfTwoNewContent.firstChild);
+    }
+
+   
   })
 
     //ends variant code
   
+
+  /*
+  *
+  *save variant data to the form 
+  *
+  */
+
+  function saveOneItemData(){
+    console.log('clicked 1')
+}
+
+  function saveTwoItemsData(){
+
+    console.log('clicked 2')
+
+  }
+
+  
+  
+
+
 
 </script>
 
