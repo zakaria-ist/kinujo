@@ -9,10 +9,6 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    email = serializers.EmailField(
-            required=True,
-            validators=[UniqueValidator(queryset=User.objects.all())]
-            )
     username = serializers.CharField(
             validators=[UniqueValidator(queryset=User.objects.all())]
             )
@@ -23,6 +19,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'username', 'email', 'password', 'groups']
 
     def create(self, validated_data):
+        if "email" not in validated_data:
+            validated_data['email'] = validated_data['username'] + "@tmp-kinujo.com"
         user = User.objects.create_user(validated_data['username'], validated_data['email'],
                 validated_data['password'])
         return user
@@ -90,7 +88,7 @@ class ProductJancodeSerializer(serializers.HyperlinkedModelSerializer):
 class AuthoritySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Authority
-        fields = ['name','commission_rate','official_commission_rate','is_hidden','created','modified']
+        fields = ['url', 'name','commission_rate','official_commission_rate','is_hidden','created','modified']
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Profile

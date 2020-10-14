@@ -24,7 +24,7 @@ SECRET_KEY = 'ro6hl1+%(r+oek3sz3j8x!dfyy+_3e+*so0q-zec9f-ycp5fox'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["testserver", "127.0.0.1"]
 
 
 # Application definition
@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'taxes',
     'api',
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -64,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  
 ]
 
 ROOT_URLCONF = 'kinujo.urls'
@@ -138,3 +140,5 @@ WEB_URL = 'http://127.0.0.1:8000' + MEDIA_URL
 
 LOGIN_URL = '/login/'
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+CORS_ORIGIN_ALLOW_ALL = DEBUG
