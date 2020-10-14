@@ -217,6 +217,8 @@ def profile_add(request):
 
                     profile.image = new_image
                     profile.save()
+
+                return render(request, 'profile_list.html')
             except Exception as e:
                 print(e)
                 messages.add_message(request, messages.ERROR, e, extra_tags='profile_add')
@@ -656,3 +658,17 @@ def listing_sales_list(request):
     """
 
     return render(request, 'listing_sales_list.html')
+
+def get_product_form(request):
+    """
+    Method to get product form page.
+    """
+
+    return render(request, 'product_form.html')
+
+def get_product_list_page(request):
+    """
+    Method to get product list page.
+    """
+
+    return render(request, 'item_info_tab.html')

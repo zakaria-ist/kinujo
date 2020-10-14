@@ -27,6 +27,8 @@ urlpatterns = [
     url(r'^templates/salon_table/$', views.salon_table, name='salon_table'),
     url(r'^templates/shipping_form/$', views.shipping_form, name='shipping_form'),
     url(r'^templates/shipping_table/$', views.shipping_table, name='shipping_table'),
+    url(r'^templates/product_form/$', views.get_product_form, name='get_product_form'),
+    url(r'^templates/product_list_page/$', views.get_product_list_page, name='get_product_list_page'),
 
 
     # for listing user
