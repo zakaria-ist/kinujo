@@ -292,9 +292,9 @@
               <div id="img-wrapper" class="row" style=" margin: 150px 0 0 0;">
                 <div class="col-md-4">
                   <div class="row img-h">
-                    <label for="file" id="add-img-btn-0" class="btn btn-secondary text-center col-md-12 img-input" style="margin-left: 70px; margin-right: 70px;"  onclick="document.getElementById('file').click()">
+                    <label for="file" id="add-img-btn-0" class="btn btn-secondary text-center col-md-12 img-input" style="margin-left: 70px; margin-right: 70px;">
                       + 
-                      <input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)"  style="display: none">
+                    <input type="file"  accept="image/*" name="image" id="file" onchange="loadFile(event)"  style="display: none">
                     </label>
                     <div class="col-md-12 img-container" id="images-0">
                     </div>
@@ -520,10 +520,9 @@
       
       //increase counter for next
       counter ++;
-      
-      imgWrapper.innerHTML += `<div class="col-md-4"><div class="row img-h"><label for="file" id="add-img-btn-${counter}" class="btn btn-secondary text-center col-md-12 img-input" onclick="document.getElementById('file-${counter}').click()">
+      imgWrapper.innerHTML += `<div class="col-md-4"><div class="row img-h"><label for="file" id="add-img-btn-${counter}" class="btn btn-secondary text-center col-md-12 img-input" onclick="if(!document.getElementById('file')){document.getElementById('file-${counter}').click();}">
                   + 
-                  <input type="file"  accept="image/*" name="image" id="file-${counter}"  onchange="loadFile(event)" style="display: none">
+                  <input type="file"  accept="image/*" name="image" id="file-${counter}" onchange="loadFile(event)" style="display: none">
                 </label>
                 <div class="col-md-12 img-container" id="images-${counter}"> </div> </div></div>` 
     } else{
