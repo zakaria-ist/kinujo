@@ -664,7 +664,7 @@ def get_product_form(request):
     Method to get product form page.
     """
 
-    return render(request, 'product_form.html')
+    return render(request, 'item_form.html')
 
 def get_product_list_page(request):
     """
