@@ -26,15 +26,15 @@ SALON_CATEGORY = (
 )
 
 PRODUCT_VARIETY = (
-    ('NONE', 0),
-    ('HOROZONTAL', 1),
-    ('VERTICAL AND HOROZONTAL', 2)
+    (0, 'NONE'),
+    (1, 'HOROZONTAL'),
+    (2, 'VERTICAL AND HOROZONTAL')
 )
 
 TARGET_TYPE = (
-    ('ALL', 0),
-    ('GENERAL ONLY', 1),
-    ('STORE ONLY', 2)
+    (0, 'ALL'),
+    (1, 'GENERAL ONLY'),
+    (2, 'STORE ONLY')
 )
 
 GROUP_TYPE = (

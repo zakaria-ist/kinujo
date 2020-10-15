@@ -1,0 +1,79 @@
+INSERT INTO `taxes_taxrate` (`start_date`, `end_date`, `tax_rate`, `reduced_tax_rate`, `is_hidden`, `is_enable`, `created`, `modified`)
+VALUES
+	('1989-04-01', '1997-03-31', 0.03, 0.03, 0, 1, now(), now()),
+	('1997-04-01', '2014-03-31', 0.05, 0.05, 0, 1, now(), now()),
+	('2014-04-01', '2019-09-30', 0.08, 0.08, 0, 1, now(), now()),
+	('2019-10-01', null, 0.1, 0.08, 0, 1, now(), now());
+
+
+INSERT INTO `profiles_authority` (`name`, `commission_rate`, `official_commission_rate`, `is_hidden`, `is_enable`, `created`, `modified`)
+VALUES
+	('マスター', 0.0, 0.0, 0, 1, now(), now()),
+	('スペシャル', 0.0, 0.05, 0, 1, now(), now()),
+	('アンバサダー', 0.05, 0.2, 0, 1, now(), now()),
+	('ストア', 0.2, 0.3, 0, 1, now(), now()),
+	('一般', 0.0, 0.0, 0, 1, now(), now());
+
+
+INSERT INTO `prefectures_prefecture` (`name`, `is_hidden`, `is_enable`, `created`, `modified`)
+VALUES
+	('北海道', 0, 1, now(), now()),
+	('青森県', 0, 1, now(), now()),
+	('岩手県', 0, 1, now(), now()),
+	('宮城県', 0, 1, now(), now()),
+	('秋田県', 0, 1, now(), now()),
+	('山形県', 0, 1, now(), now()),
+	('福島県', 0, 1, now(), now()),
+	('茨城県', 0, 1, now(), now()),
+	('栃木県', 0, 1, now(), now()),
+	('群馬県', 0, 1, now(), now()),
+	('埼玉県', 0, 1, now(), now()),
+	('千葉県', 0, 1, now(), now()),
+	('東京都', 0, 1, now(), now()),
+	('神奈川県', 0, 1, now(), now()),
+	('新潟県', 0, 1, now(), now()),
+	('富山県', 0, 1, now(), now()),
+	('石川県', 0, 1, now(), now()),
+	('福井県', 0, 1, now(), now()),
+	('山梨県', 0, 1, now(), now()),
+	('長野県', 0, 1, now(), now()),
+	('岐阜県', 0, 1, now(), now()),
+	('静岡県', 0, 1, now(), now()),
+	('愛知県', 0, 1, now(), now()),
+	('三重県', 0, 1, now(), now()),
+	('滋賀県', 0, 1, now(), now()),
+	('京都府', 0, 1, now(), now()),
+	('大阪府', 0, 1, now(), now()),
+	('兵庫県', 0, 1, now(), now()),
+	('奈良県', 0, 1, now(), now()),
+	('和歌山県', 0, 1, now(), now()),
+	('鳥取県', 0, 1, now(), now()),
+	('島根県', 0, 1, now(), now()),
+	('岡山県', 0, 1, now(), now()),
+	('広島県', 0, 1, now(), now()),
+	('山口県', 0, 1, now(), now()),
+	('徳島県', 0, 1, now(), now()),
+	('香川県', 0, 1, now(), now()),
+	('愛媛県', 0, 1, now(), now()),
+	('高知県', 0, 1, now(), now()),
+	('福岡県', 0, 1, now(), now()),
+	('佐賀県', 0, 1, now(), now()),
+	('長崎県', 0, 1, now(), now()),
+	('熊本県', 0, 1, now(), now()),
+	('大分県', 0, 1, now(), now()),
+	('宮崎県', 0, 1, now(), now()),
+	('鹿児島県', 0, 1, now(), now()),
+	('沖縄県', 0, 1, now(), now());
+
+
+INSERT INTO `profiles_profile` (`is_seller`, `shop_name`, `tel`, `password`, `nickname`, `user_code`, `email`, `is_approved`, `real_name`, `gender`, `birthday`, `zipcode`, `city`, `address1`, `address2`, `corporate_name`, `message_notification`, `other_notification`, `allowed_by_id`, `allowed_by_tel`, `word`, `salon_category`, `is_hidden`, `created`, `modified`, `authority_id`, `image_id`, `introducer_id`, `prefecture_id`, `user_id`)
+VALUES
+	(1, '', '08012345678', '08012345678', 'KINUJO management', 'kinujo_jp', 'test@email.com', 1, 'KINUJO', 1, NULL, '101', '', '〒102-0083 東京都千代田区麹町5-5-2', 'ベルビュー麹町3F', '株式会社KINUJO', 1, 1, 1, 1, 'One Word Message', NULL, 0, now(), now(), 1, null, null, 1, 1);
+
+
+INSERT INTO `products_productcategory` (`name`, `is_hidden`, `created`, `modified`)
+VALUES
+	('美容家電', 1, now(), now()),
+	('シャンプー', 1, now(), now()),
+	('スタイリング', 1, now(), now()),
+	('コスメ', 1, now(), now());

@@ -17,11 +17,11 @@ class Product(models.Model):
     pr = models.TextField()
     url_str = models.CharField(max_length=255)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
-    variety = models.SmallIntegerField(null=True, choices=tuple([status[::-1] for status in PRODUCT_VARIETY]))
+    variety = models.SmallIntegerField(null=True, choices=PRODUCT_VARIETY)
     is_used = models.BooleanField(default=False)
     is_opened = models.BooleanField(default=False)
     opened_date = models.DateField(default=date.today)
-    target = models.SmallIntegerField(null=True, choices=tuple([status[::-1] for status in TARGET_TYPE]))
+    target = models.SmallIntegerField(null=True, choices=TARGET_TYPE)
     price = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])
     store_price = models.DecimalField(max_digits=11, decimal_places=2)
     shipping_fee = models.DecimalField(max_digits=11, decimal_places=2)
@@ -46,7 +46,7 @@ class ProductImage(models.Model):
 class ProductVariety(models.Model):
     name = models.CharField(max_length=100, default='')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    vertical_and_horizontal = models.SmallIntegerField(null=True, choices=tuple([status[::-1] for status in PRODUCT_VARIETY]))
+    vertical_and_horizontal = models.SmallIntegerField(null=True, choices=PRODUCT_VARIETY)
 
     is_hidden = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
