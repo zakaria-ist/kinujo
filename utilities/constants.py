@@ -1,7 +1,18 @@
 GENDER_TYPE = (
-    ('NONE', 0),
-    ('MALE', 1),
-    ('FEMALE', 2)
+    (0, 'NONE'),
+    (1, 'MALE'),
+    (2, 'FEMALE')
+)
+
+YES_NO = (
+    (0, 'NO'),
+    (1, 'YES')
+)
+
+ACCOUNT_TYPE = (
+    (1, 'Normal'),
+    (2, 'Current'),
+    (3, 'Savings')
 )
 
 SALON_TYPE = (
@@ -9,16 +20,21 @@ SALON_TYPE = (
     ('STYLISTS', 2)
 )
 
+SALON_CATEGORY = (
+    (1, 'SALONS'),
+    (2, 'STYLISTS')
+)
+
 PRODUCT_VARIETY = (
-    ('NONE', 0),
-    ('HOROZONTAL', 1),
-    ('VERTICAL AND HOROZONTAL', 2)
+    (0, 'NONE'),
+    (1, 'HOROZONTAL'),
+    (2, 'VERTICAL AND HOROZONTAL')
 )
 
 TARGET_TYPE = (
-    ('ALL', 0),
-    ('GENERAL ONLY', 1),
-    ('STORE ONLY', 2)
+    (0, 'ALL'),
+    (1, 'GENERAL ONLY'),
+    (2, 'STORE ONLY')
 )
 
 GROUP_TYPE = (

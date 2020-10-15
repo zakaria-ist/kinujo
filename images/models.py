@@ -1,10 +1,11 @@
-from datetime import date
 from django.db import models
 
+def image_container(instance, filename):
+    return '/'.join(['profile', '/image', filename])
 
 class Image(models.Model):
-    image_path = models.CharField(max_length=255)
+    image = models.ImageField(upload_to=image_container)
 
     is_hidden = models.BooleanField(default=False)
-    create_date = models.DateField(default=date.today)
-    update_date = models.DateField(default=date.today)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)

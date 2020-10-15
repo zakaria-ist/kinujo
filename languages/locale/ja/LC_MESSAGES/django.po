@@ -1,0 +1,653 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-10-13 12:29+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: orders/templates/order_form.html:10
+msgid "Order Add/Edit"
+msgstr "注文追加/編集"
+
+#: orders/templates/order_form.html:27 templates/listing_base.html:127
+msgid "Order Registration"
+msgstr "注文登録"
+
+#: orders/templates/order_form.html:32
+#: profiles/templates/commission_info_tab.html:14
+#: profiles/templates/item_sale_info_tab.html:14
+#: profiles/templates/operating_commission_info_tab.html:14
+#: profiles/templates/sales_info_tab.html:14
+msgid "Product"
+msgstr "製品"
+
+#: orders/templates/order_form.html:67 orders/templates/order_list.html:57
+msgid "Order Number"
+msgstr "注文番号"
+
+#: orders/templates/order_form.html:78
+msgid "Orderer"
+msgstr "注文者"
+
+#: orders/templates/order_form.html:85 profiles/templates/shipping_form.html:10
+msgid "Destination Name"
+msgstr "宛先名"
+
+#: orders/templates/order_form.html:94
+#: profiles/templates/basic_info_tab.html:104
+#: profiles/templates/basic_info_tab.html:194
+#: profiles/templates/salon_form.html:70
+#: profiles/templates/salon_info_tab.html:24
+#: profiles/templates/shipping_form.html:70
+#: profiles/templates/shipping_info_tab.html:24
+msgid "Phone Number"
+msgstr "電話番号"
+
+#: orders/templates/order_form.html:102
+msgid "Shipping"
+msgstr "運送"
+
+#: orders/templates/order_form.html:111
+msgid "Total Fee"
+msgstr "合計料金"
+
+#: orders/templates/order_form.html:118 orders/templates/order_list.html:61
+msgid "Status"
+msgstr "状態"
+
+#: orders/templates/order_form.html:121
+msgid "Ready"
+msgstr "準備完了"
+
+#: orders/templates/order_form.html:122
+msgid "Processing"
+msgstr "処理"
+
+#: orders/templates/order_form.html:123
+msgid "Received"
+msgstr "受け取りました"
+
+#: orders/templates/order_form.html:128 orders/templates/order_list.html:62
+msgid "Shipment Date"
+msgstr "出荷日"
+
+#: orders/templates/order_form.html:135 orders/templates/order_list.html:63
+msgid "Inquiry Number"
+msgstr "お問い合わせ番号"
+
+#: orders/templates/order_form.html:144
+msgid "Order Date"
+msgstr "注文日"
+
+#: orders/templates/order_form.html:151
+msgid "Delivery Address"
+msgstr "配送先住所"
+
+#: orders/templates/order_form.html:162
+#: profiles/templates/account_info_tab.html:89
+#: profiles/templates/basic_info_tab.html:208
+#: profiles/templates/salon_form.html:81
+#: profiles/templates/shipping_form.html:85
+msgid "Save"
+msgstr "保存する"
+
+#: orders/templates/order_form.html:163
+#: profiles/templates/account_info_tab.html:90
+#: profiles/templates/basic_info_tab.html:209
+#: profiles/templates/salon_form.html:82
+#: profiles/templates/shipping_form.html:86
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: orders/templates/order_list.html:8 orders/templates/order_list.html:31
+#: templates/listing_base.html:124
+msgid "Order List"
+msgstr "オーダーリスト"
+
+#: orders/templates/order_list.html:35
+msgid "Shipped"
+msgstr "出荷済み"
+
+#: orders/templates/order_list.html:37
+msgid "Non Shipped"
+msgstr ""
+
+#: orders/templates/order_list.html:43 products/templates/product_list.html:45
+msgid "CSV Export"
+msgstr "CSVエクスポート"
+
+#: orders/templates/order_list.html:48 products/templates/product_list.html:55
+#: profiles/templates/profile_list.html:49
+#: profiles/templates/salon_info_tab.html:11
+#: profiles/templates/shipping_info_tab.html:11
+msgid "Add"
+msgstr "追加"
+
+#: orders/templates/order_list.html:58 products/templates/product_list.html:65
+#: profiles/templates/basic_info_tab.html:74
+#: profiles/templates/payment_list.html:57
+#: profiles/templates/profile_list.html:60
+msgid "Name"
+msgstr "名前"
+
+#: orders/templates/order_list.html:59
+msgid "Destination"
+msgstr "先"
+
+#: orders/templates/order_list.html:60 profiles/templates/payment_list.html:62
+msgid "Amount"
+msgstr "量"
+
+#: orders/templates/order_list.html:64 products/templates/product_list.html:69
+#: profiles/templates/client_info_tab.html:27
+#: profiles/templates/item_info_tab.html:18
+#: profiles/templates/profile_list.html:63
+#: profiles/templates/salon_info_tab.html:25
+#: profiles/templates/shipping_info_tab.html:25
+msgid "Options"
+msgstr "オプション"
+
+#: orders/templates/order_list.html:83 products/templates/product_list.html:88
+#: profiles/templates/profile_form.html:106
+#: profiles/templates/profile_list.html:82
+msgid "Delete Confirm Dialog"
+msgstr "確認ダイアログの削除"
+
+#: orders/templates/order_list.html:90 products/templates/product_list.html:95
+#: profiles/templates/profile_form.html:113
+#: profiles/templates/profile_list.html:89
+msgid "Are you sure want to delete?"
+msgstr "削除してもよろしいですか？"
+
+#: orders/templates/order_list.html:95 products/templates/product_list.html:100
+#: profiles/templates/profile_form.html:118
+#: profiles/templates/profile_list.html:94
+msgid "No"
+msgstr "番号"
+
+#: orders/templates/order_list.html:97 products/templates/product_list.html:102
+#: profiles/templates/profile_form.html:119
+#: profiles/templates/profile_list.html:96
+msgid "Yes"
+msgstr "はい"
+
+#: products/templates/product_list.html:8
+#: products/templates/product_list.html:31
+msgid "Product Management"
+msgstr "製品管理"
+
+#: products/templates/product_list.html:35
+msgid "Published"
+msgstr "公開"
+
+#: products/templates/product_list.html:37
+msgid "Non-Published"
+msgstr "未公開"
+
+#: products/templates/product_list.html:39
+msgid "Draft"
+msgstr "ドラフト"
+
+#: products/templates/product_list.html:50
+msgid "CSV Import"
+msgstr "CSVインポート"
+
+#: products/templates/product_list.html:66
+msgid "Jan Code"
+msgstr "Janコード"
+
+#: products/templates/product_list.html:67
+msgid "Stock"
+msgstr "株式"
+
+#: products/templates/product_list.html:68
+msgid "Published Date"
+msgstr "公開日"
+
+#: profiles/templates/account_info_tab.html:6
+#: profiles/templates/profile_form.html:42
+msgid "Account Information"
+msgstr "口座情報"
+
+#: profiles/templates/account_info_tab.html:10
+msgid "Bank Code"
+msgstr "銀行番号"
+
+#: profiles/templates/account_info_tab.html:22
+msgid "Bank Name"
+msgstr "銀行名"
+
+#: profiles/templates/account_info_tab.html:33
+msgid "Branch Code"
+msgstr "支店コード"
+
+#: profiles/templates/account_info_tab.html:45
+msgid "Branch Name"
+msgstr "支店名"
+
+#: profiles/templates/account_info_tab.html:55
+msgid "Account Type"
+msgstr "口座の種類"
+
+#: profiles/templates/account_info_tab.html:59
+msgid "Normal"
+msgstr "正常"
+
+#: profiles/templates/account_info_tab.html:60
+msgid "Current"
+msgstr "電流"
+
+#: profiles/templates/account_info_tab.html:61
+msgid "Savings"
+msgstr "節約"
+
+#: profiles/templates/account_info_tab.html:66
+#: profiles/templates/payment_list.html:60
+msgid "Account Number"
+msgstr "口座番号"
+
+#: profiles/templates/account_info_tab.html:77
+#: profiles/templates/payment_list.html:61
+msgid "Account Holder"
+msgstr "口座名義人"
+
+#: profiles/templates/basic_info_tab.html:16
+msgid "Profile"
+msgstr "プロフィール"
+
+#: profiles/templates/basic_info_tab.html:22
+msgid "Profile Image"
+msgstr "プロフィール画像"
+
+#: profiles/templates/basic_info_tab.html:56
+msgid "Authority"
+msgstr "権限"
+
+#: profiles/templates/basic_info_tab.html:61
+#: profiles/templates/profile_list.html:59
+msgid "Type"
+msgstr "タイプ"
+
+#: profiles/templates/basic_info_tab.html:67
+msgid "Nickname"
+msgstr "ニックネーム"
+
+#: profiles/templates/basic_info_tab.html:79
+msgid "ID"
+msgstr "ID"
+
+#: profiles/templates/basic_info_tab.html:86
+msgid "Selling Authority"
+msgstr "販売機関"
+
+#: profiles/templates/basic_info_tab.html:93
+msgid "Gender"
+msgstr "性別"
+
+#: profiles/templates/basic_info_tab.html:98
+msgid "Birthday"
+msgstr "お誕生日"
+
+#: profiles/templates/basic_info_tab.html:109
+msgid "Password"
+msgstr "パスワード"
+
+#: profiles/templates/basic_info_tab.html:117
+msgid "Confirm Password"
+msgstr "パスワードを認証する"
+
+#: profiles/templates/basic_info_tab.html:122
+msgid "If the password is blank it will not be changed"
+msgstr "パスワードが空白の場合、パスワードは変更されません"
+
+#: profiles/templates/basic_info_tab.html:127
+msgid "Introducer"
+msgstr "イントロデューサー"
+
+#: profiles/templates/basic_info_tab.html:143
+msgid "Approval"
+msgstr "承認"
+
+#: profiles/templates/basic_info_tab.html:151
+msgid "General Store"
+msgstr "雑貨店"
+
+#: profiles/templates/basic_info_tab.html:166
+msgid "Corporate Information"
+msgstr "企業情報"
+
+#: profiles/templates/basic_info_tab.html:168
+msgid "Corporate Name"
+msgstr "会社名"
+
+#: profiles/templates/basic_info_tab.html:173
+#: profiles/templates/salon_form.html:19
+#: profiles/templates/salon_info_tab.html:22
+msgid "Representative's Name"
+msgstr "代表者の名前"
+
+#: profiles/templates/basic_info_tab.html:179
+#: profiles/templates/salon_form.html:50
+#: profiles/templates/shipping_form.html:50
+msgid "Address One"
+msgstr "アドレス1"
+
+#: profiles/templates/basic_info_tab.html:184
+#: profiles/templates/salon_form.html:60
+#: profiles/templates/shipping_form.html:60
+msgid "Address Two"
+msgstr "アドレス2"
+
+#: profiles/templates/basic_info_tab.html:190
+#: profiles/templates/salon_form.html:28
+#: profiles/templates/shipping_form.html:28
+msgid "Zip Code"
+msgstr "郵便番号"
+
+#: profiles/templates/basic_info_tab.html:201
+msgid "Active"
+msgstr "アクティブ"
+
+#: profiles/templates/client_info_tab.html:5
+msgid "Client Information"
+msgstr "クライアント情報"
+
+#: profiles/templates/client_info_tab.html:9
+#: profiles/templates/profile_list.html:39
+msgid "General"
+msgstr "一般"
+
+#: profiles/templates/client_info_tab.html:11
+#: profiles/templates/payment_list.html:44
+#: profiles/templates/profile_list.html:37
+msgid "Store"
+msgstr "お店"
+
+#: profiles/templates/client_info_tab.html:14
+msgid "Customers Number"
+msgstr "顧客番号"
+
+#: profiles/templates/commission_info_tab.html:5
+#: profiles/templates/operating_commission_info_tab.html:5
+msgid "Commission Information"
+msgstr "委員会情報"
+
+#: profiles/templates/commission_info_tab.html:13
+#: profiles/templates/item_sale_info_tab.html:13
+#: profiles/templates/operating_commission_info_tab.html:13
+#: profiles/templates/sales_info_tab.html:13
+msgid "Date"
+msgstr "日付"
+
+#: profiles/templates/commission_info_tab.html:15
+msgid "Seller"
+msgstr "売り手"
+
+#: profiles/templates/commission_info_tab.html:16
+msgid "Selling Price"
+msgstr "販売価格"
+
+#: profiles/templates/commission_info_tab.html:17
+#: profiles/templates/sales_list.html:55
+msgid "Commission"
+msgstr "手数料"
+
+#: profiles/templates/item_info_tab.html:5
+msgid "Item Information"
+msgstr "アイテム情報"
+
+#: profiles/templates/item_sale_info_tab.html:5
+#: profiles/templates/sales_info_tab.html:5
+msgid "Sales Information"
+msgstr "販売情報"
+
+#: profiles/templates/item_sale_info_tab.html:15
+#: profiles/templates/sales_info_tab.html:15
+msgid "Sales Amount"
+msgstr "売上高"
+
+#: profiles/templates/listing_sales_list.html:8
+#: profiles/templates/listing_sales_list.html:27
+#: profiles/templates/sales_list.html:8 profiles/templates/sales_list.html:31
+msgid "Sales List"
+msgstr "販売リスト"
+
+#: profiles/templates/listing_sales_list.html:48
+msgid "Item Sale"
+msgstr "アイテムセール"
+
+#: profiles/templates/listing_sales_list.html:51
+#: profiles/templates/operating_commission_info_tab.html:15
+msgid "Operating Commission"
+msgstr "運営委員会"
+
+#: profiles/templates/payment_list.html:8
+#: profiles/templates/payment_list.html:31
+msgid "Payment Management"
+msgstr "支払い管理"
+
+#: profiles/templates/payment_list.html:42
+#: profiles/templates/profile_list.html:35
+msgid "Ambassador"
+msgstr "大使"
+
+#: profiles/templates/payment_list.html:46
+msgid "Paid"
+msgstr ""
+
+#: profiles/templates/payment_list.html:48
+msgid "Not Yet"
+msgstr ""
+
+#: profiles/templates/payment_list.html:58
+msgid "Bank"
+msgstr "バンク"
+
+#: profiles/templates/payment_list.html:59
+msgid "Branch"
+msgstr "ブランチ"
+
+#: profiles/templates/payment_list.html:63
+msgid "Payment Date"
+msgstr "支払期日"
+
+#: profiles/templates/profile_form.html:11
+msgid "Profile Add/Edit"
+msgstr "プロファイルの追加/編集"
+
+#: profiles/templates/profile_form.html:28
+msgid "Profile Details"
+msgstr "プロファイルの詳細"
+
+#: profiles/templates/profile_form.html:33
+msgid "Basic Information"
+msgstr "基本情報"
+
+#: profiles/templates/profile_form.html:36 templates/listing_base.html:110
+msgid "Item List"
+msgstr "出品一覧"
+
+#: profiles/templates/profile_form.html:39
+msgid "Client"
+msgstr "顧客"
+
+#: profiles/templates/profile_form.html:45 profiles/templates/salon_form.html:6
+#: profiles/templates/salon_info_tab.html:5
+msgid "Salon Information"
+msgstr "サロン情報"
+
+#: profiles/templates/profile_form.html:48
+#: profiles/templates/shipping_form.html:6
+#: profiles/templates/shipping_info_tab.html:5
+msgid "Shipping Information"
+msgstr "送付先情報"
+
+#: profiles/templates/profile_list.html:8
+#: profiles/templates/profile_list.html:31
+msgid "Profile List"
+msgstr "プロファイルリスト"
+
+#: profiles/templates/profile_list.html:41
+msgid "Master"
+msgstr "主人"
+
+#: profiles/templates/profile_list.html:43
+msgid "Unapproved"
+msgstr "未承認"
+
+#: profiles/templates/profile_list.html:61
+msgid "Number of store accounts"
+msgstr "ストアアカウント数"
+
+#: profiles/templates/profile_list.html:62
+msgid "Number of general users"
+msgstr "一般ユーザー数"
+
+#: profiles/templates/sales_list.html:52
+msgid "Product Sales"
+msgstr ""
+
+#: profiles/templates/salon_form.html:10
+#: profiles/templates/salon_info_tab.html:21
+msgid "Salon Name"
+msgstr "サロン名"
+
+#: profiles/templates/salon_form.html:39
+#: profiles/templates/shipping_form.html:39
+msgid "Prefecture"
+msgstr "県"
+
+#: profiles/templates/salon_info_tab.html:23
+#: profiles/templates/shipping_info_tab.html:23
+msgid "Address"
+msgstr "アドレス"
+
+#: profiles/templates/shipping_form.html:19
+#: profiles/templates/shipping_info_tab.html:22
+msgid "Full Name"
+msgstr "フルネーム"
+
+#: profiles/templates/shipping_form.html:81
+msgid "Is Default"
+msgstr "デフォルトです"
+
+#: profiles/templates/shipping_info_tab.html:21
+msgid "Address Name"
+msgstr "住所名"
+
+#: templates/base.html:64 templates/listing_base.html:64
+msgid "ENGLISH"
+msgstr "英語"
+
+#: templates/base.html:73 templates/listing_base.html:73
+msgid "JAPANESE"
+msgstr "日本語"
+
+#: templates/base.html:88 templates/listing_base.html:88
+msgid "Log Out"
+msgstr "ログアウト"
+
+#: templates/base.html:106
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: templates/base.html:112
+msgid "Account Management"
+msgstr "アカウント管理"
+
+#: templates/base.html:116
+msgid "Account List"
+msgstr "アカウント一覧"
+
+#: templates/base.html:119
+msgid "Account Registration"
+msgstr "アカウント登録"
+
+#: templates/base.html:126 templates/listing_base.html:134
+msgid "Sales Management"
+msgstr "売上管理"
+
+#: templates/base.html:130
+msgid "Sales list"
+msgstr "売上一覧"
+
+#: templates/base.html:133
+msgid "Payment list"
+msgstr "支払一覧"
+
+#: templates/listing_base.html:106
+msgid "Item Management"
+msgstr "アイテム管理"
+
+#: templates/listing_base.html:113
+msgid "Item Registration"
+msgstr "アイテム登録"
+
+#: templates/listing_base.html:120
+msgid "Order Management"
+msgstr "注文管理"
+
+#: templates/master_login.html:34
+msgid "Management system"
+msgstr "管理システム"
+
+#: templates/master_login.html:42 templates/sales_login.html:42
+msgid "I forgot the password"
+msgstr "パスワードを忘れた"
+
+#: templates/password-reset.html:38
+msgid "We will send you an authorization code."
+msgstr "認証コードを送付します。"
+
+#: templates/password-reset.html:39
+msgid "Please enter your phone number and press send."
+msgstr "電話番号を入力して送信を押してください。"
+
+#: templates/password-reset.html:41
+msgid "cell phone number"
+msgstr "携帯電話番号"
+
+#: templates/password-reset.html:44
+msgid "Send"
+msgstr "送信"
+
+#: templates/password-reset.html:47
+msgid " until resendable"
+msgstr "再送信可能まで"
+
+#: templates/password-reset.html:50
+msgid "Please enter the verification code"
+msgstr "認証コードを入力してください"
+
+#: templates/password-reset.html:54
+msgid "New password setting"
+msgstr "新しいパスワード設定"
+
+#: templates/password-reset.html:56
+msgid "new password"
+msgstr "新しいパスワード"
+
+#: templates/password-reset.html:59
+msgid "New password (re-enter)"
+msgstr "新しいパスワード(再入力)"
+
+#: templates/password-reset.html:62
+msgid "Change the password"
+msgstr "パスワードを変更する"
+
+#: templates/sales_login.html:34
+msgid "Listing management site"
+msgstr "出品管理サイト"

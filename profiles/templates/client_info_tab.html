@@ -1,0 +1,32 @@
+{% block extrahead %}
+    {% load i18n %}
+{% endblock %}
+<header class="panel-heading" style="font-size: 25px">
+    <strong>{% trans 'Client Information' %}</strong>
+</header>
+<div class="form-group form-check text-center">
+    <input type="checkbox" class="form-check-input checkbox-2x" id="general_check">
+    <label class="form-check-label" for="general_check">{% trans 'General' %}</label>
+    <input type="checkbox" class="form-check-input checkbox-2x" id="store_check">
+    <label class="form-check-label" for="store_check">{% trans 'Store' %}</label>
+</div>
+<div class="form-group text-right">
+    <strong>{% trans 'Customers Number' %}: </strong>
+</div>
+<div class="table-section white-bg">
+    <div class="adv-table table-responsive">
+        <table class="display table table-bordered table-striped table-condensed"
+            id="client-table" style="width:100%">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Type</th>
+                <th>Name</th>
+                <th>Number of store account</th>
+                <th>Number of general users</th>
+                <th class="text-center" style="min-width:90px!important;">{% trans 'Options' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,213 @@
+{% block extrahead %}
+    {% load static %}
+    {% load i18n %}
+{% endblock %}
+<form class="form-horizontal"  id="profile_form"
+    {% if profile.id %}
+    action="{% url 'profile_edit' profile.id %}" 
+    {% else %}
+    action="{% url 'profile_add' %}" 
+    {% endif %}
+    role="form" method="post" onsubmit="checkInput()" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="text" name="user_id" class="form-control" value="{{ profile.user_id }}" hidden>
+    <section class="panel">
+        <header class="panel-heading" style="font-size: 25px">
+            <strong>{% trans 'Profile' %}</strong>
+        </header>
+        <div class="row">
+            <div class="col-lg-4" style="margin-top: 4%">
+                <div class="form-group">
+                    {# Profile Image #}
+                    <label class="control-label col-lg-12 col-sm-12">{% trans 'Profile Image' %}</label>
+                    <div class="col-md-8">
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <div class="fileupload-new thumbnail" style="width: 300px; height: 300px;">
+                                {% if profile.image_id %}
+                                    <img src="{{ profile.image.image.url }}" alt="" name="profile_image"/>
+                                {% else %}
+                                    <img src="{% static 'img/blank_male.png' %}" alt="" name="profile_image"/>
+                                {% endif %}
+                            </div>
+                            <div class="fileupload-preview fileupload-exists thumbnail"
+                                style="max-width: 300px; max-height: 300px; line-height: 20px;"></div>
+                            <div class="text-right">
+                                <span class="btn btn-white btn-file">
+                                    <span class="fileupload-new"><i class="fas fa-pencil-alt fa-2x"></i></span>
+                                    <span class="fileupload-exists"><i class="fas fa-undo fa-2x"></i></span>
+                                    <input name="profile_image" type="file" class="default"/>
+                                </span>
+                                <a href="javascript:void(0)" class="btn btn-danger fileupload-exists btnRemoveLogo"
+                                data-dismiss="fileupload"><i class="fas fa-trash-alt fa-2x"></i> </a>
+                                <input style="display: none;" name="rm_profile_image" class="hidethis">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="col-lg-offset-2 col-lg-8">
+                        {{ form.word|default_if_none:"" }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="form-group row">
+                    <label for="authority" class="col-lg-2 control-label">{% trans 'Authority' %}<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        {{ form.authority|default_if_none:"" }}
+                    </div>
+                    <label id="type_label" for="type" class="col-lg-2 col-sm-2 control-label">{% trans 'Type' %}</label>
+                    <div class="col-lg-4" id="type_div">
+                        {{ form.salon_category|default_if_none:"" }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="nickname" class="col-lg-2 col-sm-2 control-label">{% trans 'Nickname' %}<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        {{ form.nickname|default_if_none:"" }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="real_name" class="col-lg-2 col-sm-2 control-label">{% trans 'Name' %}<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        {{ form.real_name|default_if_none:"" }}
+                    </div>
+                    <label for="user_code" class="col-lg-2 col-sm-2 control-label">{% trans 'ID' %}<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        <input type="text" value="{{ profile.user_code }}" name="user_code" class="form-control" placeholder="" required id="id_user_code">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="is_seller" class="col-lg-2 col-sm-2 control-label">{% trans 'Selling Authority' %}<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        {{ form.is_seller|default_if_none:"" }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="gender" class="col-lg-2 col-sm-2 control-label">{% trans 'Gender' %}<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        {{ form.gender|default_if_none:"" }}
+                    </div>
+                    <label for="birthday" class="col-lg-2 col-sm-2 control-label">{% trans 'Birthday' %}</label>
+                    <div class="col-lg-4">
+                        {{ form.birthday|default_if_none:"" }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="tel" class="col-lg-2 col-sm-2 control-label">{% trans 'Phone Number' %}<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        {{ form.tel|default_if_none:"" }}
+                    </div>
+                    <label for="password" class="col-lg-2 col-sm-2 control-label">{% trans 'Password' %}</label>
+                    <div class="col-lg-4">
+                        {{ form.password|default_if_none:"" }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                    </div>
+                    <label for="password" class="col-lg-2 col-sm-2 control-label">{% trans 'Confirm Password' %}</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="password"
+                            name="conf_pass"
+                            id="conf_pass">
+                        <span id="pass-error" class="span-required">{% trans 'If the password is blank it will not be changed' %}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="introducer_div" class="row">
+                        <label for="introducer" class="col-lg-2 col-sm-2 control-label">{% trans 'Introducer' %}</label>
+                        <div class="col-lg-4">
+                            <select name="introducer" id="introducer" class="form-control trs-field sended">
+                                {% for pr in profile_list %}
+                                    {% if profile.introducer_id == pr.id %}
+                                        <option value="{{pr.id}}" selected>{{pr.nickname}}</option>
+                                    {% else %}
+                                        <option value="{{pr.id}}">{{pr.nickname}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="approval_div" class="row">
+                        <label for="is_approved" class="col-lg-2 col-sm-2 control-label">{% trans 'Approval' %}</label>
+                        <div class="col-lg-4">
+                            {{ form.is_approved|default_if_none:"" }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="general_ws_div" class="row">
+                        <label for="general_store" class="col-lg-2 col-sm-2 control-label">{% trans 'General Store' %}</label>
+                        <div class="col-lg-4">
+                            <select name="general_store" id="general_store" class="form-control trs-field sended">
+                                {% for pr in store_list %}
+                                    {% if profile.introducer_id == pr.id %}
+                                        <option value="{{pr.id}}" selected>{{pr.nickname}}</option>
+                                    {% else %}
+                                        <option value="{{pr.id}}">{{pr.nickname}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="corporate_block">
+                    <p><strong>{% trans 'Corporate Information' %}</strong></p>
+                    <div class="form-group row">
+                        <label for="corporate_name" class="col-lg-2 col-sm-2 control-label">{% trans 'Corporate Name' %}<span
+                                class="span-required">(*)</span></label>
+                        <div class="col-lg-4">
+                            {{ form.corporate_name|default_if_none:"" }}
+                        </div>
+                        <label for="representative_name" class="col-lg-2 col-sm-2 control-label">{% trans "Representative's Name" %}</label>
+                        <div class="col-lg-4">
+                            {{ form.representative_name|default_if_none:"" }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="address1" class="col-lg-2 col-sm-2 control-label">{% trans 'Address One' %}<span
+                                class="span-required">(*)</span></label>
+                        <div class="col-lg-4">
+                            {{ form.address1|default_if_none:"" }}
+                        </div>
+                        <label for="address2" class="col-lg-2 col-sm-2 control-label">{% trans 'Address Two' %}</label>
+                        <div class="col-lg-4">
+                            {{ form.address2|default_if_none:"" }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="zipcode" class="col-lg-2 col-sm-2 control-label">{% trans 'Zip Code' %}</label>
+                        <div class="col-lg-4">
+                            {{ form.zipcode|default_if_none:"" }}
+                        </div>
+                        <label for="phone_number" class="col-lg-2 col-sm-2 control-label">{% trans 'Phone Number' %}</label>
+                        <div class="col-lg-4">
+                            {{ form.corporate_tel|default_if_none:"" }}
+                        </div>
+                    </div>
+                    <div class="form-group form-check text-left" style="margin-top: 30px;">
+                        <input type="checkbox" class="form-check-input checkbox-2x" name="active_checkbox" id="active_checkbox" checked>
+                        <label class="form-check-label" for="active">{% trans 'Active' %}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="text-center">
+                <button type="submit" name="btnSave" id="btnSave" class="btn btn-primary blue-btn">{% trans 'Save' %}</button>
+                <a class="btn btn-default gray-btn" href="{% url 'profile_list' %}">{% trans 'Cancel' %}</a>
+            </div>
+        </div>
+    </section>
+</form>

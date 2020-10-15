@@ -1,0 +1,90 @@
+{% block extrahead %}
+    {% load i18n %}
+{% endblock %}
+<section class="panel">
+    <header class="panel-heading pb-5" style="font-size: 25px">
+        <strong>{% trans 'Shipping Information' %}</strong>
+    </header>
+    <div class="col-lg-12">
+        <div class="form-group row">
+            <label for="destination_name" class="col-lg-2 control-label">{% trans 'Destination Name' %}<span
+                    class="span-required">(*)</span></label>
+            <div class="col-lg-6">
+                <input class="form-control trs-field" type="text"
+                    name="destination_name"
+                    id="destination_name">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="full_name" class="col-lg-2 control-label">{% trans 'Full Name' %}<span
+                    class="span-required">(*)</span></label>
+            <div class="col-lg-6">
+                <input class="form-control trs-field" type="text"
+                    name="full_name"
+                    id="full_name">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="zip_code" class="col-lg-2 control-label">{% trans 'Zip Code' %}<span
+                    class="span-required">(*)</span></label>
+            <div class="col-lg-6">
+                <input class="form-control trs-field" type="text"
+                    name="zip_code"
+                    id="zip_code"
+                    maxlength="8"
+                    placeholder="">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="prefecture" class="col-lg-2 control-label">{% trans 'Prefecture' %}<span
+                    class="span-required">(*)</span></label>
+            <div class="col-lg-6">
+                <select name="prefecture" id="prefecture" class="form-control trs-field">
+                    {% for pr in prefecture_list %}
+                        <option value="{{pr.0}}" selected>{{pr.1}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="address1" class="col-lg-2 control-label">{% trans 'Address One' %}<span
+                    class="span-required">(*)</span></label>
+            <div class="col-lg-6">
+                <input class="form-control trs-field" type="text"
+                    name="address1"
+                    id="address1"
+                    placeholder="">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="address2" class="col-lg-2 control-label">{% trans 'Address Two' %}<span
+                    class="span-required">(*)</span></label>
+            <div class="col-lg-6">
+                <input class="form-control trs-field" type="text"
+                    name="address2"
+                    id="address2"
+                    placeholder="">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="add_tel" class="col-lg-2 control-label">{% trans 'Phone Number' %}<span
+                    class="span-required">(*)</span></label>
+            <div class="col-lg-6">
+                <input class="form-control trs-field" type="text"
+                    name="add_tel"
+                    id="add_tel"
+                    placeholder="">
+            </div>
+        </div>
+        <div class="form-group form-check text-left offset-lg-2" style="margin-top: 30px;">
+            <input type="checkbox" class="form-check-input checkbox-2x" name="default_checkbox" id="default_checkbox" checked>
+            <label class="form-check-label" for="active">{% trans 'Is Default' %}</label>
+        </div>
+        <div class="form-group row">
+            <div class="text-center">
+                <button type="button" onclick="saveShippingInfo()" name="btnAddressSave" id="btnAddressSave" class="btn btn-primary blue-btn">{% trans 'Save' %}</button>
+                <a class="btn btn-default gray-btn" onclick="cancelShippingForm()">{% trans 'Cancel' %}</a>
+            </div>
+        </div>
+    </div>
+</section>

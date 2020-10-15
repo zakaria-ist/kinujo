@@ -5,9 +5,24 @@ from prefectures.models import Prefecture
 from products.models import ProductCategory, Product, ProductImage, ProductVariety, ProductVarietySelection, ProductJancode
 from profiles.models import Authority, Profile, UserSale, UserCommision, MonthlyPayment, Address
 from taxes.models import TaxRate
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.http import HttpResponseRedirect
+from django.utils import translation
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import activate, deactivate_all
 from .serializers import UserSerializer, GroupSerializer,  OrderSerializer, OrderProductSerializer, OrderProductCommissionSerializer, OrderReceiptSerializer, TotalSaleSerializer, TotalCommissionSerializer, PolicySerializer, PrefectureSerializer, ProductCategorySerializer, ProductSerializer, ProductImageSerializer, ProductVarietySerializer, ProductVarietySelectionSerializer, ProductJancodeSerializer, AuthoritySerializer, ProfileSerializer, UserSaleSerializer, UserCommisionSerializer, MonthlyPaymentSerializer, AddressSerializer, TaxRateSerializer
+from rest_framework.test import APIRequestFactory
 
+def getContext():
+    factory = APIRequestFactory()
+    n = factory.get('/')
+    context = {
+        'request': Request(APIRequestFactory().get('/')),
+    }
+    return context
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -170,3 +185,71 @@ class TaxRateViewSet(viewsets.ModelViewSet):
     """
     queryset = TaxRate.objects.all()
     serializer_class = TaxRateSerializer
+
+class UserRegister(APIView):
+    def post(self, request, format='json'):
+        userSerializer = UserSerializer(data=request.data, context=getContext())
+        if userSerializer.is_valid():
+            user = userSerializer.save()
+
+            authority = Authority.objects.get(id=1)
+            if request.data['authority'] == 'store':
+                authority = Authority.objects.get(id=2)
+                
+            authoritySerializer = AuthoritySerializer(authority, context=getContext())
+            profileSerializer = ProfileSerializer(data={
+                'user' : userSerializer.data['url'],
+                'tel' : request.data['username'],
+                'password' : request.data['password'],
+                'nickname' : request.data['nickname'],
+                'user_code' : user.id,
+                'authority' : authoritySerializer.data['url'],
+            }, context=getContext())
+            if profileSerializer.is_valid():
+                profile = profileSerializer.save()
+                if user:
+                    return Response({"success": True, "data" : {
+                        "user" : userSerializer.data
+                    }}, status=status.HTTP_201_CREATED)
+            else:
+                print(profileSerializer.errors)
+                return Response({"success" : False}, status=status.HTTP_200_OK)
+        else:
+            print(userSerializer.errors)
+            return Response({"success" : False}, status=status.HTTP_200_OK)
+        
+class UserLogin(APIView):
+    def post(self, request, format='json'):
+        factory = APIRequestFactory()
+        n = factory.get('/')
+        profile = Profile.objects.get(tel=request.data['tel'])
+        if profile:
+            user = User.objects.get(id = profile.user_id)
+            if user:
+                if user.check_password(request.data['password']):
+                    userSerializer = UserSerializer(user, context=getContext())
+                    return Response({"success" : True, "data" : {
+                        "user" : userSerializer.data
+                    }}, status=status.HTTP_200_OK)
+                else:
+                    return Response({"success" : False, "error" : "incorrect_password"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+
+class AppConfig(APIView):
+    def post(self, request, format='json'):
+        return Response({"success" : True}, status=status.HTTP_200_OK)
+        
+@csrf_exempt
+def change_language(request):
+    """
+    API to change language.
+    """
+
+    language = request.POST['language']
+    deactivate_all()
+    activate(language)
+    request.session[translation.LANGUAGE_SESSION_KEY] = language
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -1,0 +1,97 @@
+{% extends "listing_base.html" %}
+
+{% block extrahead %}
+    {% load static %}
+    {% load i18n %}
+{% endblock %}
+
+{% block title %}{% trans 'Sales List' %}{% endblock %}
+
+{% block listing_sales_a_active %}
+    active
+{% endblock %}
+
+{% block listing_sales_i_active %}
+    active
+{% endblock %}
+
+{% block content %}
+    <br/>
+    <div class="row">
+        <div class="col-sm-12">
+            <section class="panel">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel-body">
+                            <header class="panel-heading" style="font-size: 25px">
+                                    {% trans 'Sales List' %}
+                            </header>
+                            <div class="row">
+                                <div class="col-lg-4 row">
+                                    <a style="border-color: transparent;" class="btn btn-white col-lg-2 pt-5" onclick="changeDate('Prev')"><i class="fas fa-chevron-circle-left fa-2x"></i></a>
+                                    <p id="sale_changable_date" class="changable_date pt-5"></p>
+                                    <a style="border-color: transparent;" class="btn btn-white col-lg-2 pt-5" onclick="changeDate('Next')"><i class="fas fa-chevron-circle-right fa-2x"></i></a>
+                                </div>
+                                <div class="col-lg-8 row" id="sales_summary">
+                                    <div class="col-lg-6">
+                                        <p>Total sales: 1,650,000</p>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <p>Selling sales: 650,000</p>
+                                        <p>Commission: 1,000,000</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul id="tabs" class="nav nav-tabs" data-tabs="tabs" role="tablist"
+                                style="padding-left: 20px; margin-left: 18px; margin-right: 24px;">
+                                <li class="nav-item" id="basic_tab_li">
+                                    <a href="#item_sale_tab" class="nav-link active" id="item_sale_tab_a" data-toggle="tab" role="tab" aria-controls="item_sale_tab" aria-selected="true">{% trans 'Item Sale' %}</a>
+                                </li>
+                                <li class="nav-item" id="item_tab_li">
+                                    <a href="#operating_commission_tab" class="nav-link" id="operating_commission_tab_a" data-toggle="tab" role="tab" aria-controls="operating_commission_tab" aria-selected="false">{% trans 'Operating Commission' %}</a>
+                                </li>
+                            </ul>
+                            <div class="table-section white-bg">
+                                <div id="my-tab-content" class="tab-content">
+                                    <div id="item_sale_tab" role="tabpanel"
+                                        class="tab-pane active">
+                                        {% include 'item_sale_info_tab.html' %}
+                                    </div>
+                                    <div id="operating_commission_tab" class="tab-pane" role="tabpanel">
+                                        {% include 'operating_commission_info_tab.html' %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        moment.locale('ja');
+        $('#sale_changable_date').html(moment().format('YYYY年MMM'));
+    })
+
+    function changeDate(to) {
+        if (to == 'Next') {
+            var date = $('#sale_changable_date').text();
+            var momnt = moment(date, "YYYY年MMM").add(1, 'months').format("YYYY年MMM");
+            $('#sale_changable_date').html(momnt);
+        } else {
+            var date = $('#sale_changable_date').text();
+            var momnt = moment(date, "YYYY年MMM").subtract(1, 'months').format("YYYY年MMM");
+            $('#sale_changable_date').html(momnt);
+        }
+    }
+
+    $(document).click(function (event) {
+        //hide al‘l our dropdowns
+        $('.dropdown-menu[data-parent]').hide();
+    });
+    </script>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% block extrahead %}
+    {% load i18n %}
+{% endblock %}
+
+{% load i18n %}
+<header class="panel-heading" style="font-size: 25px">
+        {% trans 'Product Management' %}
+</header>
+<div class="table-section white-bg">
+    <div class="text-right pb-3">
+        <span class="">
+            <a class="btn btn-primary blue-btn" onclick="showProductForm()"> 
+                <span>{% trans 'Add' %}</span>
+            </a>
+        </span>
+    </div>
+    <div class="adv-table table-responsive">
+        <table class="display table table-bordered table-striped table-condensed"
+            id="product-table" style="width:100%">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th></th>
+                <th>{% trans 'Name' %}</th>
+                <th>{% trans 'Jan Code' %}</th>
+                <th>{% trans 'Stock' %}</th>
+                <th class="text-center" style="min-width:90px !important;">{% trans 'Options' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>

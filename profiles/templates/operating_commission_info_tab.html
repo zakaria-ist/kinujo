@@ -1,0 +1,20 @@
+{% block extrahead %}
+    {% load i18n %}
+{% endblock %}
+<header class="panel-heading" style="font-size: 25px">
+    <strong>{% trans 'Commission Information' %}</strong>
+</header>
+<div class="table-section white-bg">
+    <div class="adv-table table-responsive">
+        <table class="display table table-bordered table-striped table-condensed"
+            id="commssion-table" style="width:100%">
+            <thead>
+            <tr>
+                <th>{% trans 'Date' %}</th>
+                <th>{% trans 'Product' %}</th>
+                <th>{% trans 'Operating Commission' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>

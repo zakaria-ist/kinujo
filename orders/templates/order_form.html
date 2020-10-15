@@ -1,0 +1,186 @@
+{% extends "listing_base.html" %}
+
+{% block extrahead %}
+    {% load static %}
+    {% load i18n %}
+    <link href="{% static "css/select2/select2.css" %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.css' %}"/>
+{% endblock %}
+
+{% block title %}{% trans 'Order Add/Edit'%}{% endblock %}
+
+{% block order_a_active %}
+    active
+{% endblock %}
+
+{% block order_i_active %}
+    active
+{% endblock %}
+
+{% block order_add_active %}
+    active
+{% endblock %}
+
+{% block content %}
+    <section class="panel">
+        <header class="panel-heading pb-5" style="font-size: 25px">
+            <strong>{% trans 'Order Registration' %}</strong>
+        </header>
+        <div class="table-section white-bg">
+            <div class="col-lg-12">
+                <div class="form-group row">
+                    <label for="product" class="col-md-2 control-label">{% trans 'Product' %}</label>
+                    <div class="col-md-4">
+                        <input class="form-control trs-field" type="text"
+                            name="product"
+                            id="product"
+                            autocomplete="off"
+                            placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <div class="fileupload-new thumbnail" style="width: 100px; height: 100px;">
+                                {% if profile.image_id %}
+                                    <img src="{{ profile.image.image.url }}" alt="" name="product_image"/>
+                                {% else %}
+                                    <img src="{% static 'img/blank_file.png' %}" alt="" name="product_image"/>
+                                {% endif %}
+                            </div>
+                            <div class="fileupload-preview fileupload-exists thumbnail"
+                                style="max-width: 100px; max-height: 100px; line-height: 20px;"></div>
+                            <div class="text-right">
+                                <span class="btn btn-white btn-file">
+                                    <span class="fileupload-new"><i class="fas fa-pencil-alt fa-2x"></i></span>
+                                    <span class="fileupload-exists"><i class="fas fa-undo fa-2x"></i></span>
+                                    <input name="product_image" type="file" class="default"/>
+                                </span>
+                                <a href="javascript:void(0)" class="btn btn-danger fileupload-exists btnRemoveLogo"
+                                data-dismiss="fileupload"><i class="fas fa-trash-alt fa-2x"></i> </a>
+                                <input style="display: none;" name="rm_product_image" class="hidethis">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="form-group row">
+                    <label for="order_no" class="col-lg-2 control-label">{% trans 'Order Number' %}<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="text"
+                            name="order_no"
+                            id="order_no"
+                            autocomplete="off"
+                            placeholder="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="name" class="col-lg-2 control-label">{% trans 'Orderer' %}</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="text"
+                            name="name"
+                            id="name"
+                            placeholder="">
+                    </div>
+                    <label for="dest_name" class="col-lg-2 control-label">{% trans 'Destination Name' %}</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="text"
+                            name="dest_name"
+                            id="dest_name"
+                            placeholder="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="phone_no" class="col-lg-2 control-label">{% trans 'Phone Number' %}<span
+                            class="span-required">(*)</span></label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="text"
+                            name="phone_no"
+                            id="phone_no"
+                            placeholder="">
+                    </div>
+                    <label for="shipping" class="col-lg-2 control-label">{% trans 'Shipping' %}</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="text"
+                            name="shipping"
+                            id="shipping"
+                            placeholder="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="total_fee" class="col-lg-2 control-label">{% trans 'Total Fee' %}</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="text"
+                            name="total_fee"
+                            id="total_fee"
+                            placeholder="">
+                    </div>
+                    <label for="order_status" class="col-lg-2 control-label">{% trans 'Status' %}</label>
+                    <div class="col-lg-4">
+                        <select name="order_status" id="order_status" class="form-control trs-field">
+                            <option value="0">{% trans 'Ready' %}</option>
+                            <option value="1">{% trans 'Processing' %}</option>
+                            <option value="2">{% trans 'Received' %}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="shipment_date" class="col-lg-2 control-label">{% trans 'Shipment Date' %}</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="text"
+                            name="shipment_date"
+                            id="shipment_date"
+                            placeholder="">
+                    </div>
+                    <label for="inquiry_no" class="col-lg-2 control-label">{% trans 'Inquiry Number' %}</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="text"
+                            name="inquiry_no"
+                            id="inquiry_no"
+                            placeholder="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="order_date" class="col-lg-2 control-label">{% trans 'Order Date' %}</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="text"
+                            name="order_date"
+                            id="order_date"
+                            placeholder="">
+                    </div>
+                    <label for="delivery_addr" class="col-lg-2 control-label">{% trans 'Delivery Address' %}</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="text"
+                            name="delivery_addr"
+                            id="delivery_addr"
+                            placeholder="">
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                    <div class="text-center">
+                        <button type="button" name="btnOrderSave" id="btnOrderSave" class="btn btn-primary blue-btn">{% trans 'Save' %}</button>
+                        <a class="btn btn-default gray-btn" href="{% url 'order_list' %}">{% trans 'Cancel' %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block js %}
+    <!-- Datatables -->
+    <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script> 
+    <script type="text/javascript" src="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.js' %}"></script>
+    <script src="{% static "js/select2/select2.js" %}"></script>
+    <script type="text/javascript">
+        $(document).on('keyup', '.select2-selection.select2-selection--single', function (e) {
+            var keycode = (e.keyCode ? e.keyCode : e.which);
+            if(keycode == '9'){
+                $(this).closest(".select2-container").siblings('select:enabled').select2('open');
+            }
+        });
+
+        $('#order_status').select2({});
+    </script>
+{% endblock %}

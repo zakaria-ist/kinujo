@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+    {% load static %}
+    {% load i18n %}
+    <link href="{% static "css/select2/select2.css" %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.css' %}"/>
+    <script src="https://zipaddr.github.io/bankautob.js" charset="UTF-8"> </script>
+{% endblock %}
+
+{% block title %}{% trans 'Profile Add/Edit'%}{% endblock %}
+
+{% block account_a_active %}
+    active
+{% endblock %}
+
+{% block account_i_active %}
+    active
+{% endblock %}
+
+{% block account_add_active %}
+    active
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+        <header class="panel-heading" style="font-size: 25px; margin-bottom: 20px;" >
+                {% trans 'Profile Details' %}
+        </header>
+        <ul id="tabs" class="nav nav-tabs" data-tabs="tabs" role="tablist"
+            style="padding-left: 20px; margin-left: 18px; margin-right: 24px;">
+            <li class="nav-item" id="basic_tab_li">
+                <a href="#basic_tab" class="nav-link active" id="basic_tab_a" data-toggle="tab" role="tab" aria-controls="basic_tab" aria-selected="true">{% trans 'Basic Information' %}</a>
+            </li>
+            <li class="nav-item" id="item_tab_li" style="display: none;">
+                <a href="#item_tab" class="nav-link" id="item_tab_a" data-toggle="tab" role="tab" aria-controls="item_tab" aria-selected="false">{% trans 'Item List' %}</a>
+            </li>
+            <li class="nav-item" id="client_tab_li" style="display: none;">
+                <a href="#client_tab" class="nav-link" id="client_tab_a" data-toggle="tab" role="tab" aria-controls="client_tab" aria-selected="false">{% trans 'Client' %}</a>
+            </li>
+            <li class="nav-item" id="account_info_tab_li" style="display: none;">
+                <a href="#account_info_tab" class="nav-link" id="account_info_a" data-toggle="tab" role="tab" aria-controls="account_info_tab" aria-selected="false">{% trans 'Account Information' %}</a>
+            </li>
+            <li class="nav-item" id="salon_info_tab_li" style="display: none;">
+                <a href="#salon_info_tab" class="nav-link" id="salon_info_a" data-toggle="tab" role="tab" aria-controls="salon_info_tab" aria-selected="false">{% trans 'Salon Information' %}</a>
+            </li>
+            <li class="nav-item" id="shipping_info_tab_li" style="display: none;">
+                <a href="#shipping_info_tab" class="nav-link" id="shipping_info_a" data-toggle="tab" role="tab" aria-controls="shipping_info_tab" aria-selected="false">{% trans 'Shipping Information' %}</a>
+            </li>
+        </ul>
+        <div class="table-section white-bg">
+            <div id="my-tab-content" class="tab-content">
+                <div id="basic_tab" role="tabpanel"
+                    class="tab-pane active">
+                    {% include 'basic_info_tab.html' %}
+                </div>
+                <div id="item_tab" class="tab-pane" role="tabpanel">
+                    {% include 'item_info_tab.html' %}
+                </div>
+                <div id="client_tab" class="tab-pane" role="tabpanel">
+                    {% include 'client_info_tab.html' %}
+                </div>
+                <div id="account_info_tab" class="tab-pane" role="tabpanel">
+                    {% include 'account_info_tab.html' %}
+                </div>
+                <div id="salon_info_tab" class="tab-pane" role="tabpanel">
+                    {% include 'salon_info_tab.html' %}
+                </div>
+                <div id="shipping_info_tab" class="tab-pane" role="tabpanel">
+                    {% include 'shipping_info_tab.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+     {# Delete confirm modal #}
+    {% comment %} <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="delete-dialog"
+         class="modal fade">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 class="modal-title">Delete Confirm Dialog</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" action="{% url 'profile_delete' profile.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Are you sure want to delete?</label>
+                        </div>
+                        <button type="submit" class="btn btn-success">OK</button>
+                        <a class="btn btn-default" href="{% url 'profile_edit' profile.id %}">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> {% endcomment %}
+    {# Delete confirm modal end #}
+    {#Comfirm Delete#}
+    <div class="modal fade" id="comfirmDeleteAllModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><strong>{% trans 'Delete Confirm Dialog' %}</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body" style="padding-bottom: 0px!important; padding: 0 3%;">
+                    <form action="">
+                        <div class="form-group">
+                            <label>{% trans 'Are you sure want to delete?' %}</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">{% trans 'No' %}</button>
+                    <button class="btn btn-success" type="button" data-dismiss="modal" id="modal_btn_delete">{% trans 'Yes' %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {#End Comfirm delete#}
+{% endblock %}
+
+{% block js %}
+    <!-- Datatables -->
+    <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script> 
+    <script type="text/javascript" src="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.js' %}"></script>
+    <script src="{% static "js/select2/select2.js" %}"></script>
+    <script src="{% static "js/profile/financial.js" %}"></script>
+    <script src="{% static "js/profile/item.js" %}"></script>
+    <script src="{% static "js/profile/client.js" %}"></script>
+    <script src="{% static "js/profile/shipping.js" %}"></script>
+    <script src="{% static "js/profile/salon.js" %}"></script>
+    <script src="{% static "js/product/product.js" %}"></script>
+    
+    <script type="text/javascript">
+        $(document).on('keyup', '.select2-selection.select2-selection--single', function (e) {
+            var keycode = (e.keyCode ? e.keyCode : e.which);
+            if(keycode == '9'){
+                $(this).closest(".select2-container").siblings('select:enabled').select2('open');
+            }
+        });
+
+        var prefecture_list = [];
+        {% for item in prefecture_list %}
+            prefecture_list.push([{{ item.0 }}, "{{ item.1 }}"])
+        {% endfor %}
+        
+        var profile_id = "{{profile.id}}";
+        var is_seller = "{{profile.is_seller}}";
+        var is_approved = "{{profile.is_approved}}";
+
+        $(document).ready(function () {
+            if (profile_id == '' || profile_id == undefined || profile_id == null) {
+                profile_id = '';
+                $('#id_password').prop('required', true);
+                $('#conf_pass').prop('required', true);
+            } else {
+                $('#id_authority').trigger('change');
+                $('#id_authority').prop('disabled', true);
+                $('#id_user_code').prop('disabled', true);
+            }
+            $('#id_is_seller').select2({});
+            $('#id_is_approved').select2({});
+            $('#introducer').select2({
+                placeholder: "Select Introducer",
+                allowClear: true
+            });
+            $('#general_store').select2({
+                placeholder: "Select Store",
+                allowClear: true
+            });
+            $('#id_authority').select2({
+                placeholder: "Select Authority"
+            });
+            $('#id_salon_category').select2({});
+            $('#id_gender').select2({});
+
+            $('#id_authority').trigger('change');
+
+            if (is_seller == 'True') {
+                $('#id_is_seller').val('1').trigger('change');
+            } 
+            if (is_approved == 'True') {
+                $('#id_is_approved').val('1').trigger('change');
+            } 
+
+        });
+
+        // Detect tab change event
+        $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+            var target = $(e.target).attr("href");
+            if ((target == '#item_tab')) {
+                loadItemTableData();
+            } else if ((target == '#client_tab')) {
+                loadClientTableData();
+            } else if ((target == '#account_info_tab')) {
+                if (!$('#account_type').data('select2')) {
+                    //$('#account_type').select2('destroy');
+                    $('#account_type').select2({});
+                }
+                load_financial_info();
+            } else if ((target == '#salon_info_tab')) {
+                loadSalonTableData();
+            } else if ((target == '#shipping_info_tab')) {
+                loadShippingTableData();
+            }
+        });
+
+        
+
+        function checkInput() {
+            $('#id_authority').prop('disabled', false);
+        }
+
+        $('#profile_form').on('submit', function(e) {
+            var pass = $('#id_password').val();
+            var conf_pass = $('#conf_pass').val();
+            if (pass != conf_pass) {
+                $('#pass-error').text("Password doesn't match");
+                $('#btnSave').prop('dsabled', true);
+                e.preventDefault();
+            } else {
+                $('#pass-error').text("");
+                $('#btnSave').prop('dsabled', false);
+            }
+        })
+
+        $('#conf_pass').on('change', function(){
+            var pass = $('#id_password').val();
+            var conf_pass = $(this).val();
+            if (pass != conf_pass) {
+                $('#pass-error').text("Password doesn't match");
+                $('#btnSave').prop('dsabled', true);
+            } else {
+                $('#pass-error').text("");
+                $('#btnSave').prop('dsabled', false);
+            }
+        })
+
+        // view filter according to authority
+        $('#id_authority').on('change', function(){
+            
+            if ($(this).val() == '1') { //master
+                $('#general_ws_div').css('display', 'none');
+                $('#introducer_div').css('display', 'none');
+                $('#approval_div').css('display', 'none');
+                $('#type_div').css('display', 'none');
+                $('#type_label').css('display', 'none');
+                $('#corporate_block').removeAttr('style');
+
+                if (profile_id) {
+                    $('#item_tab_li').removeAttr('style');
+                }
+            }
+            else if ($(this).val() == '2') { //special
+                $('#general_ws_div').css('display', 'none');
+                $('#introducer_div').css('display', 'none');
+                $('#approval_div').css('display', 'none');
+                $('#type_div').css('display', 'none');
+                $('#type_label').css('display', 'none');
+                $('#corporate_block').removeAttr('style');
+                
+                if (profile_id) {
+                    $('#item_tab_li').removeAttr('style');
+                    $('#account_info_tab_li').removeAttr('style');
+                }
+            }
+            else if ($(this).val() == '3') { //ambassador
+                $('#general_ws_div').removeAttr('style');
+                //$('#introducer_div').removeAttr('style');
+                $('#approval_div').css('display', 'none');
+                $('#type_div').css('display', 'none');
+                $('#type_label').css('display', 'none');
+                $('#corporate_block').removeAttr('style');
+
+                if (profile_id) {
+                    $('#item_tab_li').removeAttr('style');
+                    $('#client_tab_li').removeAttr('style');
+                    $('#account_info_tab_li').removeAttr('style');
+                }
+            }
+            else if ($(this).val() == '4') { //store
+                $('#general_ws_div').css('display', 'none');
+                $('#type_div').removeAttr('style');
+                $('#type_label').removeAttr('style');
+                $('#introducer_div').removeAttr('style');
+                $('#approval_div').removeAttr('style');
+                $('#corporate_block').removeAttr('style');
+
+                if (profile_id) {
+                    $('#item_tab_li').removeAttr('style');
+                    $('#client_tab_li').removeAttr('style');
+                    $('#account_info_tab_li').removeAttr('style');
+                    $('#salon_info_tab_li').removeAttr('style');
+                    $('#shipping_info_tab_li').removeAttr('style');
+                }
+            }
+            else if ($(this).val() == '5') { //general
+                $('#general_ws_div').css('display', 'none');
+                $('#type_div').css('display', 'none');
+                $('#type_label').css('display', 'none');
+                $('#introducer_div').removeAttr('style');
+                $('#approval_div').css('display', 'none');
+                $('#corporate_block').css('display', 'none');
+
+                if (profile_id) {
+                    $('#item_tab_li').removeAttr('style');
+                    $('#client_tab_li').removeAttr('style');
+                    $('#account_info_tab_li').removeAttr('style');
+                    $('#shipping_info_tab_li').removeAttr('style');
+                }
+            }
+        })
+
+    </script>
+{% endblock %}
