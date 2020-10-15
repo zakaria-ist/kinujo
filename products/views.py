@@ -287,8 +287,33 @@ def product_edit(request, product_id):
             messages.add_message(request, messages.ERROR, e, extra_tags='product_edit')
 
     product = Product.objects.get(pk=product_id)
+
+    image_array = []
+    productImages = ProductImage.objects.filter(product_id=product.id, is_hidden=False)
+    for productImage in productImages:
+        image_array.append(productImage.image.image.url)
+
+
+    varities = []
+    productVarieties = ProductVariety.objects.filter(product_id=product.id)
+    for productVariety in productVarieties:
+        productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id=productVariety.id)
+        for productVarietySelection in productVarietySelections:
+            productJancodes = ProductJancode.objects.filter(horizontal_id=productVarietySelection.id)
+            for productJancode in productJancodes:
+                varities.append({
+                    "name": productVariety.name,
+                    "vertical_and_horizontal": productVariety.vertical_and_horizontal,
+                    "selection": productVarietySelection.selection,
+                    "jan_code": productJancode.jan_code,
+                    "stock": productJancode.stock,
+                })
+
     category_list = list(ProductCategory.objects.filter(is_hidden=False).values_list('id', 'name'))
-    return render(request, 'product_form.html', {"product": product,
+
+    return render(request, 'product_form.html', {'product': product,
+                                                'images': image_array,
+                                                'varities': varities,
                                                 'category_list': category_list,
                                                 'media_url': s.MEDIA_URL})
 
