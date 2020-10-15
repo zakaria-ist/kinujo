@@ -89,14 +89,18 @@ class AuthoritySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Authority
         fields = ['url', 'name','commission_rate','official_commission_rate','is_hidden','created','modified']
+
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+    password = serializers.CharField(write_only=True)
     class Meta:
         model = Profile
-        fields = ['user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification','other_notification','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified']
+        fields = ['url', 'user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification','other_notification','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
+
 class UserSaleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = UserSale
         fields = ['year','month','user','order_count','sales_amount','tax','amount_tax_included','shipping_fee','total_amount','is_hidden','created','modified']
+
 class UserCommisionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = UserCommision
