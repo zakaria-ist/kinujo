@@ -203,6 +203,8 @@ def profile_add(request):
                 if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
                     profile.indroducer = int(request.POST.get('general_store'))
                 profile.user_code = request.POST.get('user_code')
+                if request.POST.get('birthday'):
+                    profile.birthday = request.POST.get('birthday')
                 profile.save()
 
                 profile_image = request.FILES.get('profile_image', False)
@@ -264,8 +266,10 @@ def profile_edit(request, profile_id):
                     profile.indroducer = int(request.POST.get('introducer'))
                 if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
                     profile.indroducer = int(request.POST.get('general_store'))
+                if request.POST.get('birthday'):
+                    profile.birthday = request.POST.get('birthday')
                 profile.save()
-
+                
                 profile_image = request.FILES.get('profile_image', False)
                 if profile_image:
                     if profile.image:
@@ -285,8 +289,7 @@ def profile_edit(request, profile_id):
                     
                     profile.modified = datetime.datetime.now()
                     profile.save()
-
-                    return render(request, 'profile_list.html')
+                return render(request, 'profile_list.html')
             except Exception as e:
                 print(e)
                 messages.add_message(request, messages.ERROR, e, extra_tags='profile_edit')

@@ -37,28 +37,11 @@
                             autocomplete="off"
                             placeholder="">
                     </div>
-                    <div class="col-md-6">
-                        <div class="fileupload fileupload-new" data-provides="fileupload">
-                            <div class="fileupload-new thumbnail" style="width: 100px; height: 100px;">
-                                {% if profile.image_id %}
-                                    <img src="{{ profile.image.image.url }}" alt="" name="product_image"/>
-                                {% else %}
-                                    <img src="{% static 'img/blank_file.png' %}" alt="" name="product_image"/>
-                                {% endif %}
-                            </div>
-                            <div class="fileupload-preview fileupload-exists thumbnail"
-                                style="max-width: 100px; max-height: 100px; line-height: 20px;"></div>
-                            <div class="text-right">
-                                <span class="btn btn-white btn-file">
-                                    <span class="fileupload-new"><i class="fas fa-pencil-alt fa-2x"></i></span>
-                                    <span class="fileupload-exists"><i class="fas fa-undo fa-2x"></i></span>
-                                    <input name="product_image" type="file" class="default"/>
-                                </span>
-                                <a href="javascript:void(0)" class="btn btn-danger fileupload-exists btnRemoveLogo"
-                                data-dismiss="fileupload"><i class="fas fa-trash-alt fa-2x"></i> </a>
-                                <input style="display: none;" name="rm_product_image" class="hidethis">
-                            </div>
-                        </div>
+                    <div class="col-md-1 pt-1 pointer">
+                        <a onclick=""><i class="fas fa-plus fa-2x"></i></a>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="" width="100px" height="100px" alt="" name="product_image" id="product_image" />
                     </div>
                 </div>
             </div>
