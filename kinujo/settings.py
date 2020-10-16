@@ -25,12 +25,15 @@ SECRET_KEY = 'ro6hl1+%(r+oek3sz3j8x!dfyy+_3e+*so0q-zec9f-ycp5fox'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ALLOWED_HOSTS = ['kinujo-release.c2sg.asia',
+                 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com', 'localhost']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'kinujo_local_db',
         'USER': 'root',
-        'PASSWORD': 'password',
+        'PASSWORD': '123456Sayeed',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
