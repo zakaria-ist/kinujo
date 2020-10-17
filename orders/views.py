@@ -1,15 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponsePermanentRedirect
-from django.urls import reverse
-from django.template import RequestContext
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
-from .models import Order
-from prefectures.models import Prefecture
-from images.models import Image
+from .models import Order, OrderProduct, OrderProductCommission
 from django.conf import settings as s
 import datetime
 import json
@@ -85,14 +79,13 @@ def order_add(request):
     """
     Method to add new order.
     """
-    form = None
+
     # if request.method == 'POST':
-    #     form = ProfileForm(request.POST)
+    #     order = Order()
 
     # else:
     #     form = ProfileForm()
-    return render(request, 'order_form.html', {'form': form, 
-                                                'media_url': s.MEDIA_URL})
+    return render(request, 'order_form.html', {'media_url': s.MEDIA_URL})
 
 # @login_required
 def order_edit(request, order_id):

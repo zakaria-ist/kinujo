@@ -97,7 +97,7 @@
                     </div>
                     <label for="birthday" class="col-lg-2 col-sm-2 control-label">{% trans 'Birthday' %}</label>
                     <div class="col-lg-4">
-                        {{ form.birthday|default_if_none:"" }}
+                        <input name="birthday" id="id_birthday" type="date" class="form-control" value="{{profile.birthday|date:"Y-m-d"}}">
                     </div>
                 </div>
                 <div class="form-group row">

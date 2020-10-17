@@ -54,12 +54,11 @@ class ProfileForm(forms.ModelForm):
                                       widget=forms.Select(attrs={'class': 'form-control'}))
     zipcode = forms.CharField(required=False,
                                       widget=forms.TextInput(attrs={'class': 'form-control', 'maxlength': '7'}))
-    birthday = forms.DateField(required=False,
-                                      widget=forms.DateInput(attrs={'class': 'form-control'}))
+
     class Meta:
         model = Profile
         fields = ('tel', 'password', 'nickname', 'real_name', 'corporate_name', 'address1', 'address2', 'word', 'authority',
-                    'representative_name', 'corporate_tel', 'salon_category', 'zipcode', 'birthday', 'gender')
+                    'representative_name', 'corporate_tel', 'salon_category', 'zipcode', 'gender')
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
