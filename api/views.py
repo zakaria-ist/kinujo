@@ -15,6 +15,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import activate, deactivate_all
 from .serializers import UserSerializer, GroupSerializer,  OrderSerializer, OrderProductSerializer, OrderProductCommissionSerializer, OrderReceiptSerializer, TotalSaleSerializer, TotalCommissionSerializer, PolicySerializer, PrefectureSerializer, ProductCategorySerializer, ProductSerializer, ProductImageSerializer, ProductVarietySerializer, ProductVarietySelectionSerializer, ProductJancodeSerializer, AuthoritySerializer, ProfileSerializer, UserSaleSerializer, UserCommisionSerializer, MonthlyPaymentSerializer, AddressSerializer, TaxRateSerializer
 from rest_framework.test import APIRequestFactory
+import requests 
+import json
 
 def getContext():
     factory = APIRequestFactory()
@@ -23,6 +25,10 @@ def getContext():
         'request': Request(APIRequestFactory().get('/')),
     }
     return context
+
+def getObject(url):
+    url = url.replace("testserver", "127.0.0.1:8000")
+    return requests.get(url = url).json()
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -193,10 +199,13 @@ class UserRegister(APIView):
             user = userSerializer.save()
 
             authority = Authority.objects.get(id=1)
+            is_seller = 0
             if request.data['authority'] == 'store':
                 authority = Authority.objects.get(id=2)
+                is_seller = 1
                 
             authoritySerializer = AuthoritySerializer(authority, context=getContext())
+        
             profileSerializer = ProfileSerializer(data={
                 'user' : userSerializer.data['url'],
                 'tel' : request.data['username'],
@@ -204,35 +213,68 @@ class UserRegister(APIView):
                 'nickname' : request.data['nickname'],
                 'user_code' : user.id,
                 'authority' : authoritySerializer.data['url'],
+                'is_seller' : is_seller
             }, context=getContext())
             if profileSerializer.is_valid():
                 profile = profileSerializer.save()
                 if user:
+                    data = profileSerializer.data
+                    data['authority'] = getObject(data['authority'])
+                    data['user'] = getObject(data['user'])
                     return Response({"success": True, "data" : {
-                        "user" : userSerializer.data
+                        "user" : data
                     }}, status=status.HTTP_201_CREATED)
             else:
                 print(profileSerializer.errors)
-                return Response({"success" : False}, status=status.HTTP_200_OK)
+                return Response({"success" : False, "errors" : profileSerializer.errors}, status=status.HTTP_200_OK)
         else:
             print(userSerializer.errors)
-            return Response({"success" : False}, status=status.HTTP_200_OK)
-        
+            return Response({"success" : False, "errors": userSerializer.errors}, status=status.HTTP_200_OK)
+     
+class CheckRegister(APIView):
+    def post(self, request, format='json'):
+        userSerializer = UserSerializer(data=request.data, context=getContext())
+        if userSerializer.is_valid():
+            return Response({"success" : True}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success" : False, "error" : "invalid"}, status=status.HTTP_200_OK)
+
 class UserLogin(APIView):
     def post(self, request, format='json'):
-        factory = APIRequestFactory()
-        n = factory.get('/')
         profile = Profile.objects.get(tel=request.data['tel'])
         if profile:
             user = User.objects.get(id = profile.user_id)
             if user:
                 if user.check_password(request.data['password']):
-                    userSerializer = UserSerializer(user, context=getContext())
+                    profileSerializer = ProfileSerializer(profile, context=getContext())
+                    data = profileSerializer.data
+                    data['authority'] = getObject(data['authority'])
+                    data['user'] = getObject(data['user'])
                     return Response({"success" : True, "data" : {
-                        "user" : userSerializer.data
+                        "user" : data
                     }}, status=status.HTTP_200_OK)
                 else:
                     return Response({"success" : False, "error" : "incorrect_password"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+
+class PasswordReset(APIView):
+    def post(self, request, format='json'):
+        profile = Profile.objects.get(tel=request.data['tel'])
+        if profile:
+            user = User.objects.get(id = profile.user_id)
+            if user:
+                if request.data['password'] == request.data['confirm_password']:
+                    user.set_password(request.data['password'])
+                    user.save()
+
+                    profile.password = request.data['password']
+                    profile.save()
+                    return Response({"success" : True}, status=status.HTTP_200_OK)
+                else:
+                    return Response({"success" : False, "error" : "password_mismatch"}, status=status.HTTP_200_OK)
             else:
                 return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
         else:

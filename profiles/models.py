@@ -46,6 +46,7 @@ class Profile(models.Model):
     allowed_by_id = models.BooleanField(default=False)
     allowed_by_tel = models.BooleanField(default=False)
     word = models.CharField(max_length=255, default='')
+    payload = models.TextField(null = True)
     salon_category = models.SmallIntegerField(null=True, choices=tuple([status[::-1] for status in SALON_TYPE]))
 
     is_hidden = models.BooleanField(default=False)
