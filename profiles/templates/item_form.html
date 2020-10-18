@@ -106,7 +106,13 @@
         .img-del-btn{
           font-size: 2rem;margin-top: 20%;margin-left: 4%; color: #9f111f;
         }
-       
+       .variant-col {
+        width: 80px;
+        height: 80px;
+        background: #ededed;
+        border: 1px solid;
+        padding: 10px;
+       }
       </style>
 {% endblock %}
 
@@ -167,6 +173,9 @@
               </div>
 
               <div id="variety-content" class="form-group row">
+
+              </div>
+              <div id="variety-table" class="form-group row">
 
               </div>
 
@@ -362,21 +371,21 @@
                 <div class="form-group">
                   <p style="width: 20px;" class="m-2"> </p>
                   <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 160px;">
+                  <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
                   
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
+                  <input type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
                   
-                  <input type="number" class="form-control" id="message-text" placeholder="" style="width: 70px;">
+                  <input type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
                 <div class="form-group">
                   <p style="width: 20px;" class="m-2"> </p>
                   <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 160px;">
+                  <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
                   
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
+                  <input type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
                   
-                  <input type="number" class="form-control" id="message-text" placeholder="" style="width: 70px;">
+                  <input type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
               </div>
@@ -558,12 +567,12 @@
 
     one.addEventListener('click', (event)=> {
       // event.preventDefault();
-      varietyContent.innerHTML = `<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant">+ Item / Option</button>`;
+      varietyContent.innerHTML = `<div class="col-md-12"><button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant">+ Item / Option</button></div>`;
     })
 
     two.addEventListener('click', (event)=> {
       // event.preventDefault();
-      varietyContent.innerHTML = `<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant">+ Items / Options</button>`;
+      varietyContent.innerHTML = `<div class="col-md-12"><button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant">+ Items / Options</button></div>`;
     })
 
     none.addEventListener('click', (event)=> {
@@ -705,7 +714,50 @@
   */
 
   function saveOneItemData(){
-    console.log('clicked 1')
+    console.log('clicked 1');
+    const oneItemVariantName = document.getElementById('one-item-title').value;
+    const oneItemVariantChoices = document.getElementsByClassName('one-item-choices');
+    const oneItemVariantJan = document.getElementsByClassName('one-item-jan-code');
+    const oneItemVariantStock = document.getElementsByClassName('one-item-stock');
+
+    console.log(oneItemVariantName);
+
+    const varietyTable = document.getElementById('variety-table');
+
+    //create table wrapper for the one item variant
+    varietyTable.innerHTML = `<div class="col-md-12"><div class="row" id="one-variant-title-row">
+      <div class="variant-title variant-col">${oneItemVariantName}</div>
+    </div>
+    <div class="row" id="one-variant-info-row">
+      <div class="variant-info variant-col">-</div>
+    </div>
+    </div>
+    `
+    
+
+    for(let i = 0; i < oneItemVariantChoices.length; i++){
+      let newTableChoices = document.createElement('div'); 
+      let newTableContent = document.createElement('div'); 
+      let choicesValue = oneItemVariantChoices[i].value;
+      let janValue = oneItemVariantJan[i].value;
+      let stockValue = oneItemVariantStock[i].value;
+      newTableChoices.innerHTML = `<div class="variant-title variant-col">${choicesValue}</div>`;
+      newTableContent.innerHTML = `<div class="variant-info variant-col"><p class="text-center">${janValue}</p><p class="text-center">${stockValue}</p></div>`;
+      
+      
+      if(newTableChoices.firstChild){
+        document.getElementById('one-variant-title-row').appendChild(newTableChoices.firstChild);
+      }
+
+      if(newTableContent.firstChild){
+        document.getElementById('one-variant-info-row').appendChild(newTableContent.firstChild);
+      }
+      
+      
+    }
+    varietyTable.style.overflow= 'scroll';
+
+
   }
 
   function saveTwoItemsData(){
