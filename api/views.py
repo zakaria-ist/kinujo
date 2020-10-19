@@ -294,6 +294,5 @@ def change_language(request):
     deactivate_all()
     activate(language)
     request.session[translation.LANGUAGE_SESSION_KEY] = language
-    # request.LANGUAGE_CODE = translation.get_language()
-    # print('translation.get_language()', translation.get_language())
+    request.LANGUAGE_CODE = translation.get_language()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
