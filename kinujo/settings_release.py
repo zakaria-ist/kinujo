@@ -25,7 +25,7 @@ SECRET_KEY = 'ro6hl1+%(r+oek3sz3j8x!dfyy+_3e+*so0q-zec9f-ycp5fox'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['kinujo-release.c2sg.asia', 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com', 'localhost' ]
+ALLOWED_HOSTS = ['kinujo-release.c2sg.asia', 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com' ]
 
 DATABASES = {
     'default': {
