@@ -155,7 +155,9 @@
         if (is_seller == 'True') {
             is_seller = true;
             $('#id_is_seller').val('1').trigger('change');
-        } 
+        } else {
+            is_seller = false;
+        }
         if (is_approved == 'True') {
             $('#id_is_approved').val('1').trigger('change');
         } 
