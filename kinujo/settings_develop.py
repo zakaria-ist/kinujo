@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-# from .shared_settings import *
+from .shared_settings import *
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -25,13 +25,13 @@ SECRET_KEY = 'ro6hl1+%(r+oek3sz3j8x!dfyy+_3e+*so0q-zec9f-ycp5fox'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['kinujo-release.c2sg.asia', 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com', 'localhost' ]
+ALLOWED_HOSTS = ['kinujo-develop.c2sg.asia', 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com', 'localhost' ]
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'kinujo_release_db',
-        'USER': 'kinujo_release',
+        'NAME': 'kinujo_develop_db',
+        'USER': 'kinujo_develop',
         'PASSWORD': 'Pa55w0rd',
         'HOST': 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com',
         'PORT': '3306',
@@ -151,7 +151,7 @@ AWS_STORAGE_BUCKET_NAME = 'c2sg-kinujo'
 S3_URL = 'https://%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
 DEFAULT_FILE_STORAGE = 'utilities.s3utils.MediaS3BotoStorageRelease'
-MEDIA_DIRECTORY = '/release/media/'
+MEDIA_DIRECTORY = '/develop/media/'
 MEDIA_URL = S3_URL + MEDIA_DIRECTORY
 MEDIA_ROOT = MEDIA_URL
 WEB_URL = MEDIA_URL
