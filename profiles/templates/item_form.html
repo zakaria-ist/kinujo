@@ -114,9 +114,17 @@
         min-width: 100px;
         max-width: 100;
         height: 80px;
-        background: #ededed;
+        
         border: 1px solid;
         padding: 10px;
+        text-align: center;
+       }
+       .variant-col:first-child, .variant-info:first-child {
+        background: #ededed;
+       }
+
+       .variant-info{
+
        }
 
        #one-variant-title-row, #one-variant-info-row {
@@ -368,7 +376,7 @@
             <form class="form-inline">
               <div class="form-group">
                 <label for="one-item-title" class="col-form-label">Title:</label>
-                <input type="text" class="form-control" id="one-item-title" placeholder="Color, Size, etc">
+                <input value="Color" type="text" class="form-control" id="one-item-title" placeholder="Color, Size, etc">
                 <p class="text-danger" id="title-error"></p>
               </div>
               <div class="form-group">
@@ -384,21 +392,21 @@
                 <div class="form-group">
                   <p style="width: 20px;" class="m-2"> </p>
                   <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
-                  <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                  <input value="red" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
                   
-                  <input type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+                  <input value="YIO78" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
                   
-                  <input type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                  <input value="56" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
                 <div class="form-group">
                   <p style="width: 20px;" class="m-2"> </p>
                   <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
-                  <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                  <input value="red"  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
                   
-                  <input type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+                  <input value="RED67"  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
                   
-                  <input type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                  <input value="4"  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
               </div>
@@ -635,11 +643,11 @@
     newContent.innerHTML = `<div class='form-group'>
                   <p style="width: 20px;" class="m-2"> </p>
                   <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
-                  <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                  <input value="red" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
                   
-                  <input type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+                  <input value="UIUI78" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
                   
-                  <input type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                  <input value="45" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>`;
     
@@ -754,7 +762,7 @@
     function checkError(classes, errorName){
       for(let i = 0; i < classes.length; i++){
         if(classes[i].value === ''){
-          errorMsg.innerHTML = `${errorName} field missing`;
+          errorMsg.innerHTML = `${errorName} field (${i + 1}) can't be empty`;
           classes[i].focus();
           return false;
         }
@@ -782,7 +790,7 @@
       <div class="variant-title variant-col"><h3>${oneItemVariantName}</h3></div>
     </div>
     <div class="row" id="one-variant-info-row">
-      <div class="variant-info variant-col">-</div>
+      <div class="variant-info variant-col"><h3>-</h3></div>
     </div>
     </div>
     `
@@ -808,9 +816,15 @@
       
       
     }
+
+    //make sure it's scroll able
     varietyTable.style.overflow= 'scroll';
 
-
+    //hide modal
+    // document.getElementById('one-item-save-btn').setAttribute("data-dismiss", "modal");
+    // document.getElementById('one-item-save-btn').click();
+    // document.getElementById('one-item-save-btn').removeAttribute("data-dismiss", "modal");
+    $('#oneItemVariant').modal('hide');
   }
 
   function saveTwoItemsData(){
