@@ -25,7 +25,7 @@ class ProfileForm(forms.ModelForm):
     tel = forms.CharField(required=True,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'phone number', 'maxlength': '15'}))
     password = forms.CharField(required=False,
-                            widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+                            widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'off'}))
     nickname = forms.CharField(required=True,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     real_name = forms.CharField(required=True,
@@ -40,7 +40,7 @@ class ProfileForm(forms.ModelForm):
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     address2 = forms.CharField(required=False,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
-    word = forms.CharField(required=True,
+    word = forms.CharField(required=False,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     authority = NameChoiceField(queryset=None, empty_label=None, required=True,
                                    widget=forms.Select(attrs={'class': 'form-control', 'required': 'required'}))

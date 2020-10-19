@@ -133,7 +133,10 @@ def ProfileList__asJson(request):
 
     profile_list = Profile.objects.filter(authority_id__in=auth_type, is_hidden=False).order_by('authority_id')
     if 0 in auth_type:
-        profile_list = profile_list.filter(is_approved=False)
+        if profile_list:
+            profile_list = profile_list.filter(is_approved=False)
+        else:
+            profile_list = Profile.objects.filter(is_approved=False, is_hidden=False).order_by('authority_id')
         
     records_total = profile_list.count()
 
@@ -245,10 +248,15 @@ def profile_edit(request, profile_id):
         form = ProfileForm(request.POST, instance=profile)
         if form.is_valid:
             try:
-                user = User.objects.filter(username=request.POST.get('tel')).first()
+                user = User.objects.filter(pk=profile.user_id).first()
                 if user:
-                    if request.POST.get('password') != '' and request.POST.get('password') != None:
+                    if user.username != request.POST.get('tel'):
+                        user.username = request.POST.get('tel')
+                        user.save()
+                    if user.first_name != request.POST.get('nickname'):
                         user.first_name = request.POST.get('nickname')
+                        user.save()
+                    if request.POST.get('password') != '' and request.POST.get('password') != None:
                         user.set_password(request.POST.get('password'))
                         user.save()
                 else:

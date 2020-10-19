@@ -106,7 +106,7 @@
     <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script>
     <script type="text/javascript">
     function deleteOrder(id) {
-        var url = '../order_delete/' + id + '/'
+        var url = '/orders/order_delete/' + id + '/'
         $("#comfirmDeleteOrderModal").modal("show");
         $("#comfirm-yes").attr("href", url);
     }
@@ -152,7 +152,7 @@
                     "render": function (data, type, row, meta) {
                         var btn =
                                 '<div class="btn-group">' +
-                                '<a class="btn-group-item" href="../order_edit/' + row.id + '/' + '"><i class="fas fa-pencil-alt fa-2x text-info"></i></a>' + 
+                                '<a class="btn-group-item" href="/orders/order_edit/' + row.id + '/' + '"><i class="fas fa-pencil-alt fa-2x text-info"></i></a>' + 
                                 '<a class="btn-group-item" onclick="deleteOrder(' + row.id + ')"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + 
                                 '</div>';
                         return btn;
