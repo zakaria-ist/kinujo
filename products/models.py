@@ -15,7 +15,7 @@ class ProductCategory(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=128)
     brand_name = models.CharField(max_length=128, default='')
-    urser = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='user_product', null=False)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='user_product', null=False)
     pr = models.TextField()
     url_str = models.CharField(max_length=255)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
