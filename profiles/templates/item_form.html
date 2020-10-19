@@ -107,9 +107,7 @@
           font-size: 2rem;margin-top: 20%;margin-left: 4%; color: #9f111f;
         }
 
-        #variety-table {
-          overflow: scroll;
-        }
+       
        .variant-col {
         min-width: 100px;
         max-width: 100;
@@ -119,12 +117,9 @@
         padding: 10px;
         text-align: center;
        }
-       .variant-col:first-child, .variant-info:first-child {
+
+       #one-variant-title-left, #one-variant-info-left {
         background: #ededed;
-       }
-
-       .variant-info{
-
        }
 
        #one-variant-title-row, #one-variant-info-row {
@@ -133,6 +128,9 @@
        #one-variant-title-row:first-child, #one-variant-info-row:first-child {
           font-weight: bold;
        }
+       #scrollable {
+          overflow: scroll;
+        }
       </style>
 {% endblock %}
 
@@ -786,12 +784,27 @@
     const varietyTable = document.getElementById('variety-table');
 
     //create table wrapper for the one item variant
-    varietyTable.innerHTML = `<div class="col-md-12"><div class="row" id="one-variant-title-row">
+    varietyTable.innerHTML = `
+    <div class="col-md-2" style="max-width: 100px; min-width: 100px"><div class="row" id="one-variant-title-left">
       <div class="variant-title variant-col"><h3>${oneItemVariantName}</h3></div>
     </div>
-    <div class="row" id="one-variant-info-row">
+    <div class="row" id="one-variant-info-left">
       <div class="variant-info variant-col"><h3>-</h3></div>
     </div>
+    </div>
+    <div class="col-md-9">
+      <div class="row" id="scrollable">
+        <div class="col-md-12">
+          <div class="row" id="one-variant-title-row">
+            
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="row" id="one-variant-info-row">
+            
+          </div>
+        </div>
+      </div>
     </div>
     `
     
@@ -818,12 +831,9 @@
     }
 
     //make sure it's scroll able
-    varietyTable.style.overflow= 'scroll';
+    document.getElementById("scrollable").style.overflow= 'scroll';
 
     //hide modal
-    // document.getElementById('one-item-save-btn').setAttribute("data-dismiss", "modal");
-    // document.getElementById('one-item-save-btn').click();
-    // document.getElementById('one-item-save-btn').removeAttribute("data-dismiss", "modal");
     $('#oneItemVariant').modal('hide');
   }
 
