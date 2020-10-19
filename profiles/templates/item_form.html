@@ -5,14 +5,14 @@
     <link href="{% static "css/select2/select2.css" %}" rel="stylesheet">
     <style>
         .images{
-          padding-bottom: 30px;
+          width: 100%;
           object-fit: cover;
-          height: 120px;
-          width: 120px;
+          height: 90px;
+          border-radius: 5px;
         }
         .img-container {
           position: relative;
-          width: 50%;
+         
         }
 
         .overlay {
@@ -33,7 +33,7 @@
           transform: translate(-50%, -50%);
           -ms-transform: translate(-50%, -50%);
           text-align: center;
-          height: 100%;
+          height: 90px;
         }
 
         .img-container:hover .image {
@@ -51,20 +51,18 @@
           cursor: pointer;
           height: 100%;
         }
-        .img-h {
-          
-          margin-right: -19px;
-        }
+        
         .img-input{
           font-size: 2rem;
-          padding: 20px 0;
           color: #999;
           background-color: #e0e2e3;
           border-color: #babfc4;
-          width: 120px;
           height: 90px;
-          margin-left: 15px;
           position: absolute;
+          margin: 0 15px;
+          max-width: 100px;
+          min-width: 100px;
+          padding: 17%;
         }
         .img-input:hover{
           background-color: #007bff ;
@@ -101,11 +99,26 @@
           padding: 15px;
           margin: 10px auto;
         }
+        .img-box {
+          max-width: 115px;min-width: 115px;padding-left: 10px;padding-right: 5px;
+        }
+        
+        .img-del-btn{
+          font-size: 2rem;margin-top: 20%;margin-left: 4%; color: #9f111f;
+        }
+       .variant-col {
+        width: 80px;
+        height: 80px;
+        background: #ededed;
+        border: 1px solid;
+        padding: 10px;
+       }
       </style>
 {% endblock %}
 
       <header class="panel-heading m-4" style="font-size: 25px;" >
               {% trans 'Product Details' %}
+              
       </header>
       <div class="table-section white-bg">
         {% comment %} <form action="/products/product_add/" class="m-2 p-5">  {% endcomment %}
@@ -136,6 +149,7 @@
                     <option disabled selected>Select</option>
                     <option value="">Category 1</option>
                     <option value="">Category 2</option>
+                    <option value="">Category 3</option>
                   </select>
                 </div>
               </div>
@@ -159,6 +173,9 @@
               </div>
 
               <div id="variety-content" class="form-group row">
+
+              </div>
+              <div id="variety-table" class="form-group row">
 
               </div>
 
@@ -273,12 +290,12 @@
 
               
               
-              <div id="img-wrapper" class="row" style=" margin: 150px 0 0 0;">
-                <div class="col-md-4">
+              <div id="img-wrapper" class="row">
+                <div class="col-md-4 mt-5 img-box">
                   <div class="row img-h">
-                    <label for="file" id="add-img-btn-0" class="btn btn-secondary text-center col-md-12 img-input" style="margin-left: 70px; margin-right: 70px;">
+                    <label for="file" id="add-img-btn-0" class="btn btn-secondary text-center col-md-12 img-input">
                       + 
-                    <input type="file"  accept="image/*" name="image" id="file" onchange="loadFile(event)"  style="display: none">
+                      <input type="file"  accept="image/*" name="image" id="file" onchange="loadFile(event)"  style="display: none">
                     </label>
                     <div class="col-md-12 img-container" id="images-0">
                     </div>
@@ -310,13 +327,16 @@
             
             <!--Ends left side inputs-->
             
-            <div class="col-md-6">
+            
+          </div>
+          <div class="row mt-5 pt-5">
+            <div class="col-md-6 mt-5">
               {% comment %} <input type="submit" class="btn btn-default blue-btn col-md-2 bg-primary m-5 text-white" value="Save">
               <p class="btn btn-default gray-btn m-2 text-white">{% trans 'Cancel' %}</p> {% endcomment %}
               <button type="button" onclick="saveProductInfo()" name="btnProductSave" id="btnProductSave" class="btn btn-primary blue-btn">{% trans 'Save' %}</button>
               <a class="btn btn-default gray-btn" onclick="cancelProductForm()">{% trans 'Cancel' %}</a>
             </div>
-          
+          </div>
         {% comment %} </form> {% endcomment %}
       </div>
     </div>
@@ -351,21 +371,21 @@
                 <div class="form-group">
                   <p style="width: 20px;" class="m-2"> </p>
                   <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 160px;">
+                  <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
                   
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
+                  <input type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
                   
-                  <input type="number" class="form-control" id="message-text" placeholder="" style="width: 70px;">
+                  <input type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
                 <div class="form-group">
                   <p style="width: 20px;" class="m-2"> </p>
                   <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 160px;">
+                  <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
                   
-                  <input type="text" class="form-control" id="message-text" placeholder="" style="width: 100px;">
+                  <input type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
                   
-                  <input type="number" class="form-control" id="message-text" placeholder="" style="width: 70px;">
+                  <input type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
               </div>
@@ -391,14 +411,20 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title font-weight-bold" id="exampleModalLabel">{% trans 'Variant Items Registration' %}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+            
+              <h5 class="modal-title font-weight-bold" id="exampleModalLabel">{% trans 'Variant Items Registration' %}</h5>
+              
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            
           </div>
+          
           <div class="modal-body">
+            <p class="text-danger col-md-12">{% trans '* Register one or more options on the horizontal and vertical axes.' %}</p>
             <form class="form-inline">
               <div id="firstOfTwoItem">
+                <div class="font-weight-bold p-2 text-left">Horizontal axis</div>
                 <div class="form-group">
                   <label for="first-of-two-items-title" class="col-form-label">{% trans 'Title' %}</label>
                   <input type="text" class="form-control" id="first-of-two-items-title" placeholder="Color, Size, etc">
@@ -434,6 +460,7 @@
               </div>
 
               <div id="lastOfTwoItem">
+                <div class="font-weight-bold p-2 text-left">Vertical axis</div>
                 <div class="form-group">
                   <label for="last-of-two-items-title" class="col-form-label">{% trans 'Title' %}</label>
                   <input type="text" class="form-control" id="last-of-two-items-title" placeholder="Color, Size, etc">
@@ -492,9 +519,9 @@
     const image = document.getElementById(`images-${counter}`);
 
     if(imgWrapper.childElementCount < 6){ 
-      image.innerHTML = `<img class="images" src="${URL.createObjectURL(event.target.files[0])}" width="120" /> 
+      image.innerHTML = `<img class="images" src="${URL.createObjectURL(event.target.files[0])}" /> 
                   <div class="overlay">
-                    <div onClick="this.parentNode.parentNode.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode.parentNode.parentNode)" class="rmv-img-btn"><i class="fas fa-trash-alt" style="font-size: 2rem;margin-top: 20%;margin-left: 10%; color: #9f111f;"></i> </div>
+                    <div onClick="this.parentNode.parentNode.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode.parentNode.parentNode)" class="rmv-img-btn"><i class="fas fa-trash-alt img-del-btn"></i> </div>
                   </div>
       `;
       addImgBtn.style.display = 'none';
@@ -502,11 +529,16 @@
       //increase counter for next
       counter ++;
       
-      imgWrapper.innerHTML += `<div class="col-md-4"><div class="row img-h"><label for="file" id="add-img-btn-${counter}" class="btn btn-secondary text-center col-md-12 img-input" onclick="if(!document.getElementById('file')){document.getElementById('file-${counter}').click();}">
-                  + 
-                  <input type="file"  accept="image/*" name="image" id="file-${counter}" onchange="loadFile(event)" style="display: none">
-                </label>
-                <div class="col-md-12 img-container" id="images-${counter}"> </div> </div></div>` 
+      imgWrapper.innerHTML += `<div class="col-md-4 mt-5 img-box">
+                  <div class="row img-h">
+                    <label for="file" id="add-img-btn-${counter}" class="btn btn-secondary text-center col-md-12 img-input" onclick="if(!document.getElementById('file')){document.getElementById('file-${counter}').click();}">
+                      + 
+                      <input type="file"  accept="image/*" name="image" id="file-${counter}" onchange="loadFile(event)"  style="display: none">
+                    </label>
+                    <div class="col-md-12 img-container" id="images-${counter}">
+                    </div>
+                  </div>
+                </div>`;
     } else{
       document.getElementById(`file-${counter}`).value='';
       console.log(document.getElementById(`file-${counter}`).value);
@@ -535,12 +567,12 @@
 
     one.addEventListener('click', (event)=> {
       // event.preventDefault();
-      varietyContent.innerHTML = `<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant">+ Item / Option</button>`;
+      varietyContent.innerHTML = `<div class="col-md-12"><button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant">+ Item / Option</button></div>`;
     })
 
     two.addEventListener('click', (event)=> {
       // event.preventDefault();
-      varietyContent.innerHTML = `<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant">+ Items / Options</button>`;
+      varietyContent.innerHTML = `<div class="col-md-12"><button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant">+ Items / Options</button></div>`;
     })
 
     none.addEventListener('click', (event)=> {
@@ -682,7 +714,50 @@
   */
 
   function saveOneItemData(){
-    console.log('clicked 1')
+    console.log('clicked 1');
+    const oneItemVariantName = document.getElementById('one-item-title').value;
+    const oneItemVariantChoices = document.getElementsByClassName('one-item-choices');
+    const oneItemVariantJan = document.getElementsByClassName('one-item-jan-code');
+    const oneItemVariantStock = document.getElementsByClassName('one-item-stock');
+
+    console.log(oneItemVariantName);
+
+    const varietyTable = document.getElementById('variety-table');
+
+    //create table wrapper for the one item variant
+    varietyTable.innerHTML = `<div class="col-md-12"><div class="row" id="one-variant-title-row">
+      <div class="variant-title variant-col">${oneItemVariantName}</div>
+    </div>
+    <div class="row" id="one-variant-info-row">
+      <div class="variant-info variant-col">-</div>
+    </div>
+    </div>
+    `
+    
+
+    for(let i = 0; i < oneItemVariantChoices.length; i++){
+      let newTableChoices = document.createElement('div'); 
+      let newTableContent = document.createElement('div'); 
+      let choicesValue = oneItemVariantChoices[i].value;
+      let janValue = oneItemVariantJan[i].value;
+      let stockValue = oneItemVariantStock[i].value;
+      newTableChoices.innerHTML = `<div class="variant-title variant-col">${choicesValue}</div>`;
+      newTableContent.innerHTML = `<div class="variant-info variant-col"><p class="text-center">${janValue}</p><p class="text-center">${stockValue}</p></div>`;
+      
+      
+      if(newTableChoices.firstChild){
+        document.getElementById('one-variant-title-row').appendChild(newTableChoices.firstChild);
+      }
+
+      if(newTableContent.firstChild){
+        document.getElementById('one-variant-info-row').appendChild(newTableContent.firstChild);
+      }
+      
+      
+    }
+    varietyTable.style.overflow= 'scroll';
+
+
   }
 
   function saveTwoItemsData(){

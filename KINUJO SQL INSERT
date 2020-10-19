@@ -1,3 +1,7 @@
+
+INSERT INTO `products_product` (`name`,`brand_name`, `pr`, `url_str`, `is_used`, `is_opened`, `opened_date`, `price`, `store_price`, `shipping_fee`, `description`, `is_draft`, is_food, is_hidden, category_id, created, modified) VALUES ('Hair Straightner', 'kemei', 'Hair product', 'httP//:www.kinujo.com', 1, 1, '12-1-20', 300, 270, 12, 'This product is a low budget charm', 0, 0, 0, 1, NOW(), NOW());
+
+
 INSERT INTO `taxes_taxrate` (`start_date`, `end_date`, `tax_rate`, `reduced_tax_rate`, `is_hidden`, `is_enable`, `created`, `modified`)
 VALUES
 	('1989-04-01', '1997-03-31', 0.03, 0.03, 0, 1, now(), now()),
@@ -69,6 +73,9 @@ VALUES
 INSERT INTO `profiles_profile` (`is_seller`, `shop_name`, `tel`, `password`, `nickname`, `user_code`, `email`, `is_approved`, `real_name`, `gender`, `birthday`, `zipcode`, `city`, `address1`, `address2`, `corporate_name`, `message_notification`, `other_notification`, `allowed_by_id`, `allowed_by_tel`, `word`, `salon_category`, `is_hidden`, `created`, `modified`, `authority_id`, `image_id`, `introducer_id`, `prefecture_id`, `user_id`, `corporate_tel`, `representative_name`)
 VALUES
 	(1, '', '08012345678', '08012345678', 'KINUJO management', 'kinujo_jp', 'test@email.com', 1, 'KINUJO', 1, NULL, '101', '', '〒102-0083 東京都千代田区麹町5-5-2', 'ベルビュー麹町3F', '株式会社KINUJO', 1, 1, 1, 1, 'One Word Message', NULL, 0, now(), now(), 1, null, null, 1, 1, '', '');
+INSERT INTO `profiles_profile` (`representative_name`, `corporate_tel`,`is_seller`, `shop_name`, `tel`, `password`, `nickname`, `user_code`, `email`, `is_approved`, `real_name`, `gender`, `birthday`, `zipcode`, `city`, `address1`, `address2`, `corporate_name`, `message_notification`, `other_notification`, `allowed_by_id`, `allowed_by_tel`, `word`, `salon_category`, `is_hidden`, `created`, `modified`, `authority_id`, `image_id`, `introducer_id`, `prefecture_id`, `user_id`)
+VALUES
+	('repres 1', '1796912', 1, '', '08012345678', '08012345678', 'KINUJO management', 'kinujo_jp', 'test@email.com', 1, 'KINUJO', 1, NULL, '101', '', '〒102-0083 東京都千代田区麹町5-5-2', 'ベルビュー麹町3F', '株式会社KINUJO', 1, 1, 1, 1, 'One Word Message', NULL, 0, now(), now(), 1, null, null, 1, 1);
 
 
 INSERT INTO `products_productcategory` (`name`, `is_hidden`, `created`, `modified`)
@@ -77,3 +84,12 @@ VALUES
 	('シャンプー', 1, now(), now()),
 	('スタイリング', 1, now(), now()),
 	('コスメ', 1, now(), now());
+
+
+INSERT INTO `auth_user` (`password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`)
+VALUES
+('password', '2020-10-13 09:03:08.690886', 1, '+12345678', 'Kinujo', '', 'kinujo@example.com', 1, 1, '2020-10-07 03:15:51.851681');
+
+INSERT INTO `profiles_profile` (`is_seller`, `shop_name`, `tel`, `password`, `nickname`, `user_code`, `email`, `is_approved`, `real_name`, `gender`, `birthday`, `zipcode`, `city`, `address1`, `address2`, `corporate_name`, `message_notification`, `other_notification`, `allowed_by_id`, `allowed_by_tel`, `word`, `salon_category`, `is_hidden`, `authority_id`, `image_id`, `introducer_id`, `prefecture_id`, `user_id`, `created`, `modified`, `corporate_tel`, `representative_name`)
+VALUES
+(1, '', '+08012345678', '08012345678', 'KINUJO management', 'kinujo_jp', 'test@email.com', 1, 'KINUJO', 1, NULL, '101', '', '〒102-0083 東京都千代田区麹町5-5-2', 'ベルビュー麹町3F', '株式会社KINUJO', 1, 1, 1, 1, 'One Word Message', NULL, 0, 1, NULL, NULL, 1, 1, '2020-10-08 05:03:09.752996', '2020-10-08 05:03:09.834158', '', '');

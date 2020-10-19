@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-
+from .shared_settings import *
 import os
 from django.utils.translation import ugettext_lazy as _
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -25,8 +25,18 @@ SECRET_KEY = 'ro6hl1+%(r+oek3sz3j8x!dfyy+_3e+*so0q-zec9f-ycp5fox'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["testserver", "127.0.0.1"]
+ALLOWED_HOSTS = ['kinujo-develop.c2sg.asia', 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com' ]
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'kinujo_develop_db',
+        'USER': 'kinujo_develop',
+        'PASSWORD': 'Pa55w0rd',
+        'HOST': 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com',
+        'PORT': '3306',
+    }
+}
 
 # Application definition
 
@@ -72,6 +82,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'kinujo.urls'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -108,7 +119,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -133,7 +143,6 @@ LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'languages/locale'),
 )
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
@@ -141,11 +150,19 @@ STATIC_URL = '/static/'
 STATIC_ROOT = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-WEB_URL = 'http://127.0.0.1:8000' + MEDIA_URL
+# s3 settings
+AWS_ACCESS_KEY_ID = 'AKIAI3VAZN6IG4F7I7SQ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'c2sg-kinujo'
+S3_URL = 'https://%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
-LOGIN_URL = '/login/'
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_FILE_STORAGE = 'utilities.s3utils.MediaS3BotoStorageRelease'
+MEDIA_DIRECTORY = '/develop/media/'
+MEDIA_URL = S3_URL + MEDIA_DIRECTORY
+MEDIA_ROOT = MEDIA_URL
+WEB_URL = MEDIA_URL
 
-CORS_ORIGIN_ALLOW_ALL = DEBUG
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+MEDIA_LOCAL = os.path.join(BASE_DIR, 'media')

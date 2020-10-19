@@ -55,7 +55,7 @@
                             <img src="{% static 'img/ja.png' %}" alt="" style="width: 30px">
                         {% endif %}
                     </a>
-                    <ul class="dropdown-menu pull-right" style="width: 70px;">
+                    <ul class="dropdown-menu pull-right pointer" style="width: 70px;">
                         <li style="width: 100%">
                             <form action="/api/change-language/" method="POST" class="language-form-en">
                                 {% csrf_token %}

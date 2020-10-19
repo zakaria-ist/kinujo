@@ -113,7 +113,7 @@
     <script type="text/javascript">
 
     function deleteProduct(id) {
-        var url = '../product_delete/' + id + '/'
+        var url = '/products/product_delete/' + id + '/'
         $("#comfirmDeleteProductModal").modal("show");
         $("#comfirm-yes").attr("href", url);
     }
@@ -177,7 +177,7 @@
                     "render": function (data, type, row, meta) {
                         var btn =
                                 '<div class="btn-group">' +
-                                '<a class="btn-group-item" href="../product_edit/' + row.id + '/' + '"><i class="fas fa-pencil-alt fa-2x text-info"></i></a>' + 
+                                '<a class="btn-group-item" href="/products/product_edit/' + row.id + '/' + '"><i class="fas fa-pencil-alt fa-2x text-info"></i></a>' + 
                                 '<a class="btn-group-item" onclick="deleteProduct(' + row.id + ')"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + 
                                 '</div>';
                         return btn;
