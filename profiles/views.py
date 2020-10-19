@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .forms import ProfileForm, ImageUploadForm
 from .models import Address, Profile, FinancialAccount
+from utilities.constants import AUTHORITY_TYPE
 from prefectures.models import Prefecture
 from images.models import Image
 from django.conf import settings as s
@@ -159,15 +160,18 @@ def ProfileList__asJson(request):
         list = profile_list.order_by('-' + column_name)[int(start):(int(start) + int(length))]
 
     array = []
+    introducer_list = Profile.objects.filter(is_hidden=False)
     i = 0
     for field in list:
         i = i + 1
+        store_total = introducer_list.filter(introducer_id=field.id, authority_id=AUTHORITY_TYPE['STORE']).count()
+        user_total = introducer_list.filter(introducer_id=field.id, authority_id=AUTHORITY_TYPE['GENERAL']).count()
         data = {"no": str(i),
                 "id": str(field.id),
                 "type": field.authority.name,
                 "nickname": field.nickname,
-                "store_total": '0',
-                "user_total": '0'
+                "store_total": str(store_total),
+                "user_total": str(user_total)
                 }
         array.append(data)
 
@@ -201,14 +205,18 @@ def profile_add(request):
                 user.save()
                 profile = form.save(commit=False)
                 profile.user = user
-                if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
-                    profile.indroducer = int(request.POST.get('introducer'))
-                if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
-                    profile.indroducer = int(request.POST.get('general_store'))
                 profile.user_code = request.POST.get('user_code')
                 if request.POST.get('birthday'):
                     profile.birthday = request.POST.get('birthday')
                 profile.save()
+
+                if profile.authority_id == AUTHORITY_TYPE['AMBASSADOR']:
+                    if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
+                        profile.introducer_id = int(request.POST.get('general_store'))
+                
+                elif profile.authority_id in (AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']):
+                    if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
+                        profile.introducer_id = int(request.POST.get('introducer'))
 
                 profile_image = request.FILES.get('profile_image', False)
                 if profile_image:
@@ -230,8 +238,8 @@ def profile_add(request):
     else:
         form = ProfileForm()
     
-    store_list = Profile.objects.filter(is_hidden=False, authority_id=2).values('id', 'nickname') #authority_id=2 ambassador
-    profile_list = Profile.objects.filter(is_hidden=False).exclude(authority_id=2).values('id', 'nickname')
+    store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['AMBASSADOR']).values('id', 'nickname') #authority_id=2 ambassador
+    profile_list = Profile.objects.filter(is_hidden=False).exclude(authority_id=AUTHORITY_TYPE['AMBASSADOR']).values('id', 'nickname')
     return render(request, 'profile_form.html', {'form': form, 
                                                 'media_url': s.MEDIA_URL, 
                                                 'store_list': store_list,
@@ -270,10 +278,15 @@ def profile_edit(request, profile_id):
                     profile.user_id = user.id
                 else:
                     profile.user_id = request.POST.get('user_id')
-                if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
-                    profile.indroducer = int(request.POST.get('introducer'))
-                if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
-                    profile.indroducer = int(request.POST.get('general_store'))
+                
+                if profile.authority_id == AUTHORITY_TYPE['AMBASSADOR']:
+                    if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
+                        profile.introducer_id = int(request.POST.get('general_store'))
+                
+                elif profile.authority_id in (AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']):
+                    if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
+                        profile.introducer_id = int(request.POST.get('introducer'))
+
                 if request.POST.get('birthday'):
                     profile.birthday = request.POST.get('birthday')
                 profile.save()
@@ -307,9 +320,9 @@ def profile_edit(request, profile_id):
     profile = Profile.objects.get(pk=profile_id)
     form = ProfileForm(instance=profile)
     
-    store_list = Profile.objects.filter(is_hidden=False, authority_id=2).exclude(id=profile_id).values('id', 'nickname') #authority_id=2 ambassador
-    profile_list = Profile.objects.filter(is_hidden=False).exclude(id=profile_id).exclude(authority_id=2).values('id', 'nickname')
-    prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('name').values_list('id', 'name'))
+    store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['AMBASSADOR']).exclude(id=profile_id).values('id', 'nickname') #authority_id=2 ambassador
+    profile_list = Profile.objects.filter(is_hidden=False).exclude(id=profile_id).exclude(authority_id=AUTHORITY_TYPE['AMBASSADOR']).values('id', 'nickname')
+    prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
     return render(request, 'profile_form.html', {'form': form, 
                                                 'media_url': s.MEDIA_URL, 
                                                 'store_list': store_list,
@@ -511,6 +524,10 @@ def update_shipping_info(request):
                 shipping_info.is_default = is_default
 
                 shipping_info.save()
+            
+            # if it is default then remove other from default
+            if shipping_info.is_default:
+                Address.objects.filter(user_id=profile_id).exclude(id=shipping_info.id).update(is_default=False)
 
             message = 'Success'
         except Exception as e:
@@ -609,6 +626,27 @@ def validate_user_phone(request, profile_id):
     message = 'Error'
     try:
         user = User.objects.filter(username=profile_id).first()
+        if user:
+            message = 'Success'
+    except Exception as e:
+        print(e)
+
+    context = { 'message': message }
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+def check_for_duplicate(request, type, value):
+    """
+    Method to delete a shipping info.
+    """
+
+    message = 'Error'
+    try:
+        user = None
+        if type == 'tel':
+            user = Profile.objects.filter(tel=value).first()
+        elif type == 'id':
+            user = Profile.objects.filter(user_code=value).first()
+
         if user:
             message = 'Success'
     except Exception as e:
