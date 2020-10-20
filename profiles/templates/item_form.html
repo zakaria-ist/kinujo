@@ -133,7 +133,6 @@
         }
       #variety-table-two {
         overflow: scroll;
-        height: 250px;
         width: 100%;
       }
       .flex-wrap{
@@ -185,11 +184,11 @@
               <div class="form-group row form-check form-check-inline">
                 <label class="col-md-4" for="variety">{% trans 'Variations' %}</label>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
-                  <input type="radio" id="one" name="variety" class="custom-control-input form-check-input">
+                  <input type="radio" id="one" name="variety" class="custom-control-input form-check-input" onclick="toggleOne();">
                   <label class="form-check-label custom-control-label" for="one">{% trans '1 Item' %}</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
-                  <input type="radio" id="two" name="variety" class="custom-control-input form-check-input">
+                  <input type="radio" id="two" name="variety" class="custom-control-input form-check-input" onclick="toggleTwo();">
                   <label class="form-check-label custom-control-label" for="two">{% trans '2 Items' %}</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
@@ -370,6 +369,41 @@
       </div>
     </div>
 
+    <!--Confirm modal-->
+    <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <p class="text-center p-5">Are you sure? This is gonna erase content in 2 item variants.</p>
+            <button type="button" class="btn btn-secondary" style="width: max-content; margin: 10px auto;" onclick="keepTwo();">{% trans 'Go back' %}</button>
+            <button type="button" id="one-item-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="deleteTwoContent();">{% trans 'Proceed' %}</button>
+          
+        </div>
+      </div>
+    </div>
+
+    <!--Confirm modal two-->
+    <div class="modal fade" id="confirm-two" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <p class="text-center p-5">Are you sure? This is gonna erase content in 1 item variants.</p>
+            <button type="button" class="btn btn-secondary" style="width: max-content; margin: 10px auto;" onclick="keepOne();">{% trans 'Go back' %}</button>
+            <button type="button" id="one-item-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="deleteOneContent();">{% trans 'Proceed' %}</button>
+          
+        </div>
+      </div>
+    </div>
+
+    <!--Confirm modal none-->
+    <div class="modal fade" id="confirm-none" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <p class="text-center p-5">Are you sure? This is gonna erase content in one or two item variants.</p>
+            <button type="button" class="btn btn-secondary" style="width: max-content; margin: 10px auto;" onclick="keepAny();">{% trans 'Go back' %}</button>
+            <button type="button" id="one-item-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="deleteAny();">{% trans 'Proceed' %}</button>
+          
+        </div>
+      </div>
+    </div>
 
     <!-- starts --Modal for 1 item variant -->
     <div class="modal fade" id="oneItemVariant" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -599,23 +633,89 @@
     const varTable = document.getElementById('variety-table');
     const varTableTwo = document.getElementById('variety-table-two');
 
-    one.addEventListener('click', (event)=> {
-      // event.preventDefault();
+    // one.addEventListener('click', toggleOne);
+    //start functions for confirm erase two
+    function deleteTwoContent(){
       varietyContent.innerHTML = `<div class="col-md-12"><button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant">+ Item / Option</button></div>`;
       varTableTwo.innerHTML = '';
-    })
+      varTableTwo.style.height = '0px';
+      $('#confirm-modal').modal('hide');
+      
+    }
 
-    two.addEventListener('click', (event)=> {
+    function keepTwo(){
+      two.click();
+      $('#confirm-modal').modal('hide');
+    }
+    
+    function toggleOne() {
       // event.preventDefault();
+
+      //confirm msg
+      if(varTableTwo.innerHTML.trim() !== ''){
+        
+        return $("#confirm-modal").modal();
+      }
+      deleteTwoContent()
+    }
+    //ends functions for confirm erase two
+
+
+    //starts confirm variant set two
+    function deleteOneContent(){
       varietyContent.innerHTML = `<div class="col-md-12"><button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant">+ Items / Options</button></div>`;
       varTable.innerHTML = '';
-    })
+
+      $('#confirm-two').modal('hide');
+    }
+
+    function keepOne(){
+      one.click();
+      $('#confirm-two').modal('hide');
+    }
+
+    function toggleTwo(){
+
+      if(varTable.innerHTML.trim() !== ''){
+        return $('#confirm-two').modal();
+      }
+
+      deleteOneContent();
+      // event.preventDefault();
+      
+    }
+
+
+    //confirm none
+
+    function deleteAny(){
+      varTable.innerHTML = '';
+      varTableTwo.innerHTML = '';
+      varietyContent.innerHTML = '';
+
+      varTableTwo.style.height = '0px';
+      $('#confirm-none').modal('hide');
+
+    }
+
+    function keepAny(){
+      if(varTable.innerHTML.trim() !== '') {
+        one.click();
+      }
+      if(varTableTwo.innerHTML.trim() !== '') {
+        two.click();
+      }
+      $('#confirm-none').modal('hide');
+    }
 
     none.addEventListener('click', (event)=> {
       // event.preventDefault();
-      varietyContent.innerHTML = ``;
-      varTable.innerHTML = '';
-      varTableTwo.innerHTML = '';
+
+      if(varTable.innerHTML.trim() !== '' || varTableTwo.innerHTML.trim() !== ''){
+        return $('#confirm-none').modal();
+      }
+
+      varietyContent.innerHTML = '';
     })
 
 
@@ -919,7 +1019,7 @@
 
 
     varietyTableTwo.innerHTML = `
-    <div class="col-md-2" style="max-width: 140px; min-width: 140px">
+    <div class="col-md-2" style="max-width: 140px; min-width: 140px;">
       <div class="row" id="two-variant-title-left">
         <div class="variant-title variant-col"><h6 style="font-weight: bold;">${firstOfTwotemsVariantTitle.value} <br> / <br> ${lastOfTwotemsVariantTitle.value}</h6></div>
       </div>
@@ -981,8 +1081,8 @@
 
 
     }
-
-
+  
+    varietyTableTwo.style.height = '250px';
     $('#twoItemsVariant').modal('hide');
 
   }
