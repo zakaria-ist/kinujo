@@ -136,6 +136,9 @@
         height: 250px;
         width: 100%;
       }
+      .flex-wrap{
+        flex-wrap: initial !important;
+      }
       </style>
 {% endblock %}
 
@@ -473,14 +476,14 @@
                     <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
                     <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
                   <div class="form-group">
                     <p style="width: 20px;" class="m-2"> </p>
                     <p class="m-2 first-of-two-variant-counter" style="width: 20px;">2</p>
                     <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
                 </div>
 
@@ -509,7 +512,7 @@
                     <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
                     <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
                   
                   <div class="form-group">
@@ -517,7 +520,7 @@
                     <p class="m-2 last-of-two-variant-counter" style="width: 20px;">2</p>
                     <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
                 </div>
 
@@ -531,7 +534,7 @@
                 information will also be deleted' %}</p>
             </div>
             <button type="button" class="btn btn-secondary" data-dismiss="modal" style="display: none;">{% trans 'Close' %}</button>
-            <button type="button" id="two-items-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="saveTwoItemsData();" data-dismiss="modal">{% trans 'Save' %}</button>
+            <button type="button" id="two-items-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="saveTwoItemsData();">{% trans 'Save' %}</button>
           </div>
         </div>
       </div>
@@ -692,7 +695,7 @@
                   <p class="m-2 first-of-two-variant-counter" style="width: 20px;">${firstOfTwoOptCounter}</p>
                   <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                   
-                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>`;
     
     while (firstOfTwoNewContent.firstChild) {
@@ -725,7 +728,7 @@
                   <p class="m-2 last-of-two-variant-counter" style="width: 20px;">${lastOfTwoOptCounter}</p>
                   <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                   
-                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>`;
     
     while (lastOfTwoNewContent.firstChild) {
@@ -754,14 +757,14 @@
     const oneItemVariantStock = document.getElementsByClassName('one-item-stock');
 
     //see for empty field of title and show a error message
-    if(oneItemVariantName === '' || oneItemVariantName === undefined) {
+    if(oneItemVariantName === '' || oneItemVariantName === ' ' || oneItemVariantName === undefined) {
       errorMsg.innerHTML = 'This field is required'; 
       oneItemVariantTitle.focus();
       return;
       
     }
 
-    if(oneItemVariantName !== '') {
+    if(oneItemVariantName !== '' || oneItemVariantName !== ' ' || oneItemVariantName !== undefined) {
       errorMsg.innerHTML = ''; 
       
     }
@@ -849,6 +852,8 @@
     $('#oneItemVariant').modal('hide');
   }
 
+
+  //two items variant save from modal
   function saveTwoItemsData(){
 
     console.log('clicked 2')
@@ -861,6 +866,56 @@
     let lastOfTwoErrorMsg = document.getElementById('last-of-two-title-error');
     const firstOfTwoVariantChoices = document.getElementsByClassName('first-of-two-items-choices');
     const lastOfTwoVariantChoices = document.getElementsByClassName('last-of-two-items-choices');
+    let errorFirstOfTwo = document.getElementById('first-of-two-title-error');
+    let errorLastOfTwo = document.getElementById('last-of-two-title-error');
+
+
+    //error handling
+    //function to check error of choices
+    //error check empty field
+    function checkError(classes, errorMsgId, errLine){
+      for(let i = 0; i < classes.length; i++){
+        if(classes[i].value === '' || classes[i].value === ' ' || classes[i].value === undefined){
+          errorMsgId.innerHTML = `Choices field (<span id="${errLine}">${i + 1}</span>) can't be empty`;
+          classes[i].focus();
+          return false;
+        }
+        
+      }
+
+      return true;
+    }
+
+    
+    //title empty error
+    if(firstOfTwotemsVariantTitle.value === '' || firstOfTwotemsVariantTitle.value === ' ' || firstOfTwotemsVariantTitle.value === undefined){
+      errorFirstOfTwo.innerHTML = `Title field is required`;
+      firstOfTwotemsVariantTitle.focus();
+      return;
+    }else{
+      errorFirstOfTwo.innerHTML = '';
+    }
+
+    //call checkError for first of two items variant
+    if(!checkError(firstOfTwoVariantChoices, errorFirstOfTwo, 'err-line-one')){
+      return;
+    }
+
+
+
+    //for last item empty check
+    if(lastOfTwotemsVariantTitle.value === '' || lastOfTwotemsVariantTitle.value === ' ' || lastOfTwotemsVariantTitle === undefined){
+      errorLastOfTwo.innerHTML = `Title field is required`;
+      lastOfTwotemsVariantTitle.focus();
+      return;
+    }else {
+      errorLastOfTwo,innerHTML = '';
+    }
+    if(!checkError(lastOfTwoVariantChoices, errorLastOfTwo, 'err-line-two')){
+      return;
+    }
+
+
 
 
     varietyTableTwo.innerHTML = `
@@ -876,26 +931,30 @@
       <div class="row" id="two-variant-title-row">
         
       </div>
-      <div class="row" id="addTwoItems">
-        <div class="col-md-12">
-          <div class="row" id="two-variant-cont-row">
-            
-          </div>
+      
+      <div class="row">
+
+        <div class="col-md-12" id="addTwoItems">
+ 
         </div>
  
       </div>
+
     </div>
     `;
 
     for(let i = 0; i < firstOfTwoVariantChoices.length; i++){
       let newTableFirstChoices = document.createElement('div'); 
       let newTableLastChoices = document.createElement('div');
+      let infoRow = document.createElement('div');
       let firstChoicesValue = firstOfTwoVariantChoices[i].value;
       let lastChoicesValue = lastOfTwoVariantChoices[i].value;
 
       newTableLastChoices.innerHTML = `<div class="variant-title variant-col">${lastChoicesValue}</div>`;
       newTableFirstChoices.innerHTML = `<div class="variant-title variant-col">${firstChoicesValue}</div>`;
-
+      infoRow.innerHTML = `<div class="row flex-wrap" id="two-variant-cont-row-${i}">
+            
+          </div>`;
 
       if(newTableLastChoices.firstChild){
         document.getElementById('two-variant-info-left').appendChild(newTableLastChoices.firstChild);
@@ -904,9 +963,27 @@
         document.getElementById('two-variant-title-row').appendChild(newTableFirstChoices.firstChild);
       }
 
+      if(infoRow.firstChild){
+        document.getElementById('addTwoItems').appendChild(infoRow.firstChild);
+
+        for(let j = 0; j < firstOfTwoVariantChoices.length; j++){
+          let addInfoCol = document.createElement('div');
+          addInfoCol.innerHTML = `<div class="variant-info variant-col">${firstOfTwoVariantChoices[j].value} / ${lastOfTwoVariantChoices[i].value}</div>`;
+          let id = `two-variant-cont-row-${i}`;
+
+          if(addInfoCol.firstChild){
+            document.getElementById(id).appendChild(addInfoCol.firstChild);
+          }
+        }
+      }
+
+      
 
 
     }
+
+
+    $('#twoItemsVariant').modal('hide');
 
   }
 </script>
