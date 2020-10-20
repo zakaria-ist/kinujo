@@ -324,7 +324,7 @@
                     $('#introducer').select2({});
                 }
                 if (profile_id && profile_introducer){
-                    $('#introducer').val(profile_introducer).trigger(change);
+                    $('#introducer').val(profile_introducer).trigger('change');
                 }
             } else if (auth_type == '4') { // store
                 options = '';
@@ -341,7 +341,7 @@
                     $('#introducer').select2({});
                 }
                 if (profile_id && profile_introducer){
-                    $('#introducer').val(profile_introducer).trigger(change);
+                    $('#introducer').val(profile_introducer).trigger('change');
                 }
             }
             
