@@ -213,7 +213,9 @@ def profile_add(request):
                     profile.is_seller = True
                 else:
                     profile.is_seller = False
-                if request.POST.get('is_approved') == '1':
+
+                if profile.authority_id in (AUTHORITY_TYPE['AMBASSADOR'], AUTHORITY_TYPE['GENERAL'],
+                    AUTHORITY_TYPE['MASTER'], AUTHORITY_TYPE['SPECIAL']):
                     profile.is_approved = True
                 else:
                     profile.is_approved = False
@@ -249,7 +251,7 @@ def profile_add(request):
         form = ProfileForm()
     
     store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['AMBASSADOR']).values('id', 'nickname') #authority_id=2 ambassador
-    profile_list = Profile.objects.filter(is_hidden=False).values('id', 'nickname')
+    profile_list = list(Profile.objects.filter(is_hidden=False).values_list('id', 'nickname', 'authority_id'))
     return render(request, 'profile_form.html', {'form': form, 
                                                 'media_url': s.MEDIA_URL, 
                                                 'store_list': store_list,
@@ -341,7 +343,7 @@ def profile_edit(request, profile_id):
     form = ProfileForm(instance=profile)
     
     store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['AMBASSADOR']).exclude(id=profile_id).values('id', 'nickname') #authority_id=2 ambassador
-    profile_list = Profile.objects.filter(is_hidden=False).exclude(id=profile_id).values('id', 'nickname')
+    profile_list = list(Profile.objects.filter(is_hidden=False).exclude(id=profile_id).values_list('id', 'nickname', 'authority_id'))
     prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
     return render(request, 'profile_form.html', {'form': form, 
                                                 'media_url': s.MEDIA_URL, 
