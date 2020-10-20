@@ -5,7 +5,8 @@
     {% load i18n %}
     <link href="{% static "css/select2/select2.css" %}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.css' %}"/>
-    <script src="https://zipaddr.github.io/bankautob.js" charset="UTF-8"> </script>
+    {% comment %} <script src="https://zipaddr.github.io/bankautob.js" charset="UTF-8"> </script> {% endcomment %}
+    <script src="{% static 'js/bankautob.js' %}" charset="UTF-8"> </script>
 {% endblock %}
 
 {% block title %}{% trans 'Profile Add/Edit'%}{% endblock %}
@@ -152,9 +153,20 @@
         var is_seller = "{{profile.is_seller}}";
         var is_approved = "{{profile.is_approved}}";
 
+        if (is_seller == 'True') {
+            is_seller = true;
+            $('#id_is_seller').val('1').trigger('change');
+        } else {
+            is_seller = false;
+        }
+        if (is_approved == 'True') {
+            $('#id_is_approved').val('1').trigger('change');
+        } 
+
         $(document).ready(function () {
             if (profile_id == '' || profile_id == undefined || profile_id == null) {
                 profile_id = '';
+                $('#id_authority').trigger('change');
                 $('#id_password').prop('required', true);
                 $('#conf_pass').prop('required', true);
             } else {
@@ -177,15 +189,6 @@
             });
             $('#id_salon_category').select2({});
             $('#id_gender').select2({});
-
-            $('#id_authority').trigger('change');
-
-            if (is_seller == 'True') {
-                $('#id_is_seller').val('1').trigger('change');
-            } 
-            if (is_approved == 'True') {
-                $('#id_is_approved').val('1').trigger('change');
-            } 
 
         });
 
@@ -240,44 +243,109 @@
             }
         })
 
+        $('#id_tel').on('change', function() {
+            var value = $(this).val();
+            check_for_duplicate('tel', value);
+        })
+        $('#id_user_code').on('change', function() {
+            var value = $(this).val();
+            check_for_duplicate('id', value);
+        })
+
+        function check_for_duplicate(type, value) {
+            $.ajax({
+                type: "GET",
+                url: "/profiles/check_for_duplicate/" + type + "/" + value + "/",
+                success: function (data) {
+                    if (data.message == 'Success') {
+                        if (type == 'id') {
+                            $('#id_user_code').val('');
+                            $.confirm({
+                                title: 'ID is duplicate',
+                                content: value + ' is in use. Try another ID. It must be unique',
+                                buttons: {
+                                    Ok: {
+                                        btnClass: 'btn-success',
+                                        action: function(){}
+                                        }
+                                    }
+                            });
+                        }
+                        else if (type == 'tel') {
+                            $('#id_tel').val('');
+                            $.confirm({
+                                title: 'Phone number is duplicate',
+                                content: value + ' is in use. Try another phone number. It must be unique',
+                                buttons: {
+                                    Ok: {
+                                        btnClass: 'btn-success',
+                                        action: function(){}
+                                        }
+                                    }
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        $('#id_is_seller').on('change', function() {
+            if ($('#id_is_seller').val() == '0') {
+                is_seller = false;
+                $('#item_tab_li').css('display', 'none');
+            } else {
+                is_seller = true;
+                $('#item_tab_li').removeAttr('style');
+            }
+        })
+
         // view filter according to authority
         $('#id_authority').on('change', function(){
             
             if ($(this).val() == '1') { //master
                 $('#general_ws_div').css('display', 'none');
                 $('#introducer_div').css('display', 'none');
+                $('#introducer').attr('required', false);
                 $('#approval_div').css('display', 'none');
                 $('#type_div').css('display', 'none');
                 $('#type_label').css('display', 'none');
                 $('#corporate_block').removeAttr('style');
 
                 if (profile_id) {
-                    $('#item_tab_li').removeAttr('style');
+                    if (is_seller){
+                        $('#item_tab_li').removeAttr('style');
+                    }
                 }
             }
             else if ($(this).val() == '2') { //special
                 $('#general_ws_div').css('display', 'none');
                 $('#introducer_div').css('display', 'none');
+                $('#introducer').attr('required', false);
                 $('#approval_div').css('display', 'none');
                 $('#type_div').css('display', 'none');
                 $('#type_label').css('display', 'none');
                 $('#corporate_block').removeAttr('style');
                 
                 if (profile_id) {
-                    $('#item_tab_li').removeAttr('style');
+                    if (is_seller){
+                        $('#item_tab_li').removeAttr('style');
+                    }
                     $('#account_info_tab_li').removeAttr('style');
                 }
             }
             else if ($(this).val() == '3') { //ambassador
                 $('#general_ws_div').removeAttr('style');
-                //$('#introducer_div').removeAttr('style');
+                $('#introducer_div').css('display', 'none');
+                $('#introducer').attr('required', false);
                 $('#approval_div').css('display', 'none');
                 $('#type_div').css('display', 'none');
                 $('#type_label').css('display', 'none');
                 $('#corporate_block').removeAttr('style');
 
                 if (profile_id) {
-                    $('#item_tab_li').removeAttr('style');
+                    if (is_seller){
+                        $('#item_tab_li').removeAttr('style');
+                    }
                     $('#client_tab_li').removeAttr('style');
                     $('#account_info_tab_li').removeAttr('style');
                 }
@@ -287,11 +355,14 @@
                 $('#type_div').removeAttr('style');
                 $('#type_label').removeAttr('style');
                 $('#introducer_div').removeAttr('style');
+                $('#introducer').attr('required', true);
                 $('#approval_div').removeAttr('style');
                 $('#corporate_block').removeAttr('style');
 
                 if (profile_id) {
-                    $('#item_tab_li').removeAttr('style');
+                    if (is_seller){
+                        $('#item_tab_li').removeAttr('style');
+                    }
                     $('#client_tab_li').removeAttr('style');
                     $('#account_info_tab_li').removeAttr('style');
                     $('#salon_info_tab_li').removeAttr('style');
@@ -303,11 +374,14 @@
                 $('#type_div').css('display', 'none');
                 $('#type_label').css('display', 'none');
                 $('#introducer_div').removeAttr('style');
+                $('#introducer').attr('required', true);
                 $('#approval_div').css('display', 'none');
                 $('#corporate_block').css('display', 'none');
 
                 if (profile_id) {
-                    $('#item_tab_li').removeAttr('style');
+                    if (is_seller){
+                        $('#item_tab_li').removeAttr('style');
+                    }
                     $('#client_tab_li').removeAttr('style');
                     $('#account_info_tab_li').removeAttr('style');
                     $('#shipping_info_tab_li').removeAttr('style');

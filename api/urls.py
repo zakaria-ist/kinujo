@@ -33,6 +33,8 @@ urlpatterns = [
     url(r'password/reset', views.PasswordReset.as_view(), name='password-reset'),
     url(r'user/login', views.UserLogin.as_view(), name='user-login'),
     url(r'app/config', views.AppConfig.as_view(), name='app-config'),
+    url('^products/(?P<userId>.+)/$', views.ProductList.as_view()),
+    url('^customers/(?P<userId>.+)/$', views.CustomerList.as_view()),
     url(r'^change-language/$', views.change_language, name='change_language'),
 ]
 urlpatterns += router.urls

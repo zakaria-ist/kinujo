@@ -523,7 +523,7 @@ msgstr "承認"
 
 #: profiles/templates/basic_info_tab.html:151
 msgid "General Store"
-msgstr "一般ストア"
+msgstr "スペシャルアカウント"
 
 #: profiles/templates/basic_info_tab.html:166
 msgid "Corporate Information"
