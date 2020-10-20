@@ -62,11 +62,13 @@ def reset_password(request):
 
     return render(request, 'password-reset.html')
 
+
 def login_master(request):
     """
     Method to master login.
     """
 
+    state = ""
     if request.method == 'POST':
         try:
             username = request.POST.get('username')
@@ -76,33 +78,42 @@ def login_master(request):
                 login(request, user)
                 return HttpResponsePermanentRedirect(reverse('home_load'))
             else:
-                return render(request, 'master_login.html')
+                state = "Check username & password"
+                return render(request, 'master_login.html', {'state': state})
         except Exception as e:
+            state = "Check username & password"
             print(e)
-            return render(request, 'master_login.html')
+            return render(request, 'master_login.html', {'state': state})
 
-    return render(request, 'master_login.html')
+    return render(request, 'master_login.html', {'state': state})
+
 
 def login_sales(request):
     """
     Method to sales login.
     """
     
+    state = ""
     if request.method == 'POST':
         try:
             username = request.POST.get('username')
             password = request.POST.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request, user)
-                return redirect('listing_home_load')
+                if user.is_seller:
+                    login(request, user)
+                    return redirect('listing_home_load')
+                else:
+                    state = "User is not seller account"
             else:
-                return render(request, 'sales_login.html')
+                state = "Check username & password"
+                return render(request, 'sales_login.html', {'state': state})
         except Exception as e:
             print(e)
-            return render(request, 'sales_login.html')
+            state = "Check username & password"
+            return render(request, 'sales_login.html', {'state': state})
 
-    return render(request, 'sales_login.html')
+    return render(request, 'sales_login.html', {'state': state})
 
 def logout_user(request):
     """
