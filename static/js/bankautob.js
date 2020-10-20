@@ -409,13 +409,13 @@ Bnk.c = function (d, x) {
         b = document.getElementById(K.xb).value;
         b = Ban.cg(b);
         if (0 < b.length && K.rtrv0 == "") {
-            // Bnk.pie(b, K.xb);
+            Bnk.pie(b, K.xb);
         }
     } else {
         b = document.getElementById(K.xn).value;
         b = Ban.cg(b);
         if (0 < b.length && K.rtrv0 == "") {
-            // Bnk.pie(b, K.xn);
+            Bnk.pie(b, K.xn);
         }
     }
 };
