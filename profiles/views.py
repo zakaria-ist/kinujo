@@ -53,6 +53,11 @@ def reset_password(request):
                     user.set_password(password)
                     user.save()
 
+                    profile = Profile.objects.filter(user_id=user.id, is_hidden=False).first()
+                    if profile:
+                        profile.password = password
+                        profile.save()
+
                     user = authenticate(username=username, password=password)
                     if user is not None:
                         login(request, user)
