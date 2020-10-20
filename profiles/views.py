@@ -308,7 +308,7 @@ def profile_add(request):
     else:
         form = ProfileForm()
     
-    store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['AMBASSADOR']).values('id', 'nickname') #authority_id=2 ambassador
+    store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['SPECIAL']).values('id', 'nickname')
     profile_list = list(Profile.objects.filter(is_hidden=False).values_list('id', 'nickname', 'authority_id'))
     return render(request, 'profile_form.html', {'form': form, 
                                                 'media_url': s.MEDIA_URL, 
@@ -400,7 +400,7 @@ def profile_edit(request, profile_id):
     profile = Profile.objects.get(pk=profile_id)
     form = ProfileForm(instance=profile)
     
-    store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['AMBASSADOR']).exclude(id=profile_id).values('id', 'nickname') #authority_id=2 ambassador
+    store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['SPECIAL']).exclude(id=profile_id).values('id', 'nickname')
     profile_list = list(Profile.objects.filter(is_hidden=False).exclude(id=profile_id).values_list('id', 'nickname', 'authority_id'))
     prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
     return render(request, 'profile_form.html', {'form': form, 
