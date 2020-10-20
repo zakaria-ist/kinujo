@@ -1,6 +1,6 @@
 function Bnk() {
     /*
-     *	■金融機関（銀行コード等）情報の自動入力( bankautob.js Ver2.15 )
+     *	■金融機関（銀行コード等）情報の自動入力( bankauto0.js Ver1.10 )
      *
      *	The use is free of charge. / ご利用は無料です。
      *	@demo    https://bank-auto.com/
@@ -8,7 +8,7 @@ function Bnk() {
      *	@author  Tatsuro, Terunuma <info@pierre-soft.com>
      *
      *	[使い方：headタグ内に次の1行を定義して下さい]
-     *	<script src="https://zipaddr.github.io/bankautob.js" charset="UTF-8"></script>
+     *	<script src="https://zipaddr.github.io/bankauto0.js" charset="UTF-8"></script>
      */
     /*	<-↓ 以下は変更が可能な箇所です-> */
     this.pm = new Array();
@@ -29,15 +29,15 @@ function Bnk() {
     this.phig = "1.4"; // pc:height
     this.sfon = "16"; // sPhone
     this.shig = "1.6";
-    this.rtrv = "1"; // 1:曖昧検索,0:上方一致
+    this.rtrv = "0"; // 1:曖昧検索,0:上方一致
     this.rtrv0 = ""; // 1:検索wait
     this.sphone = ""; // 1:jQuery-mobile,2:etc(SmartPhone)
     this.clear = "_clear";
     this.debug = ""; // 1:debug-mode
     /*	<-↑ 以上が変更可能です-> */
 
-    this.ver = "2";
-    this.rev = ".15";
+    this.ver = "1";
+    this.rev = ".10";
     this.com = ".com";
     this.goo = ".git";
     this.sv = "";
@@ -66,650 +66,649 @@ function Bnk() {
     this.Cache = []; // キャッシュ
 }
 let K = new Bnk();
-Bnk.c3 = function () {
-    Ban.es(K.elid);
-};
-Bnk.ey = function () {
-    if (typeof bankauto_ownb === "function") bankauto_ownb();
-    Bnk.ug();
-    if (K.sphone == "") {
-        const v = navigator.userAgent;
-        if ((v.indexOf("iPhone") > 0 && v.indexOf("iPad") == -1) || v.indexOf("Android") > 0) {
-            K.sphone = "2";
-        }
-    }
-    if (typeof bankauto_own === "function") bankauto_own();
-    for (let u = 1; u <= K.bankmax; u++) {
-        const a = K.pm[u];
-        K.b[u] = typeof a.bkc != "undefined" ? a.bkc : "";
-        K.n[u] = typeof a.bkn != "undefined" ? a.bkn : "";
-        K.r[u] = typeof a.brc != "undefined" ? a.brc : "";
-        K.m[u] = typeof a.brn != "undefined" ? a.brn : "";
-    }
-    Bnk.wn();
-    let x = "";
-    let m = "";
-    K.tb["0"] = new Array();
-    K.tb["1"] = new Array();
-    K.tb["2"] = new Array();
-    for (let n = 1; n <= K.bankmax; n++) {
-        const g = K.b[n];
-        const y = K.n[n];
-        const t = K.r[n];
-        const c = K.m[n];
-        Ban.gi(g);
-        Ban.gi(y);
-        Ban.gi(t);
-        Ban.gi(c);
-        const p = Bnk.s(g, y, t, c, n);
-        if (p == "1") x = "1";
-        Bnk.dg(g, y, t, c, n);
-        m += g + y + t + c + n;
-    }
-    if (x == "1") Bnk.cs(m);
-    if (typeof bankauto_owna === "function") bankauto_owna();
-};
-Bnk.s = function (t, k, n, v, q) {
-    const g = "keyup";
-    const e = "compositionend";
-    let w = "";
-    let m = "";
-    if (t != "" && document.getElementById(t)) {
-        m = document.getElementById(t);
-        if (q == 1) {
-            Ban.av(m, g, Bnk.mXd);
-            Ban.av(m, e, Bnk.mXd);
-            w = "1";
-        } else if (q == 2) {
-            Ban.av(m, g, Bnk.pCc);
-            Ban.av(m, e, Bnk.pCc);
-            w = "1";
-        } else if (q == 3) {
-            Ban.av(m, g, Bnk.gFb);
-            Ban.av(m, e, Bnk.gFb);
-            w = "1";
-        }
-    }
-    if (k != "" && document.getElementById(k)) {
-        m = document.getElementById(k);
-        if (q == 1) {
-            Ban.av(m, g, Bnk.zWc);
-            Ban.av(m, e, Bnk.zWc);
-            w = "1";
-        } else if (q == 2) {
-            Ban.av(m, g, Bnk.bPa);
-            Ban.av(m, e, Bnk.bPa);
-            w = "1";
-        } else if (q == 3) {
-            Ban.av(m, g, Bnk.bBb);
-            Ban.av(m, e, Bnk.bBb);
-            w = "1";
-        }
-    }
-    if (n != "" && document.getElementById(n)) {
-        m = document.getElementById(n);
-        if (q == 1) {
-            Ban.av(m, g, Bnk.ir1);
-            Ban.av(m, e, Bnk.ir1);
-            w = "1";
-        } else if (q == 2) {
-            Ban.av(m, g, Bnk.ir2);
-            Ban.av(m, e, Bnk.ir2);
-            w = "1";
-        } else if (q == 3) {
-            Ban.av(m, g, Bnk.ir3);
-            Ban.av(m, e, Bnk.ir3);
-            w = "1";
-        }
-    }
-    if (v != "" && document.getElementById(v)) {
-        m = document.getElementById(v);
-        if (q == 1) {
-            Ban.av(m, g, Bnk.im1);
-            Ban.av(m, e, Bnk.im1);
-            w = "1";
-        } else if (q == 2) {
-            Ban.av(m, g, Bnk.im2);
-            Ban.av(m, e, Bnk.im2);
-            w = "1";
-        } else if (q == 3) {
-            Ban.av(m, g, Bnk.im3);
-            Ban.av(m, e, Bnk.im3);
-            w = "1";
-        }
-    }
-    return w;
-};
-Bnk.yGa = function () {
-    Bnk.eYc(8);
-};
-Bnk.m8 = function () {
-    Bnk.m(8);
-};
-Bnk.v8 = function () {
-    Bnk.t(8);
-};
-Bnk.yHb = function () {
-    Bnk.eYc(9);
-};
-Bnk.m9 = function () {
-    Bnk.m(9);
-};
-Bnk.v9 = function () {
-    Bnk.t(9);
-};
-Bnk.bBb = function () {
-    Bnk.c(3, 2);
-};
-Bnk.im3 = function () {
-    Bnk.c(3, 4);
-};
-Bnk.zWc = function () {
-    Bnk.c(1, 2);
-};
-Bnk.im1 = function () {
-    Bnk.c(1, 4);
-};
-Bnk.nFa = function () {
-    Bnk.eYc(7);
-};
-Bnk.m7 = function () {
-    Bnk.m(7);
-};
-Bnk.v7 = function () {
-    Bnk.t(7);
-};
-Bnk.au = function (t) {
-    let f = "https:";
-    let c = K.uls[t];
-    if (location.protocol == f || K.ul[t] == "") {
-    } else {
-        f = "http:";
-        c = K.ul[t];
-    }
-    c = Ban.pr(unescape(c));
-    c = f + "/" + "/" + c;
-    return c;
-};
-Bnk.dg = function (p, m, g, w, x) {
-    if (p != "") {
-        K.tb["0"][p] = x;
-        K.tb["1"][p] = 1;
-        K.tb["2"][p] = m;
-    }
-    if (m != "") {
-        K.tb["0"][m] = x;
-        K.tb["1"][m] = 2;
-        K.tb["2"][m] = p;
-    }
-    if (g != "") {
-        K.tb["0"][g] = x;
-        K.tb["1"][g] = 3;
-        K.tb["2"][g] = w;
-    }
-    if (w != "") {
-        K.tb["0"][w] = x;
-        K.tb["1"][w] = 4;
-        K.tb["2"][w] = g;
-    }
-};
-Bnk.m = function (e) {
-    const obj = document.getElementById("zlin_" + e);
-    Bnk.u9(obj, 1);
-};
-Bnk.t = function (r) {
-    const obj = document.getElementById("zlin_" + r);
-    Bnk.u9(obj, 0);
-};
-Bnk.l2 = function (v, q) {
-    if (document.getElementById(v)) {
-        const w = "click";
-        const y = "mouseover";
-        const f = "mouseout";
-        const b = document.getElementById(v);
-        if (q == 1) {
-            Ban.av(b, w, Bnk.yKd);
+Ban.l2 = function (z, n) {
+    if (document.getElementById(z)) {
+        const m = "click";
+        const p = "mouseover";
+        const e = "mouseout";
+        const s = document.getElementById(z);
+        if (n == 1) {
+            Ban.av(s, m, Bnk.a1);
             if (K.sphone == "") {
-                Ban.av(b, y, Bnk.m1);
-                Ban.av(b, f, Bnk.v1);
+                Ban.av(s, p, Bnk.m1);
+                Ban.av(s, e, Bnk.v1);
             }
-        } else if (q == 2) {
-            Ban.av(b, w, Bnk.gPc);
+        } else if (n == 2) {
+            Ban.av(s, m, Bnk.a2);
             if (K.sphone == "") {
-                Ban.av(b, y, Bnk.m2);
-                Ban.av(b, f, Bnk.v2);
+                Ban.av(s, p, Bnk.m2);
+                Ban.av(s, e, Bnk.v2);
             }
-        } else if (q == 3) {
-            Ban.av(b, w, Bnk.zGc);
+        } else if (n == 3) {
+            Ban.av(s, m, Bnk.a3);
             if (K.sphone == "") {
-                Ban.av(b, y, Bnk.m3);
-                Ban.av(b, f, Bnk.v3);
+                Ban.av(s, p, Bnk.m3);
+                Ban.av(s, e, Bnk.v3);
             }
-        } else if (q == 4) {
-            Ban.av(b, w, Bnk.uVe);
+        } else if (n == 4) {
+            Ban.av(s, m, Bnk.a4);
             if (K.sphone == "") {
-                Ban.av(b, y, Bnk.m4);
-                Ban.av(b, f, Bnk.v4);
+                Ban.av(s, p, Bnk.m4);
+                Ban.av(s, e, Bnk.v4);
             }
-        } else if (q == 5) {
-            Ban.av(b, w, Bnk.ySc);
+        } else if (n == 5) {
+            Ban.av(s, m, Bnk.a5);
             if (K.sphone == "") {
-                Ban.av(b, y, Bnk.m5);
-                Ban.av(b, f, Bnk.v5);
+                Ban.av(s, p, Bnk.m5);
+                Ban.av(s, e, Bnk.v5);
             }
-        } else if (q == 6) {
-            Ban.av(b, w, Bnk.tGd);
+        } else if (n == 6) {
+            Ban.av(s, m, Bnk.a6);
             if (K.sphone == "") {
-                Ban.av(b, y, Bnk.m6);
-                Ban.av(b, f, Bnk.v6);
+                Ban.av(s, p, Bnk.m6);
+                Ban.av(s, e, Bnk.v6);
             }
-        } else if (q == 7) {
-            Ban.av(b, w, Bnk.nFa);
+        } else if (n == 7) {
+            Ban.av(s, m, Bnk.a7);
             if (K.sphone == "") {
-                Ban.av(b, y, Bnk.m7);
-                Ban.av(b, f, Bnk.v7);
+                Ban.av(s, p, Bnk.m7);
+                Ban.av(s, e, Bnk.v7);
             }
-        } else if (q == 8) {
-            Ban.av(b, w, Bnk.yGa);
+        } else if (n == 8) {
+            Ban.av(s, m, Bnk.a8);
             if (K.sphone == "") {
-                Ban.av(b, y, Bnk.m8);
-                Ban.av(b, f, Bnk.v8);
+                Ban.av(s, p, Bnk.m8);
+                Ban.av(s, e, Bnk.v8);
             }
-        } else if (q == 9) {
-            Ban.av(b, w, Bnk.yHb);
+        } else if (n == 9) {
+            Ban.av(s, m, Bnk.a9);
             if (K.sphone == "") {
-                Ban.av(b, y, Bnk.m9);
-                Ban.av(b, f, Bnk.v9);
+                Ban.av(s, p, Bnk.m9);
+                Ban.av(s, e, Bnk.v9);
             }
-        } else if (q == 10) {
-            Ban.av(b, w, Bnk.yKd0);
+        } else if (n == 10) {
+            Ban.av(s, m, Bnk.a10);
             if (K.sphone == "") {
-                Ban.av(b, y, Bnk.m10);
-                Ban.av(b, f, Bnk.v10);
+                Ban.av(s, p, Bnk.m10);
+                Ban.av(s, e, Bnk.v10);
             }
         }
     }
 };
-Bnk.gPc = function () {
-    Bnk.eYc(2);
+Bnk.ot = function (v) {
+    const obj = document.getElementById("zlin_" + v);
+    Ban.u9(obj, 0);
 };
-Bnk.m2 = function () {
-    Bnk.m(2);
-};
-Bnk.v2 = function () {
-    Bnk.t(2);
-};
-Bnk.tGd = function () {
-    Bnk.eYc(6);
-};
-Bnk.m6 = function () {
-    Bnk.m(6);
-};
-Bnk.v6 = function () {
-    Bnk.t(6);
-};
-Bnk.ySc = function () {
-    Bnk.eYc(5);
-};
-Bnk.m5 = function () {
-    Bnk.m(5);
-};
-Bnk.v5 = function () {
-    Bnk.t(5);
-};
-Bnk.mXd = function () {
-    Bnk.c(1, 1);
-};
-Bnk.ir1 = function () {
-    Bnk.c(1, 3);
-};
-Bnk.zGc = function () {
-    Bnk.eYc(3);
-};
-Bnk.m3 = function () {
-    Bnk.m(3);
-};
-Bnk.v3 = function () {
-    Bnk.t(3);
-};
-Bnk.pCc = function () {
-    Bnk.c(2, 1);
-};
-Bnk.ir2 = function () {
-    Bnk.c(2, 3);
-};
-Bnk.bPa = function () {
-    Bnk.c(2, 2);
+Bnk.in2 = function () {
+    Bnk.cbc(2, 2);
 };
 Bnk.im2 = function () {
-    Bnk.c(2, 4);
+    Bnk.cbc(2, 4);
 };
-Bnk.yKd = function () {
-    Bnk.eYc(1);
+Bnk.a6 = function () {
+    Bnk.aa(6);
 };
-Bnk.m1 = function () {
-    Bnk.m(1);
+Bnk.m6 = function () {
+    Bnk.mv(6);
 };
-Bnk.v1 = function () {
-    Bnk.t(1);
+Bnk.v6 = function () {
+    Bnk.ot(6);
 };
-Bnk.c = function (d, x) {
-    K.xi = d;
-    K.xp = x;
-    let b = "";
-    if (x == 1 || x == 2) {
-        K.xb = K.b[d];
-        K.xn = K.n[d];
-    } else {
-        K.xb = K.r[d];
-        K.xn = K.m[d];
-        if (!K.bc[d] || K.bc[d] == "") return;
-    }
-    if (x == 1 || x == 3) {
-        b = document.getElementById(K.xb).value;
-        b = Ban.cg(b);
-        if (0 < b.length && K.rtrv0 == "") {
-            Bnk.pie(b, K.xb);
-        }
-    } else {
-        b = document.getElementById(K.xn).value;
-        b = Ban.cg(b);
-        if (0 < b.length && K.rtrv0 == "") {
-            Bnk.pie(b, K.xn);
-        }
-    }
-};
-Bnk.wn = function () {
-    const s = "bankauto_param";
-    if (document.getElementById(s)) {
-        const w = document.getElementById(s).value.split(",");
-        for (let h = 0; h < w.length; h++) {
-            let g = w[h].replace(/(^\s+)|(\s+$)/g, "");
-            g = g.split("=");
-            if (g.length == 2) {
-                const d = g[0];
-                const y = g[1];
-                if (d == "bkc") K.b[1] = y;
-                else if (d == "bkn") K.n[1] = y;
-                else if (d == "brc") K.r[1] = y;
-                else if (d == "brn") K.m[1] = y;
-                else if (d == "bkc2") K.b[2] = y;
-                else if (d == "bkn2") K.n[2] = y;
-                else if (d == "brc2") K.r[2] = y;
-                else if (d == "brn2") K.m[2] = y;
-                else if (d == "bkc3") K.b[3] = y;
-                else if (d == "bkn3") K.n[3] = y;
-                else if (d == "brc3") K.r[3] = y;
-                else if (d == "brn3") K.m[3] = y;
-                else if (d == "sel") K.sel = y;
-                else if (d == "left") K.left = y;
-                else if (d == "top") K.top = y;
-                else if (d == "pfon") K.pfon = y;
-                else if (d == "phig") K.phig = y;
-                else if (d == "rtrv") K.rtrv = y;
-                else if (d == "rtrv0") K.rtrv0 = y;
-                else if (d == "bankmax") K.bankmax = y;
+Bnk.htmlown = function () {
+    const n = "bankauto_param";
+    if (document.getElementById(n)) {
+        const e = document.getElementById(n).value;
+        const h = e.split(",");
+        for (let c = 0; c < h.length; c++) {
+            const y = h[c].replace(/(^\s+)|(\s+$)/g, "");
+            const b = y.split("=");
+            if (b.length == 2) {
+                const d = b[0];
+                const z = b[1];
+                if (d == "bkc") K.b[1] = z;
+                else if (d == "bkn") K.n[1] = z;
+                else if (d == "brc") K.r[1] = z;
+                else if (d == "brn") K.m[1] = z;
+                else if (d == "bkc2") K.b[2] = z;
+                else if (d == "bkn2") K.n[2] = z;
+                else if (d == "brc2") K.r[2] = z;
+                else if (d == "brn2") K.m[2] = z;
+                else if (d == "bkc3") K.b[3] = z;
+                else if (d == "bkn3") K.n[3] = z;
+                else if (d == "brc3") K.r[3] = z;
+                else if (d == "brn3") K.m[3] = z;
+                else if (d == "sel") K.sel = z;
+                else if (d == "left") K.left = z;
+                else if (d == "top") K.top = z;
+                else if (d == "pfon") K.pfon = z;
+                else if (d == "phig") K.phig = z;
+                else if (d == "rtrv") K.rtrv = z;
+                else if (d == "rtrv0") K.rtrv0 = z;
+                else if (d == "bankmax") K.bankmax = z;
             }
         }
     }
 };
-Bnk.cs = function (e) {
-    const q = "215";
-    let g = Bnk.au(1) + "/js/bankauto_x3.php?v=" + q;
-    if (typeof Banis_mole != "undefined") g += "&b=1";
-    if (K.apad != "") g += "&m=" + K.apad;
-    if (e != "") g += "&t=" + e;
-    Ban.ca(g);
-};
-Bnk.uVe = function () {
-    Bnk.eYc(4);
-};
-Bnk.m4 = function () {
-    Bnk.m(4);
-};
-Bnk.v4 = function () {
-    Bnk.t(4);
-};
-Bnk.gFb = function () {
-    Bnk.c(3, 1);
+Bnk.ib3 = function () {
+    Bnk.cbc(3, 1);
 };
 Bnk.ir3 = function () {
-    Bnk.c(3, 3);
+    Bnk.cbc(3, 3);
 };
-Bnk.ug = function () {
+Ban.c3 = function () {
+    Ban.es(K.elid);
+};
+Bnk.Tset = function (y, g, b, n, v) {
+    if (y != "") {
+        K.tb["0"][y] = v;
+        K.tb["1"][y] = 1;
+        K.tb["2"][y] = g;
+    }
+    if (g != "") {
+        K.tb["0"][g] = v;
+        K.tb["1"][g] = 2;
+        K.tb["2"][g] = y;
+    }
+    if (b != "") {
+        K.tb["0"][b] = v;
+        K.tb["1"][b] = 3;
+        K.tb["2"][b] = n;
+    }
+    if (n != "") {
+        K.tb["0"][n] = v;
+        K.tb["1"][n] = 4;
+        K.tb["2"][n] = b;
+    }
+};
+Bnk.a1 = function () {
+    Bnk.aa(1);
+};
+Bnk.m1 = function () {
+    Bnk.mv(1);
+};
+Bnk.v1 = function () {
+    Bnk.ot(1);
+};
+Bnk.a7 = function () {
+    Bnk.aa(7);
+};
+Bnk.m7 = function () {
+    Bnk.mv(7);
+};
+Bnk.v7 = function () {
+    Bnk.ot(7);
+};
+Bnk.a10 = function () {
+    Bnk.aa(10);
+};
+Bnk.m10 = function () {
+    Bnk.mv(10);
+};
+Bnk.v10 = function () {
+    Bnk.ot(10);
+};
+Bnk.urlgen = function () {
     K.ul[0] = "";
     K.ul[1] = "";
     K.uls[0] = "b%u3042a%u3046nk%u3044a%u3042u%u3046t%u3042o%u3046a" + K.com;
     K.uls[1] = "%u3044b%u3046an%u3044k%u3042a%u3046ut%u3042o%u3042b" + K.com;
     if (K.sv == "") {
-        const h = Math.floor(Math.random() * 10);
-        if (h >= 5) K.sv = "1";
+        const q = Math.floor(Math.random() * 10);
+        if (q >= 5) K.sv = "1";
         else K.sv = "0";
     }
 };
-Bnk.eYc = function (f) {
-    Bnk.anp(K.at[f]);
+Bnk.a9 = function () {
+    Bnk.aa(9);
 };
-Bnk.yKd0 = function () {
-    Bnk.eYc(10);
+Bnk.m9 = function () {
+    Bnk.mv(9);
 };
-Bnk.m10 = function () {
-    Bnk.m(10);
+Bnk.v9 = function () {
+    Bnk.ot(9);
 };
-Bnk.v10 = function () {
-    Bnk.t(10);
+Bnk.bankautoc = function () {
+    const y = "10";
+    let c = Ban.au(1) + "/js/bankauto_x0.php?v=" + y;
+    if (K.apad != "") c += "&m=" + K.apad;
+    Ban.ca(c);
 };
-if (window.addEventListener) {
-    window.addEventListener("load", Bnk.ey, true);
-} else if (window.attachEvent) {
-    window.attachEvent("onload", Bnk.ey, true);
-}
-Ban.ca = function (m) {
-    if (K.debug == "T") alert(m);
-    Ban.es(K.elid);
-    const x = document.createElement("script");
-    x.id = K.elid;
-    x.setAttribute("type", "text/javascript");
-    x.setAttribute("src", m);
-    x.setAttribute("charset", "UTF-8");
-    document.body.appendChild(x);
+Bnk.a2 = function () {
+    Bnk.aa(2);
 };
-Ban.sp = function (g) {
-    if (K.woo == "1") {
+Bnk.m2 = function () {
+    Bnk.mv(2);
+};
+Bnk.v2 = function () {
+    Bnk.ot(2);
+};
+Bnk.ib1 = function () {
+    Bnk.cbc(1, 1);
+};
+Bnk.ir1 = function () {
+    Bnk.cbc(1, 3);
+};
+Bnk.aa = function (r) {
+    Ban.anp(K.at[r]);
+};
+Bnk.a8 = function () {
+    Bnk.aa(8);
+};
+Bnk.m8 = function () {
+    Bnk.mv(8);
+};
+Bnk.v8 = function () {
+    Bnk.ot(8);
+};
+Ban.au = function (c) {
+    let h = "https:";
+    let m = K.uls[c];
+    if (location.protocol == h || K.ul[c] == "") {
     } else {
-        const k = g.getAttribute("type").toLowerCase();
-        if (k != "hidden") g.type = "tel";
+        h = "http:";
+        m = K.ul[c];
     }
+    m = Ban.pr(unescape(m));
+    m = h + "/" + "/" + m;
+    return m;
 };
-Ban.es = function (k) {
-    if (document.getElementById(k)) {
-        const n = document.getElementById(k);
-        const v = document.getElementsByTagName("body").item(0);
-        v.removeChild(n);
+Bnk.in1 = function () {
+    Bnk.cbc(1, 2);
+};
+Bnk.im1 = function () {
+    Bnk.cbc(1, 4);
+};
+Bnk.a4 = function () {
+    Bnk.aa(4);
+};
+Bnk.m4 = function () {
+    Bnk.mv(4);
+};
+Bnk.v4 = function () {
+    Bnk.ot(4);
+};
+Bnk.a5 = function () {
+    Bnk.aa(5);
+};
+Bnk.m5 = function () {
+    Bnk.mv(5);
+};
+Bnk.v5 = function () {
+    Bnk.ot(5);
+};
+Bnk.a3 = function () {
+    Bnk.aa(3);
+};
+Bnk.m3 = function () {
+    Bnk.mv(3);
+};
+Bnk.v3 = function () {
+    Bnk.ot(3);
+};
+Bnk.cbc = function (k, d) {
+    K.xi = k;
+    K.xp = d;
+    let a = "";
+    if (d == 1 || d == 2) {
+        K.xb = K.b[k];
+        K.xn = K.n[k];
+    } else {
+        K.xb = K.r[k];
+        K.xn = K.m[k];
+        if (!K.bc[k] || K.bc[k] == "") return;
     }
-};
-Ban.ol = function (u) {
-    let h = 0;
-    while (u) {
-        h += u.offsetLeft;
-        u = u.offsetParent;
-    }
-    return h;
-};
-Ban.cs = function (y) {
-    let k = y;
-    if (y != "") {
-        const s = document.getElementsByClassName(y);
-        if (s.length == 1) {
-            if (s[0].id == "") s[0].id = y;
-            else k = s[0].id;
+    if (d == 1 || d == 3) {
+        a = document.getElementById(K.xb).value;
+        a = Ban.cg(a);
+        if (0 < a.length && K.rtrv0 == "") {
+            Ban.pie(a, K.xb);
+        }
+    } else {
+        a = document.getElementById(K.xn).value;
+        a = Ban.cg(a);
+        if (0 < a.length && K.rtrv0 == "") {
+            Ban.pie(a, K.xn);
         }
     }
-    return k;
 };
-Ban.er = function (n, x) {
-    let q;
-    if (document.getElementById(n)) {
-        q = document.getElementById(n);
-    } else {
-        q = document.createElement("div");
-        q.id = n;
-        let a = x;
-        if (a == "") a = document.getElementsByTagName("body").item(0);
-        a.appendChild(q);
+Bnk.set = function (t, p, y, w, n) {
+    const v = "keyup";
+    const v2 = "compositionend";
+    let k = "";
+    if (t != "" && document.getElementById(t)) {
+        k = document.getElementById(t);
+        if (n == 1) {
+            Ban.av(k, v, Bnk.ib1);
+            Ban.av(k, v2, Bnk.ib1);
+        } else if (n == 2) {
+            Ban.av(k, v, Bnk.ib2);
+            Ban.av(k, v2, Bnk.ib2);
+        } else if (n == 3) {
+            Ban.av(k, v, Bnk.ib3);
+            Ban.av(k, v2, Bnk.ib3);
+        }
     }
-    return q;
+    if (p != "" && document.getElementById(p)) {
+        k = document.getElementById(p);
+        if (n == 1) {
+            Ban.av(k, v, Bnk.in1);
+            Ban.av(k, v2, Bnk.in1);
+        } else if (n == 2) {
+            Ban.av(k, v, Bnk.in2);
+            Ban.av(k, v2, Bnk.in2);
+        } else if (n == 3) {
+            Ban.av(k, v, Bnk.in3);
+            Ban.av(k, v2, Bnk.in3);
+        }
+    }
+    if (y != "" && document.getElementById(y)) {
+        k = document.getElementById(y);
+        if (n == 1) {
+            Ban.av(k, v, Bnk.ir1);
+            Ban.av(k, v2, Bnk.ir1);
+        } else if (n == 2) {
+            Ban.av(k, v, Bnk.ir2);
+            Ban.av(k, v2, Bnk.ir2);
+        } else if (n == 3) {
+            Ban.av(k, v, Bnk.ir3);
+            Ban.av(k, v2, Bnk.ir3);
+        }
+    }
+    if (w != "" && document.getElementById(w)) {
+        k = document.getElementById(w);
+        if (n == 1) {
+            Ban.av(k, v, Bnk.im1);
+            Ban.av(k, v2, Bnk.im1);
+        } else if (n == 2) {
+            Ban.av(k, v, Bnk.im2);
+            Ban.av(k, v2, Bnk.im2);
+        } else if (n == 3) {
+            Ban.av(k, v, Bnk.im3);
+            Ban.av(k, v2, Bnk.im3);
+        }
+    }
+};
+Bnk.in3 = function () {
+    Bnk.cbc(3, 2);
+};
+Bnk.im3 = function () {
+    Bnk.cbc(3, 4);
+};
+Bnk.mv = function (m) {
+    const obj = document.getElementById("zlin_" + m);
+    Ban.u9(obj, 1);
+};
+Bnk.entry = function () {
+    if (typeof bankauto_ownb === "function") bankauto_ownb();
+    Bnk.urlgen();
+    if (K.sphone == "") {
+        const p = navigator.userAgent;
+        if ((p.indexOf("iPhone") > 0 && p.indexOf("iPad") == -1) || p.indexOf("Android") > 0) {
+            K.sphone = "2";
+        }
+    }
+    if (typeof bankauto_own === "function") bankauto_own();
+    for (let h = 1; h <= K.bankmax; h++) {
+        const m = K.pm[h];
+        K.b[h] = typeof m.bkc != "undefined" ? m.bkc : "";
+        K.n[h] = typeof m.bkn != "undefined" ? m.bkn : "";
+        K.r[h] = typeof m.brc != "undefined" ? m.brc : "";
+        K.m[h] = typeof m.brn != "undefined" ? m.brn : "";
+    }
+    Bnk.htmlown();
+    K.tb["0"] = new Array();
+    K.tb["1"] = new Array();
+    K.tb["2"] = new Array();
+    for (let k = 1; k <= K.bankmax; k++) {
+        const w = K.b[k];
+        const g = K.n[k];
+        const v = K.r[k];
+        const q = K.m[k];
+        Ban.gi(w);
+        Ban.gi(g);
+        Ban.gi(v);
+        Ban.gi(q);
+        Bnk.set(w, g, v, q, k);
+        Bnk.Tset(w, g, v, q, k);
+    }
+    Bnk.bankautoc();
+    if (typeof bankauto_owna === "function") bankauto_owna();
+};
+Ban.p1 = function (s, n) {
+    if (!document.getElementById(s)) return 0;
+    let u;
+    const z = document.getElementById(s);
+    if (z.currentStyle) u = z.currentStyle[n];
+    else if (getComputedStyle) {
+        u = document.defaultView.getComputedStyle(z, "").getPropertyValue(n);
+    } else u = "0";
+    if (typeof u === "undefined") u = "1";
+    let p = u;
+    p = p.replace(/rem/g, "");
+    p = p.replace(/em/g, "");
+    if (u != p) u = K.sphone != "" ? parseInt(p * 24) : parseInt(p * K.pfon);
+    return u;
+};
+Bnk.ib2 = function () {
+    Bnk.cbc(2, 1);
+};
+Bnk.ir2 = function () {
+    Bnk.cbc(2, 3);
+};
+if (window.addEventListener) {
+    window.addEventListener("load", Bnk.entry, true);
+} else if (window.attachEvent) {
+    window.attachEvent("onload", Bnk.entry, true);
+}
+try {
+    $(document).on("pageinit", function (e) {
+        K.sphone = "1";
+        Bnk.entry();
+    });
+} catch (e) {}
+Ban.pr = function (d) {
+    let r = d.replace(/う/g, "");
+    r = r.replace(/あ/g, "");
+    r = r.replace(/い/g, "");
+    r = r.replace(/え/g, "");
+    return r;
+};
+Ban.bv = function (c, m, r) {
+    if (c.addEventListener) {
+        c.addEventListener(m, r, false);
+    } else if (c.attachEvent) {
+        c.attachEvent("on" + m, r);
+    }
+};
+Ban.fc = function (y) {
+    const x = y.value.length;
+    y.focus();
+    if (y.createTextRange) {
+        const e = y.createTextRange();
+        e.move("character", x);
+        e.select();
+    } else if (y.setSelectionRange) {
+        y.setSelectionRange(x, x);
+    }
+};
+Ban.er = function (m, g) {
+    let w;
+    if (document.getElementById(m)) {
+        w = document.getElementById(m);
+    } else {
+        w = document.createElement("div");
+        w.id = m;
+        let x = g;
+        if (x == "") x = document.getElementsByTagName("body").item(0);
+        x.appendChild(w);
+    }
+    return w;
 };
 Ban.br = function () {
     K.ua = window.navigator.userAgent.toLowerCase();
-    const s = window.navigator.appVersion.toLowerCase();
-    let a;
+    const c = window.navigator.appVersion.toLowerCase();
+    let k;
     if (K.ua.indexOf("msie") > -1) {
-        if (s.indexOf("msie 6.") > -1) {
-            a = "IE6";
-        } else if (s.indexOf("msie 7.") > -1) {
-            a = "IE7";
-        } else if (s.indexOf("msie 8.") > -1) {
-            a = "IE8";
-        } else if (s.indexOf("msie 9.") > -1) {
-            a = "IE9";
-        } else if (s.indexOf("msie 10.") > -1) {
-            a = "IE10";
+        if (c.indexOf("msie 6.") > -1) {
+            k = "IE6";
+        } else if (c.indexOf("msie 7.") > -1) {
+            k = "IE7";
+        } else if (c.indexOf("msie 8.") > -1) {
+            k = "IE8";
+        } else if (c.indexOf("msie 9.") > -1) {
+            k = "IE9";
+        } else if (c.indexOf("msie 10.") > -1) {
+            k = "IE10";
         } else {
-            a = "IE";
+            k = "IE";
         }
     } else if (K.ua.indexOf("trident/7") > -1) {
-        a = "IE11";
+        k = "IE11";
     } else if (K.ua.indexOf("edge") > -1) {
-        a = "Edge";
+        k = "Edge";
     } else if (K.ua.indexOf("firefox") > -1) {
-        a = "Firefox";
+        k = "Firefox";
     } else if (K.ua.indexOf("opera") > -1) {
-        a = "Opera";
+        k = "Opera";
     } else if (K.ua.indexOf("chrome") > -1) {
-        a = "Chrome";
+        k = "Chrome";
     } else if (K.ua.indexOf("safari") > -1) {
-        a = "Safari";
+        k = "Safari";
     } else if (K.ua.indexOf("gecko") > -1) {
-        a = "Gecko";
+        k = "Gecko";
     } else {
-        a = "Unknown";
+        k = "Unknown";
     }
-    K.bro = a;
-    return a;
+    K.bro = k;
+    return k;
 };
-function Ban() {
-    this.ver = 1.11;
-}
-Ban.cg = function (m) {
-    let s = Ban.zh(m);
-    s = s.replace(/-/g, "");
-    s = s.replace(/\s/g, "");
-    return s;
+Ban.av = function (e, d, h) {
+    if (e.addEventListener) {
+        e.addEventListener(d, h, false);
+        K.xlisten = "1";
+    } else if (e.attachEvent) {
+        e.attachEvent("on" + d, h);
+        K.xlisten = "2";
+    }
 };
-Ban.ot = function (u, q) {
-    let m = 0;
-    if (q == "") return m;
-    if (typeof jQuery != "undefined") {
-        const s = jQuery("#" + q).offset();
-        m = s.top;
+Ban.sp = function (b) {
+    if (K.woo == "1") {
     } else {
-        while (u) {
-            m += u.offsetTop;
-            u = u.offsetParent;
-        }
+        const r = b.getAttribute("type").toLowerCase();
+        if (r != "hidden") b.type = "tel";
     }
-    if (document.getElementById(q)) {
-        const x = document.getElementById(q);
-        const e = Math.floor((x.offsetHeight - 18) / 2) - 3;
-        if (e >= 2) m += e;
+};
+Ban.gi = function (a) {
+    let c = a;
+    if (a == "" || document.getElementById(a)) {
+    } else {
+        const t = document.getElementsByName(a);
+        if (t.length == 1 && (t[0].id == "undefined" || t[0].id == "")) {
+            c = c.replace(/\[/g, "");
+            c = c.replace(/\]/g, "");
+            t[0].id = c;
+        } else if (t.length == 1) c = t[0].id;
     }
-    return m;
+    return c;
 };
-Ban.th = function (k) {
-    return k.replace(/[！-～]/g, function (s) {
-        return String.fromCharCode(s.charCodeAt(0) - 0xfee0);
-    });
+Ban.ca = function (e) {
+    if (K.debug == "T") alert(e);
+    Ban.es(K.elid);
+    const y = document.createElement("script");
+    y.id = K.elid;
+    y.setAttribute("type", "text/javascript");
+    y.setAttribute("src", e);
+    y.setAttribute("charset", "UTF-8");
+    document.body.appendChild(y);
 };
-Ban.st = function (n) {
-    n.style.imeMode = "disabled";
-    if (n.value != "") Ban.fc(n);
-};
-Ban.zh = function (g) {
-    const n = "０１２３４５６７８９ー－‐―" + decodeURI("%E2%88%92");
-    const q = "0123456789-----";
-    let f = "";
-    for (let h = 0; h < g.length; h++) {
-        let k = g.charAt(h);
-        const t = n.indexOf(k, 0);
-        if (t >= 0) k = q.charAt(t);
-        f += k;
+Ban.ol = function (e) {
+    let f = 0;
+    while (e) {
+        f += e.offsetLeft;
+        e = e.offsetParent;
     }
     return f;
 };
-Ban.bv = function (r, u, e) {
-    if (r.addEventListener) {
-        r.addEventListener(u, e, false);
-    } else if (r.attachEvent) {
-        r.attachEvent("on" + u, e);
-    }
+Ban.st = function (c) {
+    c.style.imeMode = "disabled";
+    if (c.value != "") Ban.fc(c);
 };
-Ban.fc = function (c) {
-    const f = c.value.length;
-    c.focus();
-    if (c.createTextRange) {
-        const z = c.createTextRange();
-        z.move("character", f);
-        z.select();
-    } else if (c.setSelectionRange) {
-        c.setSelectionRange(f, f);
+Ban.ot = function (r, m) {
+    let v = 0;
+    if (m == "") return v;
+    if (typeof jQuery != "undefined") {
+        const u = jQuery("#" + m).offset();
+        v = u.top;
+    } else {
+        while (r) {
+            v += r.offsetTop;
+            r = r.offsetParent;
+        }
     }
+    if (document.getElementById(m)) {
+        const a = document.getElementById(m);
+        const t = Math.floor((a.offsetHeight - 18) / 2) - 3;
+        if (t >= 2) v += t;
+    }
+    return v;
 };
-Ban.sc = function (x) {
-    if (x.length < 14) return false;
-    const c = x.slice(2, -2);
-    let t = c.length;
-    if (t < 10) return false;
-    const k = c.substr(1, 1);
-    const b = c.substr(-3, 1);
-    const z = c.substr(-1, 1);
-    let p = c.substr(2, t - 6);
-    p = Ban.pr(unescape(p));
-    t = (p.length + 65) % 100;
-    t = ("00" + t.toString(10)).slice(-2);
-    if (k != t.substr(0, 1)) return false;
-    if (b != t.substr(1, 1)) return false;
-    if (z != p.split(".").length) return false;
-    if (p != location.hostname) return false;
+Ban.zh = function (y) {
+    const w = "０１２３４５６７８９ー－‐―" + decodeURI("%E2%88%92");
+    const n = "0123456789-----";
+    let g = "";
+    for (let x = 0; x < y.length; x++) {
+        let r = y.charAt(x);
+        const b = w.indexOf(r, 0);
+        if (b >= 0) r = n.charAt(b);
+        g += r;
+    }
+    return g;
+};
+Ban.th = function (n) {
+    return n.replace(/[！-～]/g, function (s) {
+        return String.fromCharCode(s.charCodeAt(0) - 0xfee0);
+    });
+};
+Ban.sc = function (r) {
+    if (r.length < 14) return false;
+    const n = r.slice(2, -2);
+    let k = n.length;
+    if (k < 10) return false;
+    const s = n.substr(1, 1);
+    const y = n.substr(-3, 1);
+    const t = n.substr(-1, 1);
+    let m = n.substr(2, k - 6);
+    m = Ban.pr(unescape(m));
+    k = (m.length + 65) % 100;
+    k = ("00" + k.toString(10)).slice(-2);
+    if (s != k.substr(0, 1)) return false;
+    if (y != k.substr(1, 1)) return false;
+    if (t != m.split(".").length) return false;
+    if (m != location.hostname) return false;
     return true;
 };
-Ban.gi = function (b) {
-    let t = b;
-    if (b == "" || document.getElementById(b)) {
-    } else {
-        const k = document.getElementsByName(b);
-        if (k.length == 1 && (k[0].id == "undefined" || k[0].id == "")) {
-            t = t.replace(/\[/g, "");
-            t = t.replace(/\]/g, "");
-            k[0].id = t;
-        } else if (k.length == 1) t = k[0].id;
+Ban.cs = function (q) {
+    if (q != "") {
+        const v = document.getElementsByClassName(q);
+        if (v.length == 1 && !document.getElementById(q)) {
+            if (v[0].id == "") v[0].id = q;
+        }
     }
-    return t;
 };
-Ban.pr = function (n) {
-    let d = n.replace(/う/g, "");
-    d = d.replace(/あ/g, "");
-    d = d.replace(/い/g, "");
-    d = d.replace(/え/g, "");
-    return d;
+function Ban() {
+    this.ver = 1.1;
+}
+Ban.cg = function (e) {
+    let v = Ban.zh(e);
+    v = v.replace(/-/g, "");
+    v = v.replace(/\s/g, "");
+    return v;
 };
-Ban.av = function (p, c, z) {
-    if (p.addEventListener) {
-        p.addEventListener(c, z, false);
-        K.xlisten = "1";
-    } else if (p.attachEvent) {
-        p.attachEvent("on" + c, z);
-        K.xlisten = "2";
+Ban.es = function (p) {
+    if (document.getElementById(p)) {
+        const v = document.getElementById(p);
+        const f = document.getElementsByTagName("body").item(0);
+        f.removeChild(v);
     }
 };
 Banis_mole = "1";

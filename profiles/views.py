@@ -179,6 +179,64 @@ def ProfileList__asJson(request):
     json_content = json.dumps(content, ensure_ascii=False)
     return HttpResponse(json_content, content_type='application/json')
 
+
+# @login_required
+def ClientList__asJson(request):
+    """
+    Method to get client list as JSON.
+    """
+
+    draw = request.GET['draw']
+    start = request.GET['start']
+    length = request.GET['length']
+    search = request.GET['search[value]']
+
+    profile_id = int(request.GET.get('profile_id'))
+    auth_type = eval(request.GET.get('filter_str'))
+
+    profile_list = Profile.objects.filter(introducer_id=profile_id, is_hidden=False).order_by('authority_id')
+
+    if(len(auth_type)):
+        profile_list = profile_list.filter(authority_id__in=auth_type)
+        
+    records_total = profile_list.count()
+
+    if search:  # Filter data base on search
+        profile_list = profile_list.filter(Q(nickname__icontains=search) | Q(created__icontains=search)).order_by('-nickname')
+
+    # All data
+    records_filtered = profile_list.count()
+    # Order by list_limit base on order_dir and order_column
+    order_column = request.GET['order[0][column]']
+    column_name = ""
+    if order_column == "2":
+        column_name = "nickname"
+    if order_column == "3":
+        column_name = "created"
+    
+    order_dir = request.GET['order[0][dir]']
+    list = []
+    if order_dir == "asc":
+        list = profile_list.order_by(column_name)[int(start):(int(start) + int(length))]
+    elif order_dir == "desc":
+        list = profile_list.order_by('-' + column_name)[int(start):(int(start) + int(length))]
+
+    array = []
+    i = 0
+    for field in list:
+        i = i + 1
+        data = {"no": str(i),
+                "id": str(field.id),
+                "type": field.authority.name,
+                "nickname": field.nickname,
+                "created": field.created.strftime("%Y-%m-%d")
+                }
+        array.append(data)
+
+    content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
+    json_content = json.dumps(content, ensure_ascii=False)
+    return HttpResponse(json_content, content_type='application/json')
+
 # @login_required
 # def upload_profile_image(request):
 #     if request.method == 'POST':
