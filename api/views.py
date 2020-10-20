@@ -17,6 +17,7 @@ from .serializers import UserSerializer, GroupSerializer,  OrderSerializer, Orde
 from rest_framework.test import APIRequestFactory
 import requests 
 import json
+from django.conf import settings
 
 def getContext():
     factory = APIRequestFactory()
@@ -315,4 +316,6 @@ def change_language(request):
     activate(language)
     request.session[translation.LANGUAGE_SESSION_KEY] = language
     # request.LANGUAGE_CODE = translation.get_language()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    response = HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
+    return response
