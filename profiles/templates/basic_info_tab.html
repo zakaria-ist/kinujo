@@ -127,13 +127,13 @@
                         <label for="introducer" class="col-lg-2 col-sm-2 control-label">{% trans 'Introducer' %}</label>
                         <div class="col-lg-4">
                             <select name="introducer" id="introducer" class="form-control trs-field sended">
-                                {% for pr in profile_list %}
+                                {% comment %} {% for pr in profile_list %}
                                     {% if profile.introducer_id == pr.id %}
                                         <option value="{{pr.id}}" selected>{{pr.nickname}}</option>
                                     {% else %}
                                         <option value="{{pr.id}}">{{pr.nickname}}</option>
                                     {% endif %}
-                                {% endfor %}
+                                {% endfor %} {% endcomment %}
                             </select>
                         </div>
                     </div>

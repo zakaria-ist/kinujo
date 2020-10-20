@@ -17,6 +17,7 @@ from .serializers import UserSerializer, GroupSerializer,  OrderSerializer, Orde
 from rest_framework.test import APIRequestFactory
 import requests 
 import json
+from django.conf import settings
 
 def getContext():
     factory = APIRequestFactory()
@@ -198,10 +199,10 @@ class UserRegister(APIView):
         if userSerializer.is_valid():
             user = userSerializer.save()
 
-            authority = Authority.objects.get(id=1)
+            authority = Authority.objects.get(id=5)
             is_seller = 0
             if request.data['authority'] == 'store':
-                authority = Authority.objects.get(id=2)
+                authority = Authority.objects.get(id=4)
                 is_seller = 1
                 
             authoritySerializer = AuthoritySerializer(authority, context=getContext())
@@ -283,7 +284,27 @@ class PasswordReset(APIView):
 class AppConfig(APIView):
     def post(self, request, format='json'):
         return Response({"success" : True}, status=status.HTTP_200_OK)
-        
+
+class ProductList(APIView):
+    serializer_class = ProductSerializer
+
+    def get(self, request, userId, format='json'):
+
+        profile = Profile.objects.get(id=5)
+        profileSerializer = ProfileSerializer(profile, context=getContext())
+        products = Product.objects.filter(user=userId);
+        productSerializer = ProductSerializer(products, many=True, context=getContext())
+        return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
+
+class CustomerList(APIView):
+    serializer_class = ProductSerializer
+
+    def get(self, request, userId, format='json'):
+        orders = Order.objects.filter(seller=userId).values_list('id', flat=True)
+        profiles = Profile.objects.filter(id__in=orders)
+        profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
+        return Response({"success" : True, "orders" : profileSerializer.data}, status=status.HTTP_200_OK)
+
 @csrf_exempt
 def change_language(request):
     """
@@ -294,4 +315,7 @@ def change_language(request):
     deactivate_all()
     activate(language)
     request.session[translation.LANGUAGE_SESSION_KEY] = language
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    # request.LANGUAGE_CODE = translation.get_language()
+    response = HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
+    return response

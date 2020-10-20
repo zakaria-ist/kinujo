@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^delete_shipping_info/$', views.delete_shipping_info, name='delete_shipping_info'),
     url(r'^shipping_list_json/$', views.ShippingList__asJson, name='ShippingList__asJson'),
     url(r'^validate_user_phone/(?P<profile_id>.*)/$', views.validate_user_phone, name='validate_user_phone'),
+    url(r'^check_for_duplicate/(?P<type>.*)/(?P<value>.*)/$', views.check_for_duplicate, name='check_for_duplicate'),
     # url(r'^upload_profile_image/$', views.upload_profile_image, name='upload_profile_image'),
 
     # for sales section

@@ -70,6 +70,9 @@ VALUES
 	('沖縄県', 0, 1, now(), now());
 
 
+INSERT INTO `profiles_profile` (`is_seller`, `shop_name`, `tel`, `password`, `nickname`, `user_code`, `email`, `is_approved`, `real_name`, `gender`, `birthday`, `zipcode`, `city`, `address1`, `address2`, `corporate_name`, `message_notification`, `other_notification`, `allowed_by_id`, `allowed_by_tel`, `word`, `salon_category`, `is_hidden`, `created`, `modified`, `authority_id`, `image_id`, `introducer_id`, `prefecture_id`, `user_id`, `corporate_tel`, `representative_name`)
+VALUES
+	(1, '', '08012345678', '08012345678', 'KINUJO management', 'kinujo_jp', 'test@email.com', 1, 'KINUJO', 1, NULL, '101', '', '〒102-0083 東京都千代田区麹町5-5-2', 'ベルビュー麹町3F', '株式会社KINUJO', 1, 1, 1, 1, 'One Word Message', NULL, 0, now(), now(), 1, null, null, 1, 1, '', '');
 INSERT INTO `profiles_profile` (`representative_name`, `corporate_tel`,`is_seller`, `shop_name`, `tel`, `password`, `nickname`, `user_code`, `email`, `is_approved`, `real_name`, `gender`, `birthday`, `zipcode`, `city`, `address1`, `address2`, `corporate_name`, `message_notification`, `other_notification`, `allowed_by_id`, `allowed_by_tel`, `word`, `salon_category`, `is_hidden`, `created`, `modified`, `authority_id`, `image_id`, `introducer_id`, `prefecture_id`, `user_id`)
 VALUES
 	('repres 1', '1796912', 1, '', '08012345678', '08012345678', 'KINUJO management', 'kinujo_jp', 'test@email.com', 1, 'KINUJO', 1, NULL, '101', '', '〒102-0083 東京都千代田区麹町5-5-2', 'ベルビュー麹町3F', '株式会社KINUJO', 1, 1, 1, 1, 'One Word Message', NULL, 0, now(), now(), 1, null, null, 1, 1);

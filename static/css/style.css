@@ -2826,10 +2826,10 @@ ul.amounts li {
     float: right;
 }
 
-.dataTables_length select {
+/* .dataTables_length select {
     width: 65px;
     padding: 5px 8px;
-}
+} */
 
 .dataTables_length label, .dataTables_filter label {
     font-weight: 300;
@@ -4399,7 +4399,7 @@ td.details table tr td, .dataTable tr:last-child {
     display: inline-block;
     margin: 0 10px 0 0;
     padding: 5px 8px;
-    width: 65px;
+    width: 85px !important;
 }
 
 .adv-table .dataTables_info, .dataTables_paginate {

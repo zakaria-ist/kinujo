@@ -46,3 +46,11 @@ PAYMENT_STATUS = (
     ('UNPAID', 0),
     ('PAID', 1)
 )
+
+AUTHORITY_TYPE = {
+    'MASTER': 1,
+    'SPECIAL': 2,
+    'AMBASSADOR': 3,
+    'STORE': 4,
+    'GENERAL': 5
+}

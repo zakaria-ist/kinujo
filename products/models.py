@@ -1,6 +1,7 @@
 from datetime import date
 from django.db import models
 from images.models import Image
+from profiles.models import Profile
 from django.core.validators import MaxValueValidator
 from utilities.constants import PRODUCT_VARIETY, TARGET_TYPE
 
@@ -14,6 +15,7 @@ class ProductCategory(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=128)
     brand_name = models.CharField(max_length=128, default='')
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='user_product', null=False)
     pr = models.TextField()
     url_str = models.CharField(max_length=255)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
