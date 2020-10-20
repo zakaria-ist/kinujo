@@ -109,16 +109,16 @@
 
        
        .variant-col {
-        min-width: 100px;
-        max-width: 100;
-        height: 80px;
+        min-width: 140px;
+        max-width: 140px;
+        height: 100px;
         
         border: 1px solid;
         padding: 10px;
         text-align: center;
        }
 
-       #one-variant-title-left, #one-variant-info-left {
+       #one-variant-title-left, #one-variant-info-left, .variant-title {
         background: #ededed;
        }
 
@@ -800,14 +800,14 @@
 
     //create table wrapper for the one item variant
     varietyTable.innerHTML = `
-    <div class="col-md-2" style="max-width: 100px; min-width: 100px"><div class="row" id="one-variant-title-left">
-      <div class="variant-title variant-col"><h3>${oneItemVariantName}</h3></div>
+    <div class="col-md-2" style="max-width: 140px; min-width: 140px"><div class="row" id="one-variant-title-left">
+      <div class="variant-title variant-col"><h6 style="font-weight: bold;">${oneItemVariantName}</h6></div>
     </div>
     <div class="row" id="one-variant-info-left">
       <div class="variant-info variant-col"><h3>-</h3></div>
     </div>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-8">
       <div class="row" id="scrollable">
         <div class="col-md-12">
           <div class="row" id="one-variant-title-row">
@@ -919,15 +919,15 @@
 
 
     varietyTableTwo.innerHTML = `
-    <div class="col-md-2" style="max-width: 100px; min-width: 100px">
+    <div class="col-md-2" style="max-width: 140px; min-width: 140px">
       <div class="row" id="two-variant-title-left">
-        <div class="variant-title variant-col"><h3>${firstOfTwotemsVariantTitle.value} <br> ${lastOfTwotemsVariantTitle.value}</h3></div>
+        <div class="variant-title variant-col"><h6 style="font-weight: bold;">${firstOfTwotemsVariantTitle.value} <br> / <br> ${lastOfTwotemsVariantTitle.value}</h6></div>
       </div>
       <div class="row" id="two-variant-info-left">
         <!--place for second variable name choices -->
       </div>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-8">
       <div class="row" id="two-variant-title-row">
         
       </div>
