@@ -169,8 +169,8 @@
               
               <div class="form-group row">
                 <label class="col-md-4 p-2" for="category">{% trans 'Product Category' %}</label>
-                <div class="col-md-8">
-                  <select name="category" class="form-control" id="category">
+                <div class="col-md-8 p-0">
+                  <select name="category" class="selectpicker" id="category" style="width: 100%;">
                     <option disabled selected>Select</option>
                     <option value="">Category 1</option>
                     <option value="">Category 2</option>
@@ -181,8 +181,8 @@
 
         
 
-              <div class="form-group row form-check form-check-inline">
-                <label class="col-md-4" for="variety">{% trans 'Variations' %}</label>
+              <div class="form-group row form-check form-check-inline" style="align-items: baseline;">
+                <label class="col-md-4 p-2" for="variety">{% trans 'Variations' %}</label>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
                   <input type="radio" id="one" name="variety" class="custom-control-input form-check-input" onclick="toggleOne();">
                   <label class="form-check-label custom-control-label" for="one">{% trans '1 Item' %}</label>
@@ -217,8 +217,8 @@
                 <input type="text" class="form-control col-md-3" id="name">
               </div>
 
-              <div class="form-group row form-check form-check-inline">
-                <label class="col-md-4" for="status">{% trans 'Status' %}</label>
+              <div class="form-group row form-check form-check-inline" style="align-items: baseline;">
+                <label class="col-md-4 p-2" for="status">{% trans 'Status' %}</label>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
                   <input type="radio" id="published" name="status" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="published">{% trans 'Published' %}</label>
@@ -232,12 +232,12 @@
 
               
               <div class="form-group row">
-                <label class="col-md-4 m-2" for="opened_date">{% trans 'Published Date' %}</label>
+                <label class="col-md-3 m-2 p-0" for="opened_date" >{% trans 'Published Date' %}</label>
 
                 <div class="col-md-6 input-group" id="datetimepicker" style="padding-left: 0px;">
-                  <input name="opened_date" type="date" class="form-control">
+                  <input name="opened_date" type="date" class="form-control" style="margin-left: 10%;">
                   <div class="input-group-append">
-                    <span class="input-group-text">
+                    <span class="input-group-text" style="overflow: revert;height: max-content;padding: 8px;">
                       <i class="far">&#xf073;</i> 
                     </span>
                   </div>
@@ -248,8 +248,8 @@
                 <p class="text-danger col-md-12" style="text-align: right; padding: 15px 20px 0">{% trans '* Before the release date, it will not be published <br/> even if it is set to Publish' %}</p >
               </div>
 
-              <div class="form-group row form-check form-check-inline">
-                <label class="col-md-4" for="is-used">{% trans 'Product COndition' %}</label>
+              <div class="form-group row form-check form-check-inline" style="align-items: baseline;">
+                <label class="col-md-4 p-2" for="is-used">{% trans 'Product Condition' %}</label>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
                   <input type="radio" id="new" name="is_used" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="new">{% trans 'New' %}</label>
@@ -261,8 +261,8 @@
 
               </div>
 
-              <div class="form-group row form-check form-check-inline">
-                <label class="col-md-4" for="target">For Sale:</label>
+              <div class="form-group row form-check form-check-inline" style="align-items: baseline;">
+                <label class="col-md-4 p-2" for="target">For Sale:</label>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
                   <input type="radio" id="all-users" name="target" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="all-users">{% trans 'All Users' %}</label>
@@ -373,7 +373,7 @@
     <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <p class="text-center p-5">Are you sure? This is gonna erase content in 2 item variants.</p>
+            <p class="text-center p-5">{% trans 'Are you sure? This is gonna erase content in 2 item variants.' %}</p>
             <button type="button" class="btn btn-secondary" style="width: max-content; margin: 10px auto;" onclick="keepTwo();">{% trans 'Go back' %}</button>
             <button type="button" id="one-item-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="deleteTwoContent();">{% trans 'Proceed' %}</button>
           
@@ -385,7 +385,7 @@
     <div class="modal fade" id="confirm-two" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <p class="text-center p-5">Are you sure? This is gonna erase content in 1 item variants.</p>
+          <p class="text-center p-5">{% trans 'Are you sure? This is gonna erase content in 1 item variants.' %}</p>
             <button type="button" class="btn btn-secondary" style="width: max-content; margin: 10px auto;" onclick="keepOne();">{% trans 'Go back' %}</button>
             <button type="button" id="one-item-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="deleteOneContent();">{% trans 'Proceed' %}</button>
           
@@ -397,7 +397,7 @@
     <div class="modal fade" id="confirm-none" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <p class="text-center p-5">Are you sure? This is gonna erase content in one or two item variants.</p>
+            <p class="text-center p-5">{% trans 'Are you sure? This is gonna erase content in one or two item variants.' %}</p>
             <button type="button" class="btn btn-secondary" style="width: max-content; margin: 10px auto;" onclick="keepAny();">{% trans 'Go back' %}</button>
             <button type="button" id="one-item-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="deleteAny();">{% trans 'Proceed' %}</button>
           
@@ -440,7 +440,7 @@
                   <input value="YIO78" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
                   
                   <input value="56" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
-                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
                 <div class="form-group">
                   <p style="width: 20px;" class="m-2"> </p>
@@ -450,7 +450,7 @@
                   <input value="RED67"  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
                   
                   <input value="4"  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
-                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
               </div>
 
@@ -510,14 +510,14 @@
                     <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
                     <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
                   <div class="form-group">
                     <p style="width: 20px;" class="m-2"> </p>
                     <p class="m-2 first-of-two-variant-counter" style="width: 20px;">2</p>
                     <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
                 </div>
 
@@ -546,7 +546,7 @@
                     <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
                     <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
                   
                   <div class="form-group">
@@ -554,7 +554,7 @@
                     <p class="m-2 last-of-two-variant-counter" style="width: 20px;">2</p>
                     <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
                 </div>
 
@@ -761,7 +761,7 @@
                   <input value="UIUI78" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
                   
                   <input value="45" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
-                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>`;
     
     while (newContent.firstChild) {
@@ -795,7 +795,7 @@
                   <p class="m-2 first-of-two-variant-counter" style="width: 20px;">${firstOfTwoOptCounter}</p>
                   <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                   
-                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>`;
     
     while (firstOfTwoNewContent.firstChild) {
@@ -828,7 +828,7 @@
                   <p class="m-2 last-of-two-variant-counter" style="width: 20px;">${lastOfTwoOptCounter}</p>
                   <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                   
-                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>`;
     
     while (lastOfTwoNewContent.firstChild) {
