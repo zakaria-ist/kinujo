@@ -7,7 +7,6 @@
     <link href="{% static "css/bank_auto.css" %}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.css' %}"/>
     <script src="https://zipaddr.github.io/bankauto0.js" charset="UTF-8"> </script>
-    {% comment %} <script src="{% static 'js/bankautob.js' %}" charset="UTF-8"> </script> {% endcomment %}
 {% endblock %}
 
 {% block title %}{% trans 'Profile Add/Edit'%}{% endblock %}
@@ -307,7 +306,6 @@
         })
 
         function update_introducer_list(auth_type) {
-            console.log('profile_list', profile_list);
             var options = '';
             if (auth_type == '5') { // general
                 options = '';

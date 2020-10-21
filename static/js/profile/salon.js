@@ -169,8 +169,8 @@ function saveSalonInfo() {
         });
     } else {
         $.confirm({
-            title: 'Error',
-            content: 'Enter mandatory fileds',
+            title: 'Warning',
+            content: 'Please fill in the required fields',
             buttons: {
                 Ok: {
                     btnClass: 'btn-success',
