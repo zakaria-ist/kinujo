@@ -876,7 +876,7 @@
 
   //edit btn one function
   function editBtn(obj){
-      let modalWrapper = document.getElementById('one-modal-wrapper');
+      modalWrapper = document.getElementById('one-modal-wrapper');
 
       let tableNum = obj.id.split('-')[2];
       let janCodeId = `jan-id-${tableNum}`;
@@ -1151,7 +1151,7 @@
 
         for(let j = 0; j < firstOfTwoVariantChoices.length; j++){
           let addInfoCol = document.createElement('div');
-          addInfoCol.innerHTML = `<div class="variant-info variant-col">${firstOfTwoVariantChoices[j].value} / ${lastOfTwoVariantChoices[i].value}</div>`;
+          addInfoCol.innerHTML = `<div class="variant-info variant-col"><p class="table-p">${firstOfTwoVariantChoices[j].value} / ${lastOfTwoVariantChoices[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
           let id = `two-variant-cont-row-${i}`;
 
           if(addInfoCol.firstChild){
