@@ -138,6 +138,12 @@
       .flex-wrap{
         flex-wrap: initial !important;
       }
+      .table-p {
+        margin-bottom: .1rem;
+      }
+      .edit-btn {
+        cursor: pointer;
+      }
       </style>
 {% endblock %}
 
@@ -575,6 +581,11 @@
     </div>
     <!--Ends moal for variant-->
 
+    <!--edit modal 1 item-->
+    <div id="one-modal-wrapper">
+
+    </div>
+
 <script type="text/javascript">
   let counter = 0;
   const imgWrapper = document.getElementById('img-wrapper');
@@ -847,6 +858,69 @@
   *
   */
 
+  // edit: save one modal data
+  //save one modal data
+  
+  function saveOneModalData(){
+
+    let newJanCode = document.getElementById('jan-code-one-modal');
+    let newStock = document.getElementById('stock-one-modal');
+
+    // //save new value to the table
+    janDiv.innerHTML = newJanCode.value;
+    stockDiv.innerHTML = newStock.value;
+
+    $('#edit-modal-one').modal('hide');
+
+  }
+
+  //edit btn one function
+  function editBtn(obj){
+      let modalWrapper = document.getElementById('one-modal-wrapper');
+
+      let tableNum = obj.id.split('-')[2];
+      let janCodeId = `jan-id-${tableNum}`;
+      let stockId = `stock-id-${tableNum}`;
+
+      janDiv = document.getElementById(janCodeId);
+      stockDiv = document.getElementById(stockId);
+
+      
+
+      modalWrapper.innerHTML = `
+      <div class="modal fade" id="edit-modal-one" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content row">
+
+          <p class="col-md-9 text-center p-5">{% trans 'Are you sure? This is gonna erase content in one or two item variants.' %}</p>
+
+          <div class="form-group col-md-9">
+            <label for="jan-code-one-modal">Jan Code</label>
+            <input type="text" value="${janDiv.innerHTML}" class="form-control" id="jan-code-one-modal" placeholder="Enter Jancode"> 
+          </div>
+          <div class="form-group col-md-9">
+            <labe for="stock-one-modal">Stock</label>
+            <input type="text" value="${stockDiv.innerHTML}" class="form-control" id="stock-one-modal" placeholder="Enter Stock"> 
+          </div>
+
+
+            
+          <button type="button" class="btn btn-secondary" style="width: max-content; margin: 10px auto;" data-dismiss="modal">{% trans 'Go back' %}</button>
+          <button type="button" id="one-modal-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="saveOneModalData();">{% trans 'Proceed' %}</button>
+          
+        </div>
+      </div>
+      </div>
+      `
+      
+      $('#edit-modal-one').modal();
+
+     
+    
+  }
+
+  
+
   function saveOneItemData(){
     console.log('clicked 1');
     let oneItemVariantTitle = document.getElementById('one-item-title');
@@ -931,7 +1005,7 @@
       let janValue = oneItemVariantJan[i].value;
       let stockValue = oneItemVariantStock[i].value;
       newTableChoices.innerHTML = `<div class="variant-title variant-col">${choicesValue}</div>`;
-      newTableContent.innerHTML = `<div class="variant-info variant-col"><p class="text-center">${janValue}</p><p class="text-center">${stockValue}</p></div>`;
+      newTableContent.innerHTML = `<div class="variant-info variant-col"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">${stockValue}</p><p class="table-p"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
       
       
       if(newTableChoices.firstChild){
@@ -941,9 +1015,14 @@
       if(newTableContent.firstChild){
         document.getElementById('one-variant-info-row').appendChild(newTableContent.firstChild);
       }
-      
-      
+
+     
+     
     }
+
+    //edit btn
+   
+      
 
     //make sure it's scroll able
     document.getElementById("scrollable").style.overflow= 'scroll';
@@ -951,9 +1030,13 @@
     //hide modal
     $('#oneItemVariant').modal('hide');
   }
+  
 
 
+  /*
+  //
   //two items variant save from modal
+  */
   function saveTwoItemsData(){
 
     console.log('clicked 2')
