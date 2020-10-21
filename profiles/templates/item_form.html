@@ -868,7 +868,11 @@
 
     // //save new value to the table
     janDiv.innerHTML = newJanCode.value;
-    stockDiv.innerHTML = newStock.value;
+    
+    newStockValue = Number(stockDiv.innerHTML) + Number(newStock.value);
+    
+    
+    stockDiv.innerHTML = newStockValue;
 
     $('#edit-modal-one').modal('hide');
 
@@ -877,6 +881,35 @@
   //edit btn one function
   function editBtn(obj){
       modalWrapper = document.getElementById('one-modal-wrapper');
+
+      //code for sell name show on edit modal
+      cellName = document.getElementById('cell-name');
+      if(cellName.innerHTML.split('/')[0]){
+        leftCellName = cellName.innerHTML.split('/')[0].trim() + ':';
+      }else{
+        leftCellName = '';
+      }
+
+      if(cellName.innerHTML.split('/')[1]){
+        rightCellName = cellName.innerHTML.split('/')[1].trim() + ':';
+      }else{
+        rightCellName = '';
+      }
+
+
+      //code for cell name value on edit modal
+      cellNameValue = document.getElementById('cell-name-value');
+      if(cellNameValue.innerHTML.split('/')[0]){
+        leftCellNameValue = cellNameValue.innerHTML.split('/')[0].trim();
+      }else{
+        leftCellNameValue = '';
+      }
+
+      if(cellNameValue.innerHTML.split('/')[1]){
+        rightCellNameValue = cellNameValue.innerHTML.split('/')[1].trim();
+      }else{
+        rightCellNameValue = '';
+      }
 
       let tableNum = obj.id.split('-')[2];
       let janCodeId = `jan-id-${tableNum}`;
@@ -891,22 +924,24 @@
       <div class="modal fade" id="edit-modal-one" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
       <div class="modal-dialog" role="document">
         <div class="modal-content row">
-
-          <p class="col-md-9 text-center p-5">{% trans 'Are you sure? This is gonna erase content in one or two item variants.' %}</p>
-
-          <div class="form-group col-md-9">
-            <label for="jan-code-one-modal">Jan Code</label>
-            <input type="text" value="${janDiv.innerHTML}" class="form-control" id="jan-code-one-modal" placeholder="Enter Jancode"> 
-          </div>
-          <div class="form-group col-md-9">
-            <labe for="stock-one-modal">Stock</label>
-            <input type="text" value="${stockDiv.innerHTML}" class="form-control" id="stock-one-modal" placeholder="Enter Stock"> 
+          <h6 class="m-2 p-2" style="font-weight:bold">{% trans 'JAN code / inventory editing' %}</h6>
+          <p class="col-md-12 text-center p-2">{% trans 'The number of stocks will change during editing. When changing, increase or decrease the absolute value such as “+1” or “-1” Please enter (If you want to change the entire stock quantity, enter “100” etc. as a numerical value) If the stock quantity field is blank, the stock quantity will not be changed.' %}</p>
+          <p class="col-md-12" style="font-weight:bold"><span class="m-2">${leftCellName} ${leftCellNameValue}</span> <span class="m-2">${rightCellName} ${rightCellNameValue}</span></p>
+          <div class="row">
+            <div class="form-group col-md-5 m-2">
+              <label for="jan-code-one-modal">Jan Code</label>
+              <input type="text" value="${janDiv.innerHTML}" class="form-control" id="jan-code-one-modal" placeholder="Enter Jancode"> 
+            </div>
+            <div class="form-group col-md-5 m-2">
+              <label for="stock-one-modal">Stock Quantity: ${stockDiv.innerHTML}</label>
+              <input type="text" value="" class="form-control" id="stock-one-modal" placeholder="Enter Stock"> 
+            </div>
           </div>
 
 
             
           <button type="button" class="btn btn-secondary" style="width: max-content; margin: 10px auto;" data-dismiss="modal">{% trans 'Go back' %}</button>
-          <button type="button" id="one-modal-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="saveOneModalData();">{% trans 'Proceed' %}</button>
+          <button type="button" id="one-modal-save-btn" class="btn btn-primary mb-20" style="margin: 10px auto; padding: 5px 40px;" onclick="saveOneModalData();">{% trans 'Proceed' %}</button>
           
         </div>
       </div>
@@ -975,7 +1010,7 @@
     //create table wrapper for the one item variant
     varietyTable.innerHTML = `
     <div class="col-md-2" style="max-width: 140px; min-width: 140px"><div class="row" id="one-variant-title-left">
-      <div class="variant-title variant-col"><h6 style="font-weight: bold;">${oneItemVariantName}</h6></div>
+      <div class="variant-title variant-col"><h6 style="font-weight: bold;" id="cell-name">${oneItemVariantName}</h6></div>
     </div>
     <div class="row" id="one-variant-info-left">
       <div class="variant-info variant-col"><h3>-</h3></div>
@@ -1004,7 +1039,7 @@
       let choicesValue = oneItemVariantChoices[i].value;
       let janValue = oneItemVariantJan[i].value;
       let stockValue = oneItemVariantStock[i].value;
-      newTableChoices.innerHTML = `<div class="variant-title variant-col">${choicesValue}</div>`;
+      newTableChoices.innerHTML = `<div class="variant-title variant-col" id="cell-name-value">${choicesValue}</div>`;
       newTableContent.innerHTML = `<div class="variant-info variant-col"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">${stockValue}</p><p class="table-p"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
       
       
@@ -1038,8 +1073,6 @@
   //two items variant save from modal
   */
   function saveTwoItemsData(){
-
-    console.log('clicked 2')
 
     let varietyTableTwo = document.getElementById('variety-table-two');
     let firstOfTwotemsVariantTitle = document.getElementById('first-of-two-items-title');
@@ -1104,7 +1137,7 @@
     varietyTableTwo.innerHTML = `
     <div class="col-md-2" style="max-width: 140px; min-width: 140px;">
       <div class="row" id="two-variant-title-left">
-        <div class="variant-title variant-col"><h6 style="font-weight: bold;">${firstOfTwotemsVariantTitle.value} <br> / <br> ${lastOfTwotemsVariantTitle.value}</h6></div>
+        <div class="variant-title variant-col"><h6 style="font-weight: bold;" id="cell-name">${firstOfTwotemsVariantTitle.value} / ${lastOfTwotemsVariantTitle.value}</h6></div>
       </div>
       <div class="row" id="two-variant-info-left">
         <!--place for second variable name choices -->
@@ -1151,7 +1184,7 @@
 
         for(let j = 0; j < firstOfTwoVariantChoices.length; j++){
           let addInfoCol = document.createElement('div');
-          addInfoCol.innerHTML = `<div class="variant-info variant-col"><p class="table-p">${firstOfTwoVariantChoices[j].value} / ${lastOfTwoVariantChoices[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+          addInfoCol.innerHTML = `<div class="variant-info variant-col"><p class="table-p" id="cell-name-value">${firstOfTwoVariantChoices[j].value} / ${lastOfTwoVariantChoices[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
           let id = `two-variant-cont-row-${i}`;
 
           if(addInfoCol.firstChild){
