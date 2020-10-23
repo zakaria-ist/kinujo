@@ -144,6 +144,17 @@
       .edit-btn {
         cursor: pointer;
       }
+      /* Chrome, Safari, Edge, Opera */
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox */
+      input[type=number] {
+        -moz-appearance: textfield;
+      }
       </style>
 {% endblock %}
 
@@ -635,6 +646,25 @@
     //ends image add button increase code
 
 
+    //Jan code error check
+    function JanMaxError(formValue, errorDiv, lineNumber){
+      if(formValue.value.length > 13){
+        if(lineNumber !== undefined){
+          document.getElementById(errorDiv).innerHTML = `Jan Code max 13 characters <br> line(${lineNumber+1})`;
+          formValue.focus();
+          return false;
+        }
+        if(lineNumber === undefined){
+          document.getElementById(errorDiv).innerHTML = `Jan Code max 13 characters`;
+          formValue.focus();
+          return false;
+        }
+      }else{
+        return true;
+      }
+    }
+
+
     //starts variant code
     const one = document.getElementById('one');
     const two = document.getElementById('two');
@@ -866,10 +896,22 @@
     let newJanCode = document.getElementById('jan-code-one-modal');
     let newStock = document.getElementById('stock-one-modal');
 
+    //check Jan error
+    if(!JanMaxError(newJanCode,'janErrorEdit', undefined)){
+      return;
+    }
+
     // //save new value to the table
     janDiv.innerHTML = newJanCode.value;
     
-    newStockValue = Number(stockDiv.innerHTML) + Number(newStock.value);
+    if(isNaN(Number(newStock.value))){
+      newStockValue = Number(stockDiv.innerHTML);
+      
+    }else{
+      newStockValue = Number(stockDiv.innerHTML) + Number(newStock.value);
+    }
+    
+    
     
     
     stockDiv.innerHTML = newStockValue;
@@ -927,6 +969,7 @@
           <h6 class="m-2 p-2" style="font-weight:bold">{% trans 'JAN code / inventory editing' %}</h6>
           <p class="col-md-12 text-center p-2">{% trans 'The number of stocks will change during editing. When changing, increase or decrease the absolute value such as “+1” or “-1” Please enter (If you want to change the entire stock quantity, enter “100” etc. as a numerical value) If the stock quantity field is blank, the stock quantity will not be changed.' %}</p>
           <p class="col-md-12" style="font-weight:bold"><span class="m-2">${leftCellName} ${leftCellNameValue}</span> <span class="m-2">${rightCellName} ${rightCellNameValue}</span></p>
+          <p class="col-md-12 text-danger" id="janErrorEdit"></p>
           <div class="row">
             <div class="form-group col-md-5 m-2">
               <label for="jan-code-one-modal">Jan Code</label>
@@ -947,7 +990,9 @@
       </div>
       </div>
       `
+
       
+
       $('#edit-modal-one').modal();
 
      
@@ -965,7 +1010,11 @@
     const oneItemVariantJan = document.getElementsByClassName('one-item-jan-code');
     const oneItemVariantStock = document.getElementsByClassName('one-item-stock');
 
+
+
+
     //see for empty field of title and show a error message
+
     if(oneItemVariantName === '' || oneItemVariantName === ' ' || oneItemVariantName === undefined) {
       errorMsg.innerHTML = 'This field is required'; 
       oneItemVariantTitle.focus();
@@ -988,6 +1037,10 @@
           classes[i].focus();
           return false;
         }
+        //check Jan error
+        if(!JanMaxError(classes[i],'title-error', i)){
+          return false;
+        }
         
       }
 
@@ -1008,30 +1061,31 @@
     const varietyTable = document.getElementById('variety-table');
 
     //create table wrapper for the one item variant
-    varietyTable.innerHTML = `
-    <div class="col-md-2" style="max-width: 140px; min-width: 140px"><div class="row" id="one-variant-title-left">
-      <div class="variant-title variant-col"><h6 style="font-weight: bold;" id="cell-name">${oneItemVariantName}</h6></div>
-    </div>
-    <div class="row" id="one-variant-info-left">
-      <div class="variant-info variant-col"><h3>-</h3></div>
-    </div>
-    </div>
-    <div class="col-md-8">
-      <div class="row" id="scrollable">
-        <div class="col-md-12">
-          <div class="row" id="one-variant-title-row">
-            
+    if(varietyTable.innerHTML.trim() === ''){
+      varietyTable.innerHTML = `
+      <div class="col-md-2" style="max-width: 140px; min-width: 140px"><div class="row" id="one-variant-title-left">
+        <div class="variant-title variant-col"><h6 style="font-weight: bold;" id="cell-name">${oneItemVariantName}</h6></div>
+      </div>
+      <div class="row" id="one-variant-info-left">
+        <div class="variant-info variant-col"><h3>-</h3></div>
+      </div>
+      </div>
+      <div class="col-md-8">
+        <div class="row" id="scrollable">
+          <div class="col-md-12">
+            <div class="row" id="one-variant-title-row">
+              
+            </div>
           </div>
-        </div>
-        <div class="col-md-12">
-          <div class="row" id="one-variant-info-row">
-            
+          <div class="col-md-12">
+            <div class="row" id="one-variant-info-row">
+              
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    `
-    
+      `
+    }
 
     for(let i = 0; i < oneItemVariantChoices.length; i++){
       let newTableChoices = document.createElement('div'); 
@@ -1062,6 +1116,31 @@
     //make sure it's scroll able
     document.getElementById("scrollable").style.overflow= 'scroll';
 
+    //reset modal form
+    document.getElementById('oneItemGroup').innerHTML = `
+                <div class="form-group">
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
+                  <input value="red" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                  
+                  <input value="YIO78" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+                  
+                  <input value="56" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                </div>
+                <div class="form-group">
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
+                  <input value="red"  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                  
+                  <input value="RED67"  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+                  
+                  <input value="4"  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                </div>
+
+              `;
+
     //hide modal
     $('#oneItemVariant').modal('hide');
   }
@@ -1080,8 +1159,8 @@
     
     let firstOfTwoErrorMsg = document.getElementById('first-of-two-title-error');
     let lastOfTwoErrorMsg = document.getElementById('last-of-two-title-error');
-    const firstOfTwoVariantChoices = document.getElementsByClassName('first-of-two-items-choices');
-    const lastOfTwoVariantChoices = document.getElementsByClassName('last-of-two-items-choices');
+    let firstOfTwoVariantChoicesOriginal = document.getElementsByClassName('first-of-two-items-choices');
+    let lastOfTwoVariantChoicesOriginal = document.getElementsByClassName('last-of-two-items-choices');
     let errorFirstOfTwo = document.getElementById('first-of-two-title-error');
     let errorLastOfTwo = document.getElementById('last-of-two-title-error');
 
@@ -1113,7 +1192,7 @@
     }
 
     //call checkError for first of two items variant
-    if(!checkError(firstOfTwoVariantChoices, errorFirstOfTwo, 'err-line-one')){
+    if(!checkError(firstOfTwoVariantChoicesOriginal, errorFirstOfTwo, 'err-line-one')){
       return;
     }
 
@@ -1127,78 +1206,230 @@
     }else {
       errorLastOfTwo,innerHTML = '';
     }
-    if(!checkError(lastOfTwoVariantChoices, errorLastOfTwo, 'err-line-two')){
+    if(!checkError(lastOfTwoVariantChoicesOriginal, errorLastOfTwo, 'err-line-two')){
       return;
     }
 
 
 
-
-    varietyTableTwo.innerHTML = `
-    <div class="col-md-2" style="max-width: 140px; min-width: 140px;">
-      <div class="row" id="two-variant-title-left">
-        <div class="variant-title variant-col"><h6 style="font-weight: bold;" id="cell-name">${firstOfTwotemsVariantTitle.value} / ${lastOfTwotemsVariantTitle.value}</h6></div>
-      </div>
-      <div class="row" id="two-variant-info-left">
-        <!--place for second variable name choices -->
-      </div>
-    </div>
-    <div class="col-md-8">
-      <div class="row" id="two-variant-title-row">
-        
-      </div>
-      
-      <div class="row">
-
-        <div class="col-md-12" id="addTwoItems">
- 
+    if(varietyTableTwo.innerHTML.trim() === ''){
+      varietyTableTwo.innerHTML = `
+      <div class="col-md-2" style="max-width: 140px; min-width: 140px;">
+        <div class="row" id="two-variant-title-left">
+          <div class="variant-title variant-col"><h6 style="font-weight: bold;" id="cell-name">${firstOfTwotemsVariantTitle.value} / ${lastOfTwotemsVariantTitle.value}</h6></div>
         </div>
- 
+        <div class="row" id="two-variant-info-left">
+          <!--place for second variable name choices -->
+        </div>
       </div>
+      <div class="col-md-8">
+        <div class="row" id="two-variant-title-row">
+          
+        </div>
+        
+        <div class="row">
 
-    </div>
-    `;
+          <div class="col-md-12" id="addTwoItems">
+  
+          </div>
+  
+        </div>
 
-    for(let i = 0; i < firstOfTwoVariantChoices.length; i++){
-      let newTableFirstChoices = document.createElement('div'); 
-      let newTableLastChoices = document.createElement('div');
-      let infoRow = document.createElement('div');
-      let firstChoicesValue = firstOfTwoVariantChoices[i].value;
-      let lastChoicesValue = lastOfTwoVariantChoices[i].value;
+      </div>
+      `;
 
-      newTableLastChoices.innerHTML = `<div class="variant-title variant-col">${lastChoicesValue}</div>`;
-      newTableFirstChoices.innerHTML = `<div class="variant-title variant-col">${firstChoicesValue}</div>`;
-      infoRow.innerHTML = `<div class="row flex-wrap" id="two-variant-cont-row-${i}">
-            
-          </div>`;
+      // loop for save
+      for(let i = 0; i < firstOfTwoVariantChoicesOriginal.length; i++){
+        let newTableFirstChoices = document.createElement('div'); 
+        let newTableLastChoices = document.createElement('div');
+        let infoRow = document.createElement('div');
+        let firstChoicesValue = firstOfTwoVariantChoicesOriginal[i].value;
+        let lastChoicesValue = lastOfTwoVariantChoicesOriginal[i].value;
 
-      if(newTableLastChoices.firstChild){
-        document.getElementById('two-variant-info-left').appendChild(newTableLastChoices.firstChild);
-      }
-      if(newTableFirstChoices.firstChild){
-        document.getElementById('two-variant-title-row').appendChild(newTableFirstChoices.firstChild);
-      }
+        newTableLastChoices.innerHTML = `<div class="variant-title variant-title-left variant-col">${lastChoicesValue}</div>`;
+        newTableFirstChoices.innerHTML = `<div class="variant-title variant-title-top variant-col">${firstChoicesValue}</div>`;
+        infoRow.innerHTML = `<div class="row flex-wrap" id="two-variant-cont-row-${i}">
+              
+            </div>`;
 
-      if(infoRow.firstChild){
-        document.getElementById('addTwoItems').appendChild(infoRow.firstChild);
+        if(newTableLastChoices.firstChild){
+          document.getElementById('two-variant-info-left').appendChild(newTableLastChoices.firstChild);
+        }
+        if(newTableFirstChoices.firstChild){
+          document.getElementById('two-variant-title-row').appendChild(newTableFirstChoices.firstChild);
+        }
 
-        for(let j = 0; j < firstOfTwoVariantChoices.length; j++){
-          let addInfoCol = document.createElement('div');
-          addInfoCol.innerHTML = `<div class="variant-info variant-col"><p class="table-p" id="cell-name-value">${firstOfTwoVariantChoices[j].value} / ${lastOfTwoVariantChoices[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
-          let id = `two-variant-cont-row-${i}`;
+        if(infoRow.firstChild){
+          document.getElementById('addTwoItems').appendChild(infoRow.firstChild);
 
-          if(addInfoCol.firstChild){
-            document.getElementById(id).appendChild(addInfoCol.firstChild);
+          for(let j = 0; j < firstOfTwoVariantChoicesOriginal.length; j++){
+            let addInfoCol = document.createElement('div');
+            addInfoCol.innerHTML = `<div class="variant-info variant-col"><p class="table-p" id="cell-name-value">${firstOfTwoVariantChoicesOriginal[j].value} / ${lastOfTwoVariantChoicesOriginal[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+            let id = `two-variant-cont-row-${i}`;
+
+            if(addInfoCol.firstChild){
+              document.getElementById(id).appendChild(addInfoCol.firstChild);
+            }
           }
         }
+
+        
+
+
+      }
+
+    }else{
+      // second item variant re adding to table
+      let topOriginal = [];
+      let leftOriginal = [];
+
+      let topExisting = [];
+      let leftExisting = [];
+
+      let topExistingPlusOriginal = [];
+      let LeftExistingPlusOriginal = [];
+
+      //generate existing value array
+      let existingTitleTop = document.getElementsByClassName('variant-title-top');
+      let existingTitleLeft = document.getElementsByClassName('variant-title-left');
+
+      for(let k = 0; k < document.getElementsByClassName('variant-title-top').length; k++){
+        topExisting.push(existingTitleTop[k].innerHTML);
+        leftExisting.push(existingTitleLeft[k].innerHTML);
+
+        //add to the total arrays
+        topExistingPlusOriginal.push(existingTitleTop[k].innerHTML);
+        LeftExistingPlusOriginal.push(existingTitleLeft[k].innerHTML);
       }
 
       
+      //generate original array with value
+      for(let l = 0; l < firstOfTwoVariantChoicesOriginal.length; l++){
+        topOriginal.push(firstOfTwoVariantChoicesOriginal[l].value);
+        leftOriginal.push(lastOfTwoVariantChoicesOriginal[l].value);
 
+        //add to total arrays
+        topExistingPlusOriginal.push(firstOfTwoVariantChoicesOriginal[l].value);
+        LeftExistingPlusOriginal.push(lastOfTwoVariantChoicesOriginal[l].value);
+      }
 
+      // add algorithms
+      // 1. title for top and left add algorithm
+      // 2. loop in top original for left existing. Don't have to create row its already there. just add col. same element for each. So just one loop.
+      // 3. loop in top total (topExistingPlusOriginal) for left original. Create row and add column. Different element for each. So two loop.
+
+      //1 first add left and top title
+      for(let i = 0; i < firstOfTwoVariantChoicesOriginal.length; i++){
+        let newTableFirstChoices = document.createElement('div'); 
+        let newTableLastChoices = document.createElement('div');
+        let firstChoicesValue = firstOfTwoVariantChoicesOriginal[i].value;
+        let lastChoicesValue = lastOfTwoVariantChoicesOriginal[i].value;
+
+        newTableLastChoices.innerHTML = `<div class="variant-title variant-title-left variant-col">${lastChoicesValue}</div>`;
+        newTableFirstChoices.innerHTML = `<div class="variant-title variant-title-top variant-col">${firstChoicesValue}</div>`;
+
+        if(newTableLastChoices.firstChild){
+          document.getElementById('two-variant-info-left').appendChild(newTableLastChoices.firstChild);
+        }
+        if(newTableFirstChoices.firstChild){
+          document.getElementById('two-variant-title-row').appendChild(newTableFirstChoices.firstChild);
+        }
+
+      }
+
+      // 2 Second algorithms execution
+      
+      for(let i = 0; i < leftExisting.length; i++){
+
+        //get col num
+        let j = topExisting.length;
+
+        //get row id
+        let id = `two-variant-cont-row-${i}`;
+
+        //add column to id
+        for(let l =0; l < topOriginal.length; l++){
+          let helperElement = document.createElement('div');
+          helperElement.innerHTML =`<div class="variant-info variant-col"><p class="table-p" id="cell-name-value">${topOriginal[l]} / ${leftExisting[i]}</p><p class="text-center table-p" id="jan-id-r${i}c${j}"></p><p class="text-center table-p" id="stock-id-r${i}c${j}"></p><p class="table-p"><i class="far edit-btn" id="edit-id-r${i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+          
+
+          if(helperElement.firstChild){
+            document.getElementById(id).appendChild(helperElement.firstChild);
+          }
+
+          j++
+        }
+        
+      }
+
+      // 3 Third algorithms execution
+      let m = leftExisting.length;
+      for(let i = 0; i < leftOriginal.length; i++){
+        let infoRow = document.createElement('div');
+
+        infoRow.innerHTML = `<div class="row flex-wrap" id="two-variant-cont-row-${m + i}">
+              
+            </div>`;
+
+        if(infoRow.firstChild){
+          document.getElementById('addTwoItems').appendChild(infoRow.firstChild);
+
+          for(let j = 0; j < topExistingPlusOriginal.length; j++){
+            let addInfoCol = document.createElement('div');
+            addInfoCol.innerHTML = `<div class="variant-info variant-col"><p class="table-p" id="cell-name-value">${topExistingPlusOriginal[j]} / ${leftOriginal[i]}</p><p class="text-center table-p" id="jan-id-r${m+i}c${j}"></p><p class="text-center table-p" id="stock-id-r${m+i}c${j}"></p><p class="table-p"><i class="far edit-btn" id="edit-id-r${m+i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+            let id = `two-variant-cont-row-${m + i}`;
+
+            if(addInfoCol.firstChild){
+              document.getElementById(id).appendChild(addInfoCol.firstChild);
+            }
+          }
+        }
+
+      }
     }
-  
+
+    
+
+
+    
+    // do after saving task here
     varietyTableTwo.style.height = '250px';
+
+    document.getElementById('firstOfTwoItemGroup').innerHTML = `
+                <div class="form-group">
+                  
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
+                  <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+                  
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                </div>
+                <div class="form-group">
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 first-of-two-variant-counter" style="width: 20px;">2</p>
+                  <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+                  
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                </div>
+              `;
+    document.getElementById('lastOfTwoItemGroup').innerHTML = `
+                <div class="form-group">
+                    <p style="width: 20px;" class="m-2"> </p>
+                    <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
+                    <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+                    
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>
+                  
+                  <div class="form-group">
+                    <p style="width: 20px;" class="m-2"> </p>
+                    <p class="m-2 last-of-two-variant-counter" style="width: 20px;">2</p>
+                    <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+                    
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                  </div>
+                `;
+    
     $('#twoItemsVariant').modal('hide');
 
   }
