@@ -140,9 +140,15 @@
       }
       .table-p {
         margin-bottom: .1rem;
+        font-weight: normal;
       }
       .edit-btn {
         cursor: pointer;
+        font-weight: bold;
+        float: right;
+      }
+      .variant-title {
+        font-weight: bold;
       }
       /* Chrome, Safari, Edge, Opera */
       input::-webkit-outer-spin-button,
@@ -154,6 +160,13 @@
       /* Firefox */
       input[type=number] {
         -moz-appearance: textfield;
+      }
+      .edit-close {
+        text-align: right;
+        padding: 10px;
+        margin-top: -50px;
+        font-size: 2rem;
+        color: red;
       }
       </style>
 {% endblock %}
@@ -598,7 +611,7 @@
     </div>
 
 <script type="text/javascript">
-  let counter = 0;
+ let counter = 0;
   const imgWrapper = document.getElementById('img-wrapper');
 
   const loadFile = function(event) {
@@ -639,7 +652,26 @@
 
   
   
+  //change add item button function
 
+  function addItemBtnChange(tableItem, btnItem){
+    //change add item button
+    if(tableItem.innerHTML.trim() !== ''){
+      btnItem.style.background = 'transparent';
+      btnItem.style.color = '#0056b3';
+      btnItem.style.border = '0px';
+      btnItem.style.float = 'right';
+      btnItem.style.fontSize = '0.8rem';
+      btnItem.style.padding = '0px';
+      btnItem.innerHTML = `add / edit / delete items`;
+    }else{
+      if(tableItem === document.getElementById('variety-table')){
+        document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant">+ Item / Option</button></div>`;
+      }else{
+        document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="two-items-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant">+ Items / Options</button></div>`;
+      }
+    }
+  }
 
   
 
@@ -677,7 +709,7 @@
     // one.addEventListener('click', toggleOne);
     //start functions for confirm erase two
     function deleteTwoContent(){
-      varietyContent.innerHTML = `<div class="col-md-12"><button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant">+ Item / Option</button></div>`;
+      addItemBtnChange(document.getElementById('variety-table'), 'none');
       varTableTwo.innerHTML = '';
       varTableTwo.style.height = '0px';
       $('#confirm-modal').modal('hide');
@@ -703,8 +735,8 @@
 
 
     //starts confirm variant set two
-    function deleteOneContent(){
-      varietyContent.innerHTML = `<div class="col-md-12"><button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant">+ Items / Options</button></div>`;
+    function deleteOneContent(){ 
+      addItemBtnChange(document.getElementById('variety-table-two'), 'none');
       varTable.innerHTML = '';
 
       $('#confirm-two').modal('hide');
@@ -904,11 +936,20 @@
     // //save new value to the table
     janDiv.innerHTML = newJanCode.value;
     
-    if(isNaN(Number(newStock.value))){
-      newStockValue = Number(stockDiv.innerHTML);
-      
+    //check empty stock
+    if(newStock.value.trim() === ''){
+      return document.getElementById('janErrorEdit').innerHTML = 'Stock is empty. Put 0 to keep previous value';
     }else{
+      if(isNaN(Number(newStock.value))){
+
+      return document.getElementById('janErrorEdit').innerHTML = 'Stock should contain only number, -, + ';
+
+      //keep the value same
+      //newStockValue = Number(stockDiv.innerHTML);
+
+      } else{
       newStockValue = Number(stockDiv.innerHTML) + Number(newStock.value);
+      }
     }
     
     
@@ -967,6 +1008,9 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content row">
           <h6 class="m-2 p-2" style="font-weight:bold">{% trans 'JAN code / inventory editing' %}</h6>
+          <button type="button" class="close edit-close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+          </button>
           <p class="col-md-12 text-center p-2">{% trans 'The number of stocks will change during editing. When changing, increase or decrease the absolute value such as “+1” or “-1” Please enter (If you want to change the entire stock quantity, enter “100” etc. as a numerical value) If the stock quantity field is blank, the stock quantity will not be changed.' %}</p>
           <p class="col-md-12" style="font-weight:bold"><span class="m-2">${leftCellName} ${leftCellNameValue}</span> <span class="m-2">${rightCellName} ${rightCellNameValue}</span></p>
           <p class="col-md-12 text-danger" id="janErrorEdit"></p>
@@ -983,8 +1027,8 @@
 
 
             
-          <button type="button" class="btn btn-secondary" style="width: max-content; margin: 10px auto;" data-dismiss="modal">{% trans 'Go back' %}</button>
-          <button type="button" id="one-modal-save-btn" class="btn btn-primary mb-20" style="margin: 10px auto; padding: 5px 40px;" onclick="saveOneModalData();">{% trans 'Proceed' %}</button>
+          <!--<button type="button" class="btn btn-secondary" style="width: max-content; margin: 10px auto;" data-dismiss="modal">{% trans 'Go back' %}</button> -->
+          <button type="button" id="one-modal-save-btn" class="btn btn-primary mb-20" style="margin: 10px auto; padding: 5px 40px;" onclick="saveOneModalData();">{% trans 'Save' %}</button>
           
         </div>
       </div>
@@ -1094,7 +1138,7 @@
       let janValue = oneItemVariantJan[i].value;
       let stockValue = oneItemVariantStock[i].value;
       newTableChoices.innerHTML = `<div class="variant-title variant-col" id="cell-name-value">${choicesValue}</div>`;
-      newTableContent.innerHTML = `<div class="variant-info variant-col"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">${stockValue}</p><p class="table-p"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+      newTableContent.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">${stockValue}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
       
       
       if(newTableChoices.firstChild){
@@ -1140,6 +1184,9 @@
                 </div>
 
               `;
+
+    //change add item button
+    addItemBtnChange(document.getElementById('variety-table'), document.getElementById('one-item-btn'));
 
     //hide modal
     $('#oneItemVariant').modal('hide');
@@ -1264,7 +1311,7 @@
 
           for(let j = 0; j < firstOfTwoVariantChoicesOriginal.length; j++){
             let addInfoCol = document.createElement('div');
-            addInfoCol.innerHTML = `<div class="variant-info variant-col"><p class="table-p" id="cell-name-value">${firstOfTwoVariantChoicesOriginal[j].value} / ${lastOfTwoVariantChoicesOriginal[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+            addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value">${firstOfTwoVariantChoicesOriginal[j].value} / ${lastOfTwoVariantChoicesOriginal[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
             let id = `two-variant-cont-row-${i}`;
 
             if(addInfoCol.firstChild){
@@ -1350,7 +1397,7 @@
         //add column to id
         for(let l =0; l < topOriginal.length; l++){
           let helperElement = document.createElement('div');
-          helperElement.innerHTML =`<div class="variant-info variant-col"><p class="table-p" id="cell-name-value">${topOriginal[l]} / ${leftExisting[i]}</p><p class="text-center table-p" id="jan-id-r${i}c${j}"></p><p class="text-center table-p" id="stock-id-r${i}c${j}"></p><p class="table-p"><i class="far edit-btn" id="edit-id-r${i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+          helperElement.innerHTML =`<div class="variant-info variant-col" style="display: grid"><p class="table-p" id="cell-name-value">${topOriginal[l]} / ${leftExisting[i]}</p><p class="text-center table-p" id="jan-id-r${i}c${j}"></p><p class="text-center table-p" id="stock-id-r${i}c${j}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
           
 
           if(helperElement.firstChild){
@@ -1376,7 +1423,7 @@
 
           for(let j = 0; j < topExistingPlusOriginal.length; j++){
             let addInfoCol = document.createElement('div');
-            addInfoCol.innerHTML = `<div class="variant-info variant-col"><p class="table-p" id="cell-name-value">${topExistingPlusOriginal[j]} / ${leftOriginal[i]}</p><p class="text-center table-p" id="jan-id-r${m+i}c${j}"></p><p class="text-center table-p" id="stock-id-r${m+i}c${j}"></p><p class="table-p"><i class="far edit-btn" id="edit-id-r${m+i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+            addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value">${topExistingPlusOriginal[j]} / ${leftOriginal[i]}</p><p class="text-center table-p" id="jan-id-r${m+i}c${j}"></p><p class="text-center table-p" id="stock-id-r${m+i}c${j}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${m+i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
             let id = `two-variant-cont-row-${m + i}`;
 
             if(addInfoCol.firstChild){
@@ -1430,6 +1477,9 @@
                   </div>
                 `;
     
+    //change add item button
+    addItemBtnChange(document.getElementById('variety-table-two'), document.getElementById('two-items-btn'));
+
     $('#twoItemsVariant').modal('hide');
 
   }
