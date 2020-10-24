@@ -55,8 +55,8 @@
                             <img src="/static/img/ja.png" alt="" style="width: 30px">
                         {% endif %}
                     </a>
-                    <ul class="dropdown-menu pull-right pointer" style="width: 70px;">
-                        <li style="width: 100%">
+                    <ul class="dropdown-menu pull-right pointer" style="width: 70px; background-color: #a9d96c;">
+                        <li style="width: 100%; padding-left: 5%;">
                             <form action="/api/change-language/" method="POST" class="language-form-en">
                                 {% csrf_token %}
                                 <input type="hidden" name="language" value="en">
@@ -65,7 +65,7 @@
                                 {%  trans 'ENGLISH' %}</a>
                             </form>
                         </li>
-                        <li style="width: 100%">
+                        <li style="width: 100%; padding-left: 5%;">
                             <form action="/api/change-language/" method="POST" class="language-form-ja">
                                 {% csrf_token %}
                                 <input type="hidden" name="language" value="ja">

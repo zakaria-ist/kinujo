@@ -293,9 +293,7 @@ def profile_add(request):
                     profile.is_approved = True
                 else:
                     profile.is_approved = False
-                    
-                profile.save()
-
+                
                 if profile.authority_id == AUTHORITY_TYPE['AMBASSADOR']:
                     if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
                         profile.introducer_id = int(request.POST.get('general_store'))
@@ -303,6 +301,8 @@ def profile_add(request):
                 elif profile.authority_id in (AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']):
                     if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
                         profile.introducer_id = int(request.POST.get('introducer'))
+
+                profile.save()
 
                 profile_image = request.FILES.get('profile_image', False)
                 if profile_image:
