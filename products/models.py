@@ -56,7 +56,7 @@ class ProductVariety(models.Model):
 
 
 class ProductVarietySelection(models.Model):
-    product_variety = models.ForeignKey(ProductVariety, on_delete=models.CASCADE)
+    product_variety = models.ForeignKey(ProductVariety, on_delete=models.CASCADE, null=True)
     selection = models.CharField(max_length=255, default='')
 
     is_hidden = models.BooleanField(default=False)
@@ -65,8 +65,8 @@ class ProductVarietySelection(models.Model):
 
 
 class ProductJancode(models.Model):
-    horizontal = models.ForeignKey(ProductVarietySelection, on_delete=models.CASCADE, related_name='jancode_horizontal')
-    vertical = models.ForeignKey(ProductVarietySelection, on_delete=models.CASCADE, related_name='jancode_vertical')
+    horizontal = models.ForeignKey(ProductVarietySelection, on_delete=models.CASCADE, related_name='jancode_horizontal', null=True)
+    vertical = models.ForeignKey(ProductVarietySelection, on_delete=models.CASCADE, related_name='jancode_vertical', null=True)
     jan_code = models.CharField(max_length=255, default='')
     stock = models.BigIntegerField(validators=[MaxValueValidator(99999999999)], default=0)
 

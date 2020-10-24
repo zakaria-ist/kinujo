@@ -238,12 +238,12 @@
 
               <div class="form-group row">
                 <label class="col-md-4 p-2" for="name">{% trans 'JAN code' %}</label>
-                <input type="text" class="form-control col-md-8" id="name">
+                <input type="text" class="form-control col-md-8" id="jan_code">
               </div>
 
               <div class="form-group row">
                 <label class="col-md-4 p-2" for="name">{% trans 'Stock Quantity' %}</label>
-                <input type="text" class="form-control col-md-3" id="name">
+                <input type="text" class="form-control col-md-3" id="stock">
               </div>
 
               <div class="form-group row form-check form-check-inline" style="align-items: baseline;">
@@ -291,7 +291,7 @@
               </div>
 
               <div class="form-group row form-check form-check-inline" style="align-items: baseline;">
-                <label class="col-md-4 p-2" for="target">For Sale:</label>
+                <label class="col-md-4 p-2" for="target">{% trans 'For Sale:' %}</label>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
                   <input type="radio" id="all-users" name="target" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="all-users">{% trans 'All Users' %}</label>
@@ -447,7 +447,7 @@
           <div class="modal-body">
             <form class="form-inline">
               <div class="form-group">
-                <label for="one-item-title" class="col-form-label">Title:</label>
+                <label for="one-item-title" class="col-form-label">{% trans 'Title:' %}</label>
                 <input value="Color" type="text" class="form-control" id="one-item-title" placeholder="Color, Size, etc">
                 <p class="text-danger" id="title-error"></p>
               </div>
@@ -593,8 +593,7 @@
           </div>
           <div class="modal-footer">
             <div>
-              <p>{% trans '*If you delete the option, the registered JAN code and inventory
-                information will also be deleted' %}</p>
+              <p>{% trans '*If you delete the option, the registered JAN code and inventory information will also be deleted' %}</p>
             </div>
             <button type="button" class="btn btn-secondary" data-dismiss="modal" style="display: none;">{% trans 'Close' %}</button>
             <button type="button" id="two-items-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="saveTwoItemsData();">{% trans 'Save' %}</button>

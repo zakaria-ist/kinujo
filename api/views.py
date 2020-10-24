@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User, Group
 from orders.models import Order, OrderProduct, OrderProductCommission, OrderReceipt, TotalSale, TotalCommission
 from policies.models import Policy
+from images.models import Image
 from prefectures.models import Prefecture
 from products.models import ProductCategory, Product, ProductImage, ProductVariety, ProductVarietySelection, ProductJancode
-from profiles.models import Authority, Profile, UserSale, UserCommision, MonthlyPayment, Address
+from profiles.models import FinancialAccount, Authority, Profile, UserSale, UserCommision, MonthlyPayment, Address
 from taxes.models import TaxRate
 from rest_framework import viewsets, status
 from rest_framework.request import Request
@@ -13,7 +14,7 @@ from django.http import HttpResponseRedirect
 from django.utils import translation
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import activate, deactivate_all
-from .serializers import UserSerializer, GroupSerializer,  OrderSerializer, OrderProductSerializer, OrderProductCommissionSerializer, OrderReceiptSerializer, TotalSaleSerializer, TotalCommissionSerializer, PolicySerializer, PrefectureSerializer, ProductCategorySerializer, ProductSerializer, ProductImageSerializer, ProductVarietySerializer, ProductVarietySelectionSerializer, ProductJancodeSerializer, AuthoritySerializer, ProfileSerializer, UserSaleSerializer, UserCommisionSerializer, MonthlyPaymentSerializer, AddressSerializer, TaxRateSerializer
+from .serializers import ImageSerializer, FinancialAccountSerialier, UserSerializer, GroupSerializer,  OrderSerializer, OrderProductSerializer, OrderProductCommissionSerializer, OrderReceiptSerializer, TotalSaleSerializer, TotalCommissionSerializer, PolicySerializer, PrefectureSerializer, ProductCategorySerializer, ProductSerializer, ProductImageSerializer, ProductVarietySerializer, ProductVarietySelectionSerializer, ProductJancodeSerializer, AuthoritySerializer, ProfileSerializer, UserSaleSerializer, UserCommisionSerializer, MonthlyPaymentSerializer, AddressSerializer, TaxRateSerializer
 from rest_framework.test import APIRequestFactory
 import requests 
 import json
@@ -38,6 +39,9 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
 
+class ImageViewSet(viewsets.ModelViewSet):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
@@ -157,6 +161,13 @@ class ProfileViewSet(viewsets.ModelViewSet):
     """
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+
+class FinancialAccountViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = FinancialAccount.objects.all()
+    serializer_class = FinancialAccountSerialier
 
 class UserSaleViewSet(viewsets.ModelViewSet):
     """
@@ -296,6 +307,17 @@ class ProductList(APIView):
         productSerializer = ProductSerializer(products, many=True, context=getContext())
         return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
 
+class OrderList(APIView):
+    serializer_class = ProductSerializer
+
+    def get(self, request, userId, format='json'):
+
+        profile = Profile.objects.get(id=5)
+        profileSerializer = ProfileSerializer(profile, context=getContext())
+        orders = Order.objects.filter(user=userId);
+        orderSerializer = OrderSerializer(products, many=True, context=getContext())
+        return Response({"success" : True, "orders" : orderSerializer.data}, status=status.HTTP_200_OK)
+
 class CustomerList(APIView):
     serializer_class = ProductSerializer
 
@@ -303,7 +325,19 @@ class CustomerList(APIView):
         orders = Order.objects.filter(seller=userId).values_list('id', flat=True)
         profiles = Profile.objects.filter(id__in=orders)
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
-        return Response({"success" : True, "orders" : profileSerializer.data}, status=status.HTTP_200_OK)
+        return Response({"success" : True, "customers" : profileSerializer.data}, status=status.HTTP_200_OK)
+
+class FinancialAccountGet(APIView):
+    serializer_class = ProductSerializer
+
+    def get(self, request, userId, format='json'):
+        financialAccount = FinancialAccount.objects.filter(user=userId)
+        if len(financialAccount) > 0:
+            financialAccount = financialAccount[0]
+        else:
+            financialAccount = FinancialAccount()
+        financialAccountSerialier = FinancialAccountSerialier(financialAccount, context=getContext())
+        return Response({"success" : True, "financialAccount" : financialAccountSerialier.data}, status=status.HTTP_200_OK)
 
 @csrf_exempt
 def change_language(request):
