@@ -164,7 +164,9 @@ def product_add(request):
                 productImage.save()
 
             # save product varieties
+            varities = json.loads(request.POST.get('varities'))
             if product.variety == 0: # None
+                obj = varities[0]
                 productVariety = ProductVariety()
                 productVariety.name = ''
                 productVariety.vertical_and_horizontal = 0
@@ -177,12 +179,11 @@ def product_add(request):
                 productVarietySelection.save()
 
                 productJancode = ProductJancode()
-                productJancode.jan_code = request.POST.get('jan_code')
-                productJancode.stock = request.POST.get('stock')
+                productJancode.jan_code = obj['jan_code']
+                productJancode.stock = obj['stock']
                 productJancode.horizontal_id = productVarietySelection.id
                 productJancode.save()
             else:
-                varities = json.loads(request.POST.get('varities'))
                 if product.variety == 1: # Horizontal or vertical
                     for obj in varities:
                         obj_varities = obj['varities']
@@ -314,7 +315,9 @@ def product_edit(request, product_id):
                 productVariety.delete()
 
             # save product new varieties
+            varities = json.loads(request.POST.get('varities'))
             if product.variety == 0: # None
+                obj = varities[0]
                 productVariety = ProductVariety()
                 productVariety.name = ''
                 productVariety.vertical_and_horizontal = 0
@@ -327,12 +330,11 @@ def product_edit(request, product_id):
                 productVarietySelection.save()
 
                 productJancode = ProductJancode()
-                productJancode.jan_code = request.POST.get('jan_code')
-                productJancode.stock = request.POST.get('stock')
+                productJancode.jan_code = obj['jan_code']
+                productJancode.stock = obj['stock']
                 productJancode.horizontal_id = productVarietySelection.id
                 productJancode.save()
             else:
-                varities = json.loads(request.POST.get('varities'))
                 if product.variety == 1: # Horizontal or vertical
                     for obj in varities:
                         obj_varities = obj['varities']
@@ -526,7 +528,9 @@ def add_update_product(request):
                     productVariety.delete()
 
                 # save product new varieties
+                varities = json.loads(request.POST.get('varities'))
                 if product.variety == 0: # None
+                    obj = varities[0]
                     productVariety = ProductVariety()
                     productVariety.name = ''
                     productVariety.vertical_and_horizontal = 0
@@ -539,12 +543,11 @@ def add_update_product(request):
                     productVarietySelection.save()
 
                     productJancode = ProductJancode()
-                    productJancode.jan_code = request.POST.get('jan_code')
-                    productJancode.stock = request.POST.get('stock')
+                    productJancode.jan_code = obj['jan_code']
+                    productJancode.stock = obj['stock']
                     productJancode.horizontal_id = productVarietySelection.id
                     productJancode.save()
                 else:
-                    varities = json.loads(request.POST.get('varities'))
                     if product.variety == 1: # Horizontal or vertical
                         for obj in varities:
                             obj_varities = obj['varities']
@@ -633,7 +636,9 @@ def add_update_product(request):
                     productImage.save()
 
                 # save product varieties
+                varities = json.loads(request.POST.get('varities'))
                 if product.variety == 0: # None
+                    obj = varities[0]
                     productVariety = ProductVariety()
                     productVariety.name = ''
                     productVariety.vertical_and_horizontal = 0
@@ -646,12 +651,11 @@ def add_update_product(request):
                     productVarietySelection.save()
 
                     productJancode = ProductJancode()
-                    productJancode.jan_code = request.POST.get('jan_code')
-                    productJancode.stock = request.POST.get('stock')
+                    productJancode.jan_code = obj['jan_code']
+                    productJancode.stock = obj['stock']
                     productJancode.horizontal_id = productVarietySelection.id
                     productJancode.save()
                 else:
-                    varities = json.loads(request.POST.get('varities'))
                     if product.variety == 1: # Horizontal or vertical
                         for obj in varities:
                             obj_varities = obj['varities']
