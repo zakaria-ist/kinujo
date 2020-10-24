@@ -30,7 +30,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'kinujo_local_db',
         'USER': 'root',
-        'PASSWORD': 'password',
+        'PASSWORD': '123456Sayeed',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }

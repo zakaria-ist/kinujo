@@ -53,6 +53,11 @@ def reset_password(request):
                     user.set_password(password)
                     user.save()
 
+                    profile = Profile.objects.filter(user_id=user.id, is_hidden=False).first()
+                    if profile:
+                        profile.password = password
+                        profile.save()
+
                     user = authenticate(username=username, password=password)
                     if user is not None:
                         login(request, user)
@@ -62,11 +67,13 @@ def reset_password(request):
 
     return render(request, 'password-reset.html')
 
+
 def login_master(request):
     """
     Method to master login.
     """
 
+    state = ""
     if request.method == 'POST':
         try:
             username = request.POST.get('username')
@@ -76,33 +83,42 @@ def login_master(request):
                 login(request, user)
                 return HttpResponsePermanentRedirect(reverse('home_load'))
             else:
-                return render(request, 'master_login.html')
+                state = "Check username & password"
+                return render(request, 'master_login.html', {'state': state})
         except Exception as e:
+            state = "Check username & password"
             print(e)
-            return render(request, 'master_login.html')
+            return render(request, 'master_login.html', {'state': state})
 
-    return render(request, 'master_login.html')
+    return render(request, 'master_login.html', {'state': state})
+
 
 def login_sales(request):
     """
     Method to sales login.
     """
     
+    state = ""
     if request.method == 'POST':
         try:
             username = request.POST.get('username')
             password = request.POST.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request, user)
-                return redirect('listing_home_load')
+                if user.is_seller:
+                    login(request, user)
+                    return redirect('listing_home_load')
+                else:
+                    state = "User is not seller account"
             else:
-                return render(request, 'sales_login.html')
+                state = "Check username & password"
+                return render(request, 'sales_login.html', {'state': state})
         except Exception as e:
             print(e)
-            return render(request, 'sales_login.html')
+            state = "Check username & password"
+            return render(request, 'sales_login.html', {'state': state})
 
-    return render(request, 'sales_login.html')
+    return render(request, 'sales_login.html', {'state': state})
 
 def logout_user(request):
     """
@@ -179,6 +195,64 @@ def ProfileList__asJson(request):
     json_content = json.dumps(content, ensure_ascii=False)
     return HttpResponse(json_content, content_type='application/json')
 
+
+# @login_required
+def ClientList__asJson(request):
+    """
+    Method to get client list as JSON.
+    """
+
+    draw = request.GET['draw']
+    start = request.GET['start']
+    length = request.GET['length']
+    search = request.GET['search[value]']
+
+    profile_id = int(request.GET.get('profile_id'))
+    auth_type = eval(request.GET.get('filter_str'))
+
+    profile_list = Profile.objects.filter(introducer_id=profile_id, is_hidden=False).order_by('authority_id')
+
+    if(len(auth_type)):
+        profile_list = profile_list.filter(authority_id__in=auth_type)
+        
+    records_total = profile_list.count()
+
+    if search:  # Filter data base on search
+        profile_list = profile_list.filter(Q(nickname__icontains=search) | Q(created__icontains=search)).order_by('-nickname')
+
+    # All data
+    records_filtered = profile_list.count()
+    # Order by list_limit base on order_dir and order_column
+    order_column = request.GET['order[0][column]']
+    column_name = ""
+    if order_column == "2":
+        column_name = "nickname"
+    if order_column == "3":
+        column_name = "created"
+    
+    order_dir = request.GET['order[0][dir]']
+    list = []
+    if order_dir == "asc":
+        list = profile_list.order_by(column_name)[int(start):(int(start) + int(length))]
+    elif order_dir == "desc":
+        list = profile_list.order_by('-' + column_name)[int(start):(int(start) + int(length))]
+
+    array = []
+    i = 0
+    for field in list:
+        i = i + 1
+        data = {"no": str(i),
+                "id": str(field.id),
+                "type": field.authority.name,
+                "nickname": field.nickname,
+                "created": field.created.strftime("%Y-%m-%d")
+                }
+        array.append(data)
+
+    content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
+    json_content = json.dumps(content, ensure_ascii=False)
+    return HttpResponse(json_content, content_type='application/json')
+
 # @login_required
 # def upload_profile_image(request):
 #     if request.method == 'POST':
@@ -208,8 +282,18 @@ def profile_add(request):
                 profile.user_code = request.POST.get('user_code')
                 if request.POST.get('birthday'):
                     profile.birthday = request.POST.get('birthday')
-                profile.save()
+                
+                if request.POST.get('is_seller') == '1':
+                    profile.is_seller = True
+                else:
+                    profile.is_seller = False
 
+                if profile.authority_id in (AUTHORITY_TYPE['AMBASSADOR'], AUTHORITY_TYPE['GENERAL'],
+                    AUTHORITY_TYPE['MASTER'], AUTHORITY_TYPE['SPECIAL']):
+                    profile.is_approved = True
+                else:
+                    profile.is_approved = False
+                
                 if profile.authority_id == AUTHORITY_TYPE['AMBASSADOR']:
                     if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
                         profile.introducer_id = int(request.POST.get('general_store'))
@@ -217,6 +301,8 @@ def profile_add(request):
                 elif profile.authority_id in (AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']):
                     if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
                         profile.introducer_id = int(request.POST.get('introducer'))
+
+                profile.save()
 
                 profile_image = request.FILES.get('profile_image', False)
                 if profile_image:
@@ -238,8 +324,8 @@ def profile_add(request):
     else:
         form = ProfileForm()
     
-    store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['AMBASSADOR']).values('id', 'nickname') #authority_id=2 ambassador
-    profile_list = Profile.objects.filter(is_hidden=False).exclude(authority_id=AUTHORITY_TYPE['AMBASSADOR']).values('id', 'nickname')
+    store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['SPECIAL']).values('id', 'nickname')
+    profile_list = list(Profile.objects.filter(is_hidden=False).values_list('id', 'nickname', 'authority_id'))
     return render(request, 'profile_form.html', {'form': form, 
                                                 'media_url': s.MEDIA_URL, 
                                                 'store_list': store_list,
@@ -289,6 +375,16 @@ def profile_edit(request, profile_id):
 
                 if request.POST.get('birthday'):
                     profile.birthday = request.POST.get('birthday')
+
+                if request.POST.get('is_seller') == '1':
+                    profile.is_seller = True
+                else:
+                    profile.is_seller = False
+                if request.POST.get('is_approved') == '1':
+                    profile.is_approved = True
+                else:
+                    profile.is_approved = False
+
                 profile.save()
                 
                 profile_image = request.FILES.get('profile_image', False)
@@ -320,8 +416,8 @@ def profile_edit(request, profile_id):
     profile = Profile.objects.get(pk=profile_id)
     form = ProfileForm(instance=profile)
     
-    store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['AMBASSADOR']).exclude(id=profile_id).values('id', 'nickname') #authority_id=2 ambassador
-    profile_list = Profile.objects.filter(is_hidden=False).exclude(id=profile_id).exclude(authority_id=AUTHORITY_TYPE['AMBASSADOR']).values('id', 'nickname')
+    store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['SPECIAL']).exclude(id=profile_id).values('id', 'nickname')
+    profile_list = list(Profile.objects.filter(is_hidden=False).exclude(id=profile_id).values_list('id', 'nickname', 'authority_id'))
     prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
     return render(request, 'profile_form.html', {'form': form, 
                                                 'media_url': s.MEDIA_URL, 

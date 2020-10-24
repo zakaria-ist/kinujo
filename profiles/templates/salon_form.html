@@ -84,3 +84,16 @@
         </div>
     </div>
 </section>
+
+<script>
+$('#salon_zip_code').jpostal({   
+      postcode : [
+        '#salon_zip_code'
+      ],
+      address : {
+        '#salon_prefecture'  : '%3',
+        '#salon_address1'  : '%4, %5',
+        '#salon_address2'  : '%8, %9, %10',
+      }
+  });
+</script>

@@ -50,27 +50,27 @@
                 <li role="presentation" class="dropdown">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                         {% if LANGUAGE_CODE == "en" %}
-                            <img src="{% static 'img/en.png' %}" alt="" style="width: 30px">
+                            <img src="/static/img/en.png" alt="" style="width: 30px">
                         {% else %}
-                            <img src="{% static 'img/ja.png' %}" alt="" style="width: 30px">
+                            <img src="/static/img/ja.png" alt="" style="width: 30px">
                         {% endif %}
                     </a>
-                    <ul class="dropdown-menu pull-right pointer" style="width: 70px;">
-                        <li style="width: 100%">
+                    <ul class="dropdown-menu pull-right pointer" style="width: 70px; background-color: #a9d96c;">
+                        <li style="width: 100% padding-left: 5%;">
                             <form action="/api/change-language/" method="POST" class="language-form-en">
                                 {% csrf_token %}
                                 <input type="hidden" name="language" value="en">
                                 <a onclick="$('.language-form-en').submit()" style="width: 100%">
-                                    <img src="{% static 'img/en.png' %}" alt="" style="width: 30px">
+                                    <img src="/static/img/en.png" alt="" style="width: 30px">
                                 {%  trans 'ENGLISH' %}</a>
                             </form>
                         </li>
-                        <li style="width: 100%">
+                        <li style="width: 100% padding-left: 5%;">
                             <form action="/api/change-language/" method="POST" class="language-form-ja">
                                 {% csrf_token %}
                                 <input type="hidden" name="language" value="ja">
                                 <a onclick="$('.language-form-ja').submit()" style="width: 100%">
-                                    <img src="{% static 'img/ja.png' %}" alt="" style="width: 30px">
+                                    <img src="/static/img/ja.png" alt="" style="width: 30px">
                                 {%  trans 'JAPANESE' %}</a>
                             </form>
                         </li>

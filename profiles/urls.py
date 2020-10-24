@@ -6,6 +6,7 @@ from profiles import views
 urlpatterns = [
     url(r'^profile_list/$', views.profile_list, name='profile_list'),
     url(r'^profile_list_json/$', views.ProfileList__asJson, name='ProfileList__asJson'),
+    url(r'^client_list_json/$', views.ClientList__asJson, name='ClientList__asJson'),
     url(r'^profile_add/$', views.profile_add, name='profile_add'),
     url(r'^profile_edit/(?P<profile_id>.*)/$', views.profile_edit, name='profile_edit'),
     url(r'^profile_delete/(?P<profile_id>.*)/$', views.profile_delete, name='profile_delete'),
