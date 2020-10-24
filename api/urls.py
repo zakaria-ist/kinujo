@@ -26,6 +26,8 @@ router.register(r'user_commissions', views.UserCommisionViewSet)
 router.register(r'monthly_payments', views.MonthlyPaymentViewSet)
 router.register(r'addresses', views.AddressViewSet)
 router.register(r'tax_rates', views.TaxRateViewSet)
+router.register(r'financial_account', views.FinancialAccountViewSet)
+router.register(r'images', views.ImageViewSet)
 
 urlpatterns = [
     url(r'user/register/check', views.CheckRegister.as_view(), name='check-register'),
@@ -34,7 +36,9 @@ urlpatterns = [
     url(r'user/login', views.UserLogin.as_view(), name='user-login'),
     url(r'app/config', views.AppConfig.as_view(), name='app-config'),
     url('^products/(?P<userId>.+)/$', views.ProductList.as_view()),
+    url('^orders/(?P<userId>.+)/$', views.OrderList.as_view()),
     url('^customers/(?P<userId>.+)/$', views.CustomerList.as_view()),
+    url('^financial-account/(?P<userId>.+)/$', views.FinancialAccountGet.as_view()),
     url(r'^change-language/$', views.change_language, name='change_language'),
 ]
 urlpatterns += router.urls
