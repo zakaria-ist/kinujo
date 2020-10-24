@@ -1,4 +1,3 @@
-
 {% block extrahead %}
     {% load static %}
     {% load i18n %}
@@ -934,16 +933,24 @@
     }
 
     // //save new value to the table
-    janDiv.innerHTML = newJanCode.value;
+    if(newJanCode.value.trim() === ''){
+      document.getElementById('janErrorEdit').innerHTML = `JAN code can't be empty`;
+      newJanCode.focus();
+      return;
+    }else{
+      janDiv.innerHTML = newJanCode.value;
+    }
     
     //check empty stock
     if(newStock.value.trim() === ''){
       return document.getElementById('janErrorEdit').innerHTML = 'Stock is empty. Put 0 to keep previous value';
+      newStock.focus();
     }else{
       if(isNaN(Number(newStock.value))){
 
-      return document.getElementById('janErrorEdit').innerHTML = 'Stock should contain only number, -, + ';
-
+      document.getElementById('janErrorEdit').innerHTML = 'Stock should contain only number, -, + ';
+      newStock.focus();
+      return;
       //keep the value same
       //newStockValue = Number(stockDiv.innerHTML);
 
@@ -951,8 +958,6 @@
       newStockValue = Number(stockDiv.innerHTML) + Number(newStock.value);
       }
     }
-    
-    
     
     
     stockDiv.innerHTML = newStockValue;
@@ -1258,7 +1263,7 @@
     }
 
 
-
+    //if empty table
     if(varietyTableTwo.innerHTML.trim() === ''){
       varietyTableTwo.innerHTML = `
       <div class="col-md-2" style="max-width: 140px; min-width: 140px;">
@@ -1286,43 +1291,106 @@
       `;
 
       // loop for save
-      for(let i = 0; i < firstOfTwoVariantChoicesOriginal.length; i++){
-        let newTableFirstChoices = document.createElement('div'); 
-        let newTableLastChoices = document.createElement('div');
-        let infoRow = document.createElement('div');
-        let firstChoicesValue = firstOfTwoVariantChoicesOriginal[i].value;
-        let lastChoicesValue = lastOfTwoVariantChoicesOriginal[i].value;
+      //if last choice length if bigger than first
+      if(lastOfTwoVariantChoicesOriginal.length > firstOfTwoVariantChoicesOriginal.length){
 
-        newTableLastChoices.innerHTML = `<div class="variant-title variant-title-left variant-col">${lastChoicesValue}</div>`;
-        newTableFirstChoices.innerHTML = `<div class="variant-title variant-title-top variant-col">${firstChoicesValue}</div>`;
-        infoRow.innerHTML = `<div class="row flex-wrap" id="two-variant-cont-row-${i}">
+        for(let i = 0; i < lastOfTwoVariantChoicesOriginal.length; i++){
+          let newTableFirstChoices = document.createElement('div'); 
+          let newTableLastChoices = document.createElement('div');
+          let infoRow = document.createElement('div');
+          let lastChoicesValue = lastOfTwoVariantChoicesOriginal[i].value;
+          let firstChoicesValue;
+          if(firstOfTwoVariantChoicesOriginal[i] === undefined){
+            firstOfTwoVariantChoicesOriginal[i] = 'empty';
+            firstChoicesValue = 'empty'
+            
+          }else{
+            firstChoicesValue = firstOfTwoVariantChoicesOriginal[i].value;
+          }
+          newTableLastChoices.innerHTML = `<div class="variant-title variant-title-left variant-col">${lastChoicesValue}</div>`;
+          newTableFirstChoices.innerHTML = `<div class="variant-title variant-title-top variant-col">${firstChoicesValue}</div>`;
+          infoRow.innerHTML = `<div class="row flex-wrap" id="two-variant-cont-row-${i}">
+                
+              </div>`;
+
+          if(newTableLastChoices.firstChild){
+            document.getElementById('two-variant-info-left').appendChild(newTableLastChoices.firstChild);
+          }
+          if(newTableFirstChoices.firstChild){
+            document.getElementById('two-variant-title-row').appendChild(newTableFirstChoices.firstChild);
+          }
+
+          if(infoRow.firstChild){
+            document.getElementById('addTwoItems').appendChild(infoRow.firstChild);
+
+            for(let j = 0; j < firstOfTwoVariantChoicesOriginal.length; j++){
+              let addInfoCol = document.createElement('div');
               
-            </div>`;
+                addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value">${firstOfTwoVariantChoicesOriginal[j].value} / ${lastOfTwoVariantChoicesOriginal[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+              
+              
+              let id = `two-variant-cont-row-${i}`;
 
-        if(newTableLastChoices.firstChild){
-          document.getElementById('two-variant-info-left').appendChild(newTableLastChoices.firstChild);
-        }
-        if(newTableFirstChoices.firstChild){
-          document.getElementById('two-variant-title-row').appendChild(newTableFirstChoices.firstChild);
-        }
-
-        if(infoRow.firstChild){
-          document.getElementById('addTwoItems').appendChild(infoRow.firstChild);
-
-          for(let j = 0; j < firstOfTwoVariantChoicesOriginal.length; j++){
-            let addInfoCol = document.createElement('div');
-            addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value">${firstOfTwoVariantChoicesOriginal[j].value} / ${lastOfTwoVariantChoicesOriginal[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
-            let id = `two-variant-cont-row-${i}`;
-
-            if(addInfoCol.firstChild){
-              document.getElementById(id).appendChild(addInfoCol.firstChild);
+              if(addInfoCol.firstChild){
+                document.getElementById(id).appendChild(addInfoCol.firstChild);
+              }
             }
           }
+
+
+
         }
 
-        
+      }else{
+        //if two choices are equal or  firstOfTwoVariantChoicesOriginal > lastOfTwoVariantChoicesOriginal
+        for(let i = 0; i < firstOfTwoVariantChoicesOriginal.length; i++){
+          let newTableFirstChoices = document.createElement('div'); 
+          let newTableLastChoices = document.createElement('div');
+          let infoRow = document.createElement('div');
+          let firstChoicesValue = firstOfTwoVariantChoicesOriginal[i].value;
+          let lastChoicesValue;
+          if(lastOfTwoVariantChoicesOriginal[i] === undefined){
+            lastOfTwoVariantChoicesOriginal[i] = 'empty';
+            lastChoicesValue = 'empty'
+            
+          }else{
+            lastChoicesValue = lastOfTwoVariantChoicesOriginal[i].value;
+          }
+          newTableLastChoices.innerHTML = `<div class="variant-title variant-title-left variant-col">${lastChoicesValue}</div>`;
+          newTableFirstChoices.innerHTML = `<div class="variant-title variant-title-top variant-col">${firstChoicesValue}</div>`;
+          infoRow.innerHTML = `<div class="row flex-wrap" id="two-variant-cont-row-${i}">
+                
+              </div>`;
+
+          if(newTableLastChoices.firstChild){
+            document.getElementById('two-variant-info-left').appendChild(newTableLastChoices.firstChild);
+          }
+          if(newTableFirstChoices.firstChild){
+            document.getElementById('two-variant-title-row').appendChild(newTableFirstChoices.firstChild);
+          }
+
+          if(infoRow.firstChild){
+            document.getElementById('addTwoItems').appendChild(infoRow.firstChild);
+
+            for(let j = 0; j < firstOfTwoVariantChoicesOriginal.length; j++){
+              let addInfoCol = document.createElement('div');
+              if(lastOfTwoVariantChoicesOriginal[i] === undefined){
+                addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value">${firstOfTwoVariantChoicesOriginal[j].value} / empty</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+              }else{
+                addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value">${firstOfTwoVariantChoicesOriginal[j].value} / ${lastOfTwoVariantChoicesOriginal[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+              
+              }
+              let id = `two-variant-cont-row-${i}`;
+
+              if(addInfoCol.firstChild){
+                document.getElementById(id).appendChild(addInfoCol.firstChild);
+              }
+            }
+          }
 
 
+
+        }
       }
 
     }else{
@@ -1436,8 +1504,24 @@
     }
 
     
+    //delete empty row 
+    for(let i = 0; i < document.getElementsByClassName('variant-title-left').length; i++){
+      if(document.getElementsByClassName('variant-title-left')[i].innerHTML === 'empty'){
+        document.getElementsByClassName('variant-title-left')[i].remove();
+        let deleteId = `two-variant-cont-row-${i}`
+        document.getElementById(deleteId).remove();
+        i--;
+      }
+    }
 
-
+    //delete empty column
+    for(let i = 0; i < document.getElementsByClassName('variant-title-top').length; i++){
+      if(document.getElementsByClassName('variant-title-top')[i].innerHTML.trim() === 'empty'){
+        document.getElementsByClassName('variant-title-top')[i].remove();
+        console.log('deleted' + ' ' + i);
+        i--;
+      }
+    }
     
     // do after saving task here
     varietyTableTwo.style.height = '250px';
