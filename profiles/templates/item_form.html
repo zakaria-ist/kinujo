@@ -753,6 +753,61 @@
 
     //change modal two based on existing table data
     function changeModalTwo(){
+      let firstOfTwoItemGroup = document.getElementById('firstOfTwoItemGroup');
+      let lastOfTwoItemGroup = document.getElementById('lastOfTwoItemGroup');
+
+      if(document.getElementById('variety-table-two').innerHTML.trim() !== ''){
+
+        //empty the forms
+        firstOfTwoItemGroup.innerHTML = '';
+        lastOfTwoItemGroup.innerHTML = '';
+
+        //execute data from table
+        let variantTitleTop = document.getElementsByClassName('variant-title-top');
+        let variantTitleLeft = document.getElementsByClassName('variant-title-left');
+
+        //show data in form
+        // in horizontal form
+        for(let i = 0; i < variantTitleTop.length; i++){
+          let firstOfTwooptionArray = document.getElementsByClassName('first-of-two-variant-counter');
+          let firstOfTwoOptCounter = firstOfTwooptionArray.length + 1;
+
+          let firstOfTwoNewContent = document.createElement('div');
+          firstOfTwoNewContent.innerHTML = `<div class='form-group'>
+                        <p style="width: 20px;" class="m-2"> </p>
+                        <p class="m-2 first-of-two-variant-counter" style="width: 20px;">${firstOfTwoOptCounter}</p>
+                        <input value="${variantTitleTop[i].innerHTML}" type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+                        
+                        <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                        </div>`;
+          
+          if(firstOfTwoNewContent.firstChild) {
+            firstOfTwoItemGroup.appendChild(firstOfTwoNewContent.firstChild);
+          }
+
+        }
+
+        //show data in form
+        // in vertical form
+        for(let i = 0; i < variantTitleLeft.length; i++){
+          let lastOfTwooptionArray = document.getElementsByClassName('last-of-two-variant-counter');
+          let lastOfTwoOptCounter = lastOfTwooptionArray.length + 1;
+
+          let lastOfTwoNewContent = document.createElement('div');
+          lastOfTwoNewContent.innerHTML = `<div class='form-group'>
+                        <p style="width: 20px;" class="m-2"> </p>
+                        <p class="m-2 last-of-two-variant-counter" style="width: 20px;">${lastOfTwoOptCounter}</p>
+                        <input value="${variantTitleLeft[i].innerHTML}" type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+                        
+                        <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                        </div>`;
+          
+          if(lastOfTwoNewContent.firstChild) {
+            lastOfTwoItemGroup.appendChild(lastOfTwoNewContent.firstChild);
+          }
+
+        }
+      }
 
     }
 
@@ -1356,7 +1411,7 @@
       return;
     }
 
-
+    varietyTableTwo.innerHTML = '';
     //if empty table
     if(varietyTableTwo.innerHTML.trim() === ''){
       varietyTableTwo.innerHTML = `
@@ -1660,14 +1715,21 @@
     }
     //end three algorithms to save existing data
     
-    //delete empty row 
+    //delete empty row
+
+    let deleteArray = []
+
     for(let i = 0; i < document.getElementsByClassName('variant-title-left').length; i++){
       if(document.getElementsByClassName('variant-title-left')[i].innerHTML === 'empty'){
-        document.getElementsByClassName('variant-title-left')[i].remove();
-        let deleteId = `two-variant-cont-row-${i}`
-        document.getElementById(deleteId).remove();
-        i--;
+        document.getElementsByClassName('variant-title-left')[i];
+        let deleteId = `two-variant-cont-row-${i}`;
+        deleteArray.push(document.getElementsByClassName('variant-title-left')[i])
+        deleteArray.push(document.getElementById(deleteId));
       }
+    }
+
+    for(let i = 0; i < deleteArray.length; i++){
+      deleteArray[i].remove();
     }
 
     //delete empty column
