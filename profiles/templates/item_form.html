@@ -664,7 +664,7 @@
       if(tableItem === document.getElementById('variety-table')){
         document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ Item / Option</button></div>`;
       }else{
-        document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="two-items-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant">+ Items / Options</button></div>`;
+        document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="two-items-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant" onclick="changeModalTwo();">+ Items / Options</button></div>`;
       }
     }
   }
@@ -689,6 +689,12 @@
         return true;
       }
     }
+
+
+    //algorithms to change modal data
+    // 1. take modal data wrapper and empty it
+    // 2. Extract data from table
+    // 3. put it inside modal form as input and value
 
     //change modal if not empty table
     function changeModalOne(){
@@ -744,6 +750,11 @@
       }
     }
 
+
+    //change modal two based on existing table data
+    function changeModalTwo(){
+
+    }
 
     //starts variant code
     const one = document.getElementById('one');
@@ -997,8 +1008,9 @@
     
     //check empty stock
     if(newStock.value.trim() === ''){
-      return document.getElementById('janErrorEdit').innerHTML = 'Stock is empty. Put 0 to keep previous value';
       newStock.focus();
+      return document.getElementById('janErrorEdit').innerHTML = 'Stock is empty. Put 0 to keep previous value';
+      
     }else{
       if(isNaN(Number(newStock.value))){
 
@@ -1023,10 +1035,15 @@
   //edit btn one function
   function editBtn(obj){
       modalWrapper = document.getElementById('one-modal-wrapper');
-
-      let tableNum = obj.id.split('-')[2];
+      let tableNum;
+      if(document.getElementById('variety-table').innerHTML.trim() === ''){
+        tableNum = obj.parentNode.parentNode.firstChild.id.split('-')[3];
+      }else{
+        tableNum = obj.id.split('-')[2];
+      }
+      
       let cellNameId = `cell-name`;
-      let cellNameValueId = `cell-name-value-${tableNum}`
+      let cellNameValueId = `cell-name-value-${tableNum}`;
 
       //code for cell name show on edit modal
       if(document.getElementById(cellNameId) === undefined){
@@ -1035,6 +1052,7 @@
         leftCellNameValue = '';
         rightCellNameValue = '';
       }else{
+        console.log('not undefined');
         cellName = document.getElementById(cellNameId);
         if(cellName.innerHTML.split('/')[0]){
           leftCellName = cellName.innerHTML.split('/')[0].trim() + ':';
@@ -1050,9 +1068,9 @@
 
 
         //code for cell name value on edit modal
-        if(document.getElementById(cellNameValueId) === null){
+        if(document.getElementById(cellNameValueId) === undefined){
 
-          leftCellNameValue = 'tableNum';
+          leftCellNameValue = '';
           rightCellNameValue = '';
         }else{
           cellNameValue = document.getElementById(cellNameValueId);
@@ -1072,9 +1090,10 @@
       }
       
 
-      
-      let janCodeId = `jan-id-${tableNum}`;
-      let stockId = `stock-id-${tableNum}`;
+      let mixTableNum = obj.id.split('-')[2];
+      console.log(mixTableNum);
+      let janCodeId = `jan-id-${mixTableNum}`;
+      let stockId = `stock-id-${mixTableNum}`;
 
       janDiv = document.getElementById(janCodeId);
       stockDiv = document.getElementById(stockId);
@@ -1401,7 +1420,7 @@
             for(let j = 0; j < firstOfTwoVariantChoicesOriginal.length; j++){
               let addInfoCol = document.createElement('div');
               
-                addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value-${j}">${firstOfTwoVariantChoicesOriginal[j].value} / ${lastOfTwoVariantChoicesOriginal[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+                addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value-r${i}c${j}">${firstOfTwoVariantChoicesOriginal[j].value} / ${lastOfTwoVariantChoicesOriginal[i].value}</p><p class="text-center table-p" id="jan-id-r${i}c${j}"></p><p class="text-center table-p" id="stock-id-r${i}c${j}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
               
               
               let id = `two-variant-cont-row-${i}`;
@@ -1450,9 +1469,9 @@
             for(let j = 0; j < firstOfTwoVariantChoicesOriginal.length; j++){
               let addInfoCol = document.createElement('div');
               if(lastOfTwoVariantChoicesOriginal[i] === undefined){
-                addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value">${firstOfTwoVariantChoicesOriginal[j].value} / empty</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+                addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value-r${i}c${j}">${firstOfTwoVariantChoicesOriginal[j].value} / empty</p><p class="text-center table-p" id="jan-id-r${i}c${j}"></p><p class="text-center table-p" id="stock-id-r${i}c${j}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
               }else{
-                addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value-${j}">${firstOfTwoVariantChoicesOriginal[j].value} / ${lastOfTwoVariantChoicesOriginal[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+                addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value-r${i}c${j}">${firstOfTwoVariantChoicesOriginal[j].value} / ${lastOfTwoVariantChoicesOriginal[i].value}</p><p class="text-center table-p" id="jan-id-r${i}c${j}"></p><p class="text-center table-p" id="stock-id-r${i}c${j}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
               
               }
               let id = `two-variant-cont-row-${i}`;
