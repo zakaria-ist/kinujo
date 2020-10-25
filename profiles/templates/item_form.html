@@ -646,12 +646,10 @@
 
     
   };
-
-
+      //ends image add button increase code
   
   
   //change add item button function
-
   function addItemBtnChange(tableItem, btnItem){
     //change add item button
     if(tableItem.innerHTML.trim() !== ''){
@@ -664,16 +662,14 @@
       btnItem.innerHTML = `add / edit / delete items`;
     }else{
       if(tableItem === document.getElementById('variety-table')){
-        document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant">+ Item / Option</button></div>`;
+        document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ Item / Option</button></div>`;
       }else{
         document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="two-items-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant">+ Items / Options</button></div>`;
       }
     }
   }
 
-  
 
-    //ends image add button increase code
 
 
     //Jan code error check
@@ -691,6 +687,60 @@
         }
       }else{
         return true;
+      }
+    }
+
+    //change modal if not empty table
+    function changeModalOne(){
+      let oneGroupItemWrapper =  document.getElementById('oneItemGroup');
+      let tableOne = document.getElementById('variety-table');
+      if(tableOne.innerHTML.trim() !== ''){
+
+        //empty modal form
+        oneGroupItemWrapper.innerHTML = '';
+
+        //get exisiting data from the table
+        let variantTitleRow = document.getElementById('one-variant-title-row');
+        let variantTitle = variantTitleRow.getElementsByClassName('variant-title ');
+        let variantInfoRowId = document.getElementById('one-variant-info-row');
+        let variantInfo = variantInfoRowId.getElementsByClassName('variant-info');
+        for(let i = 0; i < variantTitle.length; i++){
+          console.log("ls" + variantTitle.length);
+          let varChoices = variantTitle[i].innerHTML;
+          let janId = `jan-id-${i}`;
+          let stockId = `stock-id-${i}`
+          let varJanCode = document.getElementById(janId).innerHTML;
+          let varStock = document.getElementById(stockId).innerHTML;
+        
+
+          //add existing table data to modal form
+          let optCounter;
+          if(document.getElementsByClassName('one-variant-counter') === undefined){
+            optCounter = 1;
+          }else{
+            let optionArray = document.getElementsByClassName('one-variant-counter');
+            optCounter = optionArray.length + 1;
+          }
+          
+          
+
+          let newContent = document.createElement('div');
+          newContent.innerHTML = `<div class='form-group'>
+                        <p style="width: 20px;" class="m-2"> </p>
+                        <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
+                        <input value="${varChoices}" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                        
+                        <input value="${varJanCode}" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+                        
+                        <input value="${varStock}" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                        <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                        </div>`;
+          
+          while (newContent.firstChild) {
+            oneGroupItemWrapper.appendChild(newContent.firstChild);
+          }
+        }
+
       }
     }
 
@@ -799,6 +849,11 @@
   // var modal = $(this)
   // modal.find('.modal-title').text(recipient)
   // modal.find('.modal-body input').val(recipient)
+
+        //change modal on btn click
+
+  
+
   })
   //modal for 2 items variable
     $('#twoItemsVariant').on('show.bs.modal', function (event) {
@@ -827,11 +882,11 @@
     newContent.innerHTML = `<div class='form-group'>
                   <p style="width: 20px;" class="m-2"> </p>
                   <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
-                  <input value="red" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                  <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
                   
-                  <input value="UIUI78" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+                  <input type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
                   
-                  <input value="45" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                  <input type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>`;
     
@@ -969,36 +1024,55 @@
   function editBtn(obj){
       modalWrapper = document.getElementById('one-modal-wrapper');
 
-      //code for sell name show on edit modal
-      cellName = document.getElementById('cell-name');
-      if(cellName.innerHTML.split('/')[0]){
-        leftCellName = cellName.innerHTML.split('/')[0].trim() + ':';
-      }else{
-        leftCellName = '';
-      }
-
-      if(cellName.innerHTML.split('/')[1]){
-        rightCellName = cellName.innerHTML.split('/')[1].trim() + ':';
-      }else{
-        rightCellName = '';
-      }
-
-
-      //code for cell name value on edit modal
-      cellNameValue = document.getElementById('cell-name-value');
-      if(cellNameValue.innerHTML.split('/')[0]){
-        leftCellNameValue = cellNameValue.innerHTML.split('/')[0].trim();
-      }else{
-        leftCellNameValue = '';
-      }
-
-      if(cellNameValue.innerHTML.split('/')[1]){
-        rightCellNameValue = cellNameValue.innerHTML.split('/')[1].trim();
-      }else{
-        rightCellNameValue = '';
-      }
-
       let tableNum = obj.id.split('-')[2];
+      let cellNameId = `cell-name`;
+      let cellNameValueId = `cell-name-value-${tableNum}`
+
+      //code for cell name show on edit modal
+      if(document.getElementById(cellNameId) === undefined){
+        leftCellName = '';
+        rightCellName = '';
+        leftCellNameValue = '';
+        rightCellNameValue = '';
+      }else{
+        cellName = document.getElementById(cellNameId);
+        if(cellName.innerHTML.split('/')[0]){
+          leftCellName = cellName.innerHTML.split('/')[0].trim() + ':';
+        }else{
+          leftCellName = '';
+        }
+
+        if(cellName.innerHTML.split('/')[1]){
+          rightCellName = cellName.innerHTML.split('/')[1].trim() + ':';
+        }else{
+          rightCellName = '';
+        }
+
+
+        //code for cell name value on edit modal
+        if(document.getElementById(cellNameValueId) === null){
+
+          leftCellNameValue = 'tableNum';
+          rightCellNameValue = '';
+        }else{
+          cellNameValue = document.getElementById(cellNameValueId);
+          if(cellNameValue.innerHTML.split('/')[0]){
+            leftCellNameValue = cellNameValue.innerHTML.split('/')[0].trim();
+          }else{
+            leftCellNameValue = '';
+          }
+
+          if(cellNameValue.innerHTML.split('/')[1]){
+            rightCellNameValue = cellNameValue.innerHTML.split('/')[1].trim();
+          }else{
+            rightCellNameValue = '';
+          }
+        }
+        
+      }
+      
+
+      
       let janCodeId = `jan-id-${tableNum}`;
       let stockId = `stock-id-${tableNum}`;
 
@@ -1108,6 +1182,8 @@
 
     const varietyTable = document.getElementById('variety-table');
 
+    varietyTable.innerHTML = '';
+
     //create table wrapper for the one item variant
     if(varietyTable.innerHTML.trim() === ''){
       varietyTable.innerHTML = `
@@ -1141,7 +1217,7 @@
       let choicesValue = oneItemVariantChoices[i].value;
       let janValue = oneItemVariantJan[i].value;
       let stockValue = oneItemVariantStock[i].value;
-      newTableChoices.innerHTML = `<div class="variant-title variant-col" id="cell-name-value">${choicesValue}</div>`;
+      newTableChoices.innerHTML = `<div class="variant-title variant-col" id="cell-name-value-${i}">${choicesValue}</div>`;
       newTableContent.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">${stockValue}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
       
       
@@ -1325,7 +1401,7 @@
             for(let j = 0; j < firstOfTwoVariantChoicesOriginal.length; j++){
               let addInfoCol = document.createElement('div');
               
-                addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value">${firstOfTwoVariantChoicesOriginal[j].value} / ${lastOfTwoVariantChoicesOriginal[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+                addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value-${j}">${firstOfTwoVariantChoicesOriginal[j].value} / ${lastOfTwoVariantChoicesOriginal[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
               
               
               let id = `two-variant-cont-row-${i}`;
@@ -1376,7 +1452,7 @@
               if(lastOfTwoVariantChoicesOriginal[i] === undefined){
                 addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value">${firstOfTwoVariantChoicesOriginal[j].value} / empty</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
               }else{
-                addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value">${firstOfTwoVariantChoicesOriginal[j].value} / ${lastOfTwoVariantChoicesOriginal[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+                addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value-${j}">${firstOfTwoVariantChoicesOriginal[j].value} / ${lastOfTwoVariantChoicesOriginal[i].value}</p><p class="text-center table-p" id="jan-id-r${j}c${i}"></p><p class="text-center table-p" id="stock-id-r${j}c${i}"></p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${j}c${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
               
               }
               let id = `two-variant-cont-row-${i}`;
@@ -1393,6 +1469,10 @@
       }
 
     }else{
+
+      //don't have existing table at all
+      //for existing table
+
       // second item variant re adding to table
       let topOriginal = [];
       let leftOriginal = [];
@@ -1407,51 +1487,96 @@
       let existingTitleTop = document.getElementsByClassName('variant-title-top');
       let existingTitleLeft = document.getElementsByClassName('variant-title-left');
 
+      //existing data top
       for(let k = 0; k < document.getElementsByClassName('variant-title-top').length; k++){
         topExisting.push(existingTitleTop[k].innerHTML);
-        leftExisting.push(existingTitleLeft[k].innerHTML);
 
         //add to the total arrays
         topExistingPlusOriginal.push(existingTitleTop[k].innerHTML);
+      }
+      //existing data left
+      for(let k = 0; k < document.getElementsByClassName('variant-title-left').length; k++){
+        leftExisting.push(existingTitleLeft[k].innerHTML);
+
+        //add to the total arrays
         LeftExistingPlusOriginal.push(existingTitleLeft[k].innerHTML);
       }
-
       
-      //generate original array with value
+      //generate top original array with value 
       for(let l = 0; l < firstOfTwoVariantChoicesOriginal.length; l++){
         topOriginal.push(firstOfTwoVariantChoicesOriginal[l].value);
-        leftOriginal.push(lastOfTwoVariantChoicesOriginal[l].value);
 
         //add to total arrays
         topExistingPlusOriginal.push(firstOfTwoVariantChoicesOriginal[l].value);
+      }
+
+      //generate left original array with value 
+      for(let l = 0; l < lastOfTwoVariantChoicesOriginal.length; l++){
+        leftOriginal.push(lastOfTwoVariantChoicesOriginal[l].value);
+
+        //add to total arrays
         LeftExistingPlusOriginal.push(lastOfTwoVariantChoicesOriginal[l].value);
       }
 
-      // add algorithms
+      // start 3 algorithms to save existing data
       // 1. title for top and left add algorithm
       // 2. loop in top original for left existing. Don't have to create row its already there. just add col. same element for each. So just one loop.
       // 3. loop in top total (topExistingPlusOriginal) for left original. Create row and add column. Different element for each. So two loop.
 
       //1 first add left and top title
-      for(let i = 0; i < firstOfTwoVariantChoicesOriginal.length; i++){
-        let newTableFirstChoices = document.createElement('div'); 
-        let newTableLastChoices = document.createElement('div');
-        let firstChoicesValue = firstOfTwoVariantChoicesOriginal[i].value;
-        let lastChoicesValue = lastOfTwoVariantChoicesOriginal[i].value;
+      if(lastOfTwoVariantChoicesOriginal > firstOfTwoVariantChoicesOriginal.length){
+        for(let i = 0; i < lastOfTwoVariantChoicesOriginal.length; i++){
 
-        newTableLastChoices.innerHTML = `<div class="variant-title variant-title-left variant-col">${lastChoicesValue}</div>`;
-        newTableFirstChoices.innerHTML = `<div class="variant-title variant-title-top variant-col">${firstChoicesValue}</div>`;
+          let newTableFirstChoices = document.createElement('div'); 
+          let newTableLastChoices = document.createElement('div');
+          let lastChoicesValue = lastOfTwoVariantChoicesOriginal[i].value;
+          let firstChoicesValue;        
+          if(firstOfTwoVariantChoicesOriginal[i] === undefined){
+            firstChoicesValue = 'empty';
+          }else{
+            firstChoicesValue = firstOfTwoVariantChoicesOriginal[i].value;
+          }
 
-        if(newTableLastChoices.firstChild){
-          document.getElementById('two-variant-info-left').appendChild(newTableLastChoices.firstChild);
+          newTableLastChoices.innerHTML = `<div class="variant-title variant-title-left variant-col">${lastChoicesValue}</div>`;
+          newTableFirstChoices.innerHTML = `<div class="variant-title variant-title-top variant-col">${firstChoicesValue}</div>`;
+
+          if(newTableLastChoices.firstChild){
+            document.getElementById('two-variant-info-left').appendChild(newTableLastChoices.firstChild);
+          }
+          if(newTableFirstChoices.firstChild){
+            document.getElementById('two-variant-title-row').appendChild(newTableFirstChoices.firstChild);
+          }
+
         }
-        if(newTableFirstChoices.firstChild){
-          document.getElementById('two-variant-title-row').appendChild(newTableFirstChoices.firstChild);
-        }
 
+      }else{
+        for(let i = 0; i < firstOfTwoVariantChoicesOriginal.length; i++){
+
+          let newTableFirstChoices = document.createElement('div'); 
+          let newTableLastChoices = document.createElement('div');
+          let firstChoicesValue = firstOfTwoVariantChoicesOriginal[i].value;
+          let lastChoicesValue;        
+          if(lastOfTwoVariantChoicesOriginal[i] === undefined){
+            lastChoicesValue = 'empty';
+          }else{
+            lastChoicesValue = lastOfTwoVariantChoicesOriginal[i].value;
+          }
+
+          newTableLastChoices.innerHTML = `<div class="variant-title variant-title-left variant-col">${lastChoicesValue}</div>`;
+          newTableFirstChoices.innerHTML = `<div class="variant-title variant-title-top variant-col">${firstChoicesValue}</div>`;
+
+          if(newTableLastChoices.firstChild){
+            document.getElementById('two-variant-info-left').appendChild(newTableLastChoices.firstChild);
+          }
+          if(newTableFirstChoices.firstChild){
+            document.getElementById('two-variant-title-row').appendChild(newTableFirstChoices.firstChild);
+          }
+
+        }
       }
+      
 
-      // 2 Second algorithms execution
+      // 2 Second algorithms execution. fill top original for left existing
       
       for(let i = 0; i < leftExisting.length; i++){
 
@@ -1475,6 +1600,19 @@
         }
         
       }
+      // //part of 2 fill topOriginalPlusExisting for left original
+      // let t = leftExisting.length;
+      // for(let s = 0; s < leftOriginal.length; s++){
+      //   let infoRowTwo = document.createElement('div');
+      //   infoRowTwo.innerHTML = `<div class="row flex-wrap" id="two-variant-cont-row-${t + i}">
+              
+      //   </div>`;
+
+      //   if(infoRowTwo.firstChild){
+      //     document.getElementById('addTwoItems').appendChild(infoRowTwo.firstChild);
+
+      //   }
+      // }
 
       // 3 Third algorithms execution
       let m = leftExisting.length;
@@ -1501,7 +1639,7 @@
 
       }
     }
-
+    //end three algorithms to save existing data
     
     //delete empty row 
     for(let i = 0; i < document.getElementsByClassName('variant-title-left').length; i++){
