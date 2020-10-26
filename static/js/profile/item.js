@@ -88,14 +88,14 @@ function showProductForm(product_id='') {
     $('#item_tab').html('');
     $.get("/profiles/templates/product_form/", function(data){
         $('#item_tab').html(data);
-        // var options = '';
-        // $.each(category_list, function(i, v) {
-        //     options += "<option value='"+v[0]+"'>"+v[1]+"</option>";
-        // });
-        // $('#category').html(options);
-        // if (!$('#category').data('select2')) {
-        //     $('#category').select2({});
-        // }
+        var options = '';
+        $.each(category_list, function(i, v) {
+            options += "<option value='"+v[0]+"'>"+v[1]+"</option>";
+        });
+        $('#category').html(options);
+        if (!$('#category').data('select2')) {
+            $('#category').select2({});
+        }
     });
     if (product_id != '') {
         g_product_id = product_id;
@@ -115,18 +115,118 @@ function showProductForm(product_id='') {
 
 
 function saveProductInfo() {
-    // var is_valid = validate_salon_form();
+
+    let varieties = [];
+    let variety = $('input[name="variety"]:checked').val();
+    if (variety == '0') { //None
+        varieties.push({
+            "jan_code": $('#jan_code').val(),
+            "stock": $('#stock').val(),
+            "varieties": []
+            })
+    }
+    else if (variety == '1') { // 1 Item
+      let name = document.getElementById('cell-name').innerHTML;
+      let variantTableTitle = document.getElementsByClassName('variant-title');
+      let variantTableCol = document.getElementsByClassName('variant-info');
+      // crate varieties
+      for(let i = 0; i < variantTableCol.length; i++) {
+          try{
+            varieties.push({
+            "jan_code": document.getElementById('jan-id-'+i).innerHTML,
+            "stock": document.getElementById('stock-id-'+i).innerHTML,
+            "varieties": [
+                {
+                    "name": name,
+                    "selection": variantTableTitle[i+1].innerHTML,
+                    "vertical_and_horizontal": "1"
+                }
+            ]
+            })
+        } catch(e){
+
+        }
+      }
+    }
+    else if (variety == '2') { // 2 Items
+        let preservedData = [];
+        let variantTableCol = document.getElementsByClassName('variant-info');
+
+        for(let i = 0; i < variantTableCol.length; i++){
+                //get id num
+            let idNum = variantTableCol[i].firstChild.id.split('-')[3];
+
+            //get jancode
+            let janId = `jan-id-${idNum}`;
+            let jancode = document.getElementById(janId).innerHTML;
+
+            //get stock
+            let stockId = `stock-id-${idNum}`;
+            let stock = document.getElementById(stockId).innerHTML;
+
+            let dataToken = variantTableCol[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
+            
+            preservedData.push({
+                jancode: jancode,
+                stock: stock,
+                token: dataToken
+            })
+        }
+        
+        // crate varieties
+        for(let i = 0; i < preservedData.length; i++){
+            varieties.push({
+                "jan_code": preservedData[i].jancode,
+                "stock": preservedData[i].stock,
+                "varieties": [
+                    {
+                        "name": 'Color',
+                        "selection": preservedData[i].token.split('_')[0],
+                        "vertical_and_horizontal": "0"
+                    },
+                    {
+                        "name": 'Size',
+                        "selection": preservedData[i].token.split('_')[1],
+                        "vertical_and_horizontal": "1"
+                    },
+                ]
+            })
+        }
+        
+    }
+
+    var data = new FormData();
+    data.append("profile_id", profile_id);
+    data.append("name", $('#name').val());
+    data.append("brand_name", $('#brand-name').val());
+    data.append("description", $('#description').val());
+    data.append("pr", $('#pr').val());
+    data.append("url_str", $('#url-str').val());
+    data.append("category", $('#category').val());
+    data.append("target", $('input[name="target"]:checked').val());
+    data.append("price", $('#price').val());
+    data.append("store_price", $('#store_price').val());
+    data.append("shipping_fee", $('#shipping_fee').val());
+    data.append("opened_date", $('#opened_date').val());
+    data.append("is_opened", $('input[name="status"]:checked').val());
+    data.append("is_used", $('input[name="is_used"]:checked').val());
+    data.append("is_draft", '0');
+    data.append("variety", variety);
+    data.append("varieties", JSON.stringify(varieties));
+
+    // Need to done
+    // $.each($("#image")[0].files, function(i, file) {
+    //     data.append("product_image", file);
+    // });
+    
     var is_valid = true;
     if (is_valid) {
         $.ajax({
             method: "POST",
             url: '/products/add_update_product/',
-            dataType: 'JSON',
-            data: {
-                'profile_id': profile_id,
-                'product_id': g_product_id, // empty if new product
-                
-            },
+            data: data,
+            processData: false,
+            contentType: false,
             success: function (json) {
                 $.confirm({
                     title: 'Update Successfull',
@@ -166,6 +266,7 @@ function saveProductInfo() {
                 }
         });
     }
+    
 }
 
 function cancelProductForm() {

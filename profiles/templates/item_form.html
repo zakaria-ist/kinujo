@@ -200,10 +200,6 @@
                 <label class="col-md-4 p-2" for="category">{% trans 'Product Category' %}</label>
                 <div class="col-md-8 p-0">
                   <select name="category" class="selectpicker" id="category" style="width: 100%;">
-                    <option disabled selected>Select</option>
-                    <option value="">Category 1</option>
-                    <option value="">Category 2</option>
-                    <option value="">Category 3</option>
                   </select>
                 </div>
               </div>
@@ -213,15 +209,15 @@
               <div class="form-group row form-check form-check-inline" style="align-items: baseline;">
                 <label class="col-md-4 p-2" for="variety">{% trans 'Variations' %}</label>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
-                  <input type="radio" value="0" id="one" name="variety" class="custom-control-input form-check-input" onclick="toggleOne();">
+                  <input type="radio" value="1" id="one" name="variety" class="custom-control-input form-check-input" onclick="toggleOne();">
                   <label class="form-check-label custom-control-label" for="one">{% trans '1 Item' %}</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
-                  <input type="radio" value="1" id="two" name="variety" class="custom-control-input form-check-input" onclick="toggleTwo();">
+                  <input type="radio" value="2" id="two" name="variety" class="custom-control-input form-check-input" onclick="toggleTwo();">
                   <label class="form-check-label custom-control-label" for="two">{% trans '2 Items' %}</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
-                  <input type="radio" value="2" id="none" name="variety" class="custom-control-input form-check-input">
+                  <input type="radio" value="0" id="none" name="variety" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="none">{% trans 'None' %}</label>
                 </div>
               </div>

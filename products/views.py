@@ -742,7 +742,7 @@ def get_product_info(request):
         'variety': '',
         'varieties': '[]',
     }
-    message = 'Error'
+    
     if request.method == 'POST':
         try:
             if request.POST.get('product_id') and request.POST.get('product_id') != '':
@@ -754,12 +754,12 @@ def get_product_info(request):
                     'description': product.description,
                     'pr': product.pr,
                     'url_str': product.url_str,
-                    'category': product.category_id,
+                    'category': str(product.category_id),
                     'target': product.target,
-                    'price': product.price,
-                    'store_price': product.store_price,
-                    'shipping_fee': product.shipping_fee,
-                    'opened_date': product.opened_date,
+                    'price': str(product.price),
+                    'store_price': str(product.store_price),
+                    'shipping_fee': str(product.shipping_fee),
+                    'opened_date': product.opened_date.strftime('%Y-%m-%d'),
                     'is_opened': '1' if product.is_opened else '0',
                     'is_used': '1' if product.is_used else '0',
                     'is_draft': '1' if product.is_draft else '0',
@@ -800,11 +800,9 @@ def get_product_info(request):
                     })
                 context['varieties'] = p_varieties
 
-            message = 'Success'
         except Exception as e:
             print(e)
 
-    context = { 'message': message }
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 

@@ -153,6 +153,11 @@
         {% for item in profile_list %}
             profile_list.push([{{ item.0 }}, "{{ item.1 }}", {{ item.2 }}])
         {% endfor %}
+
+        var category_list = [];
+        {% for item in category_list %}
+            category_list.push([{{ item.0 }}, "{{ item.1 }}"])
+        {% endfor %}
         
         var profile_id = "{{profile.id}}";
         var profile_introducer = "{{profile.introducer_id}}"
