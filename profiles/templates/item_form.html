@@ -752,11 +752,42 @@
 
 
     //change modal two based on existing table data
+    // 1. preserve existing JANcode and stock data from table
+    // 2. empty the form
+    // 3. execute choices data from table
+    // 4. show data in 2 items form
     function changeModalTwo(){
       let firstOfTwoItemGroup = document.getElementById('firstOfTwoItemGroup');
       let lastOfTwoItemGroup = document.getElementById('lastOfTwoItemGroup');
 
       if(document.getElementById('variety-table-two').innerHTML.trim() !== ''){
+
+        //grab the existing value of jancode and stock
+        let varInfo = document.getElementsByClassName('variant-info');
+
+        preservedData = {};
+
+        for(let i = 0; i < varInfo.length; i++){
+          //get id num
+          let idNum = varInfo[i].firstChild.id.split('-')[3];
+
+          //get jancode
+          let janId = `jan-id-${idNum}`;
+          let jancode = document.getElementById(janId).innerHTML;
+
+          //get stock
+          let stockId = `stock-id-${idNum}`;
+          let stock = document.getElementById(stockId).innerHTML;
+
+          let dataToken = varInfo[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
+          
+          preservedData[dataToken] = {
+            jancode: jancode,
+            stock: stock,
+          }
+        }
+
+        console.log(preservedData);
 
         //empty the forms
         firstOfTwoItemGroup.innerHTML = '';
@@ -1741,6 +1772,10 @@
       }
     }
     
+
+    // re ad preserved data to the related table cell
+
+
     // do after saving task here
     varietyTableTwo.style.height = '250px';
 
