@@ -213,15 +213,15 @@
               <div class="form-group row form-check form-check-inline" style="align-items: baseline;">
                 <label class="col-md-4 p-2" for="variety">{% trans 'Variations' %}</label>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
-                  <input type="radio" id="one" name="variety" class="custom-control-input form-check-input" onclick="toggleOne();">
+                  <input type="radio" value="0" id="one" name="variety" class="custom-control-input form-check-input" onclick="toggleOne();">
                   <label class="form-check-label custom-control-label" for="one">{% trans '1 Item' %}</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
-                  <input type="radio" id="two" name="variety" class="custom-control-input form-check-input" onclick="toggleTwo();">
+                  <input type="radio" value="1" id="two" name="variety" class="custom-control-input form-check-input" onclick="toggleTwo();">
                   <label class="form-check-label custom-control-label" for="two">{% trans '2 Items' %}</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
-                  <input type="radio" id="none" name="variety" class="custom-control-input form-check-input">
+                  <input type="radio" value="2" id="none" name="variety" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="none">{% trans 'None' %}</label>
                 </div>
               </div>
@@ -249,11 +249,11 @@
               <div class="form-group row form-check form-check-inline" style="align-items: baseline;">
                 <label class="col-md-4 p-2" for="status">{% trans 'Status' %}</label>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
-                  <input type="radio" id="published" name="status" class="custom-control-input form-check-input">
+                  <input type="radio" id="published" value="1" name="status" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="published">{% trans 'Published' %}</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
-                  <input type="radio" id="non-published" name="status" class="custom-control-input form-check-input">
+                  <input type="radio" id="non-published" value="0" name="status" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="non-published">{% trans 'Non Published' %}</label>
                 </div>
               
@@ -264,7 +264,7 @@
                 <label class="col-md-3 m-2 p-0" for="opened_date" >{% trans 'Published Date' %}</label>
 
                 <div class="col-md-6 input-group" id="datetimepicker" style="padding-left: 0px;">
-                  <input name="opened_date" type="date" class="form-control" style="margin-left: 10%;">
+                  <input name="opened_date" id="opened_date" type="date" class="form-control" style="margin-left: 10%;">
                   <div class="input-group-append">
                     <span class="input-group-text" style="overflow: revert;height: max-content;padding: 8px;">
                       <i class="far">&#xf073;</i> 
@@ -280,11 +280,11 @@
               <div class="form-group row form-check form-check-inline" style="align-items: baseline;">
                 <label class="col-md-4 p-2" for="is-used">{% trans 'Product Condition' %}</label>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
-                  <input type="radio" id="new" name="is_used" class="custom-control-input form-check-input">
+                  <input type="radio" id="new" name="is_used" value="0" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="new">{% trans 'New' %}</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline col-md-4">
-                  <input type="radio" id="second-hand" name="is_used" class="custom-control-input form-check-input">
+                  <input type="radio" id="second-hand" name="is_used" value="1" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="second-hand">{% trans 'Second Hand Goods' %}</label>
                 </div>
 
@@ -293,15 +293,15 @@
               <div class="form-group row form-check form-check-inline" style="align-items: baseline;">
                 <label class="col-md-4 p-2" for="target">{% trans 'For Sale:' %}</label>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
-                  <input type="radio" id="all-users" name="target" class="custom-control-input form-check-input">
+                  <input type="radio" id="all-users" name="target" value="0" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="all-users">{% trans 'All Users' %}</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
-                  <input type="radio" id="general-only" name="target" class="custom-control-input form-check-input">
+                  <input type="radio" id="general-only" name="target" value="1" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="general-only">{% trans 'General Only' %}</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline col-md-2">
-                  <input type="radio" id="story-only" name="target" class="custom-control-input form-check-input">
+                  <input type="radio" id="story-only" name="target"  value="2" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="story-only">{% trans 'Store Only' %}</label>
                 </div>
                 <p class="text-danger col-md-12" style="text-align: right; padding: 15px 20px 0">{% trans '* Displayed only to target users' %}</p>
@@ -456,7 +456,7 @@
                 <p style="width: 20px;" class="m-2"> </p>
                 <label for="message-text" class="col-form-label" style="width: 160px;">{% trans 'Choices' %}</label>
                 <label for="message-text" class="col-form-label" style="width: 100px;">{% trans 'JAN Code' %}</label>
-                <label for="message-text" class="col-form-label" style="width: 50px;">{% trans 'Stock' %}%'</label>
+                <label for="message-text" class="col-form-label" style="width: 50px;">{% trans 'Stock' %}</label>
                 <p class="m-2" style="width: 50px;"> </p>
               </div>
               
