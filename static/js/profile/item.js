@@ -18,7 +18,7 @@ function loadItemTableData() {
                 "orderable": false,
                 "data": null,
                 "render": function (data, type, row, meta) {
-                    return '<img src="'+row.image_path+'">';
+                    return '<img src="'+row.image_path+'"  width="50px" height="50px">';
                 }
             },
             {"data": "name"},
