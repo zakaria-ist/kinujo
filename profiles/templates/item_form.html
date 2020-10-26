@@ -609,6 +609,7 @@
     </div>
 
 <script type="text/javascript">
+let preservedData = {};
  let counter = 0;
   const imgWrapper = document.getElementById('img-wrapper');
 
@@ -1773,9 +1774,36 @@
     }
     
 
-    // re ad preserved data to the related table cell
+    if(typeof preservedData === undefined){
+      console.log(undefined);
+    }else{
+    
+      // re ad preserved data to the related table cell
+      let variantTableCol = document.getElementsByClassName('variant-info');
+      for(let i = 0; i < variantTableCol.length; i++){
+            //get id num
+            let idNum = variantTableCol[i].firstChild.id.split('-')[3];
 
+            //get jancode
+            let janId = `jan-id-${idNum}`;
+            let njancode = document.getElementById(janId);
 
+            //get stock
+            let stockId = `stock-id-${idNum}`;
+            let nstock = document.getElementById(stockId);
+
+            let dataToken = variantTableCol[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
+            if(preservedData[dataToken]){
+              console.log(preservedData[dataToken].jancode);
+              njancode.innerHTML = preservedData[dataToken].jancode;
+              nstock.innerHTML = preservedData[dataToken].stock;
+            }
+            // {
+            //   jancode: jancode,
+            //   stock: stock,
+            // }
+      }
+  }
     // do after saving task here
     varietyTableTwo.style.height = '250px';
 
