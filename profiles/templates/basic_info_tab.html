@@ -4,9 +4,9 @@
 {% endblock %}
 <form class="form-horizontal"  id="profile_form"
     {% if profile.id %}
-    action="{% url 'profile_edit' profile.id %}" 
+    action="{% url 'profile_edit' profile.id %}"
     {% else %}
-    action="{% url 'profile_add' %}" 
+    action="{% url 'profile_add' %}"
     {% endif %}
     role="form" method="post" onsubmit="checkInput()" enctype="multipart/form-data">
     {% csrf_token %}
@@ -24,7 +24,7 @@
                         <div class="fileupload fileupload-new" data-provides="fileupload">
                             <div class="fileupload-new thumbnail" style="width: 300px; height: 300px;">
                                 {% if profile.image_id %}
-                                    <img src="{{ profile.image.image.url }}" alt="" name="profile_image"/>
+                                    <img src="{{ profile.image.image }}" alt="" name="profile_image"/>
                                 {% else %}
                                     <img src="{% static 'img/blank_male.png' %}" alt="" name="profile_image"/>
                                 {% endif %}
