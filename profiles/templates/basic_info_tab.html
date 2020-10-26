@@ -58,55 +58,55 @@
                     <div class="col-lg-4">
                         {{ form.authority|default_if_none:"" }}
                     </div>
-                    <label id="type_label" for="type" class="col-lg-2 col-sm-2 control-label">{% trans 'Type' %}</label>
+                    <label id="type_label" for="type" class="col-lg-2 control-label">{% trans 'Type' %}</label>
                     <div class="col-lg-4" id="type_div">
                         {{ form.salon_category|default_if_none:"" }}
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="nickname" class="col-lg-2 col-sm-2 control-label">{% trans 'Nickname' %}<span
+                    <label for="nickname" class="col-lg-2 control-label">{% trans 'Nickname' %}<span
                             class="span-required">(*)</span></label>
                     <div class="col-lg-4">
                         {{ form.nickname|default_if_none:"" }}
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="real_name" class="col-lg-2 col-sm-2 control-label">{% trans 'Name' %}<span
+                    <label for="real_name" class="col-lg-2 control-label">{% trans 'Name' %}<span
                             class="span-required">(*)</span></label>
                     <div class="col-lg-4">
                         {{ form.real_name|default_if_none:"" }}
                     </div>
-                    <label for="user_code" class="col-lg-2 col-sm-2 control-label">{% trans 'ID' %}<span
+                    <label for="user_code" class="col-lg-2 control-label">{% trans 'ID' %}<span
                             class="span-required">(*)</span></label>
                     <div class="col-lg-4">
                         <input type="text" value="{{ profile.user_code }}" name="user_code" class="form-control" placeholder="" required id="id_user_code">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="is_seller" class="col-lg-2 col-sm-2 control-label">{% trans 'Selling Authority' %}<span
+                    <label for="is_seller" class="col-lg-2 control-label">{% trans 'Selling Authority' %}<span
                             class="span-required">(*)</span></label>
                     <div class="col-lg-4">
                         {{ form.is_seller|default_if_none:"" }}
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="gender" class="col-lg-2 col-sm-2 control-label">{% trans 'Gender' %}<span
+                    <label for="gender" class="col-lg-2 control-label">{% trans 'Gender' %}<span
                             class="span-required">(*)</span></label>
                     <div class="col-lg-4">
                         {{ form.gender|default_if_none:"" }}
                     </div>
-                    <label for="birthday" class="col-lg-2 col-sm-2 control-label">{% trans 'Birthday' %}</label>
+                    <label for="birthday" class="col-lg-2 control-label">{% trans 'Birthday' %}</label>
                     <div class="col-lg-4">
                         <input name="birthday" id="id_birthday" type="date" class="form-control" value="{{profile.birthday|date:"Y-m-d"}}">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="tel" class="col-lg-2 col-sm-2 control-label">{% trans 'Phone Number' %}<span
+                    <label for="tel" class="col-lg-2 control-label">{% trans 'Phone Number' %}<span
                             class="span-required">(*)</span></label>
                     <div class="col-lg-4">
                         {{ form.tel|default_if_none:"" }}
                     </div>
-                    <label for="password" class="col-lg-2 col-sm-2 control-label">{% trans 'Password' %}</label>
+                    <label for="password" class="col-lg-2 control-label">{% trans 'Password' %}</label>
                     <div class="col-lg-4">
                         {{ form.password|default_if_none:"" }}
                     </div>
@@ -114,7 +114,7 @@
                 <div class="form-group row">
                     <div class="col-lg-6">
                     </div>
-                    <label for="password" class="col-lg-2 col-sm-2 control-label">{% trans 'Confirm Password' %}</label>
+                    <label for="password" class="col-lg-2 control-label">{% trans 'Confirm Password' %}</label>
                     <div class="col-lg-4">
                         <input class="form-control trs-field" type="password"
                             name="conf_pass"
@@ -124,7 +124,7 @@
                 </div>
                 <div class="form-group">
                     <div id="introducer_div" class="row">
-                        <label for="introducer" class="col-lg-2 col-sm-2 control-label">{% trans 'Introducer' %}</label>
+                        <label for="introducer" class="col-lg-2 control-label">{% trans 'Introducer' %}</label>
                         <div class="col-lg-4">
                             <select name="introducer" id="introducer" class="form-control trs-field sended">
                                 {% comment %} {% for pr in profile_list %}
@@ -140,7 +140,7 @@
                 </div>
                 <div class="form-group">
                     <div id="approval_div" class="row">
-                        <label for="is_approved" class="col-lg-2 col-sm-2 control-label">{% trans 'Approval' %}</label>
+                        <label for="is_approved" class="col-lg-2 control-label">{% trans 'Approval' %}</label>
                         <div class="col-lg-4">
                             {{ form.is_approved|default_if_none:"" }}
                         </div>
@@ -148,7 +148,7 @@
                 </div>
                 <div class="form-group">
                     <div id="general_ws_div" class="row">
-                        <label for="general_store" class="col-lg-2 col-sm-2 control-label">{% trans 'General Store' %}</label>
+                        <label for="general_store" class="col-lg-2 control-label">{% trans 'General Store' %}</label>
                         <div class="col-lg-4">
                             <select name="general_store" id="general_store" class="form-control trs-field sended">
                                 <option value="">Select Store</option>
@@ -166,33 +166,33 @@
                 <div id="corporate_block">
                     <p><strong>{% trans 'Corporate Information' %}</strong></p>
                     <div class="form-group row">
-                        <label for="corporate_name" class="col-lg-2 col-sm-2 control-label">{% trans 'Corporate Name' %}<span
+                        <label for="corporate_name" class="col-lg-2 control-label">{% trans 'Corporate Name' %}<span
                                 class="span-required">(*)</span></label>
                         <div class="col-lg-4">
                             {{ form.corporate_name|default_if_none:"" }}
                         </div>
-                        <label for="representative_name" class="col-lg-2 col-sm-2 control-label">{% trans "Representative's Name" %}</label>
+                        <label for="representative_name" class="col-lg-2 control-label">{% trans "Representative's Name" %}</label>
                         <div class="col-lg-4">
                             {{ form.representative_name|default_if_none:"" }}
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="address1" class="col-lg-2 col-sm-2 control-label">{% trans 'Address One' %}<span
+                        <label for="address1" class="col-lg-2 control-label">{% trans 'Address One' %}<span
                                 class="span-required">(*)</span></label>
                         <div class="col-lg-4">
                             {{ form.address1|default_if_none:"" }}
                         </div>
-                        <label for="address2" class="col-lg-2 col-sm-2 control-label">{% trans 'Address Two' %}</label>
+                        <label for="address2" class="col-lg-2 control-label">{% trans 'Address Two' %}</label>
                         <div class="col-lg-4">
                             {{ form.address2|default_if_none:"" }}
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="zipcode" class="col-lg-2 col-sm-2 control-label">{% trans 'Zip Code' %}</label>
+                        <label for="zipcode" class="col-lg-2 control-label">{% trans 'Zip Code' %}</label>
                         <div class="col-lg-4">
                             {{ form.zipcode|default_if_none:"" }}
                         </div>
-                        <label for="phone_number" class="col-lg-2 col-sm-2 control-label">{% trans 'Phone Number' %}</label>
+                        <label for="phone_number" class="col-lg-2 control-label">{% trans 'Phone Number' %}</label>
                         <div class="col-lg-4">
                             {{ form.corporate_tel|default_if_none:"" }}
                         </div>

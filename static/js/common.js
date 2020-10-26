@@ -41,7 +41,7 @@ var Script = function () {
 
     $(function() {
         function responsiveView() {
-            if ($('#sidebar').is(":visible") === true) {
+            // if ($('#sidebar').is(":visible") === true) {
                 var wSize = $(window).width();
                 if (wSize <= 768) {
                     $('#container').addClass('sidebar-close');
@@ -52,7 +52,7 @@ var Script = function () {
                     $('#container').removeClass('sidebar-close');
                     $('#sidebar > ul').show();
                 }
-            }
+            // }
         }
         $(window).on('load', responsiveView);
         $(window).on('resize', responsiveView);
