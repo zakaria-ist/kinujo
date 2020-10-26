@@ -45,11 +45,11 @@
                                             <span><i class="fas fa-file-export"></i> {% trans 'CSV Export' %}</span>
                                         </a>
                                     </span>
-                                    <span class="">
+                                    {% comment %} <span class="">
                                         <a class="btn btn-primary blue-btn" href=""> 
                                             <span><i class="fas fa-file-import"></i> {% trans 'CSV Import' %}</span>
                                         </a>
-                                    </span>
+                                    </span> {% endcomment %}
                                     <span class="">
                                         <a class="btn btn-primary blue-btn" href="{% url 'product_add' %}"> 
                                             <span>{% trans 'Add' %}</span>
