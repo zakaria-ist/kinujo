@@ -233,7 +233,6 @@ function saveProductInfo() {
 
     let imgArr = [];
     let imageLength = document.getElementsByClassName('images').length;
-    console.log('length: ' + imageLength);
     for(let i = 0; i < imageLength; i++){
         console.log('previous' + i);
         imgArr.push("product_image", $('input[type=file]')[i].files[0]);
