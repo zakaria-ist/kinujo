@@ -607,11 +607,12 @@
 
 <script type="text/javascript">
 let preservedDatas = {};
- let counter = 0;
+
+  let counter = 0;
   const imgWrapper = document.getElementById('img-wrapper');
 
   const loadFile = function(event) {
-     
+   
     const addImgBtn = document.getElementById(`add-img-btn-${counter}`);
     const image = document.getElementById(`images-${counter}`);
 
@@ -640,7 +641,7 @@ let preservedDatas = {};
 
       newFileInput.innerHTML = `<div class="col-md-4 mt-5 img-box">
                   <div class="row img-h">
-                    <label for="file-${counter}" id="add-img-btn-${counter}" class="btn btn-secondary text-center col-md-12 img-input" onclick="if(!document.getElementById('file')){document.getElementById('file-${counter}').click();}">
+                    <label for="file-${counter}" id="add-img-btn-${counter}" class="btn btn-secondary text-center col-md-12 img-input" onclick="if(!document.getElementById('file-0')){document.getElementById('file-${counter}').click();}">
                       + 
                       <input type="file"  accept="image/*" name="image-${counter}" id="file-${counter}" onchange="loadFile(event)"  style="display: none">
                     </label>

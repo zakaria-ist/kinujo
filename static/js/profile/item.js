@@ -240,7 +240,7 @@ function saveProductInfo() {
         imgArr.push(new_img);
 
     }
-
+    console.log(imgArr);
     data.append("product_image", imgArr);
         
     
