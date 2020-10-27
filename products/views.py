@@ -73,6 +73,12 @@ def ProductList__asJson(request):
         jancode_ids = get_products_jancodes(field.id, type='id')
         productJancodes = ProductJancode.objects.filter(id__in=jancode_ids)
         for p_jan in productJancodes:
+            veries = get_jan_varieties(p_jan)
+            very_str = ''
+            for item in veries:
+                very_str += item['name'] + ' : ' + item['selection'] + ','
+            if len(very_str):
+                very_str = very_str[:-1]
             i = i + 1
             data = {
                 "no": str(i),
@@ -82,7 +88,8 @@ def ProductList__asJson(request):
                 "opened_date": field.opened_date.strftime("%Y-%m-%d"),
                 "image_path": str(image_path),
                 "jan_code": str(p_jan.jan_code),
-                "stock": str(p_jan.stock)
+                "stock": str(p_jan.stock),
+                "varieties": very_str
             }
             
             array.append(data)
@@ -91,6 +98,25 @@ def ProductList__asJson(request):
     json_content = json.dumps(content, ensure_ascii=False)
     return HttpResponse(json_content, content_type='application/json')
 
+def get_jan_varieties(productJancode):
+    varieties = []
+    if productJancode.horizontal_id:
+        productVarietySelection = ProductVarietySelection.objects.get(pk=productJancode.horizontal_id)
+        productVariety = ProductVariety.objects.get(pk=productVarietySelection.product_variety_id)
+        varieties.append({
+            "name": str(productVariety.name),
+            "selection": str(productVarietySelection.selection),
+            "vertical_and_horizontal": str(productVariety.vertical_and_horizontal),
+        })
+    if productJancode.vertical_id:
+        productVarietySelection = ProductVarietySelection.objects.get(pk=productJancode.vertical_id)
+        productVariety = ProductVariety.objects.get(pk=productVarietySelection.product_variety_id)
+        varieties.append({
+            "name": str(productVariety.name),
+            "selection": str(productVarietySelection.selection),
+            "vertical_and_horizontal": str(productVariety.vertical_and_horizontal),
+        })
+    return varieties
 
 def get_products_jancodes(product_id, type='id'):
     product = Product.objects.get(pk=product_id)

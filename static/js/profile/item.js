@@ -23,7 +23,14 @@ function loadItemTableData() {
             },
             {"data": "name"},
             {"data": "jan_code", "orderable": false},
+            {
+                "orderable": false,
+                "render": function(data, type, row){
+                    return row.varieties.split(",").join("<br/>");
+                }
+            },
             {"data": "stock", "orderable": false},
+            {"data": "opened_date", "orderable": false},
             {
                 "sClass": "text-center",
                 "orderable": false,
@@ -42,8 +49,8 @@ function loadItemTableData() {
 }
 
 function deleteProduct(id) {
-    $("#comfirmDeleteAllModal").modal("show");
-    $("#modal_btn_delete").attr("onclick", "deleteProductConfirm("+ id +")");
+    $("#comfirmDeleteProductModal").modal("show");
+    $("#product_btn_delete").attr("onclick", "deleteProductConfirm("+ id +")");
 }
 
 function deleteProductConfirm(id) {
