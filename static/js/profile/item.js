@@ -236,9 +236,10 @@ function saveProductInfo() {
 
     for(let i = 0; i < imageLength; i++){
 
-        imgArr.push("product_image", $('input[type=file]')[i].files[0]);
+        imgArr.push($('input[type=file]')[i].files[0]);
 
     }
+    
     data.append("product_image", imgArr);
         
     
