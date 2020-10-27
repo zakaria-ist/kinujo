@@ -231,17 +231,16 @@ function saveProductInfo() {
     //     };
     // }
 
-    let imgArr = [];
+
     let imageLength = document.getElementsByClassName('images').length;
     //let fileInputs = document.querySelectorAll('input[type=file]');
     for(let i = 0; i < imageLength; i++){
-        let fileId = `file-${i}`;
-        let new_img = document.getElementById(fileId).files[0];
-        imgArr.push(new_img);
+        let fileId = `file-${i}`;  
+        data.append("product_image", document.getElementById(fileId).files[0]);
 
     }
-    console.log(imgArr);
-    data.append("product_image", imgArr);
+
+    
         
     
 

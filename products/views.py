@@ -41,11 +41,12 @@ def ProductList__asJson(request):
             product_list = product_list.exclude(is_opened=False)
         if 3 not in filter_array:
             product_list = product_list.exclude(is_draft=True)
-        
+
     records_total = product_list.count()
 
     if search:  # Filter data base on search
-        product_list = product_list.filter(Q(name__icontains=search)).order_by('name')
+        product_list = product_list.filter(
+            Q(name__icontains=search)).order_by('name')
 
     # All data
     records_filtered = product_list.count()
@@ -54,22 +55,25 @@ def ProductList__asJson(request):
     column_name = ""
     if order_column == "2":
         column_name = "name"
-    
+
     order_dir = request.GET['order[0][dir]']
     list = []
     if order_dir == "asc":
-        list = product_list.order_by(column_name)[int(start):(int(start) + int(length))]
+        list = product_list.order_by(column_name)[
+            int(start):(int(start) + int(length))]
     elif order_dir == "desc":
-        list = product_list.order_by('-' + column_name)[int(start):(int(start) + int(length))]
+        list = product_list.order_by(
+            '-' + column_name)[int(start):(int(start) + int(length))]
 
     array = []
     i = 0
     for field in list:
-        productImage = ProductImage.objects.filter(product_id=field.id, is_hidden=False).first()
+        productImage = ProductImage.objects.filter(
+            product_id=field.id, is_hidden=False).first()
         image_path = ''
         if productImage:
             image_path = productImage.image.image.url
-        
+
         jancode_ids = get_products_jancodes(field.id, type='id')
         productJancodes = ProductJancode.objects.filter(id__in=jancode_ids)
         for p_jan in productJancodes:
@@ -91,27 +95,33 @@ def ProductList__asJson(request):
                 "stock": str(p_jan.stock),
                 "varieties": very_str
             }
-            
+
             array.append(data)
     records_total = len(array)
     records_filtered = len(array)
-    content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
+    content = {"draw": draw, "data": array,
+               "recordsTotal": records_total, "recordsFiltered": records_filtered}
     json_content = json.dumps(content, ensure_ascii=False)
     return HttpResponse(json_content, content_type='application/json')
+
 
 def get_jan_varieties(productJancode):
     varieties = []
     if productJancode.horizontal_id:
-        productVarietySelection = ProductVarietySelection.objects.get(pk=productJancode.horizontal_id)
-        productVariety = ProductVariety.objects.get(pk=productVarietySelection.product_variety_id)
+        productVarietySelection = ProductVarietySelection.objects.get(
+            pk=productJancode.horizontal_id)
+        productVariety = ProductVariety.objects.get(
+            pk=productVarietySelection.product_variety_id)
         varieties.append({
             "name": str(productVariety.name),
             "selection": str(productVarietySelection.selection),
             "vertical_and_horizontal": str(productVariety.vertical_and_horizontal),
         })
     if productJancode.vertical_id:
-        productVarietySelection = ProductVarietySelection.objects.get(pk=productJancode.vertical_id)
-        productVariety = ProductVariety.objects.get(pk=productVarietySelection.product_variety_id)
+        productVarietySelection = ProductVarietySelection.objects.get(
+            pk=productJancode.vertical_id)
+        productVariety = ProductVariety.objects.get(
+            pk=productVarietySelection.product_variety_id)
         varieties.append({
             "name": str(productVariety.name),
             "selection": str(productVarietySelection.selection),
@@ -119,15 +129,19 @@ def get_jan_varieties(productJancode):
         })
     return varieties
 
+
 def get_products_jancodes(product_id, type='id'):
     product = Product.objects.get(pk=product_id)
     jancodes = []
-    productVarieties = ProductVariety.objects.filter(product_id=product.id, is_hidden=False)
+    productVarieties = ProductVariety.objects.filter(
+        product_id=product.id, is_hidden=False)
     for productVariety in productVarieties:
-        productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id=productVariety.id, is_hidden=False)
+        productVarietySelections = ProductVarietySelection.objects.filter(
+            product_variety_id=productVariety.id, is_hidden=False)
         for productVarietySelection in productVarietySelections:
             if productVariety.vertical_and_horizontal == 0:
-                productJancodes = ProductJancode.objects.filter(horizontal_id=productVarietySelection.id, is_hidden=False)
+                productJancodes = ProductJancode.objects.filter(
+                    horizontal_id=productVarietySelection.id, is_hidden=False)
                 for productJancode in productJancodes:
                     if type == 'id':
                         if productJancode.id not in jancodes:
@@ -136,7 +150,8 @@ def get_products_jancodes(product_id, type='id'):
                         if productJancode.jan_code not in jancodes:
                             jancodes.append(productJancode.jan_code)
             else:
-                productJancodes = ProductJancode.objects.filter(vertical_id=productVarietySelection.id, is_hidden=False)
+                productJancodes = ProductJancode.objects.filter(
+                    vertical_id=productVarietySelection.id, is_hidden=False)
                 for productJancode in productJancodes:
                     if type == 'id':
                         if productJancode.id not in jancodes:
@@ -175,7 +190,7 @@ def product_add(request):
             product.variety = int(request.POST.get('variety'))
             product.save()
 
-            # product image save 
+            # product image save
             image_ids = []
             product_images = request.FILES.getlist('product_image')
             for image in product_images:
@@ -183,7 +198,7 @@ def product_add(request):
                 new_image.image.save(image.name, image)
                 new_image.save()
                 image_ids.append(new_image.id)
-            
+
             for image_id in image_ids:
                 productImage = ProductImage()
                 productImage.image_id = image_id
@@ -192,7 +207,7 @@ def product_add(request):
 
             # save product varieties
             varieties = json.loads(request.POST.get('varieties'))
-            if product.variety == 0: # None
+            if product.variety == 0:  # None
                 obj = varieties[0]
                 productVariety = ProductVariety()
                 productVariety.name = ''
@@ -211,12 +226,13 @@ def product_add(request):
                 productJancode.horizontal_id = productVarietySelection.id
                 productJancode.save()
             else:
-                if product.variety == 1: # Horizontal or vertical
+                if product.variety == 1:  # Horizontal or vertical
                     for obj in varieties:
                         obj_varieties = obj['varieties']
                         productVariety = ProductVariety()
                         productVariety.name = obj_varieties[0]['name']
-                        productVariety.vertical_and_horizontal = int(obj_varieties[0]['vertical_and_horizontal'])
+                        productVariety.vertical_and_horizontal = int(
+                            obj_varieties[0]['vertical_and_horizontal'])
                         productVariety.product_id = product.id
                         productVariety.save()
 
@@ -238,13 +254,15 @@ def product_add(request):
                         obj_varieties = obj['varieties']
                         productVariety1 = ProductVariety()
                         productVariety1.name = obj_varieties[0]['name']
-                        productVariety1.vertical_and_horizontal = int(obj_varieties[0]['vertical_and_horizontal'])
+                        productVariety1.vertical_and_horizontal = int(
+                            obj_varieties[0]['vertical_and_horizontal'])
                         productVariety1.product_id = product.id
                         productVariety1.save()
 
                         productVariety2 = ProductVariety()
                         productVariety2.name = obj_varieties[1]['name']
-                        productVariety2.vertical_and_horizontal = int(obj_varieties[1]['vertical_and_horizontal'])
+                        productVariety2.vertical_and_horizontal = int(
+                            obj_varieties[1]['vertical_and_horizontal'])
                         productVariety2.product_id = product.id
                         productVariety2.save()
 
@@ -267,9 +285,11 @@ def product_add(request):
             return render(request, 'product_list.html')
         except Exception as e:
             print(e)
-            messages.add_message(request, messages.ERROR, e, extra_tags='product_add')
+            messages.add_message(request, messages.ERROR,
+                                 e, extra_tags='product_add')
 
-    category_list = list(ProductCategory.objects.filter(is_hidden=False).values_list('id', 'name'))
+    category_list = list(ProductCategory.objects.filter(
+        is_hidden=False).values_list('id', 'name'))
     return render(request, 'product_form.html', {'category_list': category_list, 'media_url': s.MEDIA_URL})
 
 
@@ -300,8 +320,9 @@ def product_edit(request, product_id):
             product.modified = datetime.datetime.now()
             product.save()
 
-            # product old image delete 
-            productImages = ProductImage.objects.filter(product_id=product.id, is_hidden=False)
+            # product old image delete
+            productImages = ProductImage.objects.filter(
+                product_id=product.id, is_hidden=False)
             for productImage in productImages:
                 image = Image.objects.get(pk=productImage.image_id)
                 image.modified = datetime.datetime.now()
@@ -311,8 +332,8 @@ def product_edit(request, product_id):
                 productImage.is_hidden = True
                 productImage.modified = datetime.datetime.now()
                 productImage.save()
-            
-            # product new image save 
+
+            # product new image save
             image_ids = []
             product_images = request.FILES.getlist('product_image')
             for image in product_images:
@@ -320,7 +341,7 @@ def product_edit(request, product_id):
                 new_image.image.save(image.name, image)
                 new_image.save()
                 image_ids.append(new_image.id)
-            
+
             for image_id in image_ids:
                 productImage = ProductImage()
                 productImage.image_id = image_id
@@ -328,16 +349,20 @@ def product_edit(request, product_id):
                 productImage.save()
 
             # delete product old varieties
-            productVarieties = ProductVariety.objects.filter(product_id=product.id)
+            productVarieties = ProductVariety.objects.filter(
+                product_id=product.id)
             for productVariety in productVarieties:
-                productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id=productVariety.id)
+                productVarietySelections = ProductVarietySelection.objects.filter(
+                    product_variety_id=productVariety.id)
                 for productVarietySelection in productVarietySelections:
-                    productJancodes = ProductJancode.objects.filter(horizontal_id=productVarietySelection.id)
+                    productJancodes = ProductJancode.objects.filter(
+                        horizontal_id=productVarietySelection.id)
                     for productJancode in productJancodes:
                         productJancode.is_hidden = True
                         productJancode.modified = datetime.datetime.now()
                         productJancode.save()
-                    productJancodes = ProductJancode.objects.filter(vertical_id=productVarietySelection.id)
+                    productJancodes = ProductJancode.objects.filter(
+                        vertical_id=productVarietySelection.id)
                     for productJancode in productJancodes:
                         productJancode.is_hidden = True
                         productJancode.modified = datetime.datetime.now()
@@ -346,7 +371,7 @@ def product_edit(request, product_id):
                     productVarietySelection.is_hidden = True
                     productVarietySelection.modified = datetime.datetime.now()
                     productVarietySelection.save()
-                    
+
                 productVariety.delete()
                 productVariety.is_hidden = True
                 productVariety.modified = datetime.datetime.now()
@@ -354,7 +379,7 @@ def product_edit(request, product_id):
 
             # save product new varieties
             varieties = json.loads(request.POST.get('varieties'))
-            if product.variety == 0: # None
+            if product.variety == 0:  # None
                 obj = varieties[0]
                 productVariety = ProductVariety()
                 productVariety.name = ''
@@ -373,12 +398,13 @@ def product_edit(request, product_id):
                 productJancode.horizontal_id = productVarietySelection.id
                 productJancode.save()
             else:
-                if product.variety == 1: # Horizontal or vertical
+                if product.variety == 1:  # Horizontal or vertical
                     for obj in varieties:
                         obj_varieties = obj['varieties']
                         productVariety = ProductVariety()
                         productVariety.name = obj_varieties[0]['name']
-                        productVariety.vertical_and_horizontal = int(obj_varieties[0]['vertical_and_horizontal'])
+                        productVariety.vertical_and_horizontal = int(
+                            obj_varieties[0]['vertical_and_horizontal'])
                         productVariety.product_id = product.id
                         productVariety.save()
 
@@ -400,13 +426,15 @@ def product_edit(request, product_id):
                         obj_varieties = obj['varieties']
                         productVariety1 = ProductVariety()
                         productVariety1.name = obj_varieties[0]['name']
-                        productVariety1.vertical_and_horizontal = int(obj_varieties[0]['vertical_and_horizontal'])
+                        productVariety1.vertical_and_horizontal = int(
+                            obj_varieties[0]['vertical_and_horizontal'])
                         productVariety1.product_id = product.id
                         productVariety1.save()
 
                         productVariety2 = ProductVariety()
                         productVariety2.name = obj_varieties[1]['name']
-                        productVariety2.vertical_and_horizontal = int(obj_varieties[1]['vertical_and_horizontal'])
+                        productVariety2.vertical_and_horizontal = int(
+                            obj_varieties[1]['vertical_and_horizontal'])
                         productVariety2.product_id = product.id
                         productVariety2.save()
 
@@ -429,15 +457,16 @@ def product_edit(request, product_id):
             return render(request, 'product_list.html')
         except Exception as e:
             print(e)
-            messages.add_message(request, messages.ERROR, e, extra_tags='product_edit')
+            messages.add_message(request, messages.ERROR,
+                                 e, extra_tags='product_edit')
 
     product = Product.objects.get(pk=product_id)
 
     image_array = []
-    productImages = ProductImage.objects.filter(product_id=product.id, is_hidden=False)
+    productImages = ProductImage.objects.filter(
+        product_id=product.id, is_hidden=False)
     for productImage in productImages:
         image_array.append(productImage.image.image.url)
-
 
     p_varieties = []
     jancode_ids = get_products_jancodes(product.id, type='id')
@@ -445,16 +474,20 @@ def product_edit(request, product_id):
         varieties = []
         productJancode = ProductJancode.objects.get(pk=jan_id)
         if productJancode.horizontal_id:
-            productVarietySelection = ProductVarietySelection.objects.get(pk=productJancode.horizontal_id)
-            productVariety = ProductVariety.objects.get(pk=productVarietySelection.product_variety_id)
+            productVarietySelection = ProductVarietySelection.objects.get(
+                pk=productJancode.horizontal_id)
+            productVariety = ProductVariety.objects.get(
+                pk=productVarietySelection.product_variety_id)
             varieties.append({
                 "name": str(productVariety.name),
                 "selection": str(productVarietySelection.selection),
                 "vertical_and_horizontal": str(productVariety.vertical_and_horizontal),
             })
         if productJancode.vertical_id:
-            productVarietySelection = ProductVarietySelection.objects.get(pk=productJancode.vertical_id)
-            productVariety = ProductVariety.objects.get(pk=productVarietySelection.product_variety_id)
+            productVarietySelection = ProductVarietySelection.objects.get(
+                pk=productJancode.vertical_id)
+            productVariety = ProductVariety.objects.get(
+                pk=productVarietySelection.product_variety_id)
             varieties.append({
                 "name": str(productVariety.name),
                 "selection": str(productVarietySelection.selection),
@@ -466,13 +499,15 @@ def product_edit(request, product_id):
             "varieties": varieties
         })
 
-    category_list = list(ProductCategory.objects.filter(is_hidden=False).values_list('id', 'name'))
+    category_list = list(ProductCategory.objects.filter(
+        is_hidden=False).values_list('id', 'name'))
 
     return render(request, 'product_form.html', {'product': product,
-                                                'images': image_array,
-                                                'varieties': p_varieties,
-                                                'category_list': category_list,
-                                                'media_url': s.MEDIA_URL})
+                                                 'images': image_array,
+                                                 'varieties': p_varieties,
+                                                 'category_list': category_list,
+                                                 'media_url': s.MEDIA_URL})
+
 
 def hide_product(product_id):
     try:
@@ -481,7 +516,8 @@ def hide_product(product_id):
         product.modified = datetime.datetime.now()
         product.save()
 
-        productImages = ProductImage.objects.filter(product_id=product.id, is_hidden=False)
+        productImages = ProductImage.objects.filter(
+            product_id=product.id, is_hidden=False)
         for productImage in productImages:
             image = Image.objects.get(pk=productImage.image_id)
             image.modified = datetime.datetime.now()
@@ -491,17 +527,20 @@ def hide_product(product_id):
             productImage.is_hidden = True
             productImage.modified = datetime.datetime.now()
             productImage.save()
-        
+
         productVarieties = ProductVariety.objects.filter(product_id=product.id)
         for productVariety in productVarieties:
-            productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id=productVariety.id)
+            productVarietySelections = ProductVarietySelection.objects.filter(
+                product_variety_id=productVariety.id)
             for productVarietySelection in productVarietySelections:
-                productJancodes = ProductJancode.objects.filter(horizontal_id=productVarietySelection.id)
+                productJancodes = ProductJancode.objects.filter(
+                    horizontal_id=productVarietySelection.id)
                 for productJancode in productJancodes:
                     productJancode.is_hidden = True
                     productJancode.modified = datetime.datetime.now()
                     productJancode.save()
-                productJancodes = ProductJancode.objects.filter(vertical_id=productVarietySelection.id)
+                productJancodes = ProductJancode.objects.filter(
+                    vertical_id=productVarietySelection.id)
                 for productJancode in productJancodes:
                     productJancode.is_hidden = True
                     productJancode.modified = datetime.datetime.now()
@@ -510,7 +549,7 @@ def hide_product(product_id):
                 productVarietySelection.is_hidden = True
                 productVarietySelection.modified = datetime.datetime.now()
                 productVarietySelection.save()
-                
+
             productVariety.delete()
             productVariety.is_hidden = True
             productVariety.modified = datetime.datetime.now()
@@ -523,6 +562,8 @@ def hide_product(product_id):
     return True
 
 # @login_required
+
+
 @csrf_exempt
 def product_delete(request, product_id):
     """
@@ -530,7 +571,7 @@ def product_delete(request, product_id):
     """
 
     result = hide_product(product_id)
-    
+
     return render(request, 'product_list.html')
 
 
@@ -564,8 +605,9 @@ def add_update_product(request):
                 product.modified = datetime.datetime.now()
                 product.save()
 
-                # product old image delete 
-                productImages = ProductImage.objects.filter(product_id=product.id, is_hidden=False)
+                # product old image delete
+                productImages = ProductImage.objects.filter(
+                    product_id=product.id, is_hidden=False)
                 for productImage in productImages:
                     image = Image.objects.get(pk=productImage.image_id)
                     image.modified = datetime.datetime.now()
@@ -575,8 +617,8 @@ def add_update_product(request):
                     productImage.is_hidden = True
                     productImage.modified = datetime.datetime.now()
                     productImage.save()
-                
-                # product new image save 
+
+                # product new image save
                 image_ids = []
                 product_images = request.FILES.getlist('product_image')
                 for image in product_images:
@@ -584,7 +626,7 @@ def add_update_product(request):
                     new_image.image.save(image.name, image)
                     new_image.save()
                     image_ids.append(new_image.id)
-                
+
                 for image_id in image_ids:
                     productImage = ProductImage()
                     productImage.image_id = image_id
@@ -592,16 +634,20 @@ def add_update_product(request):
                     productImage.save()
 
                 # delete product old varieties
-                productVarieties = ProductVariety.objects.filter(product_id=product.id)
+                productVarieties = ProductVariety.objects.filter(
+                    product_id=product.id)
                 for productVariety in productVarieties:
-                    productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id=productVariety.id)
+                    productVarietySelections = ProductVarietySelection.objects.filter(
+                        product_variety_id=productVariety.id)
                     for productVarietySelection in productVarietySelections:
-                        productJancodes = ProductJancode.objects.filter(horizontal_id=productVarietySelection.id)
+                        productJancodes = ProductJancode.objects.filter(
+                            horizontal_id=productVarietySelection.id)
                         for productJancode in productJancodes:
                             productJancode.is_hidden = True
                             productJancode.modified = datetime.datetime.now()
                             productJancode.save()
-                        productJancodes = ProductJancode.objects.filter(vertical_id=productVarietySelection.id)
+                        productJancodes = ProductJancode.objects.filter(
+                            vertical_id=productVarietySelection.id)
                         for productJancode in productJancodes:
                             productJancode.is_hidden = True
                             productJancode.modified = datetime.datetime.now()
@@ -610,7 +656,7 @@ def add_update_product(request):
                         productVarietySelection.is_hidden = True
                         productVarietySelection.modified = datetime.datetime.now()
                         productVarietySelection.save()
-                        
+
                     productVariety.delete()
                     productVariety.is_hidden = True
                     productVariety.modified = datetime.datetime.now()
@@ -618,7 +664,7 @@ def add_update_product(request):
 
                 # save product new varieties
                 varieties = json.loads(request.POST.get('varieties'))
-                if product.variety == 0: # None
+                if product.variety == 0:  # None
                     obj = varieties[0]
                     productVariety = ProductVariety()
                     productVariety.name = ''
@@ -637,12 +683,13 @@ def add_update_product(request):
                     productJancode.horizontal_id = productVarietySelection.id
                     productJancode.save()
                 else:
-                    if product.variety == 1: # Horizontal or vertical
+                    if product.variety == 1:  # Horizontal or vertical
                         for obj in varieties:
                             obj_varieties = obj['varieties']
                             productVariety = ProductVariety()
                             productVariety.name = obj_varieties[0]['name']
-                            productVariety.vertical_and_horizontal = int(obj_varieties[0]['vertical_and_horizontal'])
+                            productVariety.vertical_and_horizontal = int(
+                                obj_varieties[0]['vertical_and_horizontal'])
                             productVariety.product_id = product.id
                             productVariety.save()
 
@@ -664,13 +711,15 @@ def add_update_product(request):
                             obj_varieties = obj['varieties']
                             productVariety1 = ProductVariety()
                             productVariety1.name = obj_varieties[0]['name']
-                            productVariety1.vertical_and_horizontal = int(obj_varieties[0]['vertical_and_horizontal'])
+                            productVariety1.vertical_and_horizontal = int(
+                                obj_varieties[0]['vertical_and_horizontal'])
                             productVariety1.product_id = product.id
                             productVariety1.save()
 
                             productVariety2 = ProductVariety()
                             productVariety2.name = obj_varieties[1]['name']
-                            productVariety2.vertical_and_horizontal = int(obj_varieties[1]['vertical_and_horizontal'])
+                            productVariety2.vertical_and_horizontal = int(
+                                obj_varieties[1]['vertical_and_horizontal'])
                             productVariety2.product_id = product.id
                             productVariety2.save()
 
@@ -709,7 +758,7 @@ def add_update_product(request):
                 product.variety = int(request.POST.get('variety'))
                 product.save()
 
-                # product image save 
+                # product image save
                 image_ids = []
                 product_images = request.FILES.getlist('product_image')
                 for image in product_images:
@@ -717,7 +766,7 @@ def add_update_product(request):
                     new_image.image.save(image.name, image)
                     new_image.save()
                     image_ids.append(new_image.id)
-                
+
                 for image_id in image_ids:
                     productImage = ProductImage()
                     productImage.image_id = image_id
@@ -726,7 +775,7 @@ def add_update_product(request):
 
                 # save product varieties
                 varieties = json.loads(request.POST.get('varieties'))
-                if product.variety == 0: # None
+                if product.variety == 0:  # None
                     obj = varieties[0]
                     productVariety = ProductVariety()
                     productVariety.name = ''
@@ -745,12 +794,13 @@ def add_update_product(request):
                     productJancode.horizontal_id = productVarietySelection.id
                     productJancode.save()
                 else:
-                    if product.variety == 1: # Horizontal or vertical
+                    if product.variety == 1:  # Horizontal or vertical
                         for obj in varieties:
                             obj_varieties = obj['varieties']
                             productVariety = ProductVariety()
                             productVariety.name = obj_varieties[0]['name']
-                            productVariety.vertical_and_horizontal = int(obj_varieties[0]['vertical_and_horizontal'])
+                            productVariety.vertical_and_horizontal = int(
+                                obj_varieties[0]['vertical_and_horizontal'])
                             productVariety.product_id = product.id
                             productVariety.save()
 
@@ -772,13 +822,15 @@ def add_update_product(request):
                             obj_varieties = obj['varieties']
                             productVariety1 = ProductVariety()
                             productVariety1.name = obj_varieties[0]['name']
-                            productVariety1.vertical_and_horizontal = int(obj_varieties[0]['vertical_and_horizontal'])
+                            productVariety1.vertical_and_horizontal = int(
+                                obj_varieties[0]['vertical_and_horizontal'])
                             productVariety1.product_id = product.id
                             productVariety1.save()
 
                             productVariety2 = ProductVariety()
                             productVariety2.name = obj_varieties[1]['name']
-                            productVariety2.vertical_and_horizontal = int(obj_varieties[1]['vertical_and_horizontal'])
+                            productVariety2.vertical_and_horizontal = int(
+                                obj_varieties[1]['vertical_and_horizontal'])
                             productVariety2.product_id = product.id
                             productVariety2.save()
 
@@ -802,7 +854,7 @@ def add_update_product(request):
         except Exception as e:
             print(e)
 
-    context = { 'message': message }
+    context = {'message': message}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
@@ -831,7 +883,7 @@ def get_product_info(request):
         'variety': '',
         'varieties': '[]',
     }
-    
+
     if request.method == 'POST':
         try:
             if request.POST.get('product_id') and request.POST.get('product_id') != '':
@@ -855,7 +907,8 @@ def get_product_info(request):
                     'variety': product.variety,
                 }
                 image_array = []
-                productImages = ProductImage.objects.filter(product_id=product.id, is_hidden=False)
+                productImages = ProductImage.objects.filter(
+                    product_id=product.id, is_hidden=False)
                 for productImage in productImages:
                     image_array.append(productImage.image.image.url)
 
@@ -867,16 +920,20 @@ def get_product_info(request):
                     varieties = []
                     productJancode = ProductJancode.objects.get(pk=jan_id)
                     if productJancode.horizontal_id:
-                        productVarietySelection = ProductVarietySelection.objects.get(pk=productJancode.horizontal_id)
-                        productVariety = ProductVariety.objects.get(pk=productVarietySelection.product_variety_id)
+                        productVarietySelection = ProductVarietySelection.objects.get(
+                            pk=productJancode.horizontal_id)
+                        productVariety = ProductVariety.objects.get(
+                            pk=productVarietySelection.product_variety_id)
                         varieties.append({
                             "name": str(productVariety.name),
                             "selection": str(productVarietySelection.selection),
                             "vertical_and_horizontal": str(productVariety.vertical_and_horizontal),
                         })
                     if productJancode.vertical_id:
-                        productVarietySelection = ProductVarietySelection.objects.get(pk=productJancode.vertical_id)
-                        productVariety = ProductVariety.objects.get(pk=productVarietySelection.product_variety_id)
+                        productVarietySelection = ProductVarietySelection.objects.get(
+                            pk=productJancode.vertical_id)
+                        productVariety = ProductVariety.objects.get(
+                            pk=productVarietySelection.product_variety_id)
                         varieties.append({
                             "name": str(productVariety.name),
                             "selection": str(productVarietySelection.selection),
@@ -908,5 +965,5 @@ def delete_product(request):
         if result:
             message = 'Success'
 
-    context = { 'message': message }
+    context = {'message': message}
     return HttpResponse(json.dumps(context), content_type="application/json")
