@@ -180,6 +180,8 @@ function saveProductInfo() {
             })
         }
         
+        //second cell name
+        let twoItemCellName = document.getElementById('cell-name');
         // crate varieties
         for(let i = 0; i < preservedData.length; i++){
             varieties.push({
@@ -187,12 +189,12 @@ function saveProductInfo() {
                 "stock": preservedData[i].stock,
                 "varieties": [
                     {
-                        "name": 'Color',
+                        "name": twoItemCellName.innerHTML.split('/')[0].trim(),
                         "selection": preservedData[i].token.split('_')[0],
                         "vertical_and_horizontal": "0"
                     },
                     {
-                        "name": 'Size',
+                        "name": twoItemCellName.innerHTML.split('/')[1].trim(),
                         "selection": preservedData[i].token.split('_')[1],
                         "vertical_and_horizontal": "1"
                     },
