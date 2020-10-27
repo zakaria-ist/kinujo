@@ -605,7 +605,7 @@
     </div>
 
 <script type="text/javascript">
-let preservedData = {};
+let preservedDatas = {};
  let counter = 0;
   const imgWrapper = document.getElementById('img-wrapper');
 
@@ -615,17 +615,29 @@ let preservedData = {};
     const image = document.getElementById(`images-${counter}`);
 
     if(imgWrapper.childElementCount < 6){ 
+      //let newImgDiv = document.createElement('div');
+      
+
       image.innerHTML = `<img class="images" src="${URL.createObjectURL(event.target.files[0])}" /> 
                   <div class="overlay">
                     <div onClick="this.parentNode.parentNode.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode.parentNode.parentNode)" class="rmv-img-btn"><i class="fas fa-trash-alt img-del-btn"></i> </div>
-                  </div>
-      `;
+                  </div>`;
+
+      // if(newImgDiv.firstChild){
+      //   image.appendChild(newImgDiv.firstChild);
+      // }
+
+      
+
       addImgBtn.style.display = 'none';
       
       //increase counter for next
       counter ++;
       
-      imgWrapper.innerHTML += `<div class="col-md-4 mt-5 img-box">
+      let newFileInput = document.createElement('div');
+
+
+      newFileInput.innerHTML = `<div class="col-md-4 mt-5 img-box">
                   <div class="row img-h">
                     <label for="file" id="add-img-btn-${counter}" class="btn btn-secondary text-center col-md-12 img-input" onclick="if(!document.getElementById('file')){document.getElementById('file-${counter}').click();}">
                       + 
@@ -635,6 +647,12 @@ let preservedData = {};
                     </div>
                   </div>
                 </div>`;
+      
+
+      if(newFileInput.firstChild){
+        imgWrapper.appendChild(newFileInput.firstChild);
+      }
+
     } else{
       document.getElementById(`file-${counter}`).value='';
       console.log(document.getElementById(`file-${counter}`).value);
@@ -762,7 +780,7 @@ let preservedData = {};
         //grab the existing value of jancode and stock
         let varInfo = document.getElementsByClassName('variant-info');
 
-        preservedData = {};
+        preservedDatas = {};
 
         for(let i = 0; i < varInfo.length; i++){
           //get id num
@@ -778,13 +796,13 @@ let preservedData = {};
 
           let dataToken = varInfo[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
           
-          preservedData[dataToken] = {
+          preservedDatas[dataToken] = {
             jancode: jancode,
             stock: stock,
           }
         }
 
-        console.log(preservedData);
+        console.log(preservedDatas);
 
         //empty the forms
         firstOfTwoItemGroup.innerHTML = '';
@@ -1770,7 +1788,7 @@ let preservedData = {};
     }
     
 
-    if(typeof preservedData === undefined){
+    if(typeof preservedDatas === undefined){
       console.log(undefined);
     }else{
     
@@ -1789,10 +1807,10 @@ let preservedData = {};
             let nstock = document.getElementById(stockId);
 
             let dataToken = variantTableCol[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
-            if(preservedData[dataToken]){
-              console.log(preservedData[dataToken].jancode);
-              njancode.innerHTML = preservedData[dataToken].jancode;
-              nstock.innerHTML = preservedData[dataToken].stock;
+            if(preservedDatas[dataToken]){
+              console.log(preservedDatas[dataToken].jancode);
+              njancode.innerHTML = preservedDatas[dataToken].jancode;
+              nstock.innerHTML = preservedDatas[dataToken].stock;
             }
             // {
             //   jancode: jancode,

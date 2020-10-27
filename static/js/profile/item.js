@@ -215,9 +215,24 @@ function saveProductInfo() {
     data.append("varieties", JSON.stringify(varieties));
 
     // Need to done
-    // $.each($("#image")[0].files, function(i, file) {
-    //     data.append("product_image", file);
-    // });
+    // for(let j = 0; j < 5; j++){
+
+    //     $(".images")[j].files[0], function(i, file) {
+    //         data.append("product_image", file);
+    //     };
+    // }
+
+    let imageLength = document.getElementsByClassName('images').length;
+    console.log('length: ' + imageLength);
+    for(let i = 0; i < imageLength; i++){
+        console.log('previous' + i);
+        data.append("product_image", $('input[type=file]')[i].files[0]);
+        console.log('after' + i, data.product_image);
+    }
+        
+    
+
+
     
     var is_valid = true;
     if (is_valid) {
