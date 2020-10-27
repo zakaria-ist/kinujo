@@ -386,13 +386,16 @@ def profile_edit(request, profile_id):
                 else:
                     profile.is_approved = False
 
+                profile.modified = datetime.datetime.now()
                 profile.save()
                 
                 profile_image = request.FILES.get('profile_image', False)
                 if profile_image:
                     if profile.image:
                         image = Image.objects.get(pk=profile.image_id)
-                        image.delete()
+                        image.is_hidden = True
+                        image.modified = datetime.datetime.now()
+                        image.save()
 
                     new_image = Image()
                     new_image.image.save(profile_image.name, profile_image)
@@ -401,12 +404,12 @@ def profile_edit(request, profile_id):
                     profile.image = new_image
                     profile.save()
 
-                    active = request.POST.get('active_checkbox', '') == 'on'
-                    if not active:
-                        profile.is_hidden = True
-                    
-                    profile.modified = datetime.datetime.now()
-                    profile.save()
+                active = request.POST.get('active_checkbox', '') == 'on'
+                if not active:
+                    profile.is_hidden = True
+                
+                profile.save()
+
                 return render(request, 'profile_list.html')
             except Exception as e:
                 print(e)
@@ -441,6 +444,12 @@ def profile_delete(request, profile_id):
         profile.is_hidden = 1
         profile.modified = datetime.datetime.now()
         profile.save()
+        
+        if profile.image:
+            image = Image.objects.get(pk=profile.image_id)
+            image.is_hidden = True
+            image.modified = datetime.datetime.now()
+            image.save()
     except Exception as e:
         print(e)
     return render(request, 'profile_list.html')

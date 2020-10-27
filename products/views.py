@@ -93,7 +93,8 @@ def ProductList__asJson(request):
             }
             
             array.append(data)
-
+    records_total = len(array)
+    records_filtered = len(array)
     content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
     json_content = json.dumps(content, ensure_ascii=False)
     return HttpResponse(json_content, content_type='application/json')
@@ -302,11 +303,14 @@ def product_edit(request, product_id):
             # product old image delete 
             productImages = ProductImage.objects.filter(product_id=product.id, is_hidden=False)
             for productImage in productImages:
-                # may be CASCADE will do it
-                # image = Image.objects.get(pk=productImage.image_id)
-                # image.delete()
+                image = Image.objects.get(pk=productImage.image_id)
+                image.modified = datetime.datetime.now()
+                image.is_hidden = True
+                image.save()
 
-                productImage.delete()
+                productImage.is_hidden = True
+                productImage.modified = datetime.datetime.now()
+                productImage.save()
             
             # product new image save 
             image_ids = []
@@ -326,19 +330,27 @@ def product_edit(request, product_id):
             # delete product old varieties
             productVarieties = ProductVariety.objects.filter(product_id=product.id)
             for productVariety in productVarieties:
-                # may be CASCADE will do it
-                # productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id=productVariety.id)
-                # for productVarietySelection in productVarietySelections:
-                #     productJancodes = ProductJancode.objects.filter(horizontal_id=productVarietySelection.id)
-                #     for productJancode in productJancodes:
-                #         productJancode.delete()
-                #     productJancodes = ProductJancode.objects.filter(vertical_id=productVarietySelection.id)
-                #     for productJancode in productJancodes:
-                #         productJancode.delete()
+                productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id=productVariety.id)
+                for productVarietySelection in productVarietySelections:
+                    productJancodes = ProductJancode.objects.filter(horizontal_id=productVarietySelection.id)
+                    for productJancode in productJancodes:
+                        productJancode.is_hidden = True
+                        productJancode.modified = datetime.datetime.now()
+                        productJancode.save()
+                    productJancodes = ProductJancode.objects.filter(vertical_id=productVarietySelection.id)
+                    for productJancode in productJancodes:
+                        productJancode.is_hidden = True
+                        productJancode.modified = datetime.datetime.now()
+                        productJancode.save()
 
-                #     productVarietySelection.delete()
+                    productVarietySelection.is_hidden = True
+                    productVarietySelection.modified = datetime.datetime.now()
+                    productVarietySelection.save()
                     
                 productVariety.delete()
+                productVariety.is_hidden = True
+                productVariety.modified = datetime.datetime.now()
+                productVariety.save()
 
             # save product new varieties
             varieties = json.loads(request.POST.get('varieties'))
@@ -462,6 +474,54 @@ def product_edit(request, product_id):
                                                 'category_list': category_list,
                                                 'media_url': s.MEDIA_URL})
 
+def hide_product(product_id):
+    try:
+        product = Product.objects.get(pk=product_id)
+        product.is_hidden = 1
+        product.modified = datetime.datetime.now()
+        product.save()
+
+        productImages = ProductImage.objects.filter(product_id=product.id, is_hidden=False)
+        for productImage in productImages:
+            image = Image.objects.get(pk=productImage.image_id)
+            image.modified = datetime.datetime.now()
+            image.is_hidden = True
+            image.save()
+
+            productImage.is_hidden = True
+            productImage.modified = datetime.datetime.now()
+            productImage.save()
+        
+        productVarieties = ProductVariety.objects.filter(product_id=product.id)
+        for productVariety in productVarieties:
+            productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id=productVariety.id)
+            for productVarietySelection in productVarietySelections:
+                productJancodes = ProductJancode.objects.filter(horizontal_id=productVarietySelection.id)
+                for productJancode in productJancodes:
+                    productJancode.is_hidden = True
+                    productJancode.modified = datetime.datetime.now()
+                    productJancode.save()
+                productJancodes = ProductJancode.objects.filter(vertical_id=productVarietySelection.id)
+                for productJancode in productJancodes:
+                    productJancode.is_hidden = True
+                    productJancode.modified = datetime.datetime.now()
+                    productJancode.save()
+
+                productVarietySelection.is_hidden = True
+                productVarietySelection.modified = datetime.datetime.now()
+                productVarietySelection.save()
+                
+            productVariety.delete()
+            productVariety.is_hidden = True
+            productVariety.modified = datetime.datetime.now()
+            productVariety.save()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+    return True
+
 # @login_required
 @csrf_exempt
 def product_delete(request, product_id):
@@ -469,16 +529,8 @@ def product_delete(request, product_id):
     Method to delete a product.
     """
 
-    try:
-        product = Product.objects.get(pk=product_id)
-        product.is_hidden = 1
-        product.modified = datetime.datetime.now()
-        product.save()
-
-        jancode_ids = get_products_jancodes(product.id, type='id')
-        productJancodes = ProductJancode.objects.filter(id__in=jancode_ids).update(is_hidden=True, modified=datetime.datetime.now())
-    except Exception as e:
-        print(e)
+    result = hide_product(product_id)
+    
     return render(request, 'product_list.html')
 
 
@@ -515,11 +567,14 @@ def add_update_product(request):
                 # product old image delete 
                 productImages = ProductImage.objects.filter(product_id=product.id, is_hidden=False)
                 for productImage in productImages:
-                    # may be CASCADE will do it
-                    # image = Image.objects.get(pk=productImage.image_id)
-                    # image.delete()
+                    image = Image.objects.get(pk=productImage.image_id)
+                    image.modified = datetime.datetime.now()
+                    image.is_hidden = True
+                    image.save()
 
-                    productImage.delete()
+                    productImage.is_hidden = True
+                    productImage.modified = datetime.datetime.now()
+                    productImage.save()
                 
                 # product new image save 
                 image_ids = []
@@ -539,19 +594,27 @@ def add_update_product(request):
                 # delete product old varieties
                 productVarieties = ProductVariety.objects.filter(product_id=product.id)
                 for productVariety in productVarieties:
-                    # may be CASCADE will do it
-                    # productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id=productVariety.id)
-                    # for productVarietySelection in productVarietySelections:
-                    #     productJancodes = ProductJancode.objects.filter(horizontal_id=productVarietySelection.id)
-                    #     for productJancode in productJancodes:
-                    #         productJancode.delete()
-                    #     productJancodes = ProductJancode.objects.filter(vertical_id=productVarietySelection.id)
-                    #     for productJancode in productJancodes:
-                    #         productJancode.delete()
+                    productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id=productVariety.id)
+                    for productVarietySelection in productVarietySelections:
+                        productJancodes = ProductJancode.objects.filter(horizontal_id=productVarietySelection.id)
+                        for productJancode in productJancodes:
+                            productJancode.is_hidden = True
+                            productJancode.modified = datetime.datetime.now()
+                            productJancode.save()
+                        productJancodes = ProductJancode.objects.filter(vertical_id=productVarietySelection.id)
+                        for productJancode in productJancodes:
+                            productJancode.is_hidden = True
+                            productJancode.modified = datetime.datetime.now()
+                            productJancode.save()
 
-                    #     productVarietySelection.delete()
+                        productVarietySelection.is_hidden = True
+                        productVarietySelection.modified = datetime.datetime.now()
+                        productVarietySelection.save()
                         
                     productVariety.delete()
+                    productVariety.is_hidden = True
+                    productVariety.modified = datetime.datetime.now()
+                    productVariety.save()
 
                 # save product new varieties
                 varieties = json.loads(request.POST.get('varieties'))
@@ -841,18 +904,9 @@ def delete_product(request):
     message = 'Error'
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
-        try:
-            product = Product.objects.get(pk=product_id)
-            product.is_hidden = 1
-            product.modified = datetime.datetime.now()
-            product.save()
-
-            jancode_ids = get_products_jancodes(product.id, type='id')
-            productJancodes = ProductJancode.objects.filter(id__in=jancode_ids).update(is_hidden=True, modified=datetime.datetime.now())
-
+        result = hide_product(product_id)
+        if result:
             message = 'Success'
-        except Exception as e:
-            print(e)
 
     context = { 'message': message }
     return HttpResponse(json.dumps(context), content_type="application/json")
