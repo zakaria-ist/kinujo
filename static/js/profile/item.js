@@ -233,13 +233,14 @@ function saveProductInfo() {
 
     let imgArr = [];
     let imageLength = document.getElementsByClassName('images').length;
-
+    //let fileInputs = document.querySelectorAll('input[type=file]');
     for(let i = 0; i < imageLength; i++){
-
-        imgArr.push($('input[type=file]')[i].files[0]);
+        let fileId = `file-${i}`;
+        let new_img = document.getElementById(fileId).files[0];
+        imgArr.push(new_img);
 
     }
-    
+
     data.append("product_image", imgArr);
         
     

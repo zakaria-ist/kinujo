@@ -346,9 +346,10 @@
               <div id="img-wrapper" class="row">
                 <div class="col-md-4 mt-5 img-box">
                   <div class="row img-h">
-                    <label for="file" id="add-img-btn-0" class="btn btn-secondary text-center col-md-12 img-input">
+                    
+                    <label for="file-0" id="add-img-btn-0" class="btn btn-secondary text-center col-md-12 img-input">
                       + 
-                      <input type="file"  accept="image/*" name="image" id="file" onchange="loadFile(event)"  style="display: none">
+                      <input type="file"  accept="image/*" name="image-0" id="file-0" onchange="loadFile(event);"  style="display: none">
                     </label>
                     <div class="col-md-12 img-container" id="images-0">
                     </div>
@@ -639,9 +640,9 @@ let preservedDatas = {};
 
       newFileInput.innerHTML = `<div class="col-md-4 mt-5 img-box">
                   <div class="row img-h">
-                    <label for="file" id="add-img-btn-${counter}" class="btn btn-secondary text-center col-md-12 img-input" onclick="if(!document.getElementById('file')){document.getElementById('file-${counter}').click();}">
+                    <label for="file-${counter}" id="add-img-btn-${counter}" class="btn btn-secondary text-center col-md-12 img-input" onclick="if(!document.getElementById('file')){document.getElementById('file-${counter}').click();}">
                       + 
-                      <input type="file"  accept="image/*" name="image" id="file-${counter}" onchange="loadFile(event)"  style="display: none">
+                      <input type="file"  accept="image/*" name="image-${counter}" id="file-${counter}" onchange="loadFile(event)"  style="display: none">
                     </label>
                     <div class="col-md-12 img-container" id="images-${counter}">
                     </div>
