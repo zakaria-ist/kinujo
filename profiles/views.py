@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .forms import ProfileForm, ImageUploadForm
 from .models import Address, Profile, FinancialAccount
+from products.models import ProductCategory
 from utilities.constants import AUTHORITY_TYPE
 from prefectures.models import Prefecture
 from images.models import Image
@@ -419,11 +420,13 @@ def profile_edit(request, profile_id):
     store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['SPECIAL']).exclude(id=profile_id).values('id', 'nickname')
     profile_list = list(Profile.objects.filter(is_hidden=False).exclude(id=profile_id).values_list('id', 'nickname', 'authority_id'))
     prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
+    category_list = list(ProductCategory.objects.filter(is_hidden=False).order_by('id').values_list('id', 'name'))
     return render(request, 'profile_form.html', {'form': form, 
                                                 'media_url': s.MEDIA_URL, 
                                                 'store_list': store_list,
                                                 'profile_list': profile_list,
                                                 'profile': profile,
+                                                'category_list': category_list,
                                                 'prefecture_list': prefecture_list})
 
 # @login_required
