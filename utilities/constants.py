@@ -47,6 +47,11 @@ PAYMENT_STATUS = (
     ('PAID', 1)
 )
 
+ORDER_STATUS = (
+    (1, 'IN PROCESSING'),
+    (2, 'SHIPMENT COMPLETE')
+)
+
 AUTHORITY_TYPE = {
     'MASTER': 1,
     'SPECIAL': 2,

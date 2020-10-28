@@ -5,6 +5,13 @@
     {% load i18n %}
     <link href="{% static "css/select2/select2.css" %}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.css' %}"/>
+    <style>
+        .address-btn {
+            background-color: #A5A4BF !important;
+            color: #ffffff !important;
+            min-width: 100px;
+        }
+    </style>
 {% endblock %}
 
 {% block title %}{% trans 'Order Add/Edit'%}{% endblock %}
@@ -22,6 +29,14 @@
 {% endblock %}
 
 {% block content %}
+<form class="form-horizontal"  id="order_form"
+    {% if order.id %}
+    action="{% url 'order_edit' order.id %}"
+    {% else %}
+    action="{% url 'order_add' %}"
+    {% endif %}
+    role="form" method="post" onsubmit="validateForm()" enctype="multipart/form-data">
+    {% csrf_token %}
     <section class="panel">
         <header class="panel-heading pb-5" style="font-size: 25px">
             <strong>{% trans 'Order Registration' %}</strong>
@@ -50,105 +65,162 @@
                     <label for="order_no" class="col-lg-2 control-label">{% trans 'Order Number' %}<span
                             class="span-required">(*)</span></label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field" type="text"
+                        <input class="form-control trs-field" type="text" readonly
                             name="order_no"
                             id="order_no"
                             autocomplete="off"
-                            placeholder="">
+                            placeholder=""
+                            value="{{order.id}}">
+                    </div>
+                    <label for="order_date" class="col-lg-2 control-label">{% trans 'Order Date' %}</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="date"
+                            name="order_date"
+                            id="order_date"
+                            placeholder=""
+                            value="{{order.order_date|date:"Y-m-d"}}">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="name" class="col-lg-2 control-label">{% trans 'Orderer' %}</label>
                     <div class="col-lg-4">
+                        <select name="orderer" id="orderer" class="form-control trs-field">
+                            {% for pr in orderer_list %}
+                                {% if pr.0 == order.purchaser_id %}
+                                <option value="{{pr.0}}" selected>{{pr.1}}</option>
+                                {% else %}
+                                <option value="{{pr.0}}">{{pr.1}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <label for="name" class="col-lg-2 control-label">{% trans 'Receiver Name' %}</label>
+                    <div class="col-lg-4">
                         <input class="form-control trs-field" type="text"
                             name="name"
                             id="name"
-                            placeholder="">
-                    </div>
-                    <label for="dest_name" class="col-lg-2 control-label">{% trans 'Destination Name' %}</label>
-                    <div class="col-lg-4">
-                        <input class="form-control trs-field" type="text"
-                            name="dest_name"
-                            id="dest_name"
-                            placeholder="">
+                            placeholder=""
+                            value="{{order.name}}">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="phone_no" class="col-lg-2 control-label">{% trans 'Phone Number' %}<span
+                    <label for="tel" class="col-lg-2 control-label">{% trans 'Phone Number' %}<span
                             class="span-required">(*)</span></label>
                     <div class="col-lg-4">
                         <input class="form-control trs-field" type="text"
-                            name="phone_no"
-                            id="phone_no"
-                            placeholder="">
+                            name="tel"
+                            id="tel"
+                            placeholder=""
+                            value="{{order.tel}}">
                     </div>
-                    <label for="shipping" class="col-lg-2 control-label">{% trans 'Shipping' %}</label>
-                    <div class="col-lg-4">
+                    <label for="zip1" class="col-lg-2 control-label">{% trans 'Zip Code' %}</label>
+                    <div class="col-lg-2">
                         <input class="form-control trs-field" type="text"
-                            name="shipping"
-                            id="shipping"
-                            placeholder="">
+                            name="zip1"
+                            id="zip1"
+                            placeholder=""
+                            value="{{order.zip1}}">
+                    </div>
+                    <div class="col-lg-2">
+                        <span class="">
+                            <a class="btn address-btn" onclick="showAddressBook()"> 
+                                <span>{% trans 'Address Book' %}</span>
+                            </a>
+                        </span>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="total_fee" class="col-lg-2 control-label">{% trans 'Total Fee' %}</label>
+                    <label for="total_amount" class="col-lg-2 control-label">{% trans 'Total Amount' %}</label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field" type="text"
-                            name="total_fee"
-                            id="total_fee"
-                            placeholder="">
+                        <input class="form-control trs-field" type="number"
+                            name="total_amount"
+                            id="total_amout"
+                            placeholder=""
+                            value="{{order.total_amout}}">
                     </div>
-                    <label for="order_status" class="col-lg-2 control-label">{% trans 'Status' %}</label>
+                    <label for="prefecture" class="col-lg-2 control-label">{% trans 'Prefecture' %}<span
+                            class="span-required">(*)</span></label>
                     <div class="col-lg-4">
-                        <select name="order_status" id="order_status" class="form-control trs-field">
-                            <option value="0">{% trans 'Ready' %}</option>
-                            <option value="1">{% trans 'Processing' %}</option>
-                            <option value="2">{% trans 'Received' %}</option>
+                        <select name="prefecture" id="prefecture" class="form-control trs-field">
+                            {% for pr in prefecture_list %}
+                                {% if pr.0 == order.prefecture_id %}
+                                <option value="{{pr.0}}" selected>{{pr.1}}</option>
+                                {% else %}
+                                <option value="{{pr.0}}">{{pr.1}}</option>
+                                {% endif %}
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="shipment_date" class="col-lg-2 control-label">{% trans 'Shipment Date' %}</label>
+                    <label for="shipping_fee" class="col-lg-2 control-label">{% trans 'Shipping Fee' %}</label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field" type="text"
-                            name="shipment_date"
-                            id="shipment_date"
-                            placeholder="">
+                        <input class="form-control trs-field" type="number"
+                            name="shipping_fee"
+                            id="shipping_fee"
+                            placeholder=""
+                            value="{{order.shipping_fee}}">
                     </div>
-                    <label for="inquiry_no" class="col-lg-2 control-label">{% trans 'Inquiry Number' %}</label>
+                    <label for="address1" class="col-lg-2 control-label">{% trans 'Address One' %}<span
+                            class="span-required">(*)</span></label>
                     <div class="col-lg-4">
                         <input class="form-control trs-field" type="text"
-                            name="inquiry_no"
-                            id="inquiry_no"
-                            placeholder="">
+                            name="address1"
+                            id="address1"
+                            placeholder=""
+                            value="{{order.address1}}">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="order_date" class="col-lg-2 control-label">{% trans 'Order Date' %}</label>
+                    <label for="order_status" class="col-lg-2 control-label">{% trans 'Status' %}</label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field" type="text"
-                            name="order_date"
-                            id="order_date"
-                            placeholder="">
+                        <select name="order_status" id="order_status" class="form-control trs-field">
+                            {% for pr in status_list %}
+                                {% if pr.0 == order.status %}
+                                <option value="{{pr.0}}" selected>{{pr.1}}</option>
+                                {% else %}
+                                <option value="{{pr.0}}">{{pr.1}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
                     </div>
-                    <label for="delivery_addr" class="col-lg-2 control-label">{% trans 'Delivery Address' %}</label>
+                    <label for="address2" class="col-lg-2 control-label">{% trans 'Address Two' %}</label>
                     <div class="col-lg-4">
                         <input class="form-control trs-field" type="text"
-                            name="delivery_addr"
-                            id="delivery_addr"
-                            placeholder="">
+                            name="address2"
+                            id="address2"
+                            placeholder=""
+                            value="{{order.address2}}">
                     </div>
                 </div>
-                
+                <div class="form-group row">
+                    <label for="shipped_date" class="col-lg-2 control-label">{% trans 'Shipment Date' %}</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="date"
+                            name="shipped_date"
+                            id="shipped_date"
+                            placeholder=""
+                            value="{{order.shipped_date|date:"Y-m-d"}}">
+                    </div>
+                    <label for="inquiry_number" class="col-lg-2 control-label">{% trans 'Tracking Number' %}</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="text"
+                            name="inquiry_number"
+                            id="inquiry_number"
+                            placeholder=""
+                            value="{{order.inquiry_number}}">
+                    </div>
+                </div>
                 <div class="form-group row">
                     <div class="text-center">
-                        <button type="button" name="btnOrderSave" id="btnOrderSave" class="btn btn-primary blue-btn">{% trans 'Save' %}</button>
+                        <button type="submit" name="btnOrderSave" id="btnOrderSave" class="btn btn-primary blue-btn">{% trans 'Save' %}</button>
                         <a class="btn btn-default gray-btn" href="{% url 'order_list' %}">{% trans 'Cancel' %}</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+</form>
 {% endblock %}
 
 {% block js %}
@@ -156,6 +228,7 @@
     <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script> 
     <script type="text/javascript" src="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.js' %}"></script>
     <script src="{% static "js/select2/select2.js" %}"></script>
+    <script src="{% static "js/jpostal.js" %}"></script>
     <script type="text/javascript">
         $(document).on('keyup', '.select2-selection.select2-selection--single', function (e) {
             var keycode = (e.keyCode ? e.keyCode : e.which);
@@ -165,5 +238,22 @@
         });
 
         $('#order_status').select2({});
+        $('#prefecture').select2({});
+        $('#orderer').select2({});
+
+        $('#zip_code').jpostal({   
+            postcode : [
+                '#zip_code'
+            ],
+            address : {
+                '#prefecture'  : '%3',
+                '#address1'  : '%4, %5',
+                '#address2'  : '%8, %9, %10',
+            }
+        });
+
+        function validateForm() {
+            
+        }
     </script>
 {% endblock %}
