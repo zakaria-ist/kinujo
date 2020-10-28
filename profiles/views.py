@@ -81,8 +81,13 @@ def login_master(request):
             password = request.POST.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request, user)
-                return HttpResponsePermanentRedirect(reverse('home_load'))
+                profile = Profile.objects.filter(is_hidden=False, user_id=user.id).first()
+                if profile and profile.authority_id == AUTHORITY_TYPE['MASTER']:
+                    login(request, user)
+                    return HttpResponsePermanentRedirect(reverse('home_load'))
+                else:
+                    state = "User is not a Master Account"
+                    return render(request, 'master_login.html', {'state': state})
             else:
                 state = "Check username & password"
                 return render(request, 'master_login.html', {'state': state})
@@ -110,7 +115,8 @@ def login_sales(request):
                     login(request, user)
                     return redirect('listing_home_load')
                 else:
-                    state = "User is not seller account"
+                    state = "User is not Seller Account"
+                    return render(request, 'sales_login.html', {'state': state})
             else:
                 state = "Check username & password"
                 return render(request, 'sales_login.html', {'state': state})
