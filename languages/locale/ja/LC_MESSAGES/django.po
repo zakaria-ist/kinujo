@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-27 04:52+0000\n"
+"POT-Creation-Date: 2020-10-28 04:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,7 +67,6 @@ msgid "Phone Number"
 msgstr "電話番号"
 
 #: orders/templates/order_form.html:85 products/templates/product_form.html:271
-#: profiles/templates/item_form.html:326
 msgid "Shipping"
 msgstr "運送"
 
@@ -114,8 +113,8 @@ msgstr "配送先住所"
 #: products/templates/product_form.html:492
 #: profiles/templates/account_info_tab.html:89
 #: profiles/templates/basic_info_tab.html:210
-#: profiles/templates/item_form.html:391 profiles/templates/item_form.html:495
-#: profiles/templates/item_form.html:598 profiles/templates/item_form.html:1213
+#: profiles/templates/item_form.html:392 profiles/templates/item_form.html:496
+#: profiles/templates/item_form.html:599 profiles/templates/item_form.html:1234
 #: profiles/templates/salon_form.html:81
 #: profiles/templates/shipping_form.html:84
 msgid "Save"
@@ -125,7 +124,7 @@ msgstr "保存する"
 #: products/templates/product_form.html:331
 #: profiles/templates/account_info_tab.html:90
 #: profiles/templates/basic_info_tab.html:211
-#: profiles/templates/item_form.html:392 profiles/templates/salon_form.html:82
+#: profiles/templates/item_form.html:393 profiles/templates/salon_form.html:82
 #: profiles/templates/shipping_form.html:85
 msgid "Cancel"
 msgstr "キャンセル"
@@ -351,68 +350,68 @@ msgid "Product Description"
 msgstr "商品説明文"
 
 #: products/templates/product_form.html:307
-#: profiles/templates/item_form.html:362
+#: profiles/templates/item_form.html:363
 msgid "Error Max Images"
 msgstr "エラー最大画像"
 
 #: products/templates/product_form.html:314
-#: profiles/templates/item_form.html:369
+#: profiles/templates/item_form.html:370
 msgid "Warning"
 msgstr "警告"
 
 #: products/templates/product_form.html:318
-#: profiles/templates/item_form.html:373
+#: profiles/templates/item_form.html:374
 msgid "Maximum of 5 images are allowed only."
 msgstr "最大5つの画像のみが許可されます。"
 
 #: products/templates/product_form.html:321
 #: products/templates/product_form.html:396
 #: products/templates/product_form.html:491
-#: profiles/templates/item_form.html:376 profiles/templates/item_form.html:494
-#: profiles/templates/item_form.html:597
+#: profiles/templates/item_form.html:377 profiles/templates/item_form.html:495
+#: profiles/templates/item_form.html:598
 msgid "Close"
 msgstr "閉じる"
 
 #: products/templates/product_form.html:344
-#: profiles/templates/item_form.html:441
+#: profiles/templates/item_form.html:442
 msgid "Variation item registration"
 msgstr "バリエーション項目登録"
 
 #: products/templates/product_form.html:358
 #: products/templates/product_form.html:424
 #: products/templates/product_form.html:459
-#: profiles/templates/item_form.html:456 profiles/templates/item_form.html:529
-#: profiles/templates/item_form.html:566
+#: profiles/templates/item_form.html:457 profiles/templates/item_form.html:530
+#: profiles/templates/item_form.html:567
 msgid "Choices"
 msgstr "選択肢"
 
 #: products/templates/product_form.html:359
-#: profiles/templates/item_form.html:457
+#: profiles/templates/item_form.html:458
 msgid "JAN Code"
 msgstr "Janコード"
 
 #: products/templates/product_form.html:360
 #: products/templates/product_list.html:70
-#: profiles/templates/item_form.html:458
+#: profiles/templates/item_form.html:459
 #: profiles/templates/item_info_tab.html:27
 msgid "Stock"
 msgstr "在庫"
 
 #: products/templates/product_form.html:393
-#: profiles/templates/item_form.html:491
+#: profiles/templates/item_form.html:492
 msgid ""
 "* If you delete the option, the registered JAN code and inventory "
 "information will also be deleted"
 msgstr "※選択肢を削除すると登録済のJANコード・在庫情報も削除されます。"
 
 #: products/templates/product_form.html:408
-#: profiles/templates/item_form.html:507
+#: profiles/templates/item_form.html:508
 msgid "Variant Items Registration"
 msgstr "バリエーション項目登録"
 
 #: products/templates/product_form.html:417
 #: products/templates/product_form.html:452
-#: profiles/templates/item_form.html:521 profiles/templates/item_form.html:558
+#: profiles/templates/item_form.html:522 profiles/templates/item_form.html:559
 msgid "Title"
 msgstr "項目名"
 
@@ -628,58 +627,62 @@ msgid "Commission"
 msgstr "手数料"
 
 #: profiles/templates/item_form.html:291
-msgid "For Sale:"
-msgstr ""
+msgid "For Sale"
+msgstr "販売のため"
 
-#: profiles/templates/item_form.html:404
+#: profiles/templates/item_form.html:326
+msgid "Shipping Fee"
+msgstr "送料"
+
+#: profiles/templates/item_form.html:405
 msgid "Are you sure? This is gonna erase content in 2 item variants."
 msgstr ""
 
-#: profiles/templates/item_form.html:405 profiles/templates/item_form.html:417
-#: profiles/templates/item_form.html:429 profiles/templates/item_form.html:1212
-msgid "Go back"
-msgstr ""
-
 #: profiles/templates/item_form.html:406 profiles/templates/item_form.html:418
-#: profiles/templates/item_form.html:430
-msgid "Proceed"
-msgstr ""
+#: profiles/templates/item_form.html:430 profiles/templates/item_form.html:1233
+msgid "Go back"
+msgstr "戻る"
 
-#: profiles/templates/item_form.html:416
+#: profiles/templates/item_form.html:407 profiles/templates/item_form.html:419
+#: profiles/templates/item_form.html:431
+msgid "Proceed"
+msgstr "進む"
+
+#: profiles/templates/item_form.html:417
 msgid "Are you sure? This is gonna erase content in 1 item variants."
 msgstr ""
 
-#: profiles/templates/item_form.html:428
+#: profiles/templates/item_form.html:429
 msgid "Are you sure? This is gonna erase content in one or two item variants."
 msgstr ""
 
-#: profiles/templates/item_form.html:449
+#: profiles/templates/item_form.html:450
 msgid "Title:"
 msgstr "項目名:"
 
-#: profiles/templates/item_form.html:516
+#: profiles/templates/item_form.html:517
 msgid "* Register one or more options on the horizontal and vertical axes."
 msgstr "※横軸と縦軸にそれぞれ1つ以上の選択肢を登録してください"
 
-#: profiles/templates/item_form.html:519
+#: profiles/templates/item_form.html:520
 msgid "Horizontal axis"
 msgstr ""
 
-#: profiles/templates/item_form.html:556
+#: profiles/templates/item_form.html:557
 msgid "Vertical axis"
 msgstr ""
 
-#: profiles/templates/item_form.html:595
+#: profiles/templates/item_form.html:596
 msgid ""
 "*If you delete the option, the registered JAN code and inventory information "
 "will also be deleted"
 msgstr "※選択肢を削除すると登録済のJANコード・在庫情報も削除されます。"
 
-#: profiles/templates/item_form.html:1192
+#: profiles/templates/item_form.html:1213
 msgid "JAN code / inventory editing"
 msgstr ""
 
-#: profiles/templates/item_form.html:1196
+#: profiles/templates/item_form.html:1217
 msgid ""
 "The number of stocks will change during editing. When changing, increase or "
 "decrease the absolute value such as “+1” or “-1” Please enter (If you want "

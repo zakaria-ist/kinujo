@@ -89,7 +89,8 @@ def ProductList__asJson(request):
             veries = get_jan_varieties(p_jan)
             very_str = ''
             for item in veries:
-                very_str += item['name'] + ' : ' + item['selection'] + ','
+                if item['name']:
+                    very_str += item['name'] + ' : ' + item['selection'] + ','
             if len(very_str):
                 very_str = very_str[:-1]
             i = i + 1
@@ -571,8 +572,6 @@ def hide_product(product_id):
     return True
 
 # @login_required
-
-
 @csrf_exempt
 def product_delete(request, product_id):
     """
