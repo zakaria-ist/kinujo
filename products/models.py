@@ -39,6 +39,7 @@ class Product(models.Model):
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     image = models.ForeignKey(Image, on_delete=models.CASCADE)
+    image_no = models.SmallIntegerField(null=True)
 
     is_hidden = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)

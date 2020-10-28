@@ -106,6 +106,16 @@ function setEditFormInputs(json) {
     $("input[name=status]").val([json.is_opened]);
     $("input[name=is_used]").val([json.is_used]);
     $("input[name=variety]").val([json.variety]).trigger('change');
+    
+    for(let i=0; i<json.images.length; i++) {
+        $('#img_image'+i).attr("src", json.images[i]);
+    }
+
+    if (json.variety == '0') {
+        let v = json.varieties[0];
+        $('#jan_code').val(v.jan_code);
+        $('#stock').val(v.stock);
+    }
 }
 
 var g_product_id = '';
@@ -121,21 +131,21 @@ function showProductForm(product_id='') {
         if (!$('#category').data('select2')) {
             $('#category').select2({});
         }
+        if (product_id != '') {
+            g_product_id = product_id;
+            $.ajax({
+                method: "POST",
+                url: '/products/get_product_info/',
+                dataType: 'JSON',
+                data: {
+                    'product_id': product_id,
+                },
+                success: function (json) {
+                    setEditFormInputs(json);
+                }
+            });
+        }
     });
-    if (product_id != '') {
-        g_product_id = product_id;
-        $.ajax({
-            method: "POST",
-            url: '/products/get_product_info/',
-            dataType: 'JSON',
-            data: {
-                'product_id': product_id,
-            },
-            success: function (json) {
-                setEditFormInputs(json);
-            }
-        });
-    }
 }
 
 
@@ -245,11 +255,25 @@ function saveProductInfo() {
         data.append("variety", variety);
         data.append("varieties", JSON.stringify(varieties));
 
-        let imageLength = document.getElementsByClassName('images').length;
-        for(let i = 0; i < imageLength; i++){
-            let fileId = `file-${i}`;  
-            data.append("product_image", document.getElementById(fileId).files[0]);
-
+        // let imageLength = document.getElementsByClassName('images').length;
+        // for(let i = 0; i < imageLength; i++){
+        //     let fileId = `file-${i}`;  
+        //     data.append("product_image", document.getElementById(fileId).files[0]);
+        // }
+        if ($('#product_image0').prop('files')[0] !== undefined) {
+            data.append("product_image0", $('#product_image0').prop('files')[0]);
+        }
+        if ($('#product_image1').prop('files')[0] !== undefined) {
+            data.append("product_image1", $('#product_image1').prop('files')[0]);
+        }
+        if ($('#product_image2').prop('files')[0] !== undefined) {
+            data.append("product_image2", $('#product_image2').prop('files')[0]);
+        }
+        if ($('#product_image3').prop('files')[0] !== undefined) {
+            data.append("product_image3", $('#product_image3').prop('files')[0]);
+        }
+        if ($('#product_image4').prop('files')[0] !== undefined) {
+            data.append("product_image4", $('#product_image4').prop('files')[0]);
         }
         $.ajax({
             method: "POST",

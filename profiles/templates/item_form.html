@@ -343,7 +343,7 @@
 
               
               
-              <div id="img-wrapper" class="row">
+              {% comment %} <div id="img-wrapper" class="row">
                 <div class="col-md-4 mt-5 img-box">
                   <div class="row img-h">
                     
@@ -353,6 +353,103 @@
                     </label>
                     <div class="col-md-12 img-container" id="images-0">
                     </div>
+                  </div>
+                </div>
+              </div> {% endcomment %}
+              <div id="img-wrapper" class="row">
+                <div class="col-md-4 mt-3 mr-3 img-box">
+                  <div class="fileupload fileupload-new" data-provides="fileupload">
+                      <div class="fileupload-new thumbnail" style="width: 120px; height: 120px;">
+                          <img id="img_image0" src="{% static 'img/white-plus.png' %}" alt="" name="product_image0"/>
+                      </div>
+                      <div class="fileupload-preview fileupload-exists thumbnail"
+                          style="max-width: 120px; max-height: 120px; line-height: 20px;"></div>
+                      <div class="text-right">
+                          <span class="btn btn-white btn-file">
+                              <span class="fileupload-new"><i class="fas fa-pencil-alt fa-lg"></i></span>
+                              <span class="fileupload-exists"><i class="fas fa-undo fa-lg"></i></span>
+                              <input id="product_image0" name="product_image0" type="file" class="default"/>
+                          </span>
+                          <a href="javascript:void(0)" class="btn btn-danger fileupload-exists btnRemoveLogo"
+                          data-dismiss="fileupload"><i class="fas fa-trash-alt fa-lg"></i> </a>
+                          <input style="display: none;" name="rm_product_image0" class="hidethis">
+                      </div>
+                  </div>
+                </div>
+                <div class="col-md-4 mt-3 mr-3 img-box">
+                  <div class="fileupload fileupload-new" data-provides="fileupload">
+                      <div class="fileupload-new thumbnail" style="width: 120px; height: 120px;">
+                          <img id="img_image1" src="{% static 'img/white-plus.png' %}" alt="" name="product_image1"/>
+                      </div>
+                      <div class="fileupload-preview fileupload-exists thumbnail"
+                          style="max-width: 120px; max-height: 120px; line-height: 20px;"></div>
+                      <div class="text-right">
+                          <span class="btn btn-white btn-file">
+                              <span class="fileupload-new"><i class="fas fa-pencil-alt fa-lg"></i></span>
+                              <span class="fileupload-exists"><i class="fas fa-undo fa-lg"></i></span>
+                              <input id="product_image1" name="product_image1" type="file" class="default"/>
+                          </span>
+                          <a href="javascript:void(0)" class="btn btn-danger fileupload-exists btnRemoveLogo"
+                          data-dismiss="fileupload"><i class="fas fa-trash-alt fa-lg"></i> </a>
+                          <input style="display: none;" name="rm_product_image1" class="hidethis">
+                      </div>
+                  </div>
+                </div>
+                <div class="col-md-4 mt-3 mr-3 img-box">
+                  <div class="fileupload fileupload-new" data-provides="fileupload">
+                      <div class="fileupload-new thumbnail" style="width: 120px; height: 120px;">
+                          <img id="img_image2" src="{% static 'img/white-plus.png' %}" alt="" name="product_image2"/>
+                      </div>
+                      <div class="fileupload-preview fileupload-exists thumbnail"
+                          style="max-width: 120px; max-height: 120px; line-height: 20px;"></div>
+                      <div class="text-right">
+                          <span class="btn btn-white btn-file">
+                              <span class="fileupload-new"><i class="fas fa-pencil-alt fa-lg"></i></span>
+                              <span class="fileupload-exists"><i class="fas fa-undo fa-lg"></i></span>
+                              <input id="product_image2" name="product_image2" type="file" class="default"/>
+                          </span>
+                          <a href="javascript:void(0)" class="btn btn-danger fileupload-exists btnRemoveLogo"
+                          data-dismiss="fileupload"><i class="fas fa-trash-alt fa-lg"></i> </a>
+                          <input style="display: none;" name="rm_product_image2" class="hidethis">
+                      </div>
+                  </div>
+                </div>
+                <div class="col-md-4 mt-3 mr-3 img-box">
+                  <div class="fileupload fileupload-new" data-provides="fileupload">
+                      <div class="fileupload-new thumbnail" style="width: 120px; height: 120px;">
+                          <img id="img_image3" src="{% static 'img/white-plus.png' %}" alt="" name="product_image3"/>
+                      </div>
+                      <div class="fileupload-preview fileupload-exists thumbnail"
+                          style="max-width: 120px; max-height: 120px; line-height: 20px;"></div>
+                      <div class="text-right">
+                          <span class="btn btn-white btn-file">
+                              <span class="fileupload-new"><i class="fas fa-pencil-alt fa-lg"></i></span>
+                              <span class="fileupload-exists"><i class="fas fa-undo fa-lg"></i></span>
+                              <input id="product_image3" name="product_image3" type="file" class="default"/>
+                          </span>
+                          <a href="javascript:void(0)" class="btn btn-danger fileupload-exists btnRemoveLogo"
+                          data-dismiss="fileupload"><i class="fas fa-trash-alt fa-lg"></i> </a>
+                          <input style="display: none;" name="rm_product_image3" class="hidethis">
+                      </div>
+                  </div>
+                </div>
+                <div class="col-md-4 mt-3 mr-3 img-box">
+                  <div class="fileupload fileupload-new" data-provides="fileupload">
+                      <div class="fileupload-new thumbnail" style="width: 120px; height: 120px;">
+                          <img id="img_image4" src="{% static 'img/white-plus.png' %}" alt="" name="product_image4"/>
+                      </div>
+                      <div class="fileupload-preview fileupload-exists thumbnail"
+                          style="max-width: 120px; max-height: 120px; line-height: 20px;"></div>
+                      <div class="text-right">
+                          <span class="btn btn-white btn-file">
+                              <span class="fileupload-new"><i class="fas fa-pencil-alt fa-lg"></i></span>
+                              <span class="fileupload-exists"><i class="fas fa-undo fa-lg"></i></span>
+                              <input id="product_image4" name="product_image4" type="file" class="default"/>
+                          </span>
+                          <a href="javascript:void(0)" class="btn btn-danger fileupload-exists btnRemoveLogo"
+                          data-dismiss="fileupload"><i class="fas fa-trash-alt fa-lg"></i> </a>
+                          <input style="display: none;" name="rm_product_image4" class="hidethis">
+                      </div>
                   </div>
                 </div>
               </div>

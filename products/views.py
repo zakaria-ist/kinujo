@@ -78,7 +78,7 @@ def ProductList__asJson(request):
     i = 0
     for field in list:
         productImage = ProductImage.objects.filter(
-            product_id=field.id, is_hidden=False).first()
+            product_id=field.id, is_hidden=False).order_by('image_no').exclude(image_no__isnull=True).first()
         image_path = ''
         if productImage:
             image_path = productImage.image.image.url
@@ -474,7 +474,7 @@ def product_edit(request, product_id):
 
     image_array = []
     productImages = ProductImage.objects.filter(
-        product_id=product.id, is_hidden=False)
+        product_id=product.id, is_hidden=False).order_by('image_no').exclude(image_no__isnull=True)
     for productImage in productImages:
         image_array.append(productImage.image.image.url)
 
@@ -613,33 +613,18 @@ def add_update_product(request):
                 product.modified = datetime.datetime.now()
                 product.save()
 
-                # product old image delete
-                productImages = ProductImage.objects.filter(
-                    product_id=product.id, is_hidden=False)
-                for productImage in productImages:
-                    image = Image.objects.get(pk=productImage.image_id)
-                    image.modified = datetime.datetime.now()
-                    image.is_hidden = True
-                    image.save()
-
-                    productImage.is_hidden = True
-                    productImage.modified = datetime.datetime.now()
-                    productImage.save()
-
-                # product new image save
-                image_ids = []
-                product_images = request.FILES.getlist('product_image')
-                for image in product_images:
-                    new_image = Image()
-                    new_image.image.save(image.name, image)
-                    new_image.save()
-                    image_ids.append(new_image.id)
-
-                for image_id in image_ids:
-                    productImage = ProductImage()
-                    productImage.image_id = image_id
-                    productImage.product_id = product.id
-                    productImage.save()
+                # product image update
+                if request.FILES.get('product_image0', False):
+                    update_product_image(request.FILES.get('product_image0'), 1, product.id)
+                if request.FILES.get('product_image1', False):
+                    update_product_image(request.FILES.get('product_image1'), 2, product.id)
+                if request.FILES.get('product_image2', False):
+                    update_product_image(request.FILES.get('product_image2'), 3, product.id)
+                if request.FILES.get('product_image3', False):
+                    update_product_image(request.FILES.get('product_image3'), 4, product.id)
+                if request.FILES.get('product_image4', False):
+                    update_product_image(request.FILES.get('product_image4'), 5, product.id)
+                
 
                 # delete product old varieties
                 productVarieties = ProductVariety.objects.filter(
@@ -768,18 +753,16 @@ def add_update_product(request):
 
                 # product image save
                 image_ids = []
-                product_images = request.FILES.getlist('product_image')
-                for image in product_images:
-                    new_image = Image()
-                    new_image.image.save(image.name, image)
-                    new_image.save()
-                    image_ids.append(new_image.id)
-
-                for image_id in image_ids:
-                    productImage = ProductImage()
-                    productImage.image_id = image_id
-                    productImage.product_id = product.id
-                    productImage.save()
+                if request.FILES.get('product_image0', False):
+                    save_product_image(request.FILES.get('product_image0'), 1, product.id)
+                if request.FILES.get('product_image1', False):
+                    save_product_image(request.FILES.get('product_image1'), 2, product.id)
+                if request.FILES.get('product_image2', False):
+                    save_product_image(request.FILES.get('product_image2'), 3, product.id)
+                if request.FILES.get('product_image3', False):
+                    save_product_image(request.FILES.get('product_image3'), 4, product.id)
+                if request.FILES.get('product_image4', False):
+                    save_product_image(request.FILES.get('product_image4'), 5, product.id)
 
                 # save product varieties
                 varieties = json.loads(request.POST.get('varieties'))
@@ -866,6 +849,42 @@ def add_update_product(request):
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
+def update_product_image(image, image_no, product_id):
+    try:
+        # delete old images
+        productImages = ProductImage.objects.filter(product_id=product_id, image_no=image_no, is_hidden=False)
+        for productImage in productImages:
+            old_image = Image.objects.get(pk=productImage.image_id)
+            old_image.modified = datetime.datetime.now()
+            old_image.is_hidden = True
+            old_image.save()
+
+            productImage.is_hidden = True
+            productImage.modified = datetime.datetime.now()
+            productImage.save()
+        # save new one
+        save_product_image(image, image_no, product_id)
+    except:
+        pass
+
+    return True
+
+def save_product_image(image, image_no, product_id):
+    try:
+        new_image = Image()
+        new_image.image.save(image.name, image)
+        new_image.save()
+
+        productImage = ProductImage()
+        productImage.image_id = new_image.id
+        productImage.image_no = image_no
+        productImage.product_id = product_id
+        productImage.save()
+    except:
+        pass
+
+    return True
+
 @csrf_exempt
 def get_product_info(request):
     """
@@ -916,7 +935,7 @@ def get_product_info(request):
                 }
                 image_array = []
                 productImages = ProductImage.objects.filter(
-                    product_id=product.id, is_hidden=False)
+                    product_id=product.id, is_hidden=False).order_by('image_no').exclude(image_no__isnull=True)
                 for productImage in productImages:
                     image_array.append(productImage.image.image.url)
 
