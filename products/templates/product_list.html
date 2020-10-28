@@ -113,6 +113,7 @@
     <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script>
     <script type="text/javascript">
 
+    var profile_id = "{{profile_id}}";
     function deleteProduct(id) {
         var url = '/products/product_delete/' + id + '/'
         $("#comfirmDeleteProductModal").modal("show");
@@ -153,6 +154,7 @@
             "ajax": {
                 "url": "{% url 'ProductList__asJson' %}",
                 "data": {
+                    "profile_id": profile_id,
                     "filter_str": filter_str
                 }
             },

@@ -188,12 +188,12 @@
 
               <div class="form-group row">
                 <label class="col-md-4 p-2" for="name">{% trans 'Brand or manufacturer name' %}</label>
-                <input name="brand_name" type="text" class="form-control col-md-8" id="brand-name">
+                <input name="brand_name" type="text" class="form-control col-md-8" id="brand_name">
               </div>
 
               <div class="form-group row">
                 <label class="col-md-4 p-2" for="name">{% trans 'Product ID(URL)' %}</label>
-                <input name="url_str" type="text" class="form-control col-md-8" id="url-str">
+                <input name="url_str" type="text" class="form-control col-md-8" id="url_str">
               </div>
               
               <div class="form-group row">
@@ -310,31 +310,31 @@
             <!--Starts right side inputs-->
             <div class="col-md-5">
               <div class="form-group row">
-                <label class="col-md-6 text-center p-2" for="price">{% trans 'General Price' %}</label>
+                <label class="offset-md-1 col-md-5 p-2" for="price">{% trans 'General Price' %}</label>
                 <input name="price" type="text" class="form-control col-md-6" id="price">
                 
               </div>
 
               <div class="form-group row">
-                <label class="col-md-6 text-center p-2" for="store_price">{% trans 'Store Price' %}</label>
-                <input name="store_price" type="text" class="form-control col-md-6" id="store_price">
+                <label class="offset-md-1 col-md-5 p-2" for="store_price">{% trans 'Store Price' %}</label>
+                <input name="store_price" type="text" class="form-control col-md-6" id="store_price" readonly>
                 
               </div>
 
               <div class="form-group row">
-                <label class="col-md-6 text-center p-2" for="shipping_fee">{% trans 'Shipping' %}</label>
+                <label class="offset-md-1 col-md-5 p-2" for="shipping_fee">{% trans 'Shipping' %}</label>
                 <input name="shipping_fee" type="text" class="form-control col-md-6" id="shipping_fee">
                 
               </div>
 
               <div class="form-group row">
-                <label class="col-md-6 text-center p-2" for="price">{% trans 'PR Statement' %}</label>
+                <label class="offset-md-1 col-md-5 p-2" for="price">{% trans 'PR Statement' %}</label>
                 <input name="pr" type="text" class="form-control col-md-6" id="pr">
                 
               </div>
 
               <div class="form-group row">
-                <label class="col-md-6 text-center p-2" for="description">{% trans 'Product Description' %}</label>
+                <label class="offset-md-1 col-md-5 p-2" for="description">{% trans 'Product Description' %}</label>
                 <textarea name="description" class="form-control col-md-6" id="description" rows="6"></textarea>
                 
               </div>
@@ -1864,4 +1864,13 @@ let preservedDatas = {};
     $('#twoItemsVariant').modal('hide');
 
   }
+
+  $('#price').on('change', function() {
+    var general_price = parseFloat($(this).val());
+    var store_price =  general_price - (0.2 * general_price);
+    if(authority_id == '1') { // master
+        store_price = general_price - (0.3 * general_price);
+    }
+    $('#store_price').val(store_price);
+});
 </script>

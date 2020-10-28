@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .models import Product, ProductImage, ProductCategory, ProductJancode, ProductVariety, ProductVarietySelection
 from images.models import Image
+from profiles.models import Profile
 from django.conf import settings as s
 import datetime
 import json
@@ -17,8 +18,15 @@ def product_list(request):
     """
     Method to redirect to product list page.
     """
+    try:
+        user_id = request.user.id
+        profile = Profile.objects.filter(is_hidden=False, user_id=user_id).last()
+        profile_id = profile.id
+    except Exception as e:
+        print(e)
+        profile_id = ''
 
-    return render(request, 'product_list.html')
+    return render(request, 'product_list.html', {'profile_id': profile_id})
 
 
 # @login_required
@@ -32,7 +40,8 @@ def ProductList__asJson(request):
     length = request.GET['length']
     search = request.GET['search[value]']
 
-    product_list = Product.objects.filter(is_hidden=False).order_by('name')
+    profile_id = request.GET.get('profile_id')
+    product_list = Product.objects.filter(is_hidden=False, user_id=profile_id).order_by('name')
     filter_array = eval(request.GET.get('filter_str'))
     if len(filter_array):
         if 1 not in filter_array:
@@ -896,7 +905,7 @@ def get_product_info(request):
                     'pr': product.pr,
                     'url_str': product.url_str,
                     'category': str(product.category_id),
-                    'target': product.target,
+                    'target': str(product.target),
                     'price': str(product.price),
                     'store_price': str(product.store_price),
                     'shipping_fee': str(product.shipping_fee),
@@ -904,7 +913,7 @@ def get_product_info(request):
                     'is_opened': '1' if product.is_opened else '0',
                     'is_used': '1' if product.is_used else '0',
                     'is_draft': '1' if product.is_draft else '0',
-                    'variety': product.variety,
+                    'variety': str(product.variety),
                 }
                 image_array = []
                 productImages = ProductImage.objects.filter(
