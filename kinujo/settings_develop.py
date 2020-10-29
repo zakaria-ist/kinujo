@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-from .shared_settings import *
+# from .shared_settings import *
 import os
 from django.utils.translation import ugettext_lazy as _
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -151,8 +151,8 @@ STATIC_ROOT = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # s3 settings
-AWS_ACCESS_KEY_ID = 'AKIAI3VAZN6IG4F7I7SQ'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = 'AKIA4YVCJSZFRIFD44QQ'
+AWS_SECRET_ACCESS_KEY = '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'
 AWS_STORAGE_BUCKET_NAME = 'c2sg-kinujo'
 S3_URL = 'https://%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 

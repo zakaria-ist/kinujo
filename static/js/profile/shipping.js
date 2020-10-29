@@ -202,42 +202,36 @@ function validate_shipping_form() {
 
     if ( $('#destination_name').val() != '' ) {
         $('#destination_name').removeClass('highlight-mandatory');
-        is_valid = true;
      } else {
         $('#destination_name').addClass('highlight-mandatory');
          is_valid = false;
      }
     if ( $('#full_name').val() != '' ) {
         $('#full_name').removeClass('highlight-mandatory');
-        is_valid = true;
      } else {
         $('#full_name').addClass('highlight-mandatory');
          is_valid = false;
      }
     if ( $('#zip_code').val() != '' ) {
         $('#zip_code').removeClass('highlight-mandatory');
-        is_valid = true;
      } else {
         $('#zip_code').addClass('highlight-mandatory');
          is_valid = false;
      }
     if ( $('#prefecture').val() != '' ) {
         $('#prefecture').removeClass('highlight-mandatory');
-        is_valid = true;
      } else {
         $('#prefecture').addClass('highlight-mandatory');
          is_valid = false;
      }
     if ( $('#address1').val() != '' ) {
         $('#address1').removeClass('highlight-mandatory');
-        is_valid = true;
      } else {
         $('#address1').addClass('highlight-mandatory');
          is_valid = false;
      }
     if ( $('#add_tel').val() != '' ) {
         $('#add_tel').removeClass('highlight-mandatory');
-        is_valid = true;
      } else {
         $('#add_tel').addClass('highlight-mandatory');
          is_valid = false;

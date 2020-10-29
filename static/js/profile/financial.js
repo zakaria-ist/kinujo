@@ -81,49 +81,42 @@ function validate_finance_form() {
 
     if ( $('#bank_name').val() != '' ) {
         $('#bank_name').removeClass('highlight-mandatory');
-        is_valid = true;
      } else {
         $('#bank_name').addClass('highlight-mandatory');
          is_valid = false;
      }
     if ( $('#bank_code').val() != '' ) {
         $('#bank_code').removeClass('highlight-mandatory');
-        is_valid = true;
      } else {
         $('#bank_code').addClass('highlight-mandatory');
          is_valid = false;
      }
     if ( $('#branch_code').val() != '' ) {
         $('#branch_code').removeClass('highlight-mandatory');
-        is_valid = true;
      } else {
         $('#branch_code').addClass('highlight-mandatory');
          is_valid = false;
      }
     if ( $('#branch_name').val() != '' ) {
         $('#branch_name').removeClass('highlight-mandatory');
-        is_valid = true;
      } else {
         $('#branch_name').addClass('highlight-mandatory');
          is_valid = false;
      }
     if ( $('#account_number').val() != '' ) {
         $('#account_number').removeClass('highlight-mandatory');
-        is_valid = true;
      } else {
         $('#account_number').addClass('highlight-mandatory');
          is_valid = false;
      }
     if ( $('#account_holder').val() != '' ) {
         $('#account_holder').removeClass('highlight-mandatory');
-        is_valid = true;
      } else {
         $('#account_holder').addClass('highlight-mandatory');
          is_valid = false;
      }
     if ( $('#account_type').val() != '' ) {
         $('#account_type').removeClass('highlight-mandatory');
-        is_valid = true;
      } else {
         $('#account_type').addClass('highlight-mandatory');
          is_valid = false;

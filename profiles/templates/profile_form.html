@@ -122,6 +122,32 @@
         </div>
     </div>
     {#End Comfirm delete#}
+    {#Comfirm Product Delete#}
+    <div class="modal fade" id="comfirmDeleteProductModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><strong>{% trans 'Delete Confirm Dialog' %}</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body" style="padding-bottom: 0px!important; padding: 0 3%;">
+                    <form action="">
+                        <div class="form-group">
+                            <label>{% trans 'This will remove all the variations of this product. Do you still want to continue?' %}</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">{% trans 'No' %}</button>
+                    <button class="btn btn-success" type="button" data-dismiss="modal" id="product_btn_delete">{% trans 'Yes' %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {#End Comfirm delete#}
 {% endblock %}
 
 {% block js %}
@@ -153,8 +179,14 @@
         {% for item in profile_list %}
             profile_list.push([{{ item.0 }}, "{{ item.1 }}", {{ item.2 }}])
         {% endfor %}
+
+        var category_list = [];
+        {% for item in category_list %}
+            category_list.push([{{ item.0 }}, "{{ item.1 }}"])
+        {% endfor %}
         
         var profile_id = "{{profile.id}}";
+        var authority_id = "{{profile.authority_id}}";
         var profile_introducer = "{{profile.introducer_id}}"
         var is_seller = "{{profile.is_seller}}";
         var is_approved = "{{profile.is_approved}}";
