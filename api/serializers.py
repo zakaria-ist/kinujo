@@ -100,7 +100,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     password = serializers.CharField(write_only=True)
     class Meta:
         model = Profile
-        fields = ['url', 'user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification','other_notification','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
+        fields = ['url', 'user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
 
 class FinancialAccountSerialier(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -123,7 +123,7 @@ class MonthlyPaymentSerializer(serializers.HyperlinkedModelSerializer):
 class AddressSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Address
-        fields = ['address_name','user','name','zip1','prefecture','address1','address2','tel','is_default','is_hidden','created','modified']
+        fields = ['url', 'address_name','user','name','zip1','prefecture','address1','address2','tel','is_default','is_hidden','created','modified']
 class TaxRateSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TaxRate
