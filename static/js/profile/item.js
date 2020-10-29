@@ -2,9 +2,10 @@ function loadItemTableData() {
     $('#item-table').DataTable().destroy();
     $('#item-table').DataTable({
         "order": [[2, "asc"]],
+        "pageLength": 25,
         "serverSide": true,
         "scrollX": true,
-        stateSave: true,
+        //stateSave: true,
         "ajax": {
             "url": "/products/product_list_json/",
             "data": {
@@ -112,17 +113,336 @@ function setEditFormInputs(json) {
     }
 
     if (json.variety == '0') {
-        let v = json.varieties[0];
-        $('#jan_code').val(v.jan_code);
-        $('#stock').val(v.stock);
+        let vrty = json.varieties[0];
+        $('#jan_code').val(vrty.jan_code);
+        $('#stock').val(vrty.stock);
+        deleteAny();
+    } else if (json.variety == '1') {
+        prepareVarientOneTable(json);
+    } else if (json.variety == '2') {
+        prepareVarientTwoTable(json);
     }
 }
+
+function prepareVarientTwoTable(json){
+    let variety2 = json.varieties;
+    let v_names2 = [];
+    let v_jancodes2 = [];
+    let v_stocks2 = [];
+    let horizontals = [];
+    let verticals = [];
+    let v_selections2 = [];
+    for (let i=0; i<variety2.length; i++) {
+        v_jancodes2.push(variety2[i].jan_code);
+        v_stocks2.push(variety2[i].stock);
+
+        if (horizontals.indexOf(variety2[i].varieties[0].selection) === -1) {
+            horizontals.push(variety2[i].varieties[0].selection);
+        }
+        if (verticals.indexOf(variety2[i].varieties[1].selection) === -1) {
+            verticals.push(variety2[i].varieties[1].selection);
+        }
+
+        v_selections2.push({
+            "X": variety2[i].varieties[0].selection, 
+            "Y": variety2[i].varieties[1].selection
+        });
+
+        if (v_names2.indexOf(variety2[i].varieties[0].name) === -1) {
+            v_names2.push(variety2[i].varieties[0].name);
+        }
+        if (v_names2.indexOf(variety2[i].varieties[1].name) === -1) {
+            v_names2.push(variety2[i].varieties[1].name);
+        }
+    }
+
+    let varietyTableTwo1 = document.getElementById('variety-table-two');
+    let firstOfTwoVariantChoicesOriginal = horizontals;
+    let lastOfTwoVariantChoicesOriginal = verticals;
+
+    varietyTableTwo1.innerHTML = '';
+    //if empty table
+    if(varietyTableTwo1.innerHTML.trim() === ''){
+        varietyTableTwo1.innerHTML = `
+            <div class="col-md-2" style="max-width: 140px; min-width: 140px;">
+                <div class="row" id="two-variant-title-left">
+                <div class="variant-title variant-col"><h6 style="font-weight: bold;" id="cell-name">${v_names2[0]} / ${v_names2[1]}</h6></div>
+                </div>
+                <div class="row" id="two-variant-info-left">
+                <!--place for second variable name choices -->
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="row" id="two-variant-title-row">
+                
+                </div>
+                
+                <div class="row">
+
+                <div class="col-md-12" id="addTwoItems">
+
+                </div>
+
+                </div>
+
+            </div>
+        `;
+
+        
+        if(lastOfTwoVariantChoicesOriginal.length > firstOfTwoVariantChoicesOriginal.length){
+
+            for(let i = 0; i < lastOfTwoVariantChoicesOriginal.length; i++){
+              let newTableFirstChoices = document.createElement('div'); 
+              let newTableLastChoices = document.createElement('div');
+              let infoRow = document.createElement('div');
+              let lastChoicesValue = lastOfTwoVariantChoicesOriginal[i];
+              let firstChoicesValue;
+              if(firstOfTwoVariantChoicesOriginal[i] === undefined){
+                firstOfTwoVariantChoicesOriginal[i] = 'empty';
+                firstChoicesValue = 'empty';
+                
+              }else{
+                firstChoicesValue = firstOfTwoVariantChoicesOriginal[i];
+              }
+
+              newTableLastChoices.innerHTML = `<div class="variant-title variant-title-left variant-col">${lastChoicesValue}</div>`;
+              if (firstChoicesValue != 'empty') {
+                newTableFirstChoices.innerHTML = `<div class="variant-title variant-title-top variant-col">${firstChoicesValue}</div>`;
+              }
+              infoRow.innerHTML = `<div class="row flex-wrap" id="two-variant-cont-row-${i}">
+                    
+                  </div>`;
+  
+              if(newTableLastChoices.firstChild){
+                document.getElementById('two-variant-info-left').appendChild(newTableLastChoices.firstChild);
+              }
+              if(newTableFirstChoices.firstChild){
+                document.getElementById('two-variant-title-row').appendChild(newTableFirstChoices.firstChild);
+              }
+  
+              if(infoRow.firstChild){
+                document.getElementById('addTwoItems').appendChild(infoRow.firstChild);
+  
+                for(let j = 0; j < firstOfTwoVariantChoicesOriginal.length; j++){
+                    let janCode2;
+                    let stocks2;
+                    let indx = v_selections2.findIndex((item) => (item.X === firstOfTwoVariantChoicesOriginal[j] && item.Y === lastOfTwoVariantChoicesOriginal[i]));
+                    if (indx !== -1) {
+                        janCode2 = v_jancodes2[indx];
+                        stocks2 = v_stocks2[indx];
+
+                        let addInfoCol = document.createElement('div');
+                        addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value-r${i}c${j}" style="display: none;">${firstOfTwoVariantChoicesOriginal[j]} / ${lastOfTwoVariantChoicesOriginal[i]}</p><p class="text-center table-p" id="jan-id-r${i}c${j}">${janCode2}</p><p class="text-center table-p" id="stock-id-r${i}c${j}">${stocks2}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+                    
+                        let id = `two-variant-cont-row-${i}`;
+                        if(addInfoCol.firstChild){
+                            document.getElementById(id).appendChild(addInfoCol.firstChild);
+                        }
+                    }
+                }
+              }
+            }
+  
+          }else{
+            //if two choices are equal or  firstOfTwoVariantChoicesOriginal > lastOfTwoVariantChoicesOriginal
+            for(let i = 0; i < firstOfTwoVariantChoicesOriginal.length; i++){
+                let newTableFirstChoices = document.createElement('div'); 
+                let newTableLastChoices = document.createElement('div');
+                let infoRow = document.createElement('div');
+                let firstChoicesValue = firstOfTwoVariantChoicesOriginal[i];
+                let lastChoicesValue;
+                if(lastOfTwoVariantChoicesOriginal[i] === undefined){
+                    lastOfTwoVariantChoicesOriginal[i] = 'empty';
+                    lastChoicesValue = 'empty';
+                    
+                }else{
+                    lastChoicesValue = lastOfTwoVariantChoicesOriginal[i];
+                }
+                if (lastChoicesValue != 'empty') {
+                    newTableLastChoices.innerHTML = `<div class="variant-title variant-title-left variant-col">${lastChoicesValue}</div>`;
+                }
+                newTableFirstChoices.innerHTML = `<div class="variant-title variant-title-top variant-col">${firstChoicesValue}</div>`;
+                infoRow.innerHTML = `<div class="row flex-wrap" id="two-variant-cont-row-${i}">
+                        
+                    </div>`;
+    
+                if(newTableLastChoices.firstChild){
+                    document.getElementById('two-variant-info-left').appendChild(newTableLastChoices.firstChild);
+                }
+                if(newTableFirstChoices.firstChild){
+                    document.getElementById('two-variant-title-row').appendChild(newTableFirstChoices.firstChild);
+                }
+    
+                if(infoRow.firstChild){
+                    document.getElementById('addTwoItems').appendChild(infoRow.firstChild);
+    
+                    for(let j = 0; j < firstOfTwoVariantChoicesOriginal.length; j++){
+                        let janCode2;
+                        let stocks2;
+                        let indx = v_selections2.findIndex((item) => (item.X === firstOfTwoVariantChoicesOriginal[j] && item.Y === lastOfTwoVariantChoicesOriginal[i]));
+                        if (indx !== -1) {
+                            janCode2 = v_jancodes2[indx];
+                            stocks2 = v_stocks2[indx];
+                            
+                            let addInfoCol = document.createElement('div');
+                            addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value-r${i}c${j}" style="display: none;">${firstOfTwoVariantChoicesOriginal[j]} / ${lastOfTwoVariantChoicesOriginal[i]}</p><p class="text-center table-p" id="jan-id-r${i}c${j}">${janCode2}</p><p class="text-center table-p" id="stock-id-r${i}c${j}">${stocks2}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+    
+                            let id = `two-variant-cont-row-${i}`;
+                            if(addInfoCol.firstChild){
+                                document.getElementById(id).appendChild(addInfoCol.firstChild);
+                            }
+                        }
+                    }
+                }
+          }
+        }
+    }
+
+    varietyTableTwo1.style.height = '250px';
+
+    document.getElementById('firstOfTwoItemGroup').innerHTML = `
+                <div class="form-group">
+                
+                <p style="width: 20px;" class="m-2"> </p>
+                <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
+                <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+                
+                <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                </div>
+                <div class="form-group">
+                <p style="width: 20px;" class="m-2"> </p>
+                <p class="m-2 first-of-two-variant-counter" style="width: 20px;">2</p>
+                <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+                
+                <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                </div>
+            `;
+    document.getElementById('lastOfTwoItemGroup').innerHTML = `
+                <div class="form-group">
+                    <p style="width: 20px;" class="m-2"> </p>
+                    <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
+                    <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+                    
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                </div>
+                
+                <div class="form-group">
+                    <p style="width: 20px;" class="m-2"> </p>
+                    <p class="m-2 last-of-two-variant-counter" style="width: 20px;">2</p>
+                    <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+                    
+                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                </div>
+                `;
+
+    document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="two-items-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant" onclick="changeModalTwo();">+ Items / Options</button></div>`;
+    //change add item button
+    addItemBtnChange(document.getElementById('variety-table-two'), document.getElementById('two-items-btn'));
+}
+
+
+function prepareVarientOneTable(json){
+    let variety1 = json.varieties;
+    let v_name = '';
+    let v_jancodes = [];
+    let v_stocks = [];
+    let v_selections = [];
+    for (let i=0; i<variety1.length; i++) {
+        v_jancodes.push(variety1[i].jan_code);
+        v_stocks.push(variety1[i].stock);
+        v_selections.push(variety1[i].varieties[0].selection);
+        v_name = variety1[i].varieties[0].name;
+    }
+
+    const varietyTable1 = document.getElementById('variety-table');
+
+    varietyTable1.innerHTML = '';
+
+    //create table wrapper for the one item variant
+    if(varietyTable1.innerHTML.trim() === ''){
+      varietyTable1.innerHTML = `
+      <div class="col-md-2" style="max-width: 140px; min-width: 140px"><div class="row" id="one-variant-title-left">
+        <div class="variant-title variant-col"><h6 style="font-weight: bold;" id="cell-name">${v_name}</h6></div>
+      </div>
+      <div class="row" id="one-variant-info-left">
+        <div class="variant-info variant-col"><h3>-</h3></div>
+      </div>
+      </div>
+      <div class="col-md-8">
+        <div class="row" id="scrollable">
+          <div class="col-md-12">
+            <div class="row" id="one-variant-title-row">
+              
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row" id="one-variant-info-row">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      `
+    }
+
+    for(let i = 0; i < variety1.length; i++){
+      let newTableChoices = document.createElement('div'); 
+      let newTableContent = document.createElement('div'); 
+      let choicesValue = v_selections[i];
+      let janValue = v_jancodes[i];
+      let stockValue = v_stocks[i];
+      newTableChoices.innerHTML = `<div class="variant-title variant-col" id="cell-name-value-${i}">${choicesValue}</div>`;
+      newTableContent.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">${stockValue}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+      
+      
+      if(newTableChoices.firstChild){
+        document.getElementById('one-variant-title-row').appendChild(newTableChoices.firstChild);
+      }
+
+      if(newTableContent.firstChild){
+        document.getElementById('one-variant-info-row').appendChild(newTableContent.firstChild);
+      }
+
+    }
+    //make sure it's scroll able
+    document.getElementById("scrollable").style.overflow= 'scroll';
+
+    //reset modal form
+    document.getElementById('oneItemGroup').innerHTML = `
+                <div class="form-group">
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
+                  <input value="red" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                  
+                  <input value="YIO78" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+                  
+                  <input value="56" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                </div>
+                <div class="form-group">
+                  <p style="width: 20px;" class="m-2"> </p>
+                  <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
+                  <input value="red"  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                  
+                  <input value="RED67"  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+                  
+                  <input value="4"  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                </div>
+
+              `;
+
+    //change add item button
+    document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ Item / Option</button></div>`;
+    addItemBtnChange(document.getElementById('variety-table'), document.getElementById('one-item-btn'));
+  }
 
 var g_product_id = '';
 function showProductForm(product_id='') {
     $('#item_tab').html('');
     $.get("/profiles/templates/product_form/", function(data){
         $('#item_tab').html(data);
+        deleteAny();
         var options = '';
         $.each(category_list, function(i, v) {
             options += "<option value='"+v[0]+"'>"+v[1]+"</option>";

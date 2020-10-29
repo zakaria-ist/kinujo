@@ -68,11 +68,9 @@ def ProductList__asJson(request):
     order_dir = request.GET['order[0][dir]']
     list = []
     if order_dir == "asc":
-        list = product_list.order_by(column_name)[
-            int(start):(int(start) + int(length))]
+        list = product_list.order_by(column_name)[int(start):(int(start) + int(length))]
     elif order_dir == "desc":
-        list = product_list.order_by(
-            '-' + column_name)[int(start):(int(start) + int(length))]
+        list = product_list.order_by('-' + column_name)[int(start):(int(start) + int(length))]
 
     array = []
     i = 0
@@ -650,7 +648,6 @@ def add_update_product(request):
                         productVarietySelection.modified = datetime.datetime.now()
                         productVarietySelection.save()
 
-                    productVariety.delete()
                     productVariety.is_hidden = True
                     productVariety.modified = datetime.datetime.now()
                     productVariety.save()

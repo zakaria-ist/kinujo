@@ -755,7 +755,6 @@
 
       } else{
         document.getElementById(`file-${counter}`).value='';
-        console.log(document.getElementById(`file-${counter}`).value);
         document.getElementById('max-img-btn').click();
       }
 
@@ -826,7 +825,6 @@
           let variantInfoRowId = document.getElementById('one-variant-info-row');
           let variantInfo = variantInfoRowId.getElementsByClassName('variant-info');
           for(let i = 0; i < variantTitle.length; i++){
-            console.log("ls" + variantTitle.length);
             let varChoices = variantTitle[i].innerHTML;
             let janId = `jan-id-${i}`;
             let stockId = `stock-id-${i}`
@@ -901,8 +899,6 @@
               stock: stock,
             }
           }
-
-          console.log(preservedDatas);
 
           //empty the forms
           firstOfTwoItemGroup.innerHTML = '';
@@ -1113,7 +1109,6 @@
 
     //first of two items variant
     function deleteOptionsFirstOfTwo(){
-      console.log('deleted');
 
       let firstOfTwooptionArray = document.getElementsByClassName('first-of-two-variant-counter');
 
@@ -1146,7 +1141,6 @@
 
     //last of two items variant
     function deleteOptionsLastOfTwo(){
-      console.log('deleted');
 
       let lastOfTwooptionArray = document.getElementsByClassName('last-of-two-variant-counter');
 
@@ -1253,7 +1247,6 @@
           leftCellNameValue = '';
           rightCellNameValue = '';
         }else{
-          console.log('not undefined');
           cellName = document.getElementById(cellNameId);
           if(cellName.innerHTML.split('/')[0]){
             leftCellName = cellName.innerHTML.split('/')[0].trim() + ':';
@@ -1292,7 +1285,6 @@
         
 
         let mixTableNum = obj.id.split('-')[2];
-        console.log(mixTableNum);
         let janCodeId = `jan-id-${mixTableNum}`;
         let stockId = `stock-id-${mixTableNum}`;
 
@@ -1344,7 +1336,6 @@
     
 
     function saveOneItemData(){
-      console.log('clicked 1');
       let oneItemVariantTitle = document.getElementById('one-item-title');
       let oneItemVariantName = document.getElementById('one-item-title').value;
       let errorMsg = document.getElementById('title-error');
@@ -1882,7 +1873,6 @@
       for(let i = 0; i < document.getElementsByClassName('variant-title-top').length; i++){
         if(document.getElementsByClassName('variant-title-top')[i].innerHTML.trim() === 'empty'){
           document.getElementsByClassName('variant-title-top')[i].remove();
-          console.log('deleted' + ' ' + i);
           i--;
         }
       }
@@ -1908,16 +1898,11 @@
 
               let dataToken = variantTableCol[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
               if(preservedDatas[dataToken]){
-                console.log(preservedDatas[dataToken].jancode);
                 njancode.innerHTML = preservedDatas[dataToken].jancode;
                 nstock.innerHTML = preservedDatas[dataToken].stock;
               }
-              // {
-              //   jancode: jancode,
-              //   stock: stock,
-              // }
         }
-    }
+     }
       // do after saving task here
       varietyTableTwo.style.height = '250px';
 
