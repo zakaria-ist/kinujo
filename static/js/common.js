@@ -155,3 +155,29 @@ jQuery.browser = {};
         jQuery.browser.version = RegExp.$1;
     }
 })();
+
+
+function prefill_select2(event){
+    /** * Pre-fills the search box with the current text from the Label. * Executes when the dropdown is opened */
+        if ($( event.target ).val() !== ''){
+            var input = $( event.target ).select2('data');
+    
+            if (!input[0]) {
+                var search = $(".select2-search__field");
+    
+                search.val( $( event.target ).find('option[value="0"]').html() );
+                search.select();
+            }
+            else {
+                var value = input[0].text;
+        
+                if ( value !== null && $.trim(value) !== ""){
+                    var search = $(".select2-search__field");
+                    if ( search.length > 0){
+                        search.val( value );
+                        search.select();
+                    }
+                }
+            }
+        }
+    }

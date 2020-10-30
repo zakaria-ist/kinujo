@@ -451,6 +451,9 @@ function showProductForm(product_id='') {
         if (!$('#category').data('select2')) {
             $('#category').select2({});
         }
+        $('#category').on("select2:open", function( event ){
+            prefill_select2(event);
+        });
         if (product_id != '') {
             g_product_id = product_id;
             $.ajax({
