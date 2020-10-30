@@ -234,21 +234,21 @@
 
               <div class="form-group row">
                 <label class="col-md-4 p-2" for="name">{% trans 'JAN code' %}</label>
-                <input type="text" class="form-control col-md-8" id="jan_code">
+                <input type="text" class="form-control col-md-6" id="jan_code">
               </div>
 
               <div class="form-group row">
                 <label class="col-md-4 p-2" for="name">{% trans 'Stock Quantity' %}</label>
-                <input type="text" class="form-control col-md-3" id="stock">
+                <input type="text" class="form-control col-md-6 text-right" id="stock">
               </div>
 
               <div id="status-div" class="form-group row form-check form-check-inline" style="align-items: baseline;">
                 <label class="col-md-4 p-2" for="status">{% trans 'Status' %}</label>
-                <div class="custom-control custom-radio custom-control-inline col-md-2">
+                <div class="custom-control custom-radio custom-control-inline col-md-2 ml-3">
                   <input type="radio" id="published" value="1" name="status" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="published">{% trans 'Published' %}</label>
                 </div>
-                <div class="custom-control custom-radio custom-control-inline col-md-3">
+                <div class="custom-control custom-radio custom-control-inline col-md-4">
                   <input type="radio" id="non-published" value="0" name="status" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="non-published">{% trans 'Non Published' %}</label>
                 </div>
@@ -257,20 +257,9 @@
 
               
               <div class="form-group row">
-                <label class="col-md-3 m-2 p-0" for="opened_date" >{% trans 'Published Date' %}</label>
-
-                <div class="col-md-6 input-group" id="datetimepicker" style="padding-left: 0px;">
-                  <input name="opened_date" id="opened_date" type="date" class="form-control" style="margin-left: 10%;">
-                  <div class="input-group-append">
-                    <span class="input-group-text" style="overflow: revert;height: max-content;padding: 8px;">
-                      <i class="far">&#xf073;</i> 
-                    </span>
-                  </div>
-                  
-                    
-                    
-                </div>
-                <p class="text-danger col-md-12" style="text-align: right; padding: 15px 20px 0">{% trans '* Before the release date, it will not be published <br/> even if it is set to Publish' %}</p >
+                <label class="col-md-4 p-2" for="opened_date" >{% trans 'Published Date' %}</label>
+                <input name="opened_date" id="opened_date" type="date" class="form-control col-md-6" style="">
+                <p class="text-danger text-right col-md-10 p-2">{% trans '* Before the release date, it will not be published <br/> even if it is set to Publish' %}</p >
               </div>
 
               <div id="is_used-div" class="form-group row form-check form-check-inline" style="align-items: baseline;">
@@ -288,7 +277,7 @@
 
               <div id="target-div" class="form-group row form-check form-check-inline" style="align-items: baseline;">
                 <label class="col-md-4 p-2" for="target">{% trans 'For Sale' %}</label>
-                <div class="custom-control custom-radio custom-control-inline col-md-2">
+                <div class="custom-control custom-radio custom-control-inline col-md-2 ml-1">
                   <input type="radio" id="all-users" name="target" value="0" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="all-users">{% trans 'All Users' %}</label>
                 </div>
@@ -300,7 +289,7 @@
                   <input type="radio" id="story-only" name="target"  value="2" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="story-only">{% trans 'Store Only' %}</label>
                 </div>
-                <p class="text-danger col-md-12" style="text-align: right; padding: 15px 20px 0">{% trans '* Displayed only to target users' %}</p>
+                <p class="text-danger col-md-10 text-right p-2">{% trans '* Displayed only to target users' %}</p>
               </div>
               
               
@@ -311,19 +300,19 @@
             <div class="col-md-5">
               <div class="form-group row">
                 <label class="offset-md-1 col-md-5 p-2" for="price">{% trans 'General Price' %}</label>
-                <input name="price" type="number" class="form-control col-md-6" id="price">
+                <input name="price" type="number" class="form-control col-md-6 text-right" id="price">
                 
               </div>
 
               <div class="form-group row">
                 <label class="offset-md-1 col-md-5 p-2" for="store_price">{% trans 'Store Price' %}</label>
-                <input name="store_price" type="number" class="form-control col-md-6" id="store_price" readonly>
+                <input name="store_price" type="number" class="form-control col-md-6 text-right" id="store_price" readonly>
                 
               </div>
 
               <div class="form-group row">
                 <label class="offset-md-1 col-md-5 p-2" for="shipping_fee">{% trans 'Shipping Fee' %}</label>
-                <input name="shipping_fee" type="number" class="form-control col-md-6" id="shipping_fee">
+                <input name="shipping_fee" type="number" class="form-control col-md-6 text-right" id="shipping_fee">
                 
               </div>
 

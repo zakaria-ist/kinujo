@@ -464,6 +464,11 @@ function showProductForm(product_id='') {
                     setEditFormInputs(json);
                 }
             });
+        } else {
+            $('#none').click();
+            $('#published').click();
+            $('#new').click();
+            $('#all-users').click();
         }
     });
 }
