@@ -98,9 +98,9 @@ function setEditFormInputs(json) {
     $('#description').val(json.description);
     $('#pr').val(json.pr);
     $('#url_str').val(json.url_str);
-    $('#store_price').val(json.store_price);
-    $('#price').val(json.price);
-    $('#shipping_fee').val(json.shipping_fee);
+    $('#store_price').val(comma_format(json.store_price) + ' ' + JPCUR);
+    $('#price').val(comma_format(json.price) + ' ' + JPCUR);
+    $('#shipping_fee').val(comma_format(json.shipping_fee) + ' ' + JPCUR);
     $('#category').val(json.category).trigger('change');
     $('#opened_date').val(json.opened_date).trigger('change');
     $("input[name=target]").val([json.target]);
@@ -476,7 +476,6 @@ function showProductForm(product_id='') {
     });
 }
 
-
 function saveProductInfo() {
 
     var is_valid = validateProductForm();
@@ -573,9 +572,9 @@ function saveProductInfo() {
         data.append("url_str", $('#url_str').val());
         data.append("category", $('#category').val());
         data.append("target", $('input[name="target"]:checked').val());
-        data.append("price", $('#price').val());
-        data.append("store_price", $('#store_price').val());
-        data.append("shipping_fee", $('#shipping_fee').val());
+        data.append("price", pure_number($('#price').val()));
+        data.append("store_price", pure_number($('#store_price').val()));
+        data.append("shipping_fee", pure_number($('#shipping_fee').val()));
         data.append("opened_date", $('#opened_date').val());
         data.append("is_opened", $('input[name="status"]:checked').val());
         data.append("is_used", $('input[name="is_used"]:checked').val());
