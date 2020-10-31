@@ -108,13 +108,13 @@
 
        
        .variant-col {
-        min-width: 140px;
-        max-width: 140px;
-        height: 100px;
-        
-        border: 1px solid;
-        padding: 10px;
-        text-align: center;
+          min-width: 140px;
+          max-width: 140px;
+          border: 1px solid;
+          padding: 5px;
+          text-align: center;
+          min-height: 70px;
+          max-height: 70px;
        }
 
        #one-variant-title-left, #one-variant-info-left, .variant-title {
@@ -148,6 +148,12 @@
       }
       .variant-title {
         font-weight: bold;
+        min-height: 30px !important;
+        max-height: 30px !important;
+      }
+      .variant-title-left {
+        font-weight: bold;
+        padding-top: 25px;
       }
       /* Chrome, Safari, Edge, Opera */
       input::-webkit-outer-spin-button,
@@ -1200,24 +1206,32 @@
       if(newStock.value.trim() === ''){
         //newStock.focus();
         //return document.getElementById('janErrorEdit').innerHTML = 'Stock is empty. Put 0 to keep previous value';
-        newStockValue = Number(stockDiv.innerHTML);
+        let oldStock = 0;
+        if(stockDiv.innerHTML !== '') {
+          oldStock = stockDiv.innerHTML.split(':')[1].trim();
+        }
+        newStockValue = Number(oldStock) + Number(newStock.value);
         
       }else{
         if(isNaN(Number(newStock.value))){
 
-        document.getElementById('janErrorEdit').innerHTML = 'Stock should contain only number, -, + ';
-        newStock.focus();
-        return;
-        //keep the value same
-        //newStockValue = Number(stockDiv.innerHTML);
+          document.getElementById('janErrorEdit').innerHTML = 'Stock should contain only number, -, + ';
+          newStock.focus();
+          return;
+          //keep the value same
+          //newStockValue = Number(stockDiv.innerHTML);
 
         } else{
-        newStockValue = Number(stockDiv.innerHTML) + Number(newStock.value);
+          let oldStock = 0;
+          if(stockDiv.innerHTML !== '') {
+            oldStock = stockDiv.innerHTML.split(':')[1].trim();
+          }
+          newStockValue = Number(oldStock) + Number(newStock.value);
         }
       }
       
       
-      stockDiv.innerHTML = newStockValue;
+      stockDiv.innerHTML = 'Stock:' + newStockValue;
 
       $('#edit-modal-one').modal('hide');
 
@@ -1286,6 +1300,12 @@
 
         janDiv = document.getElementById(janCodeId);
         stockDiv = document.getElementById(stockId);
+        let oldStock = '0';
+        try{
+          oldStock = stockDiv.innerHTML.split(':')[1].trim();
+        } catch (e) {
+          console.log(e);
+        }
 
         
 
@@ -1306,7 +1326,7 @@
                 <input type="text" value="${janDiv.innerHTML}" class="form-control" id="jan-code-one-modal" placeholder="Enter Jancode"> 
               </div>
               <div class="form-group col-md-5 m-2 pl-4">
-                <label for="stock-one-modal">Stock Quantity: ${stockDiv.innerHTML}</label>
+                <label for="stock-one-modal">Stock Quantity: ${oldStock}</label>
                 <input type="text" value="" class="form-control" id="stock-one-modal" placeholder="Enter Stock"> 
               </div>
             </div>
@@ -1395,7 +1415,7 @@
       if(varietyTable.innerHTML.trim() === ''){
         varietyTable.innerHTML = `
         <div class="col-md-2" style="max-width: 140px; min-width: 140px"><div class="row" id="one-variant-title-left">
-          <div class="variant-title variant-col"><h6 style="font-weight: bold;" id="cell-name">${oneItemVariantName}</h6></div>
+          <div class="variant-title variant-col"><span id="cell-name">${oneItemVariantName}</span></div>
         </div>
         <div class="row" id="one-variant-info-left">
           <div class="variant-info variant-col"><h3>-</h3></div>
@@ -1425,7 +1445,7 @@
         let janValue = oneItemVariantJan[i].value;
         let stockValue = oneItemVariantStock[i].value;
         newTableChoices.innerHTML = `<div class="variant-title variant-col" id="cell-name-value-${i}">${choicesValue}</div>`;
-        newTableContent.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">${stockValue}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+        newTableContent.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">Stock:${stockValue}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
         
         
         if(newTableChoices.firstChild){
@@ -1550,7 +1570,7 @@
         varietyTableTwo.innerHTML = `
         <div class="col-md-2" style="max-width: 140px; min-width: 140px;">
           <div class="row" id="two-variant-title-left">
-            <div class="variant-title variant-col"><h6 style="font-weight: bold;" id="cell-name">${firstOfTwotemsVariantTitle.value} / ${lastOfTwotemsVariantTitle.value}</h6></div>
+            <div class="variant-title variant-col"><span id="cell-name">${firstOfTwotemsVariantTitle.value} / ${lastOfTwotemsVariantTitle.value}</span></div>
           </div>
           <div class="row" id="two-variant-info-left">
             <!--place for second variable name choices -->
@@ -1589,7 +1609,7 @@
             }else{
               firstChoicesValue = firstOfTwoVariantChoicesOriginal[i].value;
             }
-            newTableLastChoices.innerHTML = `<div class="variant-title variant-title-left variant-col">${lastChoicesValue}</div>`;
+            newTableLastChoices.innerHTML = `<div class="variant-title-left variant-col">${lastChoicesValue}</div>`;
             newTableFirstChoices.innerHTML = `<div class="variant-title variant-title-top variant-col">${firstChoicesValue}</div>`;
             infoRow.innerHTML = `<div class="row flex-wrap" id="two-variant-cont-row-${i}">
                   
@@ -1638,7 +1658,7 @@
             }else{
               lastChoicesValue = lastOfTwoVariantChoicesOriginal[i].value;
             }
-            newTableLastChoices.innerHTML = `<div class="variant-title variant-title-left variant-col">${lastChoicesValue}</div>`;
+            newTableLastChoices.innerHTML = `<div class="variant-title-left variant-col">${lastChoicesValue}</div>`;
             newTableFirstChoices.innerHTML = `<div class="variant-title variant-title-top variant-col">${firstChoicesValue}</div>`;
             infoRow.innerHTML = `<div class="row flex-wrap" id="two-variant-cont-row-${i}">
                   
