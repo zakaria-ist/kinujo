@@ -238,12 +238,21 @@
         });
 
         $('#order_status').select2({});
+        $('#order_status').on("select2:open", function( event ){
+            prefill_select2(event);
+        });
         $('#prefecture').select2({});
+        $('#prefecture').on("select2:open", function( event ){
+            prefill_select2(event);
+        });
         $('#orderer').select2({});
+        $('#orderer').on("select2:open", function( event ){
+            prefill_select2(event);
+        });
 
-        $('#zip_code').jpostal({   
+        $('#zip1').jpostal({   
             postcode : [
-                '#zip_code'
+                '#zip1'
             ],
             address : {
                 '#prefecture'  : '%3',
@@ -251,6 +260,13 @@
                 '#address2'  : '%8, %9, %10',
             }
         });
+
+        $('#zip1').on('change', function() {
+            setTimeout(() => {
+                $('#prefecture').val($('#prefecture').val()).trigger('change');
+            }, 800);
+        });
+
 
         function validateForm() {
             

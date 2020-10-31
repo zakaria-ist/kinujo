@@ -94,9 +94,11 @@ function showSalonForm(salon_id='') {
         });
         $('#salon_prefecture').html(options);
         if (!$('#salon_prefecture').data('select2')) {
-            //$('#prefecture').select2('destroy');
             $('#salon_prefecture').select2({});
         }
+        $('#salon_prefecture').on("select2:open", function( event ){
+            prefill_select2(event);
+        });
     });
     if (salon_id != '') {
         g_salon_id = salon_id;
