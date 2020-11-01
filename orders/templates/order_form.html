@@ -45,12 +45,17 @@
             <div id="product-div" class="col-lg-12">
                 <label for="product" class="col-md-2 mb-4 control-label"><h5>{% trans 'Products' %}</h5></label>
                 <div class="form-group row" id="product_line_0">
-                    <div class="offset-md-2 col-md-1">
+                    <div class="offset-lg-1 col-lg-1">
                         <img src="" width="70px" height="70px" alt="" name="product_image_0" id="product_image_0" />
                     </div>
-                    <div class="col-md-4 pt-3">
+                    <div class="col-lg-4 pt-3">
                         <select name="product_select_0" id="product_select_0" class="form-control trs-field">
                         </select>
+                    </div>
+                    <div class="col-lg-2 pt-3">
+                        <input class="form-control trs-field numeric_qty" type="text"
+                            name="quantity_0"
+                            id="quantity_0">
                     </div>
                     <div class="btn-group pt-3">
                         <a class="btn-group-item" onclick="addProduct(0)"><i class="fas fa-plus-circle fa-2x text-info"></i></a>
@@ -129,7 +134,7 @@
                 <div class="form-group row">
                     <label for="total_amount" class="col-lg-2 control-label">{% trans 'Total Amount' %}</label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field" type="number"
+                        <input class="form-control trs-field numeric_price" type="number"
                             name="total_amount"
                             id="total_amount"
                             placeholder=""
@@ -152,7 +157,7 @@
                 <div class="form-group row">
                     <label for="shipping_fee" class="col-lg-2 control-label">{% trans 'Shipping Fee' %}</label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field" type="number"
+                        <input class="form-control trs-field numeric_price" type="number"
                             name="shipping_fee"
                             id="shipping_fee"
                             placeholder=""
@@ -447,12 +452,17 @@
 
         var product_line = `
                 <div class="form-group row" id="product_line">
-                    <div class="offset-md-2 col-md-1">
+                    <div class="offset-lg-1 col-lg-1">
                         <img src="" width="70px" height="70px" alt="" name="product_image" id="product_image" />
                     </div>
-                    <div class="col-md-4 pt-3">
+                    <div class="col-lg-4 pt-3">
                         <select name="product_select" id="product_select" class="form-control trs-field">
                         </select>
+                    </div>
+                    <div class="col-lg-2 pt-3">
+                        <input class="form-control trs-field numeric_qty" type="text"
+                            name="quantity"
+                            id="quantity">
                     </div>
                     <div class="btn-group pt-3">
                         <a class="btn-group-item" onclick="addProduct()"><i class="fas fa-plus-circle fa-2x text-info"></i></a>
@@ -496,11 +506,14 @@
                         $(this).attr({'aria-labelledby': 'select2-product_select_'+i+'-container'});
                     }
                 });
-
                 $(product_div).find('span.select2-selection__rendered').each(function () {
                     if($(this).attr('id') != undefined) {
                         $(this).attr({'id': 'select2-product_select_'+i+'-container'});
                     }
+                });
+                $(product_div).find(':input').each(function () {
+                    $(this).attr('name', 'quantity_'+i);
+                    $(this).attr('id', 'quantity_'+i);
                 });
                 $(product_div).find('a').each(function (idx) {
                     if (idx == 0) {
@@ -512,6 +525,10 @@
                 $(product_div).attr('id', 'product_line_'+i);
             }
         }
+
+        $(document).on('change', "[id*='product_line'] input:text", function(event) {
+            let line = event.target.id.replace('quanity_', '').trim();
+        });
 
         $('#order_form').on('submit', function(e) {
             var is_valid = true;
@@ -586,6 +603,12 @@
                 $('#product_select_0').removeClass('highlight-mandatory');
             } else {
                 $('#product_select_0').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+            if ( $('#quantity_0').val() != '' ) {
+                $('#quantity_0').removeClass('highlight-mandatory');
+            } else {
+                $('#quantity_0').addClass('highlight-mandatory');
                 is_valid = false;
             }
 
