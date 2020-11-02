@@ -158,6 +158,28 @@ def SellerProductList__asJson(request):
     return HttpResponse(json_content, content_type='application/json')
 
 
+def check_for_duplicate(request, type, value):
+    """
+    Method to verify duplcate info.
+    """
+
+    message = 'Error'
+    try:
+        product = None
+        if type == 'url_str':
+            product = Product.objects.filter(url_str=value).first()
+        # elif type == '':
+        #     product = Product.objects.filter(user_code=value).first()
+
+        if product:
+            message = 'Success'
+    except Exception as e:
+        print(e)
+
+    context = { 'message': message }
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+
 def get_jan_varieties(productJancode):
     varieties = []
     if productJancode.horizontal_id:
@@ -979,7 +1001,10 @@ def get_product_info(request):
                 productImages = ProductImage.objects.filter(
                     product_id=product.id, is_hidden=False).order_by('image_no').exclude(image_no__isnull=True)
                 for productImage in productImages:
-                    image_array.append(productImage.image.image.url)
+                    image_array.append({
+                        "url": productImage.image.image.url,
+                        "image_no": str(productImage.image_no)
+                    })
 
                 context['images'] = image_array
 

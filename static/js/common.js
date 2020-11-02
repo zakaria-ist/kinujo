@@ -217,6 +217,14 @@ function int_format(number_str) {
     return parseInt(float_format(number_str));
 }
 
+$(document).on("input", ".jan-input", function() {
+    let temp_str = this.value;
+    if (temp_str.length > 13) {
+        temp_str = temp_str.slice(0, -1);
+    }
+    this.value = temp_str;
+});
+
 $(document).on("input", ".numeric_qty", function() {
     let temp_str = this.value.replace(/[^0-9\.]/g,'');
     if (temp_str.split(".").length-1 > 1) {

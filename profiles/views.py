@@ -736,7 +736,7 @@ def ShippingList__asJson(request):
 
 def validate_user_phone(request, profile_id):
     """
-    Method to delete a shipping info.
+    Method to verify duplcate user.
     """
 
     message = 'Error'
@@ -750,9 +750,10 @@ def validate_user_phone(request, profile_id):
     context = { 'message': message }
     return HttpResponse(json.dumps(context), content_type="application/json")
 
+
 def check_for_duplicate(request, type, value):
     """
-    Method to delete a shipping info.
+    Method to verify duplcate info.
     """
 
     message = 'Error'
