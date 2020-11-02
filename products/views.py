@@ -112,6 +112,51 @@ def ProductList__asJson(request):
     json_content = json.dumps(content, ensure_ascii=False)
     return HttpResponse(json_content, content_type='application/json')
 
+def SellerProductList__asJson(request):
+    """
+    Method to get seller product list as JSON.
+    """
+
+    profile_id = request.GET.get('seller_id')
+    product_list = Product.objects.filter(is_hidden=False, user_id=profile_id, is_opened=True).order_by('name')
+
+    array = []
+    i = 0
+    for field in product_list:
+        productImage = ProductImage.objects.filter(
+            product_id=field.id, is_hidden=False).order_by('image_no').exclude(image_no__isnull=True).first()
+        image_path = ''
+        if productImage:
+            image_path = productImage.image.image.url
+
+        jancode_ids = get_products_jancodes(field.id, type='id')
+        productJancodes = ProductJancode.objects.filter(id__in=jancode_ids).exclude(stock__isnull=True).exclude(stock__lte=0)
+        for p_jan in productJancodes:
+            veries = get_jan_varieties(p_jan)
+            very_str = ''
+            for item in veries:
+                if item['name']:
+                    very_str += item['name'] + ':' + item['selection'] + ','
+            if len(very_str):
+                very_str = very_str[:-1]
+            i = i + 1
+            data = {
+                "no": str(i),
+                "jan_id": str(p_jan.id),
+                "id": str(field.id),
+                "name": str(field.name),
+                "opened_date": field.opened_date.strftime("%Y-%m-%d"),
+                "image_path": str(image_path),
+                "jan_code": str(p_jan.jan_code),
+                "stock": str(p_jan.stock),
+                "varieties": very_str
+            }
+
+            array.append(data)
+    content = {"data": array,}
+    json_content = json.dumps(content, ensure_ascii=False)
+    return HttpResponse(json_content, content_type='application/json')
+
 
 def get_jan_varieties(productJancode):
     varieties = []
