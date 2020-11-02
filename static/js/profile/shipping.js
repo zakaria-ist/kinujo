@@ -94,9 +94,11 @@ function showShippingForm(shipping_id='') {
         });
         $('#prefecture').html(options);
         if (!$('#prefecture').data('select2')) {
-            //$('#prefecture').select2('destroy');
             $('#prefecture').select2({});
         }
+        $('#prefecture').on("select2:open", function( event ){
+            prefill_select2(event);
+        });
     });
     if (shipping_id != '') {
         g_shipping_id = shipping_id;

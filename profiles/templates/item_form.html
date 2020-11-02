@@ -108,13 +108,13 @@
 
        
        .variant-col {
-        min-width: 140px;
-        max-width: 140px;
-        height: 100px;
-        
-        border: 1px solid;
-        padding: 10px;
-        text-align: center;
+          min-width: 140px;
+          max-width: 140px;
+          border: 1px solid;
+          padding: 5px;
+          text-align: center;
+          min-height: 70px;
+          max-height: 70px;
        }
 
        #one-variant-title-left, #one-variant-info-left, .variant-title {
@@ -148,6 +148,12 @@
       }
       .variant-title {
         font-weight: bold;
+        min-height: 30px !important;
+        max-height: 30px !important;
+      }
+      .variant-title-left {
+        font-weight: bold;
+        padding-top: 25px;
       }
       /* Chrome, Safari, Edge, Opera */
       input::-webkit-outer-spin-button,
@@ -234,21 +240,21 @@
 
               <div class="form-group row">
                 <label class="col-md-4 p-2" for="name">{% trans 'JAN code' %}</label>
-                <input type="text" class="form-control col-md-8" id="jan_code">
+                <input type="text" class="form-control col-md-6" id="jan_code">
               </div>
 
               <div class="form-group row">
                 <label class="col-md-4 p-2" for="name">{% trans 'Stock Quantity' %}</label>
-                <input type="text" class="form-control col-md-3" id="stock">
+                <input type="text" class="form-control col-md-6 text-right numeric_qty" id="stock">
               </div>
 
               <div id="status-div" class="form-group row form-check form-check-inline" style="align-items: baseline;">
                 <label class="col-md-4 p-2" for="status">{% trans 'Status' %}</label>
-                <div class="custom-control custom-radio custom-control-inline col-md-2">
+                <div class="custom-control custom-radio custom-control-inline col-md-2 ml-3">
                   <input type="radio" id="published" value="1" name="status" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="published">{% trans 'Published' %}</label>
                 </div>
-                <div class="custom-control custom-radio custom-control-inline col-md-3">
+                <div class="custom-control custom-radio custom-control-inline col-md-4">
                   <input type="radio" id="non-published" value="0" name="status" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="non-published">{% trans 'Non Published' %}</label>
                 </div>
@@ -257,20 +263,9 @@
 
               
               <div class="form-group row">
-                <label class="col-md-3 m-2 p-0" for="opened_date" >{% trans 'Published Date' %}</label>
-
-                <div class="col-md-6 input-group" id="datetimepicker" style="padding-left: 0px;">
-                  <input name="opened_date" id="opened_date" type="date" class="form-control" style="margin-left: 10%;">
-                  <div class="input-group-append">
-                    <span class="input-group-text" style="overflow: revert;height: max-content;padding: 8px;">
-                      <i class="far">&#xf073;</i> 
-                    </span>
-                  </div>
-                  
-                    
-                    
-                </div>
-                <p class="text-danger col-md-12" style="text-align: right; padding: 15px 20px 0">{% trans '* Before the release date, it will not be published <br/> even if it is set to Publish' %}</p >
+                <label class="col-md-4 p-2" for="opened_date" >{% trans 'Published Date' %}</label>
+                <input name="opened_date" id="opened_date" type="date" class="form-control col-md-6" style="">
+                <p class="text-danger text-right col-md-10 p-2">{% trans '* Before the release date, it will not be published <br/> even if it is set to Publish' %}</p >
               </div>
 
               <div id="is_used-div" class="form-group row form-check form-check-inline" style="align-items: baseline;">
@@ -288,7 +283,7 @@
 
               <div id="target-div" class="form-group row form-check form-check-inline" style="align-items: baseline;">
                 <label class="col-md-4 p-2" for="target">{% trans 'For Sale' %}</label>
-                <div class="custom-control custom-radio custom-control-inline col-md-2">
+                <div class="custom-control custom-radio custom-control-inline col-md-2 ml-1">
                   <input type="radio" id="all-users" name="target" value="0" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="all-users">{% trans 'All Users' %}</label>
                 </div>
@@ -300,7 +295,7 @@
                   <input type="radio" id="story-only" name="target"  value="2" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="story-only">{% trans 'Store Only' %}</label>
                 </div>
-                <p class="text-danger col-md-12" style="text-align: right; padding: 15px 20px 0">{% trans '* Displayed only to target users' %}</p>
+                <p class="text-danger col-md-10 text-right p-2">{% trans '* Displayed only to target users' %}</p>
               </div>
               
               
@@ -311,19 +306,19 @@
             <div class="col-md-5">
               <div class="form-group row">
                 <label class="offset-md-1 col-md-5 p-2" for="price">{% trans 'General Price' %}</label>
-                <input name="price" type="number" class="form-control col-md-6" id="price">
+                <input name="price" type="text" class="form-control col-md-6 text-right numeric_qty" id="price">
                 
               </div>
 
               <div class="form-group row">
                 <label class="offset-md-1 col-md-5 p-2" for="store_price">{% trans 'Store Price' %}</label>
-                <input name="store_price" type="number" class="form-control col-md-6" id="store_price" readonly>
+                <input name="store_price" type="text" class="form-control col-md-6 text-right numeric_price" id="store_price" readonly>
                 
               </div>
 
               <div class="form-group row">
                 <label class="offset-md-1 col-md-5 p-2" for="shipping_fee">{% trans 'Shipping Fee' %}</label>
-                <input name="shipping_fee" type="number" class="form-control col-md-6" id="shipping_fee">
+                <input name="shipping_fee" type="text" class="form-control col-md-6 text-right numeric_price" id="shipping_fee">
                 
               </div>
 
@@ -542,7 +537,7 @@
             <form class="form-inline">
               <div class="form-group">
                 <label for="one-item-title" class="col-form-label">{% trans 'Title:' %}</label>
-                <input value="Color" type="text" class="form-control" id="one-item-title" placeholder="Color, Size, etc">
+                <input value="" type="text" class="form-control" id="one-item-title" placeholder="Color, Size, etc">
                 <p class="text-danger" id="title-error"></p>
               </div>
               <div class="form-group">
@@ -558,21 +553,21 @@
                 <div class="form-group">
                   <p style="width: 20px;" class="m-2"> </p>
                   <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
-                  <input value="red" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                  <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
                   
-                  <input value="YIO78" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+                  <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
                   
-                  <input value="56" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                  <input value="" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
                 <div class="form-group">
                   <p style="width: 20px;" class="m-2"> </p>
                   <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
-                  <input value="red"  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                  <input value=""  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
                   
-                  <input value="RED67"  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+                  <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
                   
-                  <input value="4"  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                  <input value=""  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
               </div>
@@ -755,7 +750,6 @@
 
       } else{
         document.getElementById(`file-${counter}`).value='';
-        console.log(document.getElementById(`file-${counter}`).value);
         document.getElementById('max-img-btn').click();
       }
 
@@ -826,7 +820,6 @@
           let variantInfoRowId = document.getElementById('one-variant-info-row');
           let variantInfo = variantInfoRowId.getElementsByClassName('variant-info');
           for(let i = 0; i < variantTitle.length; i++){
-            console.log("ls" + variantTitle.length);
             let varChoices = variantTitle[i].innerHTML;
             let janId = `jan-id-${i}`;
             let stockId = `stock-id-${i}`
@@ -875,6 +868,12 @@
         let firstOfTwoItemGroup = document.getElementById('firstOfTwoItemGroup');
         let lastOfTwoItemGroup = document.getElementById('lastOfTwoItemGroup');
 
+        let first_varient = document.getElementById('cell-name').innerHTML.split('/')[0].trim();
+        let last_varient = document.getElementById('cell-name').innerHTML.split('/')[1].trim();
+
+        document.getElementById('first-of-two-items-title').value = first_varient;
+        document.getElementById('last-of-two-items-title').value = last_varient;
+
         if(document.getElementById('variety-table-two').innerHTML.trim() !== ''){
 
           //grab the existing value of jancode and stock
@@ -901,8 +900,6 @@
               stock: stock,
             }
           }
-
-          console.log(preservedDatas);
 
           //empty the forms
           firstOfTwoItemGroup.innerHTML = '';
@@ -1113,7 +1110,6 @@
 
     //first of two items variant
     function deleteOptionsFirstOfTwo(){
-      console.log('deleted');
 
       let firstOfTwooptionArray = document.getElementsByClassName('first-of-two-variant-counter');
 
@@ -1146,7 +1142,6 @@
 
     //last of two items variant
     function deleteOptionsLastOfTwo(){
-      console.log('deleted');
 
       let lastOfTwooptionArray = document.getElementsByClassName('last-of-two-variant-counter');
 
@@ -1209,25 +1204,34 @@
       
       //check empty stock
       if(newStock.value.trim() === ''){
-        newStock.focus();
-        return document.getElementById('janErrorEdit').innerHTML = 'Stock is empty. Put 0 to keep previous value';
+        //newStock.focus();
+        //return document.getElementById('janErrorEdit').innerHTML = 'Stock is empty. Put 0 to keep previous value';
+        let oldStock = 0;
+        if(stockDiv.innerHTML !== '') {
+          oldStock = stockDiv.innerHTML.split(':')[1].trim();
+        }
+        newStockValue = Number(oldStock) + Number(newStock.value);
         
       }else{
         if(isNaN(Number(newStock.value))){
 
-        document.getElementById('janErrorEdit').innerHTML = 'Stock should contain only number, -, + ';
-        newStock.focus();
-        return;
-        //keep the value same
-        //newStockValue = Number(stockDiv.innerHTML);
+          document.getElementById('janErrorEdit').innerHTML = 'Stock should contain only number, -, + ';
+          newStock.focus();
+          return;
+          //keep the value same
+          //newStockValue = Number(stockDiv.innerHTML);
 
         } else{
-        newStockValue = Number(stockDiv.innerHTML) + Number(newStock.value);
+          let oldStock = 0;
+          if(stockDiv.innerHTML !== '') {
+            oldStock = stockDiv.innerHTML.split(':')[1].trim();
+          }
+          newStockValue = Number(oldStock) + Number(newStock.value);
         }
       }
       
       
-      stockDiv.innerHTML = newStockValue;
+      stockDiv.innerHTML = 'Stock:' + newStockValue;
 
       $('#edit-modal-one').modal('hide');
 
@@ -1253,7 +1257,6 @@
           leftCellNameValue = '';
           rightCellNameValue = '';
         }else{
-          console.log('not undefined');
           cellName = document.getElementById(cellNameId);
           if(cellName.innerHTML.split('/')[0]){
             leftCellName = cellName.innerHTML.split('/')[0].trim() + ':';
@@ -1292,12 +1295,17 @@
         
 
         let mixTableNum = obj.id.split('-')[2];
-        console.log(mixTableNum);
         let janCodeId = `jan-id-${mixTableNum}`;
         let stockId = `stock-id-${mixTableNum}`;
 
         janDiv = document.getElementById(janCodeId);
         stockDiv = document.getElementById(stockId);
+        let oldStock = '0';
+        try{
+          oldStock = stockDiv.innerHTML.split(':')[1].trim();
+        } catch (e) {
+          console.log(e);
+        }
 
         
 
@@ -1306,19 +1314,19 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content row">
             <h6 class="m-2 p-2" style="font-weight:bold">{% trans 'JAN code / inventory editing' %}</h6>
-            <button type="button" class="close edit-close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close edit-close pt-2 pr-3" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
             </button>
-            <p class="col-md-12 text-center p-2">{% trans 'The number of stocks will change during editing. When changing, increase or decrease the absolute value such as “+1” or “-1” Please enter (If you want to change the entire stock quantity, enter “100” etc. as a numerical value) If the stock quantity field is blank, the stock quantity will not be changed.' %}</p>
+            <p class="col-md-12 text-center p-3">{% trans 'The number of stocks will change during editing. When changing, increase or decrease the absolute value such as “+1” or “-1” Please enter (If you want to change the entire stock quantity, enter “100” etc. as a numerical value) If the stock quantity field is blank, the stock quantity will not be changed.' %}</p>
             <p class="col-md-12" style="font-weight:bold"><span class="m-2">${leftCellName} ${leftCellNameValue}</span> <span class="m-2">${rightCellName} ${rightCellNameValue}</span></p>
             <p class="col-md-12 text-danger" id="janErrorEdit"></p>
             <div class="row">
-              <div class="form-group col-md-5 m-2">
+              <div class="form-group col-md-5 m-2 pl-5">
                 <label for="jan-code-one-modal">Jan Code</label>
                 <input type="text" value="${janDiv.innerHTML}" class="form-control" id="jan-code-one-modal" placeholder="Enter Jancode"> 
               </div>
-              <div class="form-group col-md-5 m-2">
-                <label for="stock-one-modal">Stock Quantity: ${stockDiv.innerHTML}</label>
+              <div class="form-group col-md-5 m-2 pl-4">
+                <label for="stock-one-modal">Stock Quantity: ${oldStock}</label>
                 <input type="text" value="" class="form-control" id="stock-one-modal" placeholder="Enter Stock"> 
               </div>
             </div>
@@ -1344,7 +1352,6 @@
     
 
     function saveOneItemData(){
-      console.log('clicked 1');
       let oneItemVariantTitle = document.getElementById('one-item-title');
       let oneItemVariantName = document.getElementById('one-item-title').value;
       let errorMsg = document.getElementById('title-error');
@@ -1408,7 +1415,7 @@
       if(varietyTable.innerHTML.trim() === ''){
         varietyTable.innerHTML = `
         <div class="col-md-2" style="max-width: 140px; min-width: 140px"><div class="row" id="one-variant-title-left">
-          <div class="variant-title variant-col"><h6 style="font-weight: bold;" id="cell-name">${oneItemVariantName}</h6></div>
+          <div class="variant-title variant-col"><span id="cell-name">${oneItemVariantName}</span></div>
         </div>
         <div class="row" id="one-variant-info-left">
           <div class="variant-info variant-col"><h3>-</h3></div>
@@ -1438,7 +1445,7 @@
         let janValue = oneItemVariantJan[i].value;
         let stockValue = oneItemVariantStock[i].value;
         newTableChoices.innerHTML = `<div class="variant-title variant-col" id="cell-name-value-${i}">${choicesValue}</div>`;
-        newTableContent.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">${stockValue}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+        newTableContent.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">Stock:${stockValue}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
         
         
         if(newTableChoices.firstChild){
@@ -1563,7 +1570,7 @@
         varietyTableTwo.innerHTML = `
         <div class="col-md-2" style="max-width: 140px; min-width: 140px;">
           <div class="row" id="two-variant-title-left">
-            <div class="variant-title variant-col"><h6 style="font-weight: bold;" id="cell-name">${firstOfTwotemsVariantTitle.value} / ${lastOfTwotemsVariantTitle.value}</h6></div>
+            <div class="variant-title variant-col"><span id="cell-name">${firstOfTwotemsVariantTitle.value} / ${lastOfTwotemsVariantTitle.value}</span></div>
           </div>
           <div class="row" id="two-variant-info-left">
             <!--place for second variable name choices -->
@@ -1602,7 +1609,7 @@
             }else{
               firstChoicesValue = firstOfTwoVariantChoicesOriginal[i].value;
             }
-            newTableLastChoices.innerHTML = `<div class="variant-title variant-title-left variant-col">${lastChoicesValue}</div>`;
+            newTableLastChoices.innerHTML = `<div class="variant-title-left variant-col">${lastChoicesValue}</div>`;
             newTableFirstChoices.innerHTML = `<div class="variant-title variant-title-top variant-col">${firstChoicesValue}</div>`;
             infoRow.innerHTML = `<div class="row flex-wrap" id="two-variant-cont-row-${i}">
                   
@@ -1651,7 +1658,7 @@
             }else{
               lastChoicesValue = lastOfTwoVariantChoicesOriginal[i].value;
             }
-            newTableLastChoices.innerHTML = `<div class="variant-title variant-title-left variant-col">${lastChoicesValue}</div>`;
+            newTableLastChoices.innerHTML = `<div class="variant-title-left variant-col">${lastChoicesValue}</div>`;
             newTableFirstChoices.innerHTML = `<div class="variant-title variant-title-top variant-col">${firstChoicesValue}</div>`;
             infoRow.innerHTML = `<div class="row flex-wrap" id="two-variant-cont-row-${i}">
                   
@@ -1882,7 +1889,6 @@
       for(let i = 0; i < document.getElementsByClassName('variant-title-top').length; i++){
         if(document.getElementsByClassName('variant-title-top')[i].innerHTML.trim() === 'empty'){
           document.getElementsByClassName('variant-title-top')[i].remove();
-          console.log('deleted' + ' ' + i);
           i--;
         }
       }
@@ -1908,16 +1914,11 @@
 
               let dataToken = variantTableCol[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
               if(preservedDatas[dataToken]){
-                console.log(preservedDatas[dataToken].jancode);
                 njancode.innerHTML = preservedDatas[dataToken].jancode;
                 nstock.innerHTML = preservedDatas[dataToken].stock;
               }
-              // {
-              //   jancode: jancode,
-              //   stock: stock,
-              // }
         }
-    }
+     }
       // do after saving task here
       varietyTableTwo.style.height = '250px';
 
@@ -1965,12 +1966,19 @@
 
     $('#price').on('change', function() {
       var general_price = parseFloat($(this).val());
+      $('#price').val(comma_format(general_price) + ' ' + JPCUR);
       var store_price =  general_price - (0.2 * general_price);
       if(authority_id == '1') { // master
           store_price = general_price - (0.3 * general_price);
       }
+      store_price = comma_format(store_price) + ' ' + JPCUR
       $('#store_price').val(store_price);
     });
+
+    $('#shipping_fee').on('change', function() {
+      var shipping_fee = parseFloat($(this).val());
+      $('#shipping_fee').val(comma_format(shipping_fee) + ' ' + JPCUR);
+    })
   } catch (e) {
     console.log(e);
   }

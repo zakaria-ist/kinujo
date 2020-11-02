@@ -86,14 +86,21 @@
 </section>
 
 <script>
-$('#salon_zip_code').jpostal({   
-      postcode : [
-        '#salon_zip_code'
-      ],
-      address : {
-        '#salon_prefecture'  : '%3',
-        '#salon_address1'  : '%4, %5',
-        '#salon_address2'  : '%8, %9, %10',
-      }
-  });
+    $('#salon_zip_code').jpostal({   
+        postcode : [
+            '#salon_zip_code'
+        ],
+        address : {
+            '#salon_prefecture'  : '%3',
+            '#salon_address1'  : '%4, %5',
+            '#salon_address2'  : '%8, %9, %10',
+        }
+    });
+
+    $('#salon_zip_code').on('change', function() {
+        setTimeout(() => {
+            $('#salon_prefecture').val($('#salon_prefecture').val()).trigger('change');
+        }, 800);
+    });
+
 </script>
