@@ -31,36 +31,38 @@
 {% block content %}
 <form class="form-horizontal"  id="order_form"
     {% if order.id %}
-    action="{% url 'order_edit' order.id %}"
+        action="{% url 'order_edit' order.id %}"
     {% else %}
-    action="{% url 'order_add' %}"
+        action="{% url 'order_add' %}"
     {% endif %}
-    role="form" method="post" onsubmit="validateForm()" enctype="multipart/form-data">
+    role="form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <section class="panel">
         <header class="panel-heading pb-5" style="font-size: 25px">
             <strong>{% trans 'Order Registration' %}</strong>
         </header>
         <div class="table-section white-bg">
-            <div class="col-lg-12">
-                <div class="form-group row">
-                    <label for="product" class="col-md-2 control-label">{% trans 'Product' %}</label>
-                    <div class="col-md-4">
-                        <input class="form-control trs-field" type="text"
-                            name="product"
-                            id="product"
-                            autocomplete="off"
-                            placeholder="">
+            <div id="product-div" class="col-lg-12">
+                <label for="product" class="col-md-2 mb-4 control-label"><h5>{% trans 'Products' %}</h5></label>
+                <div class="form-group row" id="product_line_0">
+                    <div class="offset-lg-1 col-lg-1">
+                        <img src="" width="70px" height="70px" alt="" name="product_image_0" id="product_image_0" />
                     </div>
-                    <div class="col-md-1 pt-1 pointer">
-                        <a onclick=""><i class="fas fa-plus fa-2x"></i></a>
+                    <div class="col-lg-4 pt-3">
+                        <select name="product_select_0" id="product_select_0" class="form-control trs-field">
+                        </select>
                     </div>
-                    <div class="col-md-4">
-                        <img src="" width="100px" height="100px" alt="" name="product_image" id="product_image" />
+                    <div class="col-lg-2 pt-3">
+                        <input class="form-control trs-field numeric_qty" type="text"
+                            name="quantity_0"
+                            id="quantity_0">
+                    </div>
+                    <div class="btn-group pt-3">
+                        <a class="btn-group-item" onclick="addProduct(0)"><i class="fas fa-plus-circle fa-2x text-info"></i></a>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12 mt-5">
                 <div class="form-group row">
                     <label for="order_no" class="col-lg-2 control-label">{% trans 'Order Number' %}<span
                             class="span-required">(*)</span></label>
@@ -132,9 +134,9 @@
                 <div class="form-group row">
                     <label for="total_amount" class="col-lg-2 control-label">{% trans 'Total Amount' %}</label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field" type="number"
+                        <input class="form-control trs-field numeric_price" type="number"
                             name="total_amount"
-                            id="total_amout"
+                            id="total_amount"
                             placeholder=""
                             value="{{order.total_amout}}">
                     </div>
@@ -155,7 +157,7 @@
                 <div class="form-group row">
                     <label for="shipping_fee" class="col-lg-2 control-label">{% trans 'Shipping Fee' %}</label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field" type="number"
+                        <input class="form-control trs-field numeric_price" type="number"
                             name="shipping_fee"
                             id="shipping_fee"
                             placeholder=""
@@ -221,10 +223,54 @@
         </div>
     </section>
 </form>
+<!-- Address Modal -->
+<div class="modal fade" id="AddressListModal" tabindex="-1" role="dialog"
+        aria-labelledby="AddressListModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Address List</h4>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-right: 0px!important;margin-left: 0px!important;">
+                    <section>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="panel-body"
+                                        style="padding: 0px!important; font-size: 12.5px !important;">
+                                    <div class="adv-table">
+                                        <table id="address-table" style="width: 100% !important;"
+                                                class="display table table-bordered table-striped table-condensed">
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>{% trans 'Address Name' %}</th>
+                                                <th>{% trans 'Full Name' %}</th>
+                                                <th>{% trans 'Address' %}</th>
+                                                <th>{% trans 'Phone Number' %}</th>
+                                                <th class="text-center" style="min-width:90px!important;">{% trans 'Options' %}</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default blue-btn" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Address Modal END -->
 {% endblock %}
 
 {% block js %}
-    <!-- Datatables -->
     <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script> 
     <script type="text/javascript" src="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.js' %}"></script>
     <script src="{% static "js/select2/select2.js" %}"></script>
@@ -236,6 +282,15 @@
                 $(this).closest(".select2-container").siblings('select:enabled').select2('open');
             }
         });
+
+        // seller_id will be the login id
+        var seller_id = 2;
+        var product_list = [];
+
+        $(document).ready(function() {
+            // get all products of seller
+            loadProducts();
+        })
 
         $('#order_status').select2({});
         $('#order_status').on("select2:open", function( event ){
@@ -267,9 +322,301 @@
             }, 800);
         });
 
-
-        function validateForm() {
-            
+        function showAddressBook() {
+            let profile_id = $('#orderer').val();
+            if (profile_id != '' && profile_id != undefined) {
+                $('#AddressListModal').modal('show');
+                $('#address-table').DataTable().destroy();
+                $('#address-table').DataTable({
+                    "order": [[2, "asc"]],
+                    "serverSide": true,
+                    "scrollX": true,
+                    stateSave: true,
+                    "ajax": {
+                        "url": "/profiles/shipping_list_json/",
+                        "data": {
+                            "user_id": profile_id
+                        }
+                    },
+                    "columns": [
+                        {"data": "no", "orderable": false},
+                        {"data": "address_name"},
+                        {"data": "name"},
+                        {"data": "address", "orderable": false},
+                        {"data": "tel"},
+                        
+                        {
+                            "sClass": "text-center",
+                            "orderable": false,
+                            "data": null,
+                            "render": function (data, type, row, meta) {
+                                var btn =
+                                        '<div class="btn-group">' +
+                                        '<a class="btn-group-item pointer btn btn-default gray-btn select-address" onclick="selectAddress('+row.no+')">Select</a>' +
+                                        '</div>';
+                                return btn;
+                            }
+                        }
+                    ]
+                });
+                setTimeout(() => {
+                    $('#address-table').DataTable().columns.adjust();
+                }, 300);
+            }
         }
+
+        function selectAddress(line) {
+            var dtTable = $('#address-table').DataTable();
+            var dtRow = dtTable.rows(line-1).data();
+            var sel_address = {};
+            console.log(dtRow[0]);
+            sel_address['name'] = dtRow[0].address_name;
+            sel_address['full_name'] = dtRow[0].name;
+            sel_address['tel'] = dtRow[0].tel;
+            sel_address['prefecture'] = dtRow[0].prefecture;
+            sel_address['prefecture_id'] = dtRow[0].prefecture_id;
+            sel_address['address1'] = dtRow[0].address.split(' ')[0].trim();
+            sel_address['address2'] = dtRow[0].address.split(' ')[1].replace('</br>', '').trim() + ' ' + dtRow[0].address.split(' ')[2].trim();
+            sel_address['zip1'] = dtRow[0].address.split(' ')[4].split(':')[1].trim();
+            console.log(sel_address);
+            $('#zip1').val(sel_address.zip1).trigger('change');
+            $('#tel').val(sel_address.tel);
+            $('#name').val(sel_address.name);
+            $('#AddressListModal').modal('hide');
+        };
+
+
+        // products block
+        function loadProducts() {
+            $.ajax({
+                method: "GET",
+                url: '/products/seller_product_list_json/',
+                dataType: 'JSON',
+                data: {
+                    'seller_id': seller_id,
+                },
+                success: function (json) {
+                    product_list = json.data;
+                    console.log('product_list', product_list);
+                    initiateProductSelect2('product_select_0', product_list);
+                },
+                error: function (e) {
+                    $.confirm({
+                        title: 'Error',
+                        content: e.message,
+                        buttons: {
+                            Ok: {
+                                btnClass: 'btn-success',
+                                action: function(){}
+                                }
+                            }
+                    });
+                }
+            });
+        }
+
+        function initiateProductSelect2(id, list, exclude_list=[]) {
+            if ($('#' + id).data('select2')) {
+                $('#' + id).select2('destroy');
+            }
+
+            $('#' + id).empty();
+
+            var options = '<option value="">Select Product</option>';
+            for (i in list) {
+                options += "<option value="+list[i].jan_id+">"+list[i].name + ' - ' + list[i].jan_code + ' - ' + list[i].varieties + ' - ' + list[i].stock+"</option>";
+            }
+            $('#' + id).html(options);
+
+            $('#' + id).select2({
+                placeholder: "Select Product",
+                allowClear: true,
+            });
+
+            $('#' + id).on('change', function(event) {
+                let s_val = $(this).val();
+                let line = event.target.id.replace('product_select_', '').trim();
+                for(i in list){
+                    if (s_val == list[i].jan_id) {
+                        console.log(event.target.id, line);
+                        let image_path = list[i].image_path;
+                        $('#product_image'+line).attr('src', image_path);
+                    }
+                }
+            });
+
+            $('#' + id).on("select2:open", function( event ){
+                prefill_select2(event);
+            });
+        }
+
+        var product_line = `
+                <div class="form-group row" id="product_line">
+                    <div class="offset-lg-1 col-lg-1">
+                        <img src="" width="70px" height="70px" alt="" name="product_image" id="product_image" />
+                    </div>
+                    <div class="col-lg-4 pt-3">
+                        <select name="product_select" id="product_select" class="form-control trs-field">
+                        </select>
+                    </div>
+                    <div class="col-lg-2 pt-3">
+                        <input class="form-control trs-field numeric_qty" type="text"
+                            name="quantity"
+                            id="quantity">
+                    </div>
+                    <div class="btn-group pt-3">
+                        <a class="btn-group-item" onclick="addProduct()"><i class="fas fa-plus-circle fa-2x text-info"></i></a>
+                        <a class="btn-group-item" onclick="deleteProduct()"><i class="fas fa-trash-alt fa-2x text-danger"></i></a> 
+                    </div>
+                </div>`;
+
+        function addProduct(line) {
+            new_line = Number(line) + 1;
+            new_product_line = product_line;
+            new_product_line = new_product_line.replaceAll('product_line', 'product_line_'+new_line).replaceAll('product_select', 'product_select_'+new_line);
+            new_product_line = new_product_line.replaceAll('product_image', 'product_image_'+new_line).replaceAll('addProduct()', 'addProduct('+new_line+')');
+            new_product_line = new_product_line.replaceAll('deleteProduct()', 'deleteProduct('+new_line+')');
+
+            $('#product_line_'+line).after(new_product_line);
+
+            initiateProductSelect2('product_select_'+new_line, product_list);
+            
+            reIndexAll();
+        }
+
+        function deleteProduct(line) {
+            $('#product_line_'+line).remove();
+            reIndexAll();
+        }
+
+        function reIndexAll() {
+            for (let i=0; i<$("[id*='product_line']").length; i++) {
+                let product_div = $("[id*='product_line']")[i];
+
+                $(product_div).find('img').each(function () {
+                    $(this).attr('name', 'product_image_'+i);
+                    $(this).attr('id', 'product_image_'+i);
+                });
+                $(product_div).find('select').each(function () {
+                    $(this).attr('name', 'product_select_'+i);
+                    $(this).attr('id', 'product_select_'+i);
+                });
+                $(product_div).find('span.select2-selection').each(function () {
+                    if($(this).attr('aria-labelledby') != undefined) {
+                        $(this).attr({'aria-labelledby': 'select2-product_select_'+i+'-container'});
+                    }
+                });
+                $(product_div).find('span.select2-selection__rendered').each(function () {
+                    if($(this).attr('id') != undefined) {
+                        $(this).attr({'id': 'select2-product_select_'+i+'-container'});
+                    }
+                });
+                $(product_div).find(':input').each(function () {
+                    $(this).attr('name', 'quantity_'+i);
+                    $(this).attr('id', 'quantity_'+i);
+                });
+                $(product_div).find('a').each(function (idx) {
+                    if (idx == 0) {
+                        $(this).attr('onclick', 'addProduct('+i+')');
+                    } else {
+                        $(this).attr('onclick', 'deleteProduct('+i+')');
+                    }
+                });
+                $(product_div).attr('id', 'product_line_'+i);
+            }
+        }
+
+        $(document).on('change', "[id*='product_line'] input:text", function(event) {
+            let line = event.target.id.replace('quanity_', '').trim();
+        });
+
+        $('#order_form').on('submit', function(e) {
+            var is_valid = true;
+
+            if ( $('#orderer').val() != '' ) {
+                $('#orderer').removeClass('highlight-mandatory');
+            } else {
+                $('#orderer').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+            if ( $('#tel').val() != '' ) {
+                $('#tel').removeClass('highlight-mandatory');
+            } else {
+                $('#tel').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+            if ( $('#zip1').val() != '' ) {
+                $('#zip1').removeClass('highlight-mandatory');
+            } else {
+                $('#zip1').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+            if ( $('#prefecture').val() != '' ) {
+                $('#prefecture').removeClass('highlight-mandatory');
+            } else {
+                $('#prefecture').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+            if ( $('#address1').val() != '' ) {
+                $('#address1').removeClass('highlight-mandatory');
+            } else {
+                $('#address1').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+            if ( $('#address2').val() != '' ) {
+                $('#address2').removeClass('highlight-mandatory');
+            } else {
+                $('#address2').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+            if ( $('#total_amount').val() != '' ) {
+                $('#total_amount').removeClass('highlight-mandatory');
+            } else {
+                $('#total_amount').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+            if ( $('#shipping_fee').val() != '' ) {
+                $('#shipping_fee').removeClass('highlight-mandatory');
+            } else {
+                $('#shipping_fee').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+            if ( $('#shipped_date').val() != '' ) {
+                $('#shipped_date').removeClass('highlight-mandatory');
+            } else {
+                $('#shipped_date').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+            if ( $('#order_date').val() != '' ) {
+                $('#order_date').removeClass('highlight-mandatory');
+            } else {
+                $('#order_date').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+            if ( $('#inquiry_number').val() != '' ) {
+                $('#inquiry_number').removeClass('highlight-mandatory');
+            } else {
+                $('#inquiry_number').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+            if ( $('#product_select_0').val() != '' ) {
+                $('#product_select_0').removeClass('highlight-mandatory');
+            } else {
+                $('#product_select_0').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+            if ( $('#quantity_0').val() != '' ) {
+                $('#quantity_0').removeClass('highlight-mandatory');
+            } else {
+                $('#quantity_0').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+
+            if (is_valid) {
+
+            } else {
+                e.preventDefault();
+            }
+        });
     </script>
 {% endblock %}
