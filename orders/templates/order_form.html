@@ -43,6 +43,8 @@
         </header>
         <div class="table-section white-bg">
             <div id="product-div" class="col-lg-12">
+                <input class="form-control" type="hidden" name="product_list" id="product_list">
+                <input class="form-control" type="hidden" name="seller_id" id="seller_id">
                 <label for="product" class="col-md-2 mb-4 control-label"><h5>{% trans 'Products' %}</h5></label>
                 <div class="form-group row" id="product_line_0">
                     <div class="offset-lg-1 col-lg-1">
@@ -53,7 +55,7 @@
                         </select>
                     </div>
                     <div class="col-lg-2 pt-3">
-                        <input class="form-control trs-field numeric_qty" type="text"
+                        <input class="form-control text-right trs-field numeric_qty" type="text"
                             name="quantity_0"
                             id="quantity_0">
                     </div>
@@ -106,14 +108,13 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="tel" class="col-lg-2 control-label">{% trans 'Phone Number' %}<span
-                            class="span-required">(*)</span></label>
+                    <label for="amount" class="col-lg-2 control-label">{% trans 'Amount' %}</label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field" type="text"
-                            name="tel"
-                            id="tel"
+                        <input class="form-control trs-field numeric_qty" type="text"
+                            name="amount"
+                            id="amount"
                             placeholder=""
-                            value="{{order.tel}}">
+                            value="{{order.amout}}">
                     </div>
                     <label for="zip1" class="col-lg-2 control-label">{% trans 'Zip Code' %}</label>
                     <div class="col-lg-2">
@@ -132,13 +133,13 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="total_amount" class="col-lg-2 control-label">{% trans 'Total Amount' %}</label>
+                    <label for="tax" class="col-lg-2 control-label">{% trans 'Gst' %}</label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field numeric_price" type="number"
-                            name="total_amount"
-                            id="total_amount"
+                        <input class="form-control trs-field numeric_qty" type="text" readonly
+                            name="tax"
+                            id="tax"
                             placeholder=""
-                            value="{{order.total_amout}}">
+                            value="{{order.tax}}">
                     </div>
                     <label for="prefecture" class="col-lg-2 control-label">{% trans 'Prefecture' %}<span
                             class="span-required">(*)</span></label>
@@ -157,7 +158,7 @@
                 <div class="form-group row">
                     <label for="shipping_fee" class="col-lg-2 control-label">{% trans 'Shipping Fee' %}</label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field numeric_price" type="number"
+                        <input class="form-control trs-field numeric_qty" type="text"
                             name="shipping_fee"
                             id="shipping_fee"
                             placeholder=""
@@ -174,6 +175,24 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label for="total_amount" class="col-lg-2 control-label">{% trans 'Total Amount' %}</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field numeric_qty" type="text" readonly
+                            name="total_amount"
+                            id="total_amount"
+                            placeholder=""
+                            value="{{order.total_amout}}">
+                    </div>
+                    <label for="address2" class="col-lg-2 control-label">{% trans 'Address Two' %}</label>
+                    <div class="col-lg-4">
+                        <input class="form-control trs-field" type="text"
+                            name="address2"
+                            id="address2"
+                            placeholder=""
+                            value="{{order.address2}}">
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label for="order_status" class="col-lg-2 control-label">{% trans 'Status' %}</label>
                     <div class="col-lg-4">
                         <select name="order_status" id="order_status" class="form-control trs-field">
@@ -186,13 +205,14 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <label for="address2" class="col-lg-2 control-label">{% trans 'Address Two' %}</label>
+                    <label for="tel" class="col-lg-2 control-label">{% trans 'Phone Number' %}<span
+                            class="span-required">(*)</span></label>
                     <div class="col-lg-4">
                         <input class="form-control trs-field" type="text"
-                            name="address2"
-                            id="address2"
+                            name="tel"
+                            id="tel"
                             placeholder=""
-                            value="{{order.address2}}">
+                            value="{{order.tel}}">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -286,10 +306,14 @@
         // seller_id will be the login id
         var seller_id = 2;
         var product_list = [];
+        var order_id = "{{order.id}}";
 
         $(document).ready(function() {
             // get all products of seller
             loadProducts();
+            if (!order_id) {
+                $('#order_date').val(new Date().toDateInputValue())
+            }
         })
 
         $('#order_status').select2({});
@@ -369,7 +393,6 @@
             var dtTable = $('#address-table').DataTable();
             var dtRow = dtTable.rows(line-1).data();
             var sel_address = {};
-            console.log(dtRow[0]);
             sel_address['name'] = dtRow[0].address_name;
             sel_address['full_name'] = dtRow[0].name;
             sel_address['tel'] = dtRow[0].tel;
@@ -384,6 +407,50 @@
             $('#name').val(sel_address.name);
             $('#AddressListModal').modal('hide');
         };
+
+        $('#amount').on('change', function() {
+            let amount = pure_number($(this).val());
+            if (amount > 0) {
+                // calculate tax
+                calculateTotalAmount();
+            }
+            $('#amount').val(comma_format(amount, 0) + ' ' + JPCUR);
+        });
+
+        $('#shipping_fee').on('change', function() {
+            let shipping_fee = pure_number($(this).val());
+            if (shipping_fee > 0) {
+                calculateTotalAmount();
+            }
+            $('#shipping_fee').val(comma_format(shipping_fee, 0) + ' ' + JPCUR);
+        });
+
+        function calculateTotalAmount() {
+            let amount = pure_number($('#amount').val());
+            let tax = pure_number($('#tax').val());
+            let shipping_fee = pure_number($('#shipping_fee').val());
+
+            $('#total_amount').val(comma_format(amount + tax + shipping_fee, 0) + ' ' + JPCUR);
+        }
+
+        function calculateAmount() {
+            console.log('calculateAmount');
+            let amount = 0;
+            for (let i=0; i<$("[id*='product_line']").length; i++) {
+                if ($('#product_select_'+i).val() != '' && $('#quantity_'+i).val() != ''){
+                    let qty = $('#quantity_'+i).val();
+                    let s_val = $('#product_select_'+i).val();
+                    let product = product_list.filter(function (el) {
+                        return el.jan_id == s_val;
+                    });
+                    console.log('product', product);
+                    if (product.length) {
+                        amount += parseInt(qty) * parseInt(product[0].price)
+                    }
+                }
+            }
+            $('#amount').val(comma_format(amount, 0) + ' ' + JPCUR).trigger('change');
+        }
 
 
         // products block
@@ -438,11 +505,12 @@
                 let line = event.target.id.replace('product_select_', '').trim();
                 for(i in list){
                     if (s_val == list[i].jan_id) {
-                        console.log(event.target.id, line);
                         let image_path = list[i].image_path;
                         $('#product_image'+line).attr('src', image_path);
                     }
                 }
+                $('#quantity_'+line).select();
+                calculateAmount();
             });
 
             $('#' + id).on("select2:open", function( event ){
@@ -460,7 +528,7 @@
                         </select>
                     </div>
                     <div class="col-lg-2 pt-3">
-                        <input class="form-control trs-field numeric_qty" type="text"
+                        <input class="form-control text-right trs-field numeric_qty" type="text"
                             name="quantity"
                             id="quantity">
                     </div>
@@ -485,8 +553,17 @@
         }
 
         function deleteProduct(line) {
-            $('#product_line_'+line).remove();
-            reIndexAll();
+            $.confirm({
+                title: 'Warning',
+                content: 'Are you sure?',
+                buttons: {
+                    Yes: function () {
+                        $('#product_line_'+line).remove();
+                        reIndexAll();
+                    },
+                    Cancel: function () {}
+                }
+            });
         }
 
         function reIndexAll() {
@@ -496,6 +573,10 @@
                 $(product_div).find('img').each(function () {
                     $(this).attr('name', 'product_image_'+i);
                     $(this).attr('id', 'product_image_'+i);
+                });
+                $(product_div).find(':input').each(function () {
+                    $(this).attr('name', 'quantity_'+i);
+                    $(this).attr('id', 'quantity_'+i);
                 });
                 $(product_div).find('select').each(function () {
                     $(this).attr('name', 'product_select_'+i);
@@ -511,10 +592,6 @@
                         $(this).attr({'id': 'select2-product_select_'+i+'-container'});
                     }
                 });
-                $(product_div).find(':input').each(function () {
-                    $(this).attr('name', 'quantity_'+i);
-                    $(this).attr('id', 'quantity_'+i);
-                });
                 $(product_div).find('a').each(function (idx) {
                     if (idx == 0) {
                         $(this).attr('onclick', 'addProduct('+i+')');
@@ -528,6 +605,7 @@
 
         $(document).on('change', "[id*='product_line'] input:text", function(event) {
             let line = event.target.id.replace('quanity_', '').trim();
+            calculateAmount();
         });
 
         $('#order_form').on('submit', function(e) {
@@ -569,6 +647,18 @@
                 $('#address2').addClass('highlight-mandatory');
                 is_valid = false;
             }
+            if ( $('#amount').val() != '' ) {
+                $('#amount').removeClass('highlight-mandatory');
+            } else {
+                $('#amount').addClass('highlight-mandatory');
+                is_valid = false;
+            }
+            if ( $('#tax').val() != '' ) {
+                $('#tax').removeClass('highlight-mandatory');
+            } else {
+                $('#tax').addClass('highlight-mandatory');
+                is_valid = false;
+            }
             if ( $('#total_amount').val() != '' ) {
                 $('#total_amount').removeClass('highlight-mandatory');
             } else {
@@ -599,24 +689,69 @@
                 $('#inquiry_number').addClass('highlight-mandatory');
                 is_valid = false;
             }
-            if ( $('#product_select_0').val() != '' ) {
-                $('#product_select_0').removeClass('highlight-mandatory');
-            } else {
-                $('#product_select_0').addClass('highlight-mandatory');
-                is_valid = false;
-            }
-            if ( $('#quantity_0').val() != '' ) {
-                $('#quantity_0').removeClass('highlight-mandatory');
-            } else {
-                $('#quantity_0').addClass('highlight-mandatory');
-                is_valid = false;
-            }
 
+            // Product validation
+            for (let i=0; i<$("[id*='product_line']").length; i++) {
+                if ( $('#product_select_'+i).val() != '' ) {
+                    $('#product_select_'+i).removeClass('highlight-mandatory');
+                } else {
+                    $('#product_select_'+i).addClass('highlight-mandatory');
+                    is_valid = false;
+                }
+                if ( $('#quantity_'+i).val() != '' ) {
+                    $('#quantity_'+i).removeClass('highlight-mandatory');
+                } else {
+                    $('#quantity_'+i).addClass('highlight-mandatory');
+                    is_valid = false;
+                }
+            }
+            
             if (is_valid) {
-
+                let selected_product_list = [];
+                for (let i=0; i<$("[id*='product_line']").length; i++) {
+                    let data = {
+                        "jan_id": $('#product_select_'+i).val(),
+                        "qty": $('#quantity_'+i).val()
+                    }
+                    selected_product_list.push(data);
+                }
+                $('#product_list').val(JSON.stringify(selected_product_list));
+                $('#seller_id').val(seller_id);
+                $('#amount').val(pure_number($('#amount').val()));
+                $('#tax').val(pure_number($('#tax').val()));
+                $('#total_amount').val(pure_number($('#total_amount').val()));
+                $('#shipping_fee').val(pure_number($('#shipping_fee').val()));
             } else {
                 e.preventDefault();
             }
         });
+
+        $('#inquiry_number').on('change', function() {
+            let value = $(this).val();
+            check_for_duplicate('inquiry_number', value);
+        });
+
+        function check_for_duplicate(type, value) {
+            $.ajax({
+                type: "GET",
+                url: "/orders/check_for_duplicate/" + type + "/" + value + "/",
+                success: function (data) {
+                    if (data.message == 'Success') {
+                        if (type == 'inquiry_number') {
+                            $.confirm({
+                                title: 'Tracking number is duplicate',
+                                content: value + ' is in use. Try a new one. It must be unique',
+                                buttons: {
+                                    Ok: {
+                                        btnClass: 'btn-success',
+                                        action: function(){ $('#inquiry_number').val(''); $('#inquiry_number').focus(); }
+                                        }
+                                    }
+                            });
+                        }
+                    }
+                }
+            });
+        }
     </script>
 {% endblock %}

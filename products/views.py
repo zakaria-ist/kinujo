@@ -149,6 +149,7 @@ def SellerProductList__asJson(request):
                 "image_path": str(image_path),
                 "jan_code": str(p_jan.jan_code),
                 "stock": str(p_jan.stock),
+                "price": str(field.price),
                 "varieties": very_str
             }
 
@@ -180,61 +181,90 @@ def check_for_duplicate(request, type, value):
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
+def get_jan_products(productJancode):
+    product = None
+    try: 
+        if productJancode.horizontal_id:
+            productVarietySelection = ProductVarietySelection.objects.get(
+                pk=productJancode.horizontal_id)
+            productVariety = ProductVariety.objects.get(
+                pk=productVarietySelection.product_variety_id)
+            product = Product.object.get(pk=productVariety.product_id)
+
+        if productJancode.vertical_id:
+            productVarietySelection = ProductVarietySelection.objects.get(
+                pk=productJancode.vertical_id)
+            productVariety = ProductVariety.objects.get(
+                pk=productVarietySelection.product_variety_id)
+            product = Product.object.get(pk=productVariety.product_id)
+    except:
+        pass
+
+    return product
+
+
 def get_jan_varieties(productJancode):
     varieties = []
-    if productJancode.horizontal_id:
-        productVarietySelection = ProductVarietySelection.objects.get(
-            pk=productJancode.horizontal_id)
-        productVariety = ProductVariety.objects.get(
-            pk=productVarietySelection.product_variety_id)
-        varieties.append({
-            "name": str(productVariety.name),
-            "selection": str(productVarietySelection.selection),
-            "vertical_and_horizontal": str(productVariety.vertical_and_horizontal),
-        })
-    if productJancode.vertical_id:
-        productVarietySelection = ProductVarietySelection.objects.get(
-            pk=productJancode.vertical_id)
-        productVariety = ProductVariety.objects.get(
-            pk=productVarietySelection.product_variety_id)
-        varieties.append({
-            "name": str(productVariety.name),
-            "selection": str(productVarietySelection.selection),
-            "vertical_and_horizontal": str(productVariety.vertical_and_horizontal),
-        })
+    try:
+        if productJancode.horizontal_id:
+            productVarietySelection = ProductVarietySelection.objects.get(
+                pk=productJancode.horizontal_id)
+            productVariety = ProductVariety.objects.get(
+                pk=productVarietySelection.product_variety_id)
+            varieties.append({
+                "name": str(productVariety.name),
+                "selection": str(productVarietySelection.selection),
+                "vertical_and_horizontal": str(productVariety.vertical_and_horizontal),
+            })
+        if productJancode.vertical_id:
+            productVarietySelection = ProductVarietySelection.objects.get(
+                pk=productJancode.vertical_id)
+            productVariety = ProductVariety.objects.get(
+                pk=productVarietySelection.product_variety_id)
+            varieties.append({
+                "name": str(productVariety.name),
+                "selection": str(productVarietySelection.selection),
+                "vertical_and_horizontal": str(productVariety.vertical_and_horizontal),
+            })
+    except:
+        pass
     return varieties
 
 
 def get_products_jancodes(product_id, type='id'):
-    product = Product.objects.get(pk=product_id)
     jancodes = []
-    productVarieties = ProductVariety.objects.filter(
-        product_id=product.id, is_hidden=False)
-    for productVariety in productVarieties:
-        productVarietySelections = ProductVarietySelection.objects.filter(
-            product_variety_id=productVariety.id, is_hidden=False)
-        for productVarietySelection in productVarietySelections:
-            if productVariety.vertical_and_horizontal == 0:
-                productJancodes = ProductJancode.objects.filter(
-                    horizontal_id=productVarietySelection.id, is_hidden=False)
-                for productJancode in productJancodes:
-                    if type == 'id':
-                        if productJancode.id not in jancodes:
-                            jancodes.append(productJancode.id)
-                    elif type == 'code':
-                        if productJancode.jan_code not in jancodes:
-                            jancodes.append(productJancode.jan_code)
-            else:
-                productJancodes = ProductJancode.objects.filter(
-                    vertical_id=productVarietySelection.id, is_hidden=False)
-                for productJancode in productJancodes:
-                    if type == 'id':
-                        if productJancode.id not in jancodes:
-                            jancodes.append(productJancode.id)
-                    elif type == 'code':
-                        if productJancode.jan_code not in jancodes:
-                            jancodes.append(productJancode.jan_code)
+    try:
+        product = Product.objects.get(pk=product_id)
+        productVarieties = ProductVariety.objects.filter(
+            product_id=product.id, is_hidden=False)
+        for productVariety in productVarieties:
+            productVarietySelections = ProductVarietySelection.objects.filter(
+                product_variety_id=productVariety.id, is_hidden=False)
+            for productVarietySelection in productVarietySelections:
+                if productVariety.vertical_and_horizontal == 0:
+                    productJancodes = ProductJancode.objects.filter(
+                        horizontal_id=productVarietySelection.id, is_hidden=False)
+                    for productJancode in productJancodes:
+                        if type == 'id':
+                            if productJancode.id not in jancodes:
+                                jancodes.append(productJancode.id)
+                        elif type == 'code':
+                            if productJancode.jan_code not in jancodes:
+                                jancodes.append(productJancode.jan_code)
+                else:
+                    productJancodes = ProductJancode.objects.filter(
+                        vertical_id=productVarietySelection.id, is_hidden=False)
+                    for productJancode in productJancodes:
+                        if type == 'id':
+                            if productJancode.id not in jancodes:
+                                jancodes.append(productJancode.id)
+                        elif type == 'code':
+                            if productJancode.jan_code not in jancodes:
+                                jancodes.append(productJancode.jan_code)
 
+    except:
+        pass
+    
     return jancodes
 
 

@@ -407,12 +407,6 @@ function prepareVarientOneTable(json){
 
 var g_product_id = '';
 
-Date.prototype.toDateInputValue = (function() {
-    var local = new Date(this);
-    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-    return local.toJSON().slice(0,10);
-});
-
 function showProductForm(product_id='') {
     $('#item_tab').html('');
     $.get("/profiles/templates/product_form/", function(data){
