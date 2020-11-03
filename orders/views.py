@@ -144,7 +144,7 @@ def order_add(request):
         except Exception as e:
             print(e)
 
-    orderer_list = list(Profile.objects.filter(is_hidden=False, authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']]).values_list('id', 'nickname'))
+    orderer_list = list(Profile.objects.filter(is_hidden=False, authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']]).values_list('id', 'nickname', 'authority_id'))
     prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
     return render(request, 'order_form.html', {'prefecture_list': prefecture_list,
                                                 'orderer_list': orderer_list,
@@ -246,7 +246,7 @@ def order_edit(request, order_id):
         # order_product_list.append([order_product.product_jan_code_id, order_product.quantity, image_path])
         order_product_list.append([order_product.product_jan_code_id, order_product.quantity])
 
-    orderer_list = list(Profile.objects.filter(is_hidden=False, authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']]).values_list('id', 'nickname'))
+    orderer_list = list(Profile.objects.filter(is_hidden=False, authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']]).values_list('id', 'nickname', 'authority_id'))
     prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
     
     return render(request, 'order_form.html', {'prefecture_list': prefecture_list,

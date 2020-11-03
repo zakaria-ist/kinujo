@@ -50,14 +50,15 @@
                     <div class="offset-lg-1 col-lg-1">
                         <img src="" width="70px" height="70px" alt="" name="product_image_0" id="product_image_0" />
                     </div>
-                    <div class="col-lg-4 pt-3">
+                    <div class="col-lg-6 pt-3">
                         <select name="product_select_0" id="product_select_0" class="form-control trs-field">
                         </select>
                     </div>
                     <div class="col-lg-2 pt-3">
                         <input class="form-control text-right trs-field numeric_qty" type="text"
                             name="quantity_0"
-                            id="quantity_0">
+                            id="quantity_0"
+                            value="1">
                     </div>
                     <div class="btn-group pt-3">
                         <a class="btn-group-item" onclick="addProduct(0)"><i class="fas fa-plus-circle fa-2x text-info"></i></a>
@@ -305,6 +306,7 @@
 
         // seller_id will be the login id
         var seller_id = 2;
+        var orderer_auth_type = '5';
 
         var product_list = [];
         var order_id = "{{order.id}}";
@@ -317,6 +319,11 @@
         {% for product in order_product_list %}
             order_product_list.push(["{{ product.0 }}", "{{ product.1 }}"]);
             //order_product_list.push(["{{ product.0 }}", "{{ product.1 }}", "{{ product.2 }}"]);
+        {% endfor %}
+
+        var orderer_list = []
+        {% for item in orderer_list %}
+            orderer_list.push(["{{ item.0 }}", "{{ item.1 }}", "{{ item.2 }}"]);
         {% endfor %}
 
         $(document).ready(function() {
@@ -366,6 +373,17 @@
             setTimeout(() => {
                 $('#prefecture').val($('#prefecture').val()).trigger('change');
             }, 800);
+        });
+
+        $('#orderer').on('change', function() {
+            console.log('orderer_auth_type', orderer_auth_type);
+            let orderer = $(this).val();
+            $.each(orderer_list, function(indx, item) {
+                if (item[0] == orderer) {
+                    orderer_auth_type = item[2];
+                }
+            });
+            console.log('orderer_auth_type', orderer_auth_type);
         });
 
         function showAddressBook() {
@@ -469,9 +487,12 @@
                     let product = product_list.filter(function (el) {
                         return el.jan_id == s_val;
                     });
-                    console.log('product', product);
                     if (product.length) {
-                        amount += parseInt(qty) * parseInt(product[0].price)
+                        if (orderer_auth_type == '5') { // General authority
+                            amount += parseInt(qty) * parseInt(product[0].price)
+                        } else {  // Store authority
+                            amount += parseInt(qty) * parseInt(product[0].store_price)
+                        }
                     }
                 }
             }
@@ -523,7 +544,8 @@
 
             var options = '<option value="">Select Product</option>';
             for (i in list) {
-                options += "<option value="+list[i].jan_id+">"+list[i].name + ' - ' + list[i].jan_code + ' - ' + list[i].varieties + ' - ' + list[i].stock+"</option>";
+
+                options += "<option value="+list[i].jan_id+">"+list[i].jan_code + ': ' + list[i].name + ' - ' + list[i].varieties + ' - ' + list[i].stock+"</option>";
             }
             $('#' + id).html(options);
 
@@ -542,7 +564,6 @@
                         $('#quantity_'+line).attr('max_order', list[i].stock);
                     }
                 }
-                //$('#quantity_'+line).select();
                 calculateAmount();
             });
 
@@ -559,14 +580,15 @@
                     <div class="offset-lg-1 col-lg-1">
                         <img src="" width="70px" height="70px" alt="" name="product_image" id="product_image" />
                     </div>
-                    <div class="col-lg-4 pt-3">
+                    <div class="col-lg-6 pt-3">
                         <select name="product_select" id="product_select" class="form-control trs-field">
                         </select>
                     </div>
                     <div class="col-lg-2 pt-3">
                         <input class="form-control text-right trs-field numeric_qty" type="text"
                             name="quantity"
-                            id="quantity">
+                            id="quantity"
+                            value="1">
                     </div>
                     <div class="btn-group pt-3">
                         <a class="btn-group-item" onclick="addProduct()"><i class="fas fa-plus-circle fa-2x text-info"></i></a>
@@ -579,8 +601,6 @@
                 addProduct(0);
             }
             for (i in order_product_list) {
-                console.log(order_product_list[i][0]);
-                console.log(order_product_list[i][1]);
                 $('#product_image_'+i).attr("src" ,order_product_list[i][2]);
                 $('#quantity_'+i).val(order_product_list[i][1]);
                 $('#product_select_'+i).val(order_product_list[i][0]).trigger('change');
@@ -652,11 +672,23 @@
             }
         }
 
+        // Qunatity on change
         $(document).on('change', "[id*='product_line'] input:text", function(event) {
             let line = event.target.id.replace('quanity_', '').trim();
             let qty = parseInt($('#'+event.target.id).val());
             let max_order = parseInt($('#'+event.target.id).attr('max_order'));
-            if (qty > max_order) {
+            if (0 >= qty) {
+                $.confirm({
+                    title: 'Wrong Quanity!',
+                    content: 'Order quantity must be greater than Zero',
+                    buttons: {
+                        Ok: {
+                            btnClass: 'btn-success',
+                            action: function(){ $('#'+event.target.id).val(max_order); $('#'+event.target.id).focus(); }
+                            }
+                        }
+                });
+            } else if (qty > max_order) {
                 $.confirm({
                     title: 'Wrong Quanity!',
                     content: 'Order quantity cannot be greater than stock quantity ' + max_order,
@@ -667,8 +699,9 @@
                             }
                         }
                 });
+            } else {
+                calculateAmount();
             }
-            calculateAmount();
         });
 
         $('#order_form').on('submit', function(e) {

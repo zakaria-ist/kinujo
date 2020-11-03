@@ -136,7 +136,7 @@ def SellerProductList__asJson(request):
             very_str = ''
             for item in veries:
                 if item['name']:
-                    very_str += item['name'] + ':' + item['selection'] + ','
+                    very_str += item['selection'] + ','
             if len(very_str):
                 very_str = very_str[:-1]
             i = i + 1
@@ -150,6 +150,7 @@ def SellerProductList__asJson(request):
                 "jan_code": str(p_jan.jan_code),
                 "stock": str(p_jan.stock),
                 "price": str(field.price),
+                "store_price": str(field.store_price),
                 "varieties": very_str
             }
 
@@ -298,19 +299,16 @@ def product_add(request):
             product.save()
 
             # product image save
-            image_ids = []
-            product_images = request.FILES.getlist('product_image')
-            for image in product_images:
-                new_image = Image()
-                new_image.image.save(image.name, image)
-                new_image.save()
-                image_ids.append(new_image.id)
-
-            for image_id in image_ids:
-                productImage = ProductImage()
-                productImage.image_id = image_id
-                productImage.product_id = product.id
-                productImage.save()
+            if request.FILES.get('product_image0', False):
+                save_product_image(request.FILES.get('product_image0'), 1, product.id)
+            if request.FILES.get('product_image1', False):
+                save_product_image(request.FILES.get('product_image1'), 2, product.id)
+            if request.FILES.get('product_image2', False):
+                save_product_image(request.FILES.get('product_image2'), 3, product.id)
+            if request.FILES.get('product_image3', False):
+                save_product_image(request.FILES.get('product_image3'), 4, product.id)
+            if request.FILES.get('product_image4', False):
+                save_product_image(request.FILES.get('product_image4'), 5, product.id)
 
             # save product varieties
             varieties = json.loads(request.POST.get('varieties'))
@@ -427,33 +425,18 @@ def product_edit(request, product_id):
             product.modified = datetime.datetime.now()
             product.save()
 
-            # product old image delete
-            productImages = ProductImage.objects.filter(
-                product_id=product.id, is_hidden=False)
-            for productImage in productImages:
-                image = Image.objects.get(pk=productImage.image_id)
-                image.modified = datetime.datetime.now()
-                image.is_hidden = True
-                image.save()
-
-                productImage.is_hidden = True
-                productImage.modified = datetime.datetime.now()
-                productImage.save()
-
-            # product new image save
-            image_ids = []
-            product_images = request.FILES.getlist('product_image')
-            for image in product_images:
-                new_image = Image()
-                new_image.image.save(image.name, image)
-                new_image.save()
-                image_ids.append(new_image.id)
-
-            for image_id in image_ids:
-                productImage = ProductImage()
-                productImage.image_id = image_id
-                productImage.product_id = product.id
-                productImage.save()
+            # product image update
+            if request.FILES.get('product_image0', False):
+                update_product_image(request.FILES.get('product_image0'), 1, product.id)
+            if request.FILES.get('product_image1', False):
+                update_product_image(request.FILES.get('product_image1'), 2, product.id)
+            if request.FILES.get('product_image2', False):
+                update_product_image(request.FILES.get('product_image2'), 3, product.id)
+            if request.FILES.get('product_image3', False):
+                update_product_image(request.FILES.get('product_image3'), 4, product.id)
+            if request.FILES.get('product_image4', False):
+                update_product_image(request.FILES.get('product_image4'), 5, product.id)
+            
 
             # delete product old varieties
             productVarieties = ProductVariety.objects.filter(
@@ -479,7 +462,6 @@ def product_edit(request, product_id):
                     productVarietySelection.modified = datetime.datetime.now()
                     productVarietySelection.save()
 
-                productVariety.delete()
                 productVariety.is_hidden = True
                 productVariety.modified = datetime.datetime.now()
                 productVariety.save()
@@ -848,7 +830,6 @@ def add_update_product(request):
                 product.save()
 
                 # product image save
-                image_ids = []
                 if request.FILES.get('product_image0', False):
                     save_product_image(request.FILES.get('product_image0'), 1, product.id)
                 if request.FILES.get('product_image1', False):
