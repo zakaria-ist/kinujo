@@ -273,3 +273,9 @@ Date.prototype.toDateInputValue = (function() {
     local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
     return local.toJSON().slice(0,10);
 });
+
+function roundDecimal(value, precision) {
+    var multiplier = Math.pow(10, precision || 0);
+    var interm = (value * multiplier).toFixed(1);
+    return Math.round(interm) / multiplier;
+}

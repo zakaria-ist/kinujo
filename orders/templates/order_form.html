@@ -110,7 +110,7 @@
                 <div class="form-group row">
                     <label for="amount" class="col-lg-2 control-label">{% trans 'Amount' %}</label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field numeric_qty" type="text"
+                        <input class="form-control text-right trs-field numeric_qty" type="text"
                             name="amount"
                             id="amount"
                             placeholder=""
@@ -135,7 +135,7 @@
                 <div class="form-group row">
                     <label for="tax" class="col-lg-2 control-label">{% trans 'Gst' %}</label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field numeric_qty" type="text" readonly
+                        <input class="form-control text-right trs-field numeric_qty" type="text" readonly
                             name="tax"
                             id="tax"
                             placeholder=""
@@ -158,7 +158,7 @@
                 <div class="form-group row">
                     <label for="shipping_fee" class="col-lg-2 control-label">{% trans 'Shipping Fee' %}</label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field numeric_qty" type="text"
+                        <input class="form-control text-right trs-field numeric_qty" type="text"
                             name="shipping_fee"
                             id="shipping_fee"
                             placeholder=""
@@ -177,7 +177,7 @@
                 <div class="form-group row">
                     <label for="total_amount" class="col-lg-2 control-label">{% trans 'Total Amount' %}</label>
                     <div class="col-lg-4">
-                        <input class="form-control trs-field numeric_qty" type="text" readonly
+                        <input class="form-control text-right trs-field numeric_qty" type="text" readonly
                             name="total_amount"
                             id="total_amount"
                             placeholder=""
@@ -305,14 +305,36 @@
 
         // seller_id will be the login id
         var seller_id = 2;
+
         var product_list = [];
         var order_id = "{{order.id}}";
+        var tax_rate = "{{tax_rate}}";
+        if (tax_rate) {
+            tax_rate = parseFloat(tax_rate);
+        }
+
+        var order_product_list = []
+        {% for product in order_product_list %}
+            order_product_list.push(["{{ product.0 }}", "{{ product.1 }}"]);
+            //order_product_list.push(["{{ product.0 }}", "{{ product.1 }}", "{{ product.2 }}"]);
+        {% endfor %}
 
         $(document).ready(function() {
             // get all products of seller
             loadProducts();
+
             if (!order_id) {
                 $('#order_date').val(new Date().toDateInputValue())
+            } else {
+                let amount = parseInt("{{order.amount}}");
+                let tax = parseInt("{{order.tax}}");
+                let shipping_fee = parseInt("{{order.shipping_fee}}");
+                let total_amount = parseInt("{{order.total_amount}}");
+
+                $('#amount').val(comma_format(amount, 0) + ' ' + JPCUR);
+                $('#tax').val(comma_format(tax, 0) + ' ' + JPCUR);
+                $('#shipping_fee').val(comma_format(shipping_fee, 0) + ' ' + JPCUR);
+                $('#total_amount').val(comma_format(total_amount, 0) + ' ' + JPCUR);
             }
         })
 
@@ -411,8 +433,13 @@
         $('#amount').on('change', function() {
             let amount = pure_number($(this).val());
             if (amount > 0) {
-                // calculate tax
-                calculateTotalAmount();
+                if (tax_rate) {
+                    var tax = roundDecimal(amount * tax_rate, 0);
+                    $('#tax').val(comma_format(tax, 0) + ' ' + JPCUR);
+                    calculateTotalAmount();
+                } else {
+                    calculateTotalAmount();
+                }
             }
             $('#amount').val(comma_format(amount, 0) + ' ' + JPCUR);
         });
@@ -434,7 +461,6 @@
         }
 
         function calculateAmount() {
-            console.log('calculateAmount');
             let amount = 0;
             for (let i=0; i<$("[id*='product_line']").length; i++) {
                 if ($('#product_select_'+i).val() != '' && $('#quantity_'+i).val() != ''){
@@ -466,6 +492,11 @@
                     product_list = json.data;
                     console.log('product_list', product_list);
                     initiateProductSelect2('product_select_0', product_list);
+
+                    // if order edit
+                    if (order_id && order_product_list.length && product_list.length) {
+                        recreateProductBlock();
+                    }
                 },
                 error: function (e) {
                     $.confirm({
@@ -483,6 +514,7 @@
         }
 
         function initiateProductSelect2(id, list, exclude_list=[]) {
+            let line = 0;
             if ($('#' + id).data('select2')) {
                 $('#' + id).select2('destroy');
             }
@@ -502,19 +534,23 @@
 
             $('#' + id).on('change', function(event) {
                 let s_val = $(this).val();
-                let line = event.target.id.replace('product_select_', '').trim();
+                line = event.target.id.replace('product_select_', '').trim();
                 for(i in list){
                     if (s_val == list[i].jan_id) {
                         let image_path = list[i].image_path;
                         $('#product_image'+line).attr('src', image_path);
+                        $('#quantity_'+line).attr('max_order', list[i].stock);
                     }
                 }
-                $('#quantity_'+line).select();
+                //$('#quantity_'+line).select();
                 calculateAmount();
             });
 
             $('#' + id).on("select2:open", function( event ){
                 prefill_select2(event);
+            });
+            $('#' + id).on("select2:close", function( event ){
+                $('#quantity_'+line).select();
             });
         }
 
@@ -538,12 +574,25 @@
                     </div>
                 </div>`;
 
+        function recreateProductBlock() {
+            for (let i=1; i<order_product_list.length; i++) {
+                addProduct(0);
+            }
+            for (i in order_product_list) {
+                console.log(order_product_list[i][0]);
+                console.log(order_product_list[i][1]);
+                $('#product_image_'+i).attr("src" ,order_product_list[i][2]);
+                $('#quantity_'+i).val(order_product_list[i][1]);
+                $('#product_select_'+i).val(order_product_list[i][0]).trigger('change');
+            }
+        }
+        
         function addProduct(line) {
             new_line = Number(line) + 1;
             new_product_line = product_line;
             new_product_line = new_product_line.replaceAll('product_line', 'product_line_'+new_line).replaceAll('product_select', 'product_select_'+new_line);
             new_product_line = new_product_line.replaceAll('product_image', 'product_image_'+new_line).replaceAll('addProduct()', 'addProduct('+new_line+')');
-            new_product_line = new_product_line.replaceAll('deleteProduct()', 'deleteProduct('+new_line+')');
+            new_product_line = new_product_line.replaceAll('deleteProduct()', 'deleteProduct('+new_line+')').replaceAll('quantity', 'quantity_'+new_line);
 
             $('#product_line_'+line).after(new_product_line);
 
@@ -605,6 +654,20 @@
 
         $(document).on('change', "[id*='product_line'] input:text", function(event) {
             let line = event.target.id.replace('quanity_', '').trim();
+            let qty = parseInt($('#'+event.target.id).val());
+            let max_order = parseInt($('#'+event.target.id).attr('max_order'));
+            if (qty > max_order) {
+                $.confirm({
+                    title: 'Wrong Quanity!',
+                    content: 'Order quantity cannot be greater than stock quantity ' + max_order,
+                    buttons: {
+                        Ok: {
+                            btnClass: 'btn-success',
+                            action: function(){ $('#'+event.target.id).val(max_order); $('#'+event.target.id).focus(); }
+                            }
+                        }
+                });
+            }
             calculateAmount();
         });
 

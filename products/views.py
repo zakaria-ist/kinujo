@@ -189,16 +189,17 @@ def get_jan_products(productJancode):
                 pk=productJancode.horizontal_id)
             productVariety = ProductVariety.objects.get(
                 pk=productVarietySelection.product_variety_id)
-            product = Product.object.get(pk=productVariety.product_id)
+            product = Product.objects.get(pk=productVariety.product_id)
 
         if productJancode.vertical_id:
             productVarietySelection = ProductVarietySelection.objects.get(
                 pk=productJancode.vertical_id)
             productVariety = ProductVariety.objects.get(
                 pk=productVarietySelection.product_variety_id)
-            product = Product.object.get(pk=productVariety.product_id)
-    except:
-        pass
+            product = Product.objects.get(pk=productVariety.product_id)
+
+    except Exception as e:
+        print('get_jan_products', e)
 
     return product
 
@@ -226,8 +227,9 @@ def get_jan_varieties(productJancode):
                 "selection": str(productVarietySelection.selection),
                 "vertical_and_horizontal": str(productVariety.vertical_and_horizontal),
             })
-    except:
-        pass
+    except Exception as e:
+        print('get_jan_varieties', e)
+
     return varieties
 
 
@@ -262,9 +264,9 @@ def get_products_jancodes(product_id, type='id'):
                             if productJancode.jan_code not in jancodes:
                                 jancodes.append(productJancode.jan_code)
 
-    except:
-        pass
-    
+    except Exception as e:
+        print('get_products_jancodes', e)
+
     return jancodes
 
 
