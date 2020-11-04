@@ -376,14 +376,12 @@
         });
 
         $('#orderer').on('change', function() {
-            console.log('orderer_auth_type', orderer_auth_type);
             let orderer = $(this).val();
             $.each(orderer_list, function(indx, item) {
                 if (item[0] == orderer) {
                     orderer_auth_type = item[2];
                 }
             });
-            console.log('orderer_auth_type', orderer_auth_type);
         });
 
         function showAddressBook() {
@@ -735,12 +733,6 @@
                 $('#address1').removeClass('highlight-mandatory');
             } else {
                 $('#address1').addClass('highlight-mandatory');
-                is_valid = false;
-            }
-            if ( $('#address2').val() != '' ) {
-                $('#address2').removeClass('highlight-mandatory');
-            } else {
-                $('#address2').addClass('highlight-mandatory');
                 is_valid = false;
             }
             if ( $('#amount').val() != '' ) {

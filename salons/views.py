@@ -1,17 +1,11 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponsePermanentRedirect
-from django.urls import reverse
-from django.template import RequestContext
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
-from .models import Salon
-from django.conf import settings as s
 import datetime
 import json
-from django.contrib import messages
 from django.db.models import Q
+from django.http import HttpResponse, HttpResponsePermanentRedirect
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from .models import Salon
+
 
 
 @csrf_exempt
