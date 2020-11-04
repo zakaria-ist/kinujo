@@ -127,13 +127,6 @@
                         <label for="introducer" class="col-lg-2 control-label">{% trans 'Introducer' %}</label>
                         <div class="col-lg-4">
                             <select name="introducer" id="introducer" class="form-control trs-field sended">
-                                {% comment %} {% for pr in profile_list %}
-                                    {% if profile.introducer_id == pr.id %}
-                                        <option value="{{pr.id}}" selected>{{pr.nickname}}</option>
-                                    {% else %}
-                                        <option value="{{pr.id}}">{{pr.nickname}}</option>
-                                    {% endif %}
-                                {% endfor %} {% endcomment %}
                             </select>
                         </div>
                     </div>
@@ -197,9 +190,17 @@
                             {{ form.corporate_tel|default_if_none:"" }}
                         </div>
                     </div>
-                    <div class="form-group form-check text-left" style="margin-top: 30px;">
-                        <input type="checkbox" class="form-check-input checkbox-2x" name="active_checkbox" id="active_checkbox" checked>
-                        <label class="form-check-label" for="active">{% trans 'Active' %}</label>
+                    <div id="active_checkbox_div">
+                        <div class="form-group form-check text-left" style="margin-top: 30px;">
+                            <input type="checkbox" class="form-check-input checkbox-2x" name="active_checkbox" id="active_checkbox" checked>
+                            <label class="form-check-label" for="active">{% trans 'Active' %}</label>
+                        </div>
+                    </div>
+                    <div id="master_checkbox_div">
+                        <div class="form-group form-check text-left" style="margin-top: 30px;">
+                            <input type="checkbox" class="form-check-input checkbox-2x" name="master_checkbox" id="master_checkbox" readonly>
+                            <label class="form-check-label" for="active">{% trans 'Representative Account' %}</label>
+                        </div>
                     </div>
                 </div>
             </div>
