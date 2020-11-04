@@ -28,18 +28,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['*', '127.0.0.1', 'kinujo-develop.c2sg.asia',
                  'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com']
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'kinujo_develop_db',
-#         'USER': 'kinujo_develop',
-#         'PASSWORD': 'Pa55w0rd',
-#         'HOST': 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com',
-#         'PORT': '3306',
-#     }
-# }
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
