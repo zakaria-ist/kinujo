@@ -217,6 +217,14 @@ function int_format(number_str) {
     return parseInt(float_format(number_str));
 }
 
+$(document).on("input", ".jan-input", function() {
+    let temp_str = this.value;
+    if (temp_str.length > 13) {
+        temp_str = temp_str.slice(0, -1);
+    }
+    this.value = temp_str;
+});
+
 $(document).on("input", ".numeric_qty", function() {
     let temp_str = this.value.replace(/[^0-9\.]/g,'');
     if (temp_str.split(".").length-1 > 1) {
@@ -253,5 +261,21 @@ $(document).on("input", ".numeric_price", function() {
 });
 
 function pure_number(value){
-    return float_format(value.replace(',', '').replace(' ', '').replace(JPCUR, ''))
+    if (value !== '' || value !== undefined ) {
+        return float_format(value.replace(',', '').replace(' ', '').replace(JPCUR, ''));
+    } else {
+        return 0;
+    }
+}
+
+Date.prototype.toDateInputValue = (function() {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0,10);
+});
+
+function roundDecimal(value, precision) {
+    var multiplier = Math.pow(10, precision || 0);
+    var interm = (value * multiplier).toFixed(1);
+    return Math.round(interm) / multiplier;
 }

@@ -148,7 +148,7 @@ def SalonList__asJson(request):
     records_total = salon_list.count()
 
     if search:  # Filter data base on search
-        salon_list = salon_list.filter(Q(name__icontains=search)|Q(pic__name__icontains=search)|Q(pic_tel__icontains=search)).order_by('-name')
+        salon_list = salon_list.filter(Q(name__icontains=search)|Q(pic_name__icontains=search)|Q(pic_tel__icontains=search)).order_by('-name')
 
     # All data
     records_filtered = salon_list.count()

@@ -92,38 +92,6 @@ function deleteProductConfirm(id) {
     });
 }
 
-function setEditFormInputs(json) {
-    $('#name').val(json.name);
-    $('#brand_name').val(json.brand_name);
-    $('#description').val(json.description);
-    $('#pr').val(json.pr);
-    $('#url_str').val(json.url_str);
-    $('#store_price').val(comma_format(json.store_price) + ' ' + JPCUR);
-    $('#price').val(comma_format(json.price) + ' ' + JPCUR);
-    $('#shipping_fee').val(comma_format(json.shipping_fee) + ' ' + JPCUR);
-    $('#category').val(json.category).trigger('change');
-    $('#opened_date').val(json.opened_date).trigger('change');
-    $("input[name=target]").val([json.target]);
-    $("input[name=status]").val([json.is_opened]);
-    $("input[name=is_used]").val([json.is_used]);
-    $("input[name=variety]").val([json.variety]).trigger('change');
-    
-    for(let i=0; i<json.images.length; i++) {
-        $('#img_image'+i).attr("src", json.images[i]);
-    }
-
-    if (json.variety == '0') {
-        let vrty = json.varieties[0];
-        $('#jan_code').val(vrty.jan_code);
-        $('#stock').val(vrty.stock);
-        deleteAny();
-    } else if (json.variety == '1') {
-        prepareVarientOneTable(json);
-    } else if (json.variety == '2') {
-        prepareVarientTwoTable(json);
-    }
-}
-
 function prepareVarientTwoTable(json){
     let variety2 = json.varieties;
     let v_names2 = [];
@@ -300,40 +268,40 @@ function prepareVarientTwoTable(json){
 
     varietyTableTwo1.style.height = '250px';
 
-    document.getElementById('firstOfTwoItemGroup').innerHTML = `
-                <div class="form-group">
+    // document.getElementById('firstOfTwoItemGroup').innerHTML = `
+    //             <div class="form-group">
                 
-                <p style="width: 20px;" class="m-2"> </p>
-                <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
-                <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+    //             <p style="width: 20px;" class="m-2"> </p>
+    //             <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
+    //             <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                 
-                <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                </div>
-                <div class="form-group">
-                <p style="width: 20px;" class="m-2"> </p>
-                <p class="m-2 first-of-two-variant-counter" style="width: 20px;">2</p>
-                <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+    //             <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; deleteOptionsFirstOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+    //             </div>
+    //             <div class="form-group">
+    //             <p style="width: 20px;" class="m-2"> </p>
+    //             <p class="m-2 first-of-two-variant-counter" style="width: 20px;">2</p>
+    //             <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                 
-                <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                </div>
-            `;
-    document.getElementById('lastOfTwoItemGroup').innerHTML = `
-                <div class="form-group">
-                    <p style="width: 20px;" class="m-2"> </p>
-                    <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
-                    <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+    //             <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; deleteOptionsFirstOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+    //             </div>
+    //         `;
+    // document.getElementById('lastOfTwoItemGroup').innerHTML = `
+    //             <div class="form-group">
+    //                 <p style="width: 20px;" class="m-2"> </p>
+    //                 <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
+    //                 <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                </div>
+    //                 <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+    //             </div>
                 
-                <div class="form-group">
-                    <p style="width: 20px;" class="m-2"> </p>
-                    <p class="m-2 last-of-two-variant-counter" style="width: 20px;">2</p>
-                    <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+    //             <div class="form-group">
+    //                 <p style="width: 20px;" class="m-2"> </p>
+    //                 <p class="m-2 last-of-two-variant-counter" style="width: 20px;">2</p>
+    //                 <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                </div>
-                `;
+    //                 <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+    //             </div>
+    //             `;
 
     document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="two-items-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant" onclick="changeModalTwo();">+ Items / Options</button></div>`;
     //change add item button
@@ -408,29 +376,29 @@ function prepareVarientOneTable(json){
     document.getElementById("scrollable").style.overflow= 'scroll';
 
     //reset modal form
-    document.getElementById('oneItemGroup').innerHTML = `
-                <div class="form-group">
-                  <p style="width: 20px;" class="m-2"> </p>
-                  <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
-                  <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+    // document.getElementById('oneItemGroup').innerHTML = `
+    //             <div class="form-group">
+    //               <p style="width: 20px;" class="m-2"> </p>
+    //               <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
+    //               <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
                   
-                  <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+    //               <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
                   
-                  <input value="" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
-                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                </div>
-                <div class="form-group">
-                  <p style="width: 20px;" class="m-2"> </p>
-                  <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
-                  <input value=""  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+    //               <input value="" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+    //               <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+    //             </div>
+    //             <div class="form-group">
+    //               <p style="width: 20px;" class="m-2"> </p>
+    //               <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
+    //               <input value=""  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
                   
-                  <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+    //               <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
                   
-                  <input value=""  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
-                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                </div>
+    //               <input value=""  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+    //               <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+    //             </div>
 
-              `;
+    //           `;
 
     //change add item button
     document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ Item / Option</button></div>`;
@@ -438,6 +406,7 @@ function prepareVarientOneTable(json){
   }
 
 var g_product_id = '';
+
 function showProductForm(product_id='') {
     $('#item_tab').html('');
     $.get("/profiles/templates/product_form/", function(data){
@@ -472,8 +441,53 @@ function showProductForm(product_id='') {
             $('#published').click();
             $('#new').click();
             $('#all-users').click();
+            $('#opened_date').val(new Date().toDateInputValue());
         }
     });
+}
+
+function setEditFormInputs(json) {
+    $('#name').val(json.name);
+    $('#brand_name').val(json.brand_name);
+    $('#description').val(json.description);
+    $('#pr').val(json.pr);
+    $('#url_str').val(json.url_str);
+    $('#store_price').val(comma_format(json.store_price, 0) + ' ' + JPCUR);
+    $('#price').val(comma_format(json.price, 0) + ' ' + JPCUR);
+    $('#shipping_fee').val(comma_format(json.shipping_fee, 0) + ' ' + JPCUR);
+    $('#category').val(json.category).trigger('change');
+    $('#opened_date').val(json.opened_date).trigger('change');
+    $("input[name=target]").val([json.target]);
+    $("input[name=status]").val([json.is_opened]);
+    $("input[name=is_used]").val([json.is_used]);
+    $("input[name=variety]").val([json.variety]).trigger('change');
+    
+    for(let i=0; i<json.images.length; i++) {
+        if (json.images[i].image_no == '1') {
+            $('#img_image0').attr("src", json.images[i].url);
+        } else if (json.images[i].image_no == '2') {
+            $('#img_image1').attr("src", json.images[i].url);
+        } else if (json.images[i].image_no == '3') {
+            $('#img_image2').attr("src", json.images[i].url);
+        } else if (json.images[i].image_no == '4') {
+            $('#img_image3').attr("src", json.images[i].url);
+        } else if (json.images[i].image_no == '5') {
+            $('#img_image4').attr("src", json.images[i].url);
+        }
+    }
+
+    if (json.variety == '0') {
+        let vrty = json.varieties[0];
+        $('#jan_code').val(vrty.jan_code);
+        $('#stock').val(vrty.stock);
+        deleteAny();
+    } else if (json.variety == '1') {
+        document.getElementById("none-div").style.display = "none";
+        prepareVarientOneTable(json);
+    } else if (json.variety == '2') {
+        document.getElementById("none-div").style.display = "none";
+        prepareVarientTwoTable(json);
+    }
 }
 
 function saveProductInfo() {

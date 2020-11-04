@@ -328,12 +328,14 @@
         }
 
         $('#id_is_seller').on('change', function() {
-            if ($('#id_is_seller').val() == '0') {
-                is_seller = false;
-                $('#item_tab_li').css('display', 'none');
-            } else {
-                is_seller = true;
-                $('#item_tab_li').removeAttr('style');
+            if (profile_id) {
+                if ($('#id_is_seller').val() == '0') {
+                    is_seller = false;
+                    $('#item_tab_li').css('display', 'none');
+                } else {
+                    is_seller = true;
+                    $('#item_tab_li').removeAttr('style');
+                }
             }
         })
 
@@ -395,6 +397,8 @@
                     if (is_seller){
                         $('#item_tab_li').removeAttr('style');
                     }
+                } else {
+                    $('#id_is_seller').val('1').trigger('change');
                 }
             }
             else if ($(this).val() == '2') { //special
@@ -411,6 +415,8 @@
                         $('#item_tab_li').removeAttr('style');
                     }
                     $('#account_info_tab_li').removeAttr('style');
+                } else {
+                    $('#id_is_seller').val('1').trigger('change');
                 }
             }
             else if ($(this).val() == '3') { //ambassador
@@ -428,6 +434,8 @@
                     }
                     $('#client_tab_li').removeAttr('style');
                     $('#account_info_tab_li').removeAttr('style');
+                } else {
+                    $('#id_is_seller').val('1').trigger('change');
                 }
             }
             else if ($(this).val() == '4') { //store
@@ -447,6 +455,8 @@
                     $('#account_info_tab_li').removeAttr('style');
                     $('#salon_info_tab_li').removeAttr('style');
                     $('#shipping_info_tab_li').removeAttr('style');
+                } else {
+                    $('#id_is_seller').val('0').trigger('change');
                 }
             }
             else if ($(this).val() == '5') { //general
@@ -465,6 +475,8 @@
                     $('#client_tab_li').removeAttr('style');
                     $('#account_info_tab_li').removeAttr('style');
                     $('#shipping_info_tab_li').removeAttr('style');
+                } else {
+                    $('#id_is_seller').val('0').trigger('change');
                 }
             }
         })

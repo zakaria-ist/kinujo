@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^order_add/$', views.order_add, name='order_add'),
     url(r'^order_edit/(?P<order_id>.*)/$', views.order_edit, name='order_edit'),
     url(r'^order_delete/(?P<order_id>.*)/$', views.order_delete, name='order_delete'),
+    url(r'^check_for_duplicate/(?P<type>.*)/(?P<value>.*)/$', views.check_for_duplicate, name='order_check_for_duplicate'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
