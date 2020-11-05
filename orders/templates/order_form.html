@@ -374,6 +374,11 @@
                 $('#prefecture').val($('#prefecture').val()).trigger('change');
             }, 800);
         });
+        $('#zip1').on('keyup', function() {
+            setTimeout(() => {
+                $('#prefecture').val($('#prefecture').val()).trigger('change');
+            }, 100);
+        });
 
         $('#orderer').on('change', function() {
             let orderer = $(this).val();

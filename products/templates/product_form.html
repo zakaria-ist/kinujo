@@ -1027,6 +1027,7 @@
       function keepTwo(){
         two.click();
         $('#confirm-modal').modal('hide');
+        document.getElementById("none-div").style.display = "none";
       }
       
       function toggleOne() {
@@ -1054,6 +1055,7 @@
       function keepOne(){
         one.click();
         $('#confirm-two').modal('hide');
+        document.getElementById("none-div").style.display = "none";
       }
 
       function toggleTwo(){
@@ -1081,6 +1083,7 @@
 
         varTableTwo.style.height = '0px';
         $('#confirm-none').modal('hide');
+        document.getElementById("none-div").style.display = "block";
 
       }
 
@@ -1092,6 +1095,7 @@
           two.click();
         }
         $('#confirm-none').modal('hide');
+        document.getElementById("none-div").style.display = "none";
       }
 
       none.addEventListener('click', (event)=> {

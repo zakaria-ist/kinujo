@@ -105,4 +105,9 @@
             $('#prefecture').val($('#prefecture').val()).trigger('change');
         }, 800);
     });
+    $('#zip_code').on('keyup', function() {
+        setTimeout(() => {
+            $('#prefecture').val($('#prefecture').val()).trigger('change');
+        }, 100);
+    });
 </script>
