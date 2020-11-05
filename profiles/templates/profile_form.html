@@ -190,6 +190,14 @@
         var profile_introducer = "{{profile.introducer_id}}"
         var is_seller = "{{profile.is_seller}}";
         var is_approved = "{{profile.is_approved}}";
+        var is_master = "{{profile.is_master}}";
+        if (is_master == 'True') {
+            is_master = true;
+            $('#master_checkbox').prop('checked', true);
+        } else {
+            is_master = false;
+            $('#master_checkbox').prop('checked', false);
+        }
 
         if (is_seller == 'True') {
             is_seller = true;
@@ -392,6 +400,8 @@
                 $('#type_div').css('display', 'none');
                 $('#type_label').css('display', 'none');
                 $('#corporate_block').removeAttr('style');
+                $('#master_checkbox_div').show();
+                $('#active_checkbox_div').hide();
 
                 if (profile_id) {
                     if (is_seller){
@@ -409,6 +419,8 @@
                 $('#type_div').css('display', 'none');
                 $('#type_label').css('display', 'none');
                 $('#corporate_block').removeAttr('style');
+                $('#master_checkbox_div').hide();
+                $('#active_checkbox_div').show();
                 
                 if (profile_id) {
                     if (is_seller){
@@ -427,6 +439,8 @@
                 $('#type_div').css('display', 'none');
                 $('#type_label').css('display', 'none');
                 $('#corporate_block').removeAttr('style');
+                $('#master_checkbox_div').hide();
+                $('#active_checkbox_div').show();
 
                 if (profile_id) {
                     if (is_seller){
@@ -446,6 +460,8 @@
                 $('#introducer').attr('required', true);
                 $('#approval_div').removeAttr('style');
                 $('#corporate_block').removeAttr('style');
+                $('#master_checkbox_div').hide();
+                $('#active_checkbox_div').show();
 
                 if (profile_id) {
                     if (is_seller){
@@ -467,6 +483,8 @@
                 $('#introducer').attr('required', true);
                 $('#approval_div').css('display', 'none');
                 $('#corporate_block').css('display', 'none');
+                $('#master_checkbox_div').hide();
+                $('#active_checkbox_div').show();
 
                 if (profile_id) {
                     if (is_seller){

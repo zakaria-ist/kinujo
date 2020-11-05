@@ -1,3 +1,8 @@
+import datetime
+import json
+from django.conf import settings as s
+from django.contrib import messages
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponsePermanentRedirect
 from django.contrib import messages
@@ -6,11 +11,6 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Product, ProductImage, ProductCategory, ProductJancode, ProductVariety, ProductVarietySelection
 from images.models import Image
 from profiles.models import Profile
-from django.conf import settings as s
-import datetime
-import json
-from django.contrib import messages
-from django.db.models import Q
 
 
 # @login_required

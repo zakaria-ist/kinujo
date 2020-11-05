@@ -102,5 +102,10 @@
             $('#salon_prefecture').val($('#salon_prefecture').val()).trigger('change');
         }, 800);
     });
+    $('#salon_zip_code').on('keyup', function() {
+        setTimeout(() => {
+            $('#salon_prefecture').val($('#salon_prefecture').val()).trigger('change');
+        }, 100);
+    });
 
 </script>
