@@ -21,7 +21,7 @@ from utilities.common import round_number
 
 
 
-# @login_required
+@login_required
 def order_list(request):
     """
     Method to redirect to order list page.
@@ -29,7 +29,8 @@ def order_list(request):
 
     return render(request, 'order_list.html')
 
-# @login_required
+
+@login_required
 def OrderList__asJson(request):
     """
     Method to get order list as JSON.
@@ -42,6 +43,8 @@ def OrderList__asJson(request):
 
     filter_str = eval(request.GET.get('filter_str'))
     seller_id = request.GET.get('seller_id')
+    if not seller_id:
+        seller_id = request.session['login_profile_id']
 
     order_list = Order.objects.filter(is_hidden=False, seller_id=seller_id).order_by('authority_id')
     if len(filter_str):
@@ -296,7 +299,7 @@ def update_monthly_commission_data(affected_user_list, order_date):
         print('update_monthly_commission_data', e)
 
 
-# @login_required
+@login_required
 def order_add(request):
     """
     Method to add new order.
@@ -469,13 +472,15 @@ def order_add(request):
                 authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']])\
         .values_list('id', 'nickname', 'authority_id')) # need to exclude login user
     prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
+    seller_id = request.session['login_profile_id']
     return render(request, 'order_form.html', {'prefecture_list': prefecture_list,
                                                 'orderer_list': orderer_list,
                                                 'order_product_list': [],
                                                 'status_list': ORDER_STATUS,
-                                                'tax_rate': tax_rate})
+                                                'tax_rate': tax_rate,
+                                                'seller_id': seller_id})
 
-# @login_required
+@login_required
 def order_edit(request, order_id):
     """
     Method to edit a order.
@@ -678,16 +683,17 @@ def order_edit(request, order_id):
                 authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']])\
         .values_list('id', 'nickname', 'authority_id')) # need to exclude login user
     prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
-    
+    seller_id = request.session['login_profile_id']
     return render(request, 'order_form.html', {'prefecture_list': prefecture_list,
                                                 'order': order,
                                                 'orderer_list': orderer_list,
                                                 'order_product_list': order_product_list,
                                                 'status_list': ORDER_STATUS,
-                                                'tax_rate': tax_rate})
+                                                'tax_rate': tax_rate,
+                                                'seller_id': seller_id})
 
-# @login_required
-@csrf_exempt
+@login_required
+# @csrf_exempt
 def order_delete(request, order_id):
     """
     Method to delete a order.

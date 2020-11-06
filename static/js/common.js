@@ -81,7 +81,7 @@ var Script = function () {
             window.sessionStorage.setItem('is_sidebar', '0');
         } else {
             $('#main-content').css({
-                'margin-left': '310px'
+                'margin-left': '250px'
             });
             try{
                 if ( $.fn.DataTable.isDataTable( '.table' ) ) {

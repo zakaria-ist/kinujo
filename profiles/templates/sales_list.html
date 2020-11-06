@@ -78,9 +78,17 @@
     <script src="{% static "js/profile/sales.js" %}"></script>
     <script src="{% static "js/profile/commission.js" %}"></script>
     <script type="text/javascript">
+
+    var selected_year;
+    var selected_month;
+
+    var target_tab = '';
+
     $(document).ready(function () {
         moment.locale('ja');
         $('#sale_changable_date').html(moment().format('YYYY年MMM'));
+        selected_year = moment().format('YYYY'));
+        selected_month = moment().format('MM'));
     })
 
     function changeDate(to) {
@@ -88,11 +96,78 @@
             var date = $('#sale_changable_date').text();
             var momnt = moment(date, "YYYY年MMM").add(1, 'months').format("YYYY年MMM");
             $('#sale_changable_date').html(momnt);
+            selected_year = momnt.format('YYYY'));
+            selected_month = momnt.format('MM'));
         } else {
             var date = $('#sale_changable_date').text();
             var momnt = moment(date, "YYYY年MMM").subtract(1, 'months').format("YYYY年MMM");
             $('#sale_changable_date').html(momnt);
+            selected_year = momnt.format('YYYY'));
+            selected_month = momnt.format('MM'));
         }
+
+        if ((target_tab == '#sales_tab')) {
+            loadSalesData();
+        } else if ((target_tab == '#commission_tab')) {
+            loadCommissionData();
+        }
+    }
+
+    $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+        target_tab = $(e.target).attr("href");
+        if ((target_tab == '#sales_tab')) {
+            loadSalesData();
+        } else if ((target_tab == '#commission_tab')) {
+            loadCommissionData();
+        }
+    });
+
+    function loadSalesData() {
+        $('#sales-table').DataTable().destroy();
+        $('#sales-table').DataTable({
+            "order": [[2, "asc"]],
+            "serverSide": true,
+            "scrollX": true,
+            stateSave: true,
+            "ajax": {
+                "url": "{% url 'UserSalesList__asJson' %}",
+                "data": {
+                    "year": selected_year,
+                    "month": selected_month
+                }
+            },
+            "columns": [
+                {"data": "no", "orderable": false},
+                {"data": "name"},
+                {"data": "jan_code", "orderable": false},
+                {"data": "stock", "orderable": false},
+                {"data": "opened_date", "orderable": false},
+            ]
+        });
+    }
+
+    function loadCommissionData() {
+        $('#commssion-table').DataTable().destroy();
+        $('#commssion-table').DataTable({
+            "order": [[2, "asc"]],
+            "serverSide": true,
+            "scrollX": true,
+            stateSave: true,
+            "ajax": {
+                "url": "{% url 'UserCommissionList__asJson' %}",
+                "data": {
+                    "year": selected_year,
+                    "month": selected_month
+                }
+            },
+            "columns": [
+                {"data": "no", "orderable": false},
+                {"data": "name"},
+                {"data": "jan_code", "orderable": false},
+                {"data": "stock", "orderable": false},
+                {"data": "opened_date", "orderable": false},
+            ]
+        });
     }
 
     $(document).click(function (event) {

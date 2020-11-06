@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponsePermanentRedirect
+from django.utils import translation
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -13,15 +14,13 @@ from images.models import Image
 from profiles.models import Profile
 
 
-# @login_required
+@login_required
 def product_list(request):
     """
     Method to redirect to product list page.
     """
     try:
-        user_id = request.user.id
-        profile = Profile.objects.filter(is_hidden=False, user_id=user_id).last()
-        profile_id = profile.id
+        profile_id = request.session['login_profile_id']
     except Exception as e:
         print(e)
         profile_id = ''
@@ -29,7 +28,7 @@ def product_list(request):
     return render(request, 'product_list.html', {'profile_id': profile_id})
 
 
-# @login_required
+@login_required
 def ProductList__asJson(request):
     """
     Method to get product list as JSON.
@@ -41,6 +40,8 @@ def ProductList__asJson(request):
     search = request.GET['search[value]']
 
     profile_id = request.GET.get('profile_id')
+    if not profile_id:
+        profile_id = request.session['login_profile_id']
     product_list = Product.objects.filter(is_hidden=False, user_id=profile_id).order_by('name')
     filter_array = eval(request.GET.get('filter_str'))
     if len(filter_array):
@@ -91,6 +92,12 @@ def ProductList__asJson(request):
                     very_str += item['name'] + ' : ' + item['selection'] + ','
             if len(very_str):
                 very_str = very_str[:-1]
+            else:
+                language = translation.get_language()
+                if language == 'ja':
+                    very_str = '無し'
+                else:
+                    very_str = 'None'
             i = i + 1
             data = {
                 "no": str(i),
@@ -112,12 +119,15 @@ def ProductList__asJson(request):
     json_content = json.dumps(content, ensure_ascii=False)
     return HttpResponse(json_content, content_type='application/json')
 
+
 def SellerProductList__asJson(request):
     """
     Method to get seller product list as JSON.
     """
 
     profile_id = request.GET.get('seller_id')
+    if not profile_id:
+        profile_id = request.session['login_profile_id']
     product_list = Product.objects.filter(is_hidden=False, user_id=profile_id, is_opened=True).order_by('name')
 
     array = []
@@ -271,7 +281,7 @@ def get_products_jancodes(product_id, type='id'):
     return jancodes
 
 
-# @login_required
+@login_required
 def product_add(request):
     """
     Method to add new product.
@@ -398,7 +408,7 @@ def product_add(request):
     return render(request, 'product_form.html', {'category_list': category_list, 'media_url': s.MEDIA_URL})
 
 
-# @login_required
+@login_required
 def product_edit(request, product_id):
     """
     Method to edit a product.
@@ -650,7 +660,7 @@ def hide_product(product_id):
 
     return True
 
-# @login_required
+@login_required
 @csrf_exempt
 def product_delete(request, product_id):
     """

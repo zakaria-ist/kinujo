@@ -85,6 +85,9 @@ def login_master(request):
                 profile = Profile.objects.filter(is_hidden=False, user_id=user.id).first()
                 if profile and profile.authority_id == AUTHORITY_TYPE['MASTER']:
                     login(request, user)
+                    request.session['login_profile_id'] = profile.id
+                    request.session['login_authority_id'] = profile.authority_id
+                    request.session['login_type'] = 'MASTER'
                     return HttpResponsePermanentRedirect(reverse('home_load'))
                 else:
                     state = "User is not a Master Account"
@@ -112,8 +115,12 @@ def login_sales(request):
             password = request.POST.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                if user.is_seller:
+                profile = Profile.objects.filter(is_hidden=False, user_id=user.id).first()
+                if profile.is_seller:
                     login(request, user)
+                    request.session['login_profile_id'] = profile.id
+                    request.session['login_authority_id'] = profile.authority_id
+                    request.session['login_type'] = 'SELLER'
                     return redirect('listing_home_load')
                 else:
                     state = "User is not Seller Account"

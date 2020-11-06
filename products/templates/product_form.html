@@ -4,6 +4,7 @@
     {% load static %}
     {% load i18n %}
     <link href="{% static "css/select2/select2.css" %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.css' %}"/>
     <style>
         .images{
           width: 100%;
@@ -726,7 +727,7 @@
 <script src="{% static "js/select2/select2.js" %}"></script>
 <script src="{% static "js/product/product.js" %}"></script>
 <script type="text/javascript">
-  $('#category').select2({}); 
+  //$('#category').select2({}); 
     //starts adding more image button
   try{
     let preservedDatas = {};
@@ -2047,6 +2048,47 @@
       $('#twoItemsVariant').modal('hide');
 
     }
+
+    var product_id = "{{product.id}}";
+    var category_list = []
+    {% for item in category_list %}
+        category_list.push(["{{ item.0 }}", "{{ item.1 }}"]);
+    {% endfor %}
+
+    $(document).ready(function(){
+        deleteAny();
+        console.log(category_list);
+        var options = '';
+        $.each(category_list, function(i, v) {
+            options += "<option value='"+v[0]+"'>"+v[1]+"</option>";
+        });
+        $('#category').html(options);
+        if (!$('#category').data('select2')) {
+            $('#category').select2({});
+        }
+        $('#category').on("select2:open", function( event ){
+            prefill_select2(event);
+        });
+        if (product_id) {
+            $.ajax({
+                method: "POST",
+                url: '/products/get_product_info/',
+                dataType: 'JSON',
+                data: {
+                    'product_id': product_id,
+                },
+                success: function (json) {
+                    setEditFormInputs(json);
+                }
+            });
+        } else {
+            $('#none').click();
+            $('#published').click();
+            $('#new').click();
+            $('#all-users').click();
+            $('#opened_date').val(new Date().toDateInputValue());
+        }
+    });
 
     $('#price').on('change', function() {
       var general_price = parseInt($(this).val());

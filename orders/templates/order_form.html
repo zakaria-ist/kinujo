@@ -305,7 +305,7 @@
         });
 
         // seller_id will be the login id
-        var seller_id = 2;
+        var seller_id = "{{seller_id}}";
         var orderer_auth_type = '5';
 
         var product_list = [];
@@ -343,6 +343,8 @@
                 $('#shipping_fee').val(comma_format(shipping_fee, 0) + ' ' + JPCUR);
                 $('#total_amount').val(comma_format(total_amount, 0) + ' ' + JPCUR);
             }
+
+            $('#orderer').trigger('change');
         })
 
         $('#order_status').select2({});
