@@ -200,13 +200,18 @@
       <div class="table-section white-bg">
         <form class="form-horizontal"  id="product_form"
           {% if product.id %}
-              action="{% url 'product_edit' order.id %}"
+              action="{% url 'product_edit' product.id %}"
           {% else %}
               action="{% url 'product_add' %}"
           {% endif %}
           role="form" method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <input class="form-control" type="hidden" name="varieties" id="varieties">
+          <input class="form-control" type="hidden" name="old_varieties" id="old_varieties">
+          <input class="form-control" type="hidden" name="is_draft" id="is_draft" value="0">
+          <input class="form-control" type="hidden" name="is_used" id="is_used">
+          <input class="form-control" type="hidden" name="is_opened" id="is_opened">
+          <input class="form-control" type="hidden" name="variety" id="is_draft">
           <div class="row">
 
             <!--Starts left side inputs-->
@@ -582,7 +587,7 @@
                   
                   <input value="" type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
                   
-                  <input value="" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                  <input value="" type="number" class="form-control one-item-stock  text-right" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
                 <div class="form-group">
@@ -592,7 +597,7 @@
                   
                   <input value=""  type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
                   
-                  <input value=""  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                  <input value=""  type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
               </div>
@@ -1166,7 +1171,7 @@
                     
                     <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
                     
-                    <input type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                    <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                     </div>`;
       
@@ -1412,7 +1417,7 @@
               </div>
               <div class="form-group col-md-5 m-2 pl-4">
                 <label for="stock-one-modal">Stock Quantity: ${oldStock}</label>
-                <input type="text" value="" class="form-control" id="stock-one-modal" placeholder="Enter Stock"> 
+                <input type="text" value="" class="form-control text-right" id="stock-one-modal" placeholder="Enter Stock"> 
               </div>
             </div>
 
@@ -1528,7 +1533,10 @@
         let newTableContent = document.createElement('div'); 
         let choicesValue = oneItemVariantChoices[i].value;
         let janValue = oneItemVariantJan[i].value;
-        let stockValue = oneItemVariantStock[i].value;
+        let stockValue = 0;
+        if (oneItemVariantStock[i].value){
+          stockValue = oneItemVariantStock[i].value;
+        }
         newTableChoices.innerHTML = `<div class="variant-title variant-col" id="cell-name-value-${i}">${choicesValue}</div>`;
         newTableContent.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">Stock:${stockValue}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
         

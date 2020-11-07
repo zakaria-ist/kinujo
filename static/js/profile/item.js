@@ -1,3 +1,4 @@
+var last_varieties = [];
 function loadItemTableData() {
     $('#item-table').DataTable().destroy();
     $('#item-table').DataTable({
@@ -101,6 +102,12 @@ function prepareVarientTwoTable(json){
     let verticals = [];
     let v_selections2 = [];
     for (let i=0; i<variety2.length; i++) {
+        last_varieties.push({
+            "id": variety2[i].id,
+            "jan_code": variety2[i].jan_code,
+            "hor": variety2[i].varieties[0].selection,
+            "ver": variety2[i].varieties[1].selection,
+        });
         v_jancodes2.push(variety2[i].jan_code);
         v_stocks2.push(variety2[i].stock);
 
@@ -315,7 +322,9 @@ function prepareVarientOneTable(json){
     let v_jancodes = [];
     let v_stocks = [];
     let v_selections = [];
+    let v_ids = [];
     for (let i=0; i<variety1.length; i++) {
+        v_ids.push(variety1[i].id);
         v_jancodes.push(variety1[i].jan_code);
         v_stocks.push(variety1[i].stock);
         v_selections.push(variety1[i].varieties[0].selection);
@@ -359,6 +368,12 @@ function prepareVarientOneTable(json){
       let choicesValue = v_selections[i];
       let janValue = v_jancodes[i];
       let stockValue = v_stocks[i];
+      last_varieties.push({
+        "id": v_ids[i],
+        "jan_code": v_jancodes[i],
+        "hor": v_selections[i],
+        "ver": '',
+      });
       newTableChoices.innerHTML = `<div class="variant-title variant-col" id="cell-name-value-${i}">${choicesValue}</div>`;
       newTableContent.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">Stock:${stockValue}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
       
@@ -480,6 +495,12 @@ function setEditFormInputs(json) {
         let vrty = json.varieties[0];
         $('#jan_code').val(vrty.jan_code);
         $('#stock').val(vrty.stock);
+        last_varieties.push({
+            "id": vrty.id,
+            "jan_code": vrty.jan_code,
+            "hor": '',
+            "ver": '',
+        });
         deleteAny();
     } else if (json.variety == '1') {
         document.getElementById("none-div").style.display = "none";
@@ -488,6 +509,8 @@ function setEditFormInputs(json) {
         document.getElementById("none-div").style.display = "none";
         prepareVarientTwoTable(json);
     }
+
+    console.log('last_varieties', last_varieties);
 }
 
 function saveProductInfo() {
@@ -518,7 +541,7 @@ function saveProductInfo() {
                     {
                         "name": name,
                         "selection": variantTableTitle[i+1].innerHTML,
-                        "vertical_and_horizontal": "1"
+                        "vertical_and_horizontal": "0"
                     }
                 ]
                 })
@@ -595,6 +618,7 @@ function saveProductInfo() {
         data.append("is_draft", '0');
         data.append("variety", variety);
         data.append("varieties", JSON.stringify(varieties));
+        data.append("old_varieties", JSON.stringify(last_varieties));
 
         // let imageLength = document.getElementsByClassName('images').length;
         // for(let i = 0; i < imageLength; i++){
