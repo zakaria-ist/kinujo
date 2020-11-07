@@ -10,5 +10,9 @@ urlpatterns = [
     url(r'^order_edit/(?P<order_id>.*)/$', views.order_edit, name='order_edit'),
     url(r'^order_delete/(?P<order_id>.*)/$', views.order_delete, name='order_delete'),
     url(r'^check_for_duplicate/(?P<type>.*)/(?P<value>.*)/$', views.check_for_duplicate, name='order_check_for_duplicate'),
+
+    # for commission & sales data
+    url(r'^sales_list_json/$', views.UserSalesList__asJson, name='UserSalesList__asJson'),
+    url(r'^commission_list_json/$', views.UserCommissionList__asJson, name='UserCommissionList__asJson'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

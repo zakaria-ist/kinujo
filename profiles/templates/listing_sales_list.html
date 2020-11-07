@@ -34,11 +34,11 @@
                                 </div>
                                 <div class="col-lg-8 row" id="sales_summary">
                                     <div class="col-lg-6">
-                                        <p>Total sales: 1,650,000</p>
+                                        <p>{% trans 'Total sales:' %} <span id="total-span"></span></p>
                                     </div>
                                     <div class="col-lg-6">
-                                        <p>Selling sales: 650,000</p>
-                                        <p>Commission: 1,000,000</p>
+                                        <p>{% trans 'Commission:' %} <span id="commission-span"></p>
+                                        <p>{% trans 'Selling sales:' %} <span id="sales-span"></p>
                                     </div>
                                 </div>
                             </div>
@@ -76,13 +76,15 @@
     var selected_year;
     var selected_month;
 
-    var target_tab = '';
+    var target_tab = '#item_sale_tab';
 
     $(document).ready(function () {
         moment.locale('ja');
         $('#sale_changable_date').html(moment().format('YYYY年MMM'));
-        selected_year = moment().format('YYYY'));
-        selected_month = moment().format('MM'));
+        selected_year = moment().format('YYYY');
+        selected_month = moment().format('MM');
+
+        loadSalesData();
     })
 
     function changeDate(to) {
@@ -90,14 +92,14 @@
             var date = $('#sale_changable_date').text();
             var momnt = moment(date, "YYYY年MMM").add(1, 'months').format("YYYY年MMM");
             $('#sale_changable_date').html(momnt);
-            selected_year = momnt.format('YYYY'));
-            selected_month = momnt.format('MM'));
+            selected_year = moment(date, "YYYY年MMM").add(1, 'months').format("YYYY");
+            selected_month = moment(date, "YYYY年MMM").add(1, 'months').format("MM");
         } else {
             var date = $('#sale_changable_date').text();
             var momnt = moment(date, "YYYY年MMM").subtract(1, 'months').format("YYYY年MMM");
             $('#sale_changable_date').html(momnt);
-            selected_year = momnt.format('YYYY'));
-            selected_month = momnt.format('MM'));
+            selected_year = moment(date, "YYYY年MMM").subtract(1, 'months').format("YYYY");
+            selected_month = moment(date, "YYYY年MMM").subtract(1, 'months').format("MM");
         }
 
         if ((target_tab == '#item_sale_tab')) {
@@ -123,6 +125,7 @@
             "serverSide": true,
             "scrollX": true,
             stateSave: true,
+            "searching": false,
             "ajax": {
                 "url": "{% url 'UserSalesList__asJson' %}",
                 "data": {
@@ -131,12 +134,42 @@
                 }
             },
             "columns": [
-                {"data": "no", "orderable": false},
-                {"data": "name"},
-                {"data": "jan_code", "orderable": false},
-                {"data": "stock", "orderable": false},
-                {"data": "opened_date", "orderable": false},
+                {"data": "date", "orderable": false},
+                {
+                    "sClass": "text-center",
+                    "orderable": false,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        var img ='<img src="' + row.image_path + '" width="50px" height="50px">';
+                        return img;
+                    }
+                },
+                {"data": "name", "orderable": false},
+                {
+                    "sClass": "text-center",
+                    "orderable": false,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return comma_format(row.amount, 0) + ' ' + JPCUR;
+                    }
+                },
             ]
+        });
+
+        getTotalSales();
+    }
+
+    function getTotalSales() {
+        $.ajax({
+            type: "GET",
+            url: "/profiles/get_data/" + selected_year + "/" + selected_month + "/",
+            success: function (json) {
+                let data = json.data;
+                $('#total-span').html(comma_format(data.total, 0) + ' ' + JPCUR);
+                $('#sales-span').html(comma_format(data.sales, 0) + ' ' + JPCUR);
+                $('#commission-span').html(comma_format(data.commission, 0) + ' ' + JPCUR);
+
+            }
         });
     }
 
@@ -147,6 +180,7 @@
             "serverSide": true,
             "scrollX": true,
             stateSave: true,
+            "searching": false,
             "ajax": {
                 "url": "{% url 'UserCommissionList__asJson' %}",
                 "data": {
@@ -155,13 +189,29 @@
                 }
             },
             "columns": [
-                {"data": "no", "orderable": false},
-                {"data": "name"},
-                {"data": "jan_code", "orderable": false},
-                {"data": "stock", "orderable": false},
-                {"data": "opened_date", "orderable": false},
+                {"data": "date", "orderable": false},
+                {
+                    "sClass": "text-center",
+                    "orderable": false,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        var img ='<img src="' + row.image_path + '" width="50px" height="50px">';
+                        return img;
+                    }
+                },
+                {"data": "name", "orderable": false},
+                {
+                    "sClass": "text-center",
+                    "orderable": false,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return comma_format(row.amount, 0) + ' ' + JPCUR;
+                    }
+                },
             ]
         });
+
+        getTotalSales();
     }
 
     $(document).click(function (event) {

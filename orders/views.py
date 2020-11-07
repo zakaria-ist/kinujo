@@ -759,3 +759,113 @@ def check_for_duplicate(request, type, value):
 
     context = { 'message': message }
     return HttpResponse(json.dumps(context), content_type="application/json")
+
+
+# @login_required
+def UserSalesList__asJson(request):
+    """
+    Method to get user product sales list as JSON.
+    """
+
+    draw = request.GET['draw']
+    start = request.GET['start']
+    length = request.GET['length']
+    # search = request.GET['search[value]']
+
+    year = int(request.GET.get('year'))
+    month = int(request.GET.get('month'))
+    profile_id = request.session['login_profile_id']
+    auth_type = request.session['login_authority_id']
+
+    if auth_type == AUTHORITY_TYPE['MASTER']:
+        sales_list = OrderProductCommission.objects.filter(is_hidden=False,
+                                user__authority_id=auth_type, is_sales=True,
+                                order_product__order__order_date__year=year,
+                                order_product__order__order_date__month=month,).order_by('order_product__order__order_date')
+    else:
+        sales_list = OrderProductCommission.objects.filter(is_hidden=False,
+                                user_id=profile_id, is_sales=True,
+                                order_product__order__order_date__year=year,
+                                order_product__order__order_date__month=month,).order_by('order_product__order__order_date')
+        
+
+    array = []
+    for field in sales_list:
+        product_jan = ProductJancode.objects.filter(pk=field.order_product.id).first()
+        if (product_jan):
+            j_product = get_jan_products(product_jan)
+            productImage = ProductImage.objects.filter(product_id=j_product.id, is_hidden=False)\
+                .order_by('image_no').exclude(image_no__isnull=True).first()
+            image_path = ''
+            if productImage:
+                image_path = productImage.image.image.url
+            data = {
+                "id": str(field.id),
+                "date": field.order_product.order.order_date.strftime("%Y-%m-%d"),
+                "image_path": image_path,
+                "name": j_product.name,
+                "amount": field.amount
+            }
+            array.append(data)
+
+    records_total = len(array)
+    records_filtered = len(array)
+    content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
+    json_content = json.dumps(content, ensure_ascii=False)
+    return HttpResponse(json_content, content_type='application/json')
+
+
+# @login_required
+def UserCommissionList__asJson(request):
+    """
+    Method to get user product commission list as JSON.
+    """
+
+    draw = request.GET['draw']
+    start = request.GET['start']
+    length = request.GET['length']
+    # search = request.GET['search[value]']
+
+    year = int(request.GET.get('year'))
+    month = int(request.GET.get('month'))
+    profile_id = request.session['login_profile_id']
+    auth_type = request.session['login_authority_id']
+
+    if auth_type == AUTHORITY_TYPE['MASTER']:
+        sales_list = OrderProductCommission.objects.filter(is_hidden=False,
+                                user__authority_id=auth_type, is_sales=False,
+                                order_product__order__order_date__year=year,
+                                order_product__order__order_date__month=month,).order_by('order_product__order__order_date')
+    else:
+        sales_list = OrderProductCommission.objects.filter(is_hidden=False,
+                                user_id=profile_id, is_sales=False,
+                                order_product__order__order_date__year=year,
+                                order_product__order__order_date__month=month,).order_by('order_product__order__order_date')
+        
+
+    array = []
+    for field in sales_list:
+        product_jan = ProductJancode.objects.filter(pk=field.order_product.id).first()
+        if (product_jan):
+            j_product = get_jan_products(product_jan)
+            productImage = ProductImage.objects.filter(product_id=j_product.id, is_hidden=False)\
+                .order_by('image_no').exclude(image_no__isnull=True).first()
+            image_path = ''
+            if productImage:
+                image_path = productImage.image.image.url
+            data = {
+                "id": str(field.id),
+                "date": field.order_product.order.order_date.strftime("%Y-%m-%d"),
+                "image_path": image_path,
+                "name": j_product.name,
+                "amount": field.amount,
+                "selling_price": field.order_product.total_proce,
+                "seller": field.order_product.order.seller.nickname if field.order_product.order.seller else ''
+            }
+            array.append(data)
+
+    records_total = len(array)
+    records_filtered = len(array)
+    content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
+    json_content = json.dumps(content, ensure_ascii=False)
+    return HttpResponse(json_content, content_type='application/json')

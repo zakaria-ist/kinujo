@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^shipping_list_json/$', views.ShippingList__asJson, name='ShippingList__asJson'),
     url(r'^validate_user_phone/(?P<profile_id>.*)/$', views.validate_user_phone, name='validate_user_phone'),
     url(r'^check_for_duplicate/(?P<type>.*)/(?P<value>.*)/$', views.check_for_duplicate, name='check_for_duplicate'),
+    url(r'^get_data/(?P<year>.*)/(?P<month>.*)/$', views.get_data, name='get_data'),
     # url(r'^upload_profile_image/$', views.upload_profile_image, name='upload_profile_image'),
 
     # for sales section
@@ -31,7 +32,6 @@ urlpatterns = [
     url(r'^templates/shipping_table/$', views.shipping_table, name='shipping_table'),
     url(r'^templates/product_form/$', views.get_product_form, name='get_product_form'),
     url(r'^templates/product_list_page/$', views.get_product_list_page, name='get_product_list_page'),
-
 
     # for listing user
     url(r'^listing_sales_list/$', views.listing_sales_list, name='listing_sales_list'),
