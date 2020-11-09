@@ -14,5 +14,6 @@ urlpatterns = [
     url(r'^get_product_info/$', views.get_product_info, name='get_product_info'),
     url(r'^delete_product/$', views.delete_product, name='delete_product'),
     url(r'^check_for_duplicate/(?P<type>.*)/(?P<value>.*)/$', views.check_for_duplicate, name='product_check_for_duplicate'),
+    url(r'^update_varieties/$', views.update_varieties, name='update_varieties'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

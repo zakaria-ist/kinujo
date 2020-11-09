@@ -380,91 +380,168 @@ function setEditFormInputs(json) {
     console.log('last_varieties', last_varieties);
 }
 
-$('#product_form').on('submit', function () {
+// for none type varient
+$('#jan_code').on('change', function() {
+    pushStockToDB();
+})
+$('#stock').on('change', function() {
+    pushStockToDB();
+})
 
+// Method to instanly push changes to DB, without submitting form
+function pushStockToDB() {
+    let variety = $('input[name="variety"]:checked').val();
+    let varieties = prepareVarietiesData(variety);
+    
+    if (product_id && product_id != '') {
+        $.ajax({
+            url: '/products/update_varieties/',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'product_id': product_id,
+                'variety': variety,
+                'varieties': JSON.stringify(varieties),
+                'old_varieties': JSON.stringify(last_varieties)
+            }
+        })
+        .done(function(data) {
+            console.log(data.message);
+            $.ajax({
+                method: "POST",
+                url: '/products/get_product_info/',
+                dataType: 'JSON',
+                data: {
+                    'product_id': product_id,
+                },
+                success: function (json) {
+                    // setEditFormInputs(json);
+                    last_varieties = [];
+                    if (json.variety == '0') {
+                        let vrty = json.varieties[0];
+                        $('#jan_code').val(vrty.jan_code);
+                        $('#stock').val(vrty.stock);
+                        last_varieties.push({
+                            "id": vrty.id,
+                            "jan_code": vrty.jan_code,
+                            "hor": '',
+                            "ver": '',
+                        });
+                        deleteAny();
+                    } else if (json.variety == '1') {
+                        document.getElementById("none-div").style.display = "none";
+                        prepareVarientOneTable(json);
+                    } else if (json.variety == '2') {
+                        document.getElementById("none-div").style.display = "none";
+                        prepareVarientTwoTable(json);
+                    }
+                
+                    console.log('last_varieties', last_varieties);
+                }
+            });
+        })
+        .fail(function(e) {
+            console.log(e);
+        })
+    }
+}
+
+function prepareVarietiesData(variety) {
+    let varieties = [];
+    if (variety == '0') { //None
+        varieties.push({
+            "jan_code": $('#jan_code').val(),
+            "stock": $('#stock').val(),
+            "varieties": []
+            })
+    }
+    else if (variety == '1') { // 1 Item
+        let name = document.getElementById('cell-name').innerHTML;
+        let variantTableTitle = document.getElementsByClassName('variant-title');
+        let variantTableCol = document.getElementsByClassName('variant-info');
+        // crate varieties
+        for(let i = 0; i < variantTableCol.length; i++) {
+            try{
+                varieties.push({
+                "jan_code": (document.getElementById('jan-id-'+i).innerHTML.trim() != '') ? document.getElementById('jan-id-'+i).innerHTML : '',
+                "stock": (document.getElementById('stock-id-'+i).innerHTML.trim() != '') ? document.getElementById('stock-id-'+i).innerHTML.split(':')[1].trim() : 0,
+                "varieties": [
+                    {
+                        "name": name,
+                        "selection": variantTableTitle[i+1].innerHTML,
+                        "vertical_and_horizontal": "0"
+                    }
+                ]
+                })
+            } catch(e){
+
+            }
+        }
+    }
+    else if (variety == '2') { // 2 Items
+        let preservedData = [];
+        let variantTableCol = document.getElementsByClassName('variant-info');
+
+        for(let i = 0; i < variantTableCol.length; i++){
+                //get id num
+            let idNum = variantTableCol[i].firstChild.id.split('-')[3];
+
+            //get jancode
+            let janId = `jan-id-${idNum}`;
+            let jancode = '';
+            if (document.getElementById(janId).innerHTML.trim() != '') {
+            jancode = document.getElementById(janId).innerHTML;
+            }
+
+            //get stock
+            let stockId = `stock-id-${idNum}`;
+            let stock = 0;
+            if (document.getElementById(stockId).innerHTML.trim() != '') {
+            stock = document.getElementById(stockId).innerHTML.split(':')[1].trim()
+            }
+
+            let dataToken = variantTableCol[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
+            
+            preservedData.push({
+                jancode: jancode,
+                stock: stock,
+                token: dataToken
+            })
+        }
+        
+        //second cell name
+        let twoItemCellName = document.getElementById('cell-name');
+        // crate varieties
+        for(let i = 0; i < preservedData.length; i++){
+            varieties.push({
+                "jan_code": preservedData[i].jancode,
+                "stock": preservedData[i].stock,
+                "varieties": [
+                    {
+                        "name": twoItemCellName.innerHTML.split('/')[0].trim(),
+                        "selection": preservedData[i].token.split('_')[0].trim(),
+                        "vertical_and_horizontal": "0"
+                    },
+                    {
+                        "name": twoItemCellName.innerHTML.split('/')[1].trim(),
+                        "selection": preservedData[i].token.split('_')[1].trim(),
+                        "vertical_and_horizontal": "1"
+                    },
+                ]
+            })
+        }
+        
+    }
+
+    return varieties;
+}
+
+$('#product_form').submit(function (e) {
     var is_valid = validateProductForm();
 
     if (is_valid) {
-        let varieties = [];
         let variety = $('input[name="variety"]:checked').val();
-        if (variety == '0') { //None
-            varieties.push({
-                "jan_code": $('#jan_code').val(),
-                "stock": $('#stock').val(),
-                "varieties": []
-                })
-        }
-        else if (variety == '1') { // 1 Item
-            let name = document.getElementById('cell-name').innerHTML;
-            let variantTableTitle = document.getElementsByClassName('variant-title');
-            let variantTableCol = document.getElementsByClassName('variant-info');
-            // crate varieties
-            for(let i = 0; i < variantTableCol.length; i++) {
-                try{
-                    varieties.push({
-                    "jan_code": document.getElementById('jan-id-'+i).innerHTML,
-                    "stock": document.getElementById('stock-id-'+i).innerHTML.split(':')[1].trim(),
-                    "varieties": [
-                        {
-                            "name": name,
-                            "selection": variantTableTitle[i+1].innerHTML,
-                            "vertical_and_horizontal": "0"
-                        }
-                    ]
-                    })
-                } catch(e){
-
-                }
-            }
-        }
-        else if (variety == '2') { // 2 Items
-            let preservedData = [];
-            let variantTableCol = document.getElementsByClassName('variant-info');
-
-            for(let i = 0; i < variantTableCol.length; i++){
-                    //get id num
-                let idNum = variantTableCol[i].firstChild.id.split('-')[3];
-
-                //get jancode
-                let janId = `jan-id-${idNum}`;
-                let jancode = document.getElementById(janId).innerHTML;
-
-                //get stock
-                let stockId = `stock-id-${idNum}`;
-                let stock = document.getElementById(stockId).innerHTML.split(':')[1].trim();
-
-                let dataToken = variantTableCol[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
-                
-                preservedData.push({
-                    jancode: jancode,
-                    stock: stock,
-                    token: dataToken
-                })
-            }
-            
-            //second cell name
-            let twoItemCellName = document.getElementById('cell-name');
-            // crate varieties
-            for(let i = 0; i < preservedData.length; i++){
-                varieties.push({
-                    "jan_code": preservedData[i].jancode,
-                    "stock": preservedData[i].stock,
-                    "varieties": [
-                        {
-                            "name": twoItemCellName.innerHTML.split('/')[0].trim(),
-                            "selection": preservedData[i].token.split('_')[0].trim(),
-                            "vertical_and_horizontal": "0"
-                        },
-                        {
-                            "name": twoItemCellName.innerHTML.split('/')[1].trim(),
-                            "selection": preservedData[i].token.split('_')[1].trim(),
-                            "vertical_and_horizontal": "1"
-                        },
-                    ]
-                })
-            }
-            
-        }
+        let varieties = prepareVarietiesData(variety);
 
         $('#variety').val($('input[name="variety"]:checked').val());
         $('#is_used').val($('input[name="is_used"]:checked').val());
@@ -487,6 +564,8 @@ $('#product_form').on('submit', function () {
                     }
                 }
         });
+        e.preventDefault();
+        return false;
     }
     
 })

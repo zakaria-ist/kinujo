@@ -764,13 +764,17 @@
     function addItemBtnChange(tableItem, btnItem){
       //change add item button
       if(tableItem.innerHTML.trim() !== ''){
-        btnItem.style.background = 'transparent';
-        btnItem.style.color = '#0056b3';
-        btnItem.style.border = '0px';
-        btnItem.style.float = 'right';
-        btnItem.style.fontSize = '0.8rem';
-        btnItem.style.padding = '0px';
-        btnItem.innerHTML = `add / edit / delete items`;
+        try{
+          btnItem.style.background = 'transparent';
+          btnItem.style.color = '#0056b3';
+          btnItem.style.border = '0px';
+          btnItem.style.float = 'right';
+          btnItem.style.fontSize = '0.8rem';
+          btnItem.style.padding = '0px';
+          btnItem.innerHTML = `add / edit / delete items`;
+        } catch (e) {
+          
+        }
       }else{
         if(tableItem === document.getElementById('variety-table')){
           document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ Item / Option</button></div>`;
@@ -1290,7 +1294,7 @@
       stockDiv.innerHTML = 'Stock:' + newStockValue;
 
       $('#edit-modal-one').modal('hide');
-
+      pushStockToDB();
     }
 
     //edit btn one function
@@ -1401,8 +1405,6 @@
 
         $('#edit-modal-one').modal();
 
-      
-      
     }
 
     
@@ -1556,6 +1558,8 @@
 
       //hide modal
       $('#oneItemVariant').modal('hide');
+
+      pushStockToDB();
     }
     
 
@@ -2021,6 +2025,7 @@
 
       $('#twoItemsVariant').modal('hide');
 
+      pushStockToDB();
     }
 
     $('#price').on('change', function() {
@@ -2043,6 +2048,14 @@
       let value = $(this).val();
       check_for_duplicate('url_str', value);
     });
+
+    // for none type varient
+    $('#jan_code').on('change', function() {
+        pushStockToDB();
+    })
+    $('#stock').on('change', function() {
+        pushStockToDB();
+    })
 
     function check_for_duplicate(type, value) {
         $.ajax({
