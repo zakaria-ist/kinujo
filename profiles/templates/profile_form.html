@@ -210,6 +210,7 @@
         } 
 
         $(document).ready(function () {
+            changeLang();
             if (profile_id == '' || profile_id == undefined || profile_id == null) {
                 profile_id = '';
                 $('#id_authority').trigger('change');

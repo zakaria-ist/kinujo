@@ -279,3 +279,63 @@ function roundDecimal(value, precision) {
     var interm = (value * multiplier).toFixed(1);
     return Math.round(interm) / multiplier;
 }
+
+// Translation fuction
+function get_translate(e){
+    try{
+        let current_lang = "en";
+        if(permanentStorage.getItem("language")){
+            current_lang = permanentStorage.getItem("language");
+        }
+
+        if (current_lang == "ja") {
+            if (translation_dict[e]) {
+                return translation_dict[e];
+            } else {
+                return e;
+            }
+        } else if (current_lang == "en") {
+            if (Object.keys(translation_dict).find(key => translation_dict[key] === e)) {
+                return Object.keys(translation_dict).find(key => translation_dict[key] === e);
+            } else {
+                return e;
+            }
+        } else {
+            return e;
+        }
+    } catch(error){
+        console.log(error);
+        return e;
+    }
+}
+
+var translation_dict = {
+    "Yes": "可",
+    "Save": "保存する",
+    "Cancel": "キャンセル",
+    "Warning": "警告",
+    "Error": "エラー",
+    "Are you sure?": "本気ですか？",
+    "Wrong Quantity!": "数量が間違っています！",
+    "Order quantity must be greater than Zero": "注文数量はゼロより大きくなければなりません",
+    "Please fill in the required fields": "必須フィールドに入力してください",
+    "Order quantity cannot be greater than stock quantity": "注文数量は在庫数量を超えることはできません",
+    "Choices field": "選択肢フィールド",
+    "can't be empty": "空にすることはできません",
+    "Update Successful": "更新に成功しました",
+    "Delete Successful": "削除に成功",
+    "Account information is updated.": "アカウント情報が更新されます。",
+    "Product information is updated.": "製品情報を更新しました。",
+    "Product information is deleted.": "製品情報が削除されます。",
+    "Salon information is updated.": "サロン情報を更新しました。",
+    "Salon information is deleted.": "サロン情報を削除します。",
+    "Shipping information is updated.": "配送情報を更新しました。",
+    "Shipping information is deleted.": "配送情報が削除されます。",
+    "URL String is duplicate": "URL文字列が重複しています",
+    "JAN code / inventory editing": "JANコード/在庫編集",
+    "JAN code can't be empty": "JANコードを空にすることはできません",
+    "Stock should contain only number": "在庫には数字のみを含める必要があります",
+    "Tracking number is duplicate": "追跡番号が重複しています",
+    " is in use. Try a new one. It must be unique": "使用中です。新しいものを試してください。それはユニークでなければなりません",
+    'The number of stocks will change during editing. When changing, increase or decrease the absolute value such as "+1" or "-1" Please enter (If you want to change the entire stock quantity, enter "100" etc. as a numerical value) If the stock quantity field is blank, the stock quantity will not be changed.': "在庫数は編集中に変更されます。変更する場合は、「+ 1」や「-1」などの絶対値を増減してください（在庫量全体を変更する場合は、数値として「100」などを入力してください）。空白の場合、在庫数は変更されません。",
+};

@@ -67,8 +67,8 @@ function deleteProductConfirm(id) {
         success: function (json) {
             g_product_id = '';
             $.confirm({
-                title: 'Delete Successfull',
-                content: 'Product information is deleted.',
+                title: get_translate('Delete Successful'),
+                content: get_translate('Product information is deleted.'),
                 buttons: {
                     Ok: {
                         btnClass: 'btn-success',
@@ -80,7 +80,7 @@ function deleteProductConfirm(id) {
         },
         error: function (e) {
             $.confirm({
-                title: 'Error',
+                title: get_translate('Error'),
                 content: e.message,
                 buttons: {
                     Ok: {
@@ -718,8 +718,8 @@ function saveProductInfo() {
             contentType: false,
             success: function (json) {
                 $.confirm({
-                    title: 'Update Successfull',
-                    content: 'Product information is updated.',
+                    title: get_translate('Update Successful'),
+                    content: get_translate('Product information is updated.'),
                     buttons: {
                         Ok: {
                             btnClass: 'btn-success',
@@ -732,7 +732,7 @@ function saveProductInfo() {
             },
             error: function (e) {
                 $.confirm({
-                    title: 'Error',
+                    title: get_translate('Error'),
                     content: e.message,
                     buttons: {
                         Ok: {
@@ -745,8 +745,8 @@ function saveProductInfo() {
         });
     } else {
         $.confirm({
-            title: 'Warning',
-            content: 'Please fill in the required fields',
+            title: get_translate('Warning'),
+            content: get_translate('Please fill in the required fields'),
             buttons: {
                 Ok: {
                     btnClass: 'btn-success',

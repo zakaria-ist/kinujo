@@ -182,41 +182,6 @@ function prepareVarientTwoTable(json){
 
     varietyTableTwo1.style.height = '250px';
 
-    // document.getElementById('firstOfTwoItemGroup').innerHTML = `
-    //             <div class="form-group">
-                
-    //             <p style="width: 20px;" class="m-2"> </p>
-    //             <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
-    //             <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
-                
-    //             <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; deleteOptionsFirstOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-    //             </div>
-    //             <div class="form-group">
-    //             <p style="width: 20px;" class="m-2"> </p>
-    //             <p class="m-2 first-of-two-variant-counter" style="width: 20px;">2</p>
-    //             <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
-                
-    //             <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; deleteOptionsFirstOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-    //             </div>
-    //         `;
-    // document.getElementById('lastOfTwoItemGroup').innerHTML = `
-    //             <div class="form-group">
-    //                 <p style="width: 20px;" class="m-2"> </p>
-    //                 <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
-    //                 <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
-                    
-    //                 <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-    //             </div>
-                
-    //             <div class="form-group">
-    //                 <p style="width: 20px;" class="m-2"> </p>
-    //                 <p class="m-2 last-of-two-variant-counter" style="width: 20px;">2</p>
-    //                 <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
-                    
-    //                 <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-    //             </div>
-    //             `;
-
     document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="two-items-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant" onclick="changeModalTwo();">+ Items / Options</button></div>`;
     //change add item button
     addItemBtnChange(document.getElementById('variety-table-two'), document.getElementById('two-items-btn'));
@@ -296,31 +261,6 @@ function prepareVarientOneTable(json){
     }
     //make sure it's scroll able
     document.getElementById("scrollable").style.overflow= 'scroll';
-
-    //reset modal form
-    // document.getElementById('oneItemGroup').innerHTML = `
-    //             <div class="form-group">
-    //               <p style="width: 20px;" class="m-2"> </p>
-    //               <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
-    //               <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                  
-    //               <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
-                  
-    //               <input value="" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
-    //               <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-    //             </div>
-    //             <div class="form-group">
-    //               <p style="width: 20px;" class="m-2"> </p>
-    //               <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
-    //               <input value=""  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                  
-    //               <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
-                  
-    //               <input value=""  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
-    //               <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-    //             </div>
-
-    //           `;
 
     //change add item button
     document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ Item / Option</button></div>`;
@@ -555,8 +495,8 @@ $('#product_form').submit(function (e) {
         $('#old_varieties').val(JSON.stringify(last_varieties));
     } else {
         $.confirm({
-            title: 'Warning',
-            content: 'Please fill in the required fields',
+            title: get_translate('Warning'),
+            content: get_translate('Please fill in the required fields'),
             buttons: {
                 Ok: {
                     btnClass: 'btn-success',

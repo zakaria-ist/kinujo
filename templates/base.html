@@ -55,6 +55,7 @@
                             <img src="/static/img/ja.png" alt="" style="width: 30px">
                         {% endif %}
                     </a>
+                    <input type="hidden" id="language" value="{{LANGUAGE_CODE}}">
                     <ul class="dropdown-menu pull-right pointer" style="width: 70px; background-color: #a9d96c;">
                         <li style="width: 100%; padding-left: 5%;">
                             <form action="/api/change-language/" method="POST" class="language-form-en">
@@ -173,6 +174,8 @@
 <script src="{% static 'js/slidebars.min.js' %}"></script>
 
 <script>
+    var permanentStorage = window.localStorage;
+
     if (window.sessionStorage.getItem('is_sidebar') == null || window.sessionStorage.getItem('is_sidebar') == undefined) {
         window.sessionStorage.setItem('is_sidebar', '1');
     }
@@ -214,6 +217,18 @@
         $('#sidebar > ul').hide();
         $("#container").addClass("sidebar-closed");
     }
+
+    function changeLang(){
+		var cur_language = $("#language").val();
+        var old_language = '';
+        if (permanentStorage.getItem("language")) {
+            old_language = permanentStorage.getItem("language");
+        }
+        if (cur_language != old_language) {
+            permanentStorage.setItem("language", cur_language);
+        }
+        console.log('cur_language', cur_language);
+	}
 
 </script>
 

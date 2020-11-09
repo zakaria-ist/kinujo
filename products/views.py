@@ -450,7 +450,7 @@ def product_edit(request, product_id):
 
     return render(request, 'product_form.html', {'product': product,
                                                  'images': image_array,
-                                                 'varieties': p_varieties,
+                                                #  'varieties': p_varieties,
                                                  'category_list': category_list,
                                                  'media_url': s.MEDIA_URL})
 
@@ -681,11 +681,23 @@ def update_varieties(request):
             if request.POST.get('product_id') and request.POST.get('product_id') != '':
                 product_id = request.POST.get('product_id')
                 product = Product.objects.get(pk=product_id)
+                last_variety_type = product.variety
+
+                # check if variety type changes
+                # if so then delete 0ld data
+                prdct_variety = int(request.POST.get('variety'))
+                if last_variety_type != prdct_variety:
+                    deleteOldVarieties(product)
+
+                    # save new variety type
+                    product.variety = prdct_variety
+                    product.save()
 
                 # save product new varieties
-                prdct_variety = int(request.POST.get('variety'))
                 varieties = json.loads(request.POST.get('varieties'))
                 old_varieties = json.loads(request.POST.get('old_varieties'))
+                if last_variety_type != prdct_variety:
+                    old_varieties = []
                 updateProductVarieties(product, prdct_variety, varieties, old_varieties)
                 
                 message = 'Success'

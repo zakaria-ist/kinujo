@@ -327,6 +327,7 @@
         {% endfor %}
 
         $(document).ready(function() {
+            changeLang();
             // get all products of seller
             loadProducts();
 
@@ -526,7 +527,7 @@
                 },
                 error: function (e) {
                     $.confirm({
-                        title: 'Error',
+                        title: get_translate('Error'),
                         content: e.message,
                         buttons: {
                             Ok: {
@@ -628,8 +629,8 @@
 
         function deleteProduct(line) {
             $.confirm({
-                title: 'Warning',
-                content: 'Are you sure?',
+                title: get_translate('Warning'),
+                content: get_translate('Are you sure?'),
                 buttons: {
                     Yes: function () {
                         $('#product_line_'+line).remove();
@@ -684,8 +685,8 @@
             let max_order = parseInt($('#'+event.target.id).attr('max_order'));
             if (0 >= qty) {
                 $.confirm({
-                    title: 'Wrong Quanity!',
-                    content: 'Order quantity must be greater than Zero',
+                    title: get_translate('Wrong Quantity!'),
+                    content: get_translate('Order quantity must be greater than Zero'),
                     buttons: {
                         Ok: {
                             btnClass: 'btn-success',
@@ -695,7 +696,7 @@
                 });
             } else if (qty > max_order) {
                 $.confirm({
-                    title: 'Wrong Quanity!',
+                    title: get_translate('Wrong Quantity!'),
                     content: 'Order quantity cannot be greater than stock quantity ' + max_order,
                     buttons: {
                         Ok: {
@@ -834,8 +835,8 @@
                     if (data.message == 'Success') {
                         if (type == 'inquiry_number') {
                             $.confirm({
-                                title: 'Tracking number is duplicate',
-                                content: value + ' is in use. Try a new one. It must be unique',
+                                title: get_translate('Tracking number is duplicate'),
+                                content: value + get_translate(' is in use. Try a new one. It must be unique'),
                                 buttons: {
                                     Ok: {
                                         btnClass: 'btn-success',
