@@ -559,7 +559,7 @@
                   
                   <input value="" type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
                   
-                  <input value="" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                  <input value="" type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
                 <div class="form-group">
@@ -569,7 +569,7 @@
                   
                   <input value=""  type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
                   
-                  <input value=""  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                  <input value=""  type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
               </div>
@@ -764,13 +764,17 @@
     function addItemBtnChange(tableItem, btnItem){
       //change add item button
       if(tableItem.innerHTML.trim() !== ''){
-        btnItem.style.background = 'transparent';
-        btnItem.style.color = '#0056b3';
-        btnItem.style.border = '0px';
-        btnItem.style.float = 'right';
-        btnItem.style.fontSize = '0.8rem';
-        btnItem.style.padding = '0px';
-        btnItem.innerHTML = `add / edit / delete items`;
+        try{
+          btnItem.style.background = 'transparent';
+          btnItem.style.color = '#0056b3';
+          btnItem.style.border = '0px';
+          btnItem.style.float = 'right';
+          btnItem.style.fontSize = '0.8rem';
+          btnItem.style.padding = '0px';
+          btnItem.innerHTML = `add / edit / delete items`;
+        } catch (e) {
+          
+        }
       }else{
         if(tableItem === document.getElementById('variety-table')){
           document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ Item / Option</button></div>`;
@@ -1110,8 +1114,8 @@
     //one item variant code for adding more option
     function deleteOptions(trget){
       $.confirm({
-          title: 'Warning',
-          content: 'Are you sure?',
+          title: get_translate('Warning'),
+          content: get_translate('Are you sure?'),
           buttons: {
               Yes: function () {
                   trget.parentNode.parentNode.removeChild(trget.parentNode);
@@ -1137,7 +1141,7 @@
                     
                     <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
                     
-                    <input type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                    <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                     </div>`;
       
@@ -1153,8 +1157,8 @@
     //first of two items variant
     function deleteOptionsFirstOfTwo(trget){
       $.confirm({
-          title: 'Warning',
-          content: 'Are you sure?',
+          title: get_translate('Warning'),
+          content: get_translate('Are you sure?'),
           buttons: {
               Yes: function () {
                   trget.parentNode.parentNode.removeChild(trget.parentNode);
@@ -1192,8 +1196,8 @@
     //last of two items variant
     function deleteOptionsLastOfTwo(trget){
       $.confirm({
-          title: 'Warning',
-          content: 'Are you sure?',
+          title: get_translate('Warning'),
+          content: get_translate('Are you sure?'),
           buttons: {
               Yes: function () {
                   trget.parentNode.parentNode.removeChild(trget.parentNode);
@@ -1251,7 +1255,7 @@
 
       // //save new value to the table
       if(newJanCode.value.trim() === ''){
-        document.getElementById('janErrorEdit').innerHTML = `JAN code can't be empty`;
+        document.getElementById('janErrorEdit').innerHTML = get_translate("JAN code can't be empty");
         newJanCode.focus();
         return;
       }else{
@@ -1271,7 +1275,7 @@
       }else{
         if(isNaN(Number(newStock.value))){
 
-          document.getElementById('janErrorEdit').innerHTML = 'Stock should contain only number, -, + ';
+          document.getElementById('janErrorEdit').innerHTML = get_translate("Stock should contain only number") + ', -, + ';
           newStock.focus();
           return;
           //keep the value same
@@ -1290,7 +1294,7 @@
       stockDiv.innerHTML = 'Stock:' + newStockValue;
 
       $('#edit-modal-one').modal('hide');
-
+      pushStockToDB();
     }
 
     //edit btn one function
@@ -1368,12 +1372,12 @@
         modalWrapper.innerHTML = `
         <div class="modal fade" id="edit-modal-one" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
-          <div class="modal-content row">
-            <h6 class="m-2 p-2" style="font-weight:bold">{% trans 'JAN code / inventory editing' %}</h6>
-            <button type="button" class="close edit-close pt-2 pr-3" data-dismiss="modal" aria-label="Close">
+          <div class="modal-content row">` +
+            '<h6 class="m-2 p-2" style="font-weight:bold">'+get_translate("JAN code / inventory editing")+'</h6>'+
+            `<button type="button" class="close edit-close pt-2 pr-3" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
             </button>
-            <p class="col-md-12 text-center p-3">{% trans 'The number of stocks will change during editing. When changing, increase or decrease the absolute value such as “+1” or “-1” Please enter (If you want to change the entire stock quantity, enter “100” etc. as a numerical value) If the stock quantity field is blank, the stock quantity will not be changed.' %}</p>
+            <p class="col-md-12 text-center p-3">`+get_translate("The number of stocks will change during editing. When changing, increase or decrease the absolute value such as \"+1\" or \"-1\" Please enter (If you want to change the entire stock quantity, enter \"100\" etc. as a numerical value) If the stock quantity field is blank, the stock quantity will not be changed.")+`</p>
             <p class="col-md-12" style="font-weight:bold"><span class="m-2">${leftCellName} ${leftCellNameValue}</span> <span class="m-2">${rightCellName} ${rightCellNameValue}</span></p>
             <p class="col-md-12 text-danger" id="janErrorEdit"></p>
             <div class="row">
@@ -1383,7 +1387,7 @@
               </div>
               <div class="form-group col-md-5 m-2 pl-4">
                 <label for="stock-one-modal">Stock Quantity: ${oldStock}</label>
-                <input type="text" value="" class="form-control" id="stock-one-modal" placeholder="Enter Stock"> 
+                <input type="text" value="" class="form-control text-right" id="stock-one-modal" placeholder="Enter Stock"> 
               </div>
             </div>
 
@@ -1401,8 +1405,6 @@
 
         $('#edit-modal-one').modal();
 
-      
-      
     }
 
     
@@ -1438,7 +1440,7 @@
       function checkError(classes, errorName){
         for(let i = 0; i < classes.length; i++){
           if(classes[i].value === ''){
-            errorMsg.innerHTML = `${errorName} field (<span id="errLine">${i + 1}</span>) can't be empty`;
+            errorMsg.innerHTML = `${errorName}` + get_translate("Choices field") + `(<span id="errLine">${i + 1}</span>) ` + get_translate("can't be empty");
             classes[i].focus();
             return false;
           }
@@ -1499,7 +1501,10 @@
         let newTableContent = document.createElement('div'); 
         let choicesValue = oneItemVariantChoices[i].value;
         let janValue = oneItemVariantJan[i].value;
-        let stockValue = oneItemVariantStock[i].value;
+        let stockValue = 0;
+        if (oneItemVariantStock[i].value){
+          stockValue = oneItemVariantStock[i].value;
+        }
         newTableChoices.innerHTML = `<div class="variant-title variant-col" id="cell-name-value-${i}">${choicesValue}</div>`;
         newTableContent.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">Stock:${stockValue}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
         
@@ -1553,6 +1558,8 @@
 
       //hide modal
       $('#oneItemVariant').modal('hide');
+
+      pushStockToDB();
     }
     
 
@@ -1581,7 +1588,7 @@
       function checkError(classes, errorMsgId, errLine){
         for(let i = 0; i < classes.length; i++){
           if(classes[i].value === '' || classes[i].value === ' ' || classes[i].value === undefined){
-            errorMsgId.innerHTML = `Choices field (<span id="${errLine}">${i + 1}</span>) can't be empty`;
+            errorMsgId.innerHTML = get_translate("Choices field") + ` (<span id="${errLine}">${i + 1}</span>) ` + get_translate("can't be empty");
             classes[i].focus();
             return false;
           }
@@ -2018,6 +2025,7 @@
 
       $('#twoItemsVariant').modal('hide');
 
+      pushStockToDB();
     }
 
     $('#price').on('change', function() {
@@ -2041,6 +2049,14 @@
       check_for_duplicate('url_str', value);
     });
 
+    // for none type varient
+    $('#jan_code').on('change', function() {
+        pushStockToDB();
+    })
+    $('#stock').on('change', function() {
+        pushStockToDB();
+    })
+
     function check_for_duplicate(type, value) {
         $.ajax({
             type: "GET",
@@ -2049,8 +2065,8 @@
                 if (data.message == 'Success') {
                     if (type == 'url_str') {
                         $.confirm({
-                            title: 'URL String is duplicate',
-                            content: value + ' is in use. Try a new one. It must be unique',
+                            title: get_translate('URL String is duplicate'),
+                            content: value + get_translate(' is in use. Try a new one. It must be unique'),
                             buttons: {
                                 Ok: {
                                     btnClass: 'btn-success',

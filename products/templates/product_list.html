@@ -148,9 +148,10 @@
         $('#product-table').DataTable().destroy();
         $('#product-table').DataTable({
             "order": [[2, "asc"]],
+            "pageLength": 25,
             "serverSide": true,
             "scrollX": true,
-            stateSave: true,
+            //stateSave: true,
             "ajax": {
                 "url": "{% url 'ProductList__asJson' %}",
                 "data": {

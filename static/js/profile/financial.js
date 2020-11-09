@@ -19,8 +19,8 @@ $('#btnPaymentSave').on('click', function() {
             },
             success: function (json) {
                 $.confirm({
-                    title: 'Update Successfull',
-                    content: 'Account information is updated.',
+                    title: get_translate('Update Successful'),
+                    content: get_translate('Account information is updated.'),
                     buttons: {
                         Ok: {
                             btnClass: 'btn-success',
@@ -31,7 +31,7 @@ $('#btnPaymentSave').on('click', function() {
             },
             error: function (e) {
                 $.confirm({
-                    title: 'Error',
+                    title: get_translate('Error'),
                     content: e.message,
                     buttons: {
                         Ok: {
@@ -44,8 +44,8 @@ $('#btnPaymentSave').on('click', function() {
         });
     } else {
         $.confirm({
-            title: 'Warning',
-            content: 'Please fill in the required fields',
+            title: get_translate('Warning'),
+            content: get_translate('Please fill in the required fields'),
             buttons: {
                 Ok: {
                     btnClass: 'btn-success',

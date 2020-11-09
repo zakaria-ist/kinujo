@@ -342,7 +342,7 @@ ul.sidebar-menu li a.active i {
 
 #main-content {
     margin-left: 280px;
-    margin-right: 40px;
+    /* margin-right: 40px; */
 }
 
 .header, .footer {

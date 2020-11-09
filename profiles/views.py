@@ -2,7 +2,8 @@ import datetime
 import json
 from django.conf import settings as s
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Sum, Value
+from django.db.models.functions import Coalesce
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponsePermanentRedirect
 from django.urls import reverse
@@ -13,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .forms import ProfileForm, ImageUploadForm
-from .models import Address, Profile, FinancialAccount
+from .models import Address, Profile, FinancialAccount, UserSale, UserCommision
 from products.models import ProductCategory
 from utilities.constants import AUTHORITY_TYPE
 from prefectures.models import Prefecture
@@ -85,6 +86,9 @@ def login_master(request):
                 profile = Profile.objects.filter(is_hidden=False, user_id=user.id).first()
                 if profile and profile.authority_id == AUTHORITY_TYPE['MASTER']:
                     login(request, user)
+                    request.session['login_profile_id'] = profile.id
+                    request.session['login_authority_id'] = profile.authority_id
+                    request.session['login_type'] = 'MASTER'
                     return HttpResponsePermanentRedirect(reverse('home_load'))
                 else:
                     state = "User is not a Master Account"
@@ -112,8 +116,12 @@ def login_sales(request):
             password = request.POST.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                if user.is_seller:
+                profile = Profile.objects.filter(is_hidden=False, user_id=user.id).first()
+                if profile.is_seller:
                     login(request, user)
+                    request.session['login_profile_id'] = profile.id
+                    request.session['login_authority_id'] = profile.authority_id
+                    request.session['login_type'] = 'SELLER'
                     return redirect('listing_home_load')
                 else:
                     state = "User is not Seller Account"
@@ -772,6 +780,52 @@ def check_for_duplicate(request, type, value):
 
     context = { 'message': message }
     return HttpResponse(json.dumps(context), content_type="application/json")
+
+
+def get_data(request, year, month):
+    """
+    Method to get user sales & commission data.
+    """
+
+    data = {
+        "sales": 0,
+        "commission": 0,
+        "total": 0
+    }
+    try:
+        profile_id = request.session['login_profile_id']
+        auth_type = request.session['login_authority_id']
+
+        if auth_type == AUTHORITY_TYPE['MASTER']:
+            sales_list = UserSale.objects.filter(is_hidden=False,
+                                    user__authority_id=auth_type,
+                                    year=year, month=month)\
+                    .aggregate(sales_amount=Coalesce(Sum('total_amount'), Value(0)))
+            commission_list = UserCommision.objects.filter(is_hidden=False,
+                                    user__authority_id=auth_type,
+                                    year=year, month=month)\
+                    .aggregate(com_amount=Coalesce(Sum('total_amount'), Value(0)))
+        else:
+            sales_list = UserSale.objects.filter(is_hidden=False,
+                                    user_id=profile_id,
+                                    year=year, month=month)\
+                    .aggregate(sales_amount=Coalesce(Sum('total_amount'), Value(0)))
+            commission_list = UserCommision.objects.filter(is_hidden=False,
+                                    user_id=profile_id,
+                                    year=year, month=month)\
+                    .aggregate(com_amount=Coalesce(Sum('total_amount'), Value(0)))
+
+        data = {
+            "sales": sales_list.get('sales_amount', 0),
+            "commission": commission_list.get('com_amount', 0),
+            "total": sales_list.get('sales_amount', 0) + commission_list.get('com_amount', 0)
+        }
+    except Exception as e:
+        print(e)
+
+    context = { 'data': data }
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
 
 # @login_required
 def salon_form(request):

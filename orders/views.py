@@ -21,7 +21,7 @@ from utilities.common import round_number
 
 
 
-# @login_required
+@login_required
 def order_list(request):
     """
     Method to redirect to order list page.
@@ -29,7 +29,8 @@ def order_list(request):
 
     return render(request, 'order_list.html')
 
-# @login_required
+
+@login_required
 def OrderList__asJson(request):
     """
     Method to get order list as JSON.
@@ -42,6 +43,8 @@ def OrderList__asJson(request):
 
     filter_str = eval(request.GET.get('filter_str'))
     seller_id = request.GET.get('seller_id')
+    if not seller_id:
+        seller_id = request.session['login_profile_id']
 
     order_list = Order.objects.filter(is_hidden=False, seller_id=seller_id).order_by('authority_id')
     if len(filter_str):
@@ -296,7 +299,7 @@ def update_monthly_commission_data(affected_user_list, order_date):
         print('update_monthly_commission_data', e)
 
 
-# @login_required
+@login_required
 def order_add(request):
     """
     Method to add new order.
@@ -469,13 +472,15 @@ def order_add(request):
                 authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']])\
         .values_list('id', 'nickname', 'authority_id')) # need to exclude login user
     prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
+    seller_id = request.session['login_profile_id']
     return render(request, 'order_form.html', {'prefecture_list': prefecture_list,
                                                 'orderer_list': orderer_list,
                                                 'order_product_list': [],
                                                 'status_list': ORDER_STATUS,
-                                                'tax_rate': tax_rate})
+                                                'tax_rate': tax_rate,
+                                                'seller_id': seller_id})
 
-# @login_required
+@login_required
 def order_edit(request, order_id):
     """
     Method to edit a order.
@@ -678,16 +683,17 @@ def order_edit(request, order_id):
                 authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']])\
         .values_list('id', 'nickname', 'authority_id')) # need to exclude login user
     prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
-    
+    seller_id = request.session['login_profile_id']
     return render(request, 'order_form.html', {'prefecture_list': prefecture_list,
                                                 'order': order,
                                                 'orderer_list': orderer_list,
                                                 'order_product_list': order_product_list,
                                                 'status_list': ORDER_STATUS,
-                                                'tax_rate': tax_rate})
+                                                'tax_rate': tax_rate,
+                                                'seller_id': seller_id})
 
-# @login_required
-@csrf_exempt
+@login_required
+# @csrf_exempt
 def order_delete(request, order_id):
     """
     Method to delete a order.
@@ -753,3 +759,113 @@ def check_for_duplicate(request, type, value):
 
     context = { 'message': message }
     return HttpResponse(json.dumps(context), content_type="application/json")
+
+
+# @login_required
+def UserSalesList__asJson(request):
+    """
+    Method to get user product sales list as JSON.
+    """
+
+    draw = request.GET['draw']
+    start = request.GET['start']
+    length = request.GET['length']
+    # search = request.GET['search[value]']
+
+    year = int(request.GET.get('year'))
+    month = int(request.GET.get('month'))
+    profile_id = request.session['login_profile_id']
+    auth_type = request.session['login_authority_id']
+
+    if auth_type == AUTHORITY_TYPE['MASTER']:
+        sales_list = OrderProductCommission.objects.filter(is_hidden=False,
+                                user__authority_id=auth_type, is_sales=True,
+                                order_product__order__order_date__year=year,
+                                order_product__order__order_date__month=month,).order_by('order_product__order__order_date')
+    else:
+        sales_list = OrderProductCommission.objects.filter(is_hidden=False,
+                                user_id=profile_id, is_sales=True,
+                                order_product__order__order_date__year=year,
+                                order_product__order__order_date__month=month,).order_by('order_product__order__order_date')
+        
+
+    array = []
+    for field in sales_list:
+        product_jan = ProductJancode.objects.filter(pk=field.order_product.id).first()
+        if (product_jan):
+            j_product = get_jan_products(product_jan)
+            productImage = ProductImage.objects.filter(product_id=j_product.id, is_hidden=False)\
+                .order_by('image_no').exclude(image_no__isnull=True).first()
+            image_path = ''
+            if productImage:
+                image_path = productImage.image.image.url
+            data = {
+                "id": str(field.id),
+                "date": field.order_product.order.order_date.strftime("%Y-%m-%d"),
+                "image_path": image_path,
+                "name": j_product.name,
+                "amount": field.amount
+            }
+            array.append(data)
+
+    records_total = len(array)
+    records_filtered = len(array)
+    content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
+    json_content = json.dumps(content, ensure_ascii=False)
+    return HttpResponse(json_content, content_type='application/json')
+
+
+# @login_required
+def UserCommissionList__asJson(request):
+    """
+    Method to get user product commission list as JSON.
+    """
+
+    draw = request.GET['draw']
+    start = request.GET['start']
+    length = request.GET['length']
+    # search = request.GET['search[value]']
+
+    year = int(request.GET.get('year'))
+    month = int(request.GET.get('month'))
+    profile_id = request.session['login_profile_id']
+    auth_type = request.session['login_authority_id']
+
+    if auth_type == AUTHORITY_TYPE['MASTER']:
+        sales_list = OrderProductCommission.objects.filter(is_hidden=False,
+                                user__authority_id=auth_type, is_sales=False,
+                                order_product__order__order_date__year=year,
+                                order_product__order__order_date__month=month,).order_by('order_product__order__order_date')
+    else:
+        sales_list = OrderProductCommission.objects.filter(is_hidden=False,
+                                user_id=profile_id, is_sales=False,
+                                order_product__order__order_date__year=year,
+                                order_product__order__order_date__month=month,).order_by('order_product__order__order_date')
+        
+
+    array = []
+    for field in sales_list:
+        product_jan = ProductJancode.objects.filter(pk=field.order_product.id).first()
+        if (product_jan):
+            j_product = get_jan_products(product_jan)
+            productImage = ProductImage.objects.filter(product_id=j_product.id, is_hidden=False)\
+                .order_by('image_no').exclude(image_no__isnull=True).first()
+            image_path = ''
+            if productImage:
+                image_path = productImage.image.image.url
+            data = {
+                "id": str(field.id),
+                "date": field.order_product.order.order_date.strftime("%Y-%m-%d"),
+                "image_path": image_path,
+                "name": j_product.name,
+                "amount": field.amount,
+                "selling_price": field.order_product.total_proce,
+                "seller": field.order_product.order.seller.nickname if field.order_product.order.seller else ''
+            }
+            array.append(data)
+
+    records_total = len(array)
+    records_filtered = len(array)
+    content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
+    json_content = json.dumps(content, ensure_ascii=False)
+    return HttpResponse(json_content, content_type='application/json')
