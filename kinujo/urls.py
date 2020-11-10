@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^listing_home_load/$', views.listing_home_load, name='listing_home_load'),
     url(r'^pass_reset/$', views.pass_reset, name='pass_reset'),
     url(r'^reset_password/$', views.reset_password, name='reset_password'),
+    url(r'^login/$', views.login_master, name='login_master'),
     url(r'^master_login/$', views.login_master, name='login_master'),
     url(r'^sales_login/$', views.login_sales, name='login_sales'),
     url(r'^logout/$', views.logout_user, name='logout_user'),

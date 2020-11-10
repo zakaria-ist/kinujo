@@ -27,7 +27,10 @@ def order_list(request):
     Method to redirect to order list page.
     """
 
-    return render(request, 'order_list.html')
+    if request.session['login_type'] == 'SELLER':
+        return render(request, 'order_list.html')
+    else:
+        return render(request, '404.html')
 
 
 @login_required
@@ -53,7 +56,7 @@ def OrderList__asJson(request):
     records_total = order_list.count()
 
     if search:  # Filter data base on search
-        order_list = order_list.filter(Q(id__icontains=search)|Q(name__icontains=search)).order_by('-nickname')
+        order_list = order_list.filter(Q(id__icontains=search)|Q(name__icontains=search)).order_by('-name')
 
     # All data
     records_filtered = order_list.count()
@@ -305,197 +308,17 @@ def order_add(request):
     Method to add new order.
     """
 
-    try:
-        tax_rate = TaxRate.objects.filter(is_hidden=False, is_enable=True, end_date__isnull=True).last().tax_rate
-    except:
-        tax_rate = None
-
-    if request.method == 'POST':
+    if request.session['login_type'] == 'SELLER':
         try:
-            order = Order()
-            order.seller_id = request.POST.get('seller_id')
-            order.purchaser_id = request.POST.get('orderer')
-            order.amount = request.POST.get('amount')
-            order.tax = request.POST.get('tax')
-            order.shipping_fee = request.POST.get('shipping_fee')
-            order.total_amount = request.POST.get('total_amount')
-            order.name = request.POST.get('name')
-            order.zip1 = request.POST.get('zip1')
-            order.prefecture_id = request.POST.get('prefecture')
-            order.address1 = request.POST.get('address1')
-            order.address2 = request.POST.get('address2')
-            order.tel = request.POST.get('tel')
-            order.status = request.POST.get('order_status')
-            order.inquiry_number = request.POST.get('inquiry_number')
-            order.order_date = request.POST.get('order_date')
-            order.shipped_date = request.POST.get('shipped_date')
-            order.save()
+            tax_rate = TaxRate.objects.filter(is_hidden=False, is_enable=True, end_date__isnull=True).last().tax_rate
+        except:
+            tax_rate = None
 
-            product_list = json.loads(request.POST.get('product_list'))
-            kinujo_product = if_kinujo_product(order.seller_id)
-            commission_holder_list = get_commission_holder_list(order.purchaser_id, kinujo_product)
-            orderer_auth_type = Profile.objects.get(pk=order.purchaser_id).authority_id
-            
-            affected_user_list = []
-            for item in product_list:
-                product_jan = ProductJancode.objects.filter(pk=item['jan_id']).first()
-                if (product_jan):
-                    j_product = get_jan_products(product_jan)
-                    if j_product:
-                        orderProduct = OrderProduct()
-                        orderProduct.product_jan_code_id = item['jan_id']
-                        orderProduct.order_id = order.id
-                        orderProduct.quantity = item['qty']
-                        if orderer_auth_type == AUTHORITY_TYPE['STORE']:
-                            orderProduct.unit_price = j_product.store_price
-                        else:
-                            orderProduct.unit_price = j_product.price
-                        orderProduct.total_price = int(orderProduct.unit_price) * int(item['qty'])
-                        if tax_rate:
-                            orderProduct.tax = round_number(orderProduct.total_price * tax_rate, 0)
-                        else:
-                            orderProduct.tax = 0
-                        orderProduct.total_amount = orderProduct.total_price + orderProduct.tax
-                        orderProduct.save()
-
-                        product_jan.stock = product_jan.stock - int(item['qty'])
-                        product_jan.modified = datetime.datetime.now()
-                        product_jan.save()
-
-                        # commissoion block
-                        if kinujo_product:
-                            remaining_amount = int(j_product.price) * int(orderProduct.quantity)
-                            if orderer_auth_type == AUTHORITY_TYPE['STORE']:
-                                remaining_amount = int(j_product.store_price) * int(orderProduct.quantity)
-                            # others commission
-                            for commission_holder in commission_holder_list:
-                                if float(commission_holder['commission']) != 0:
-                                    his_amount = int(j_product.price  * int(orderProduct.quantity) * float(commission_holder['commission']))
-                                    remaining_amount = remaining_amount - his_amount
-                                    orderProductCommission = OrderProductCommission()
-                                    orderProductCommission.order_product_id = orderProduct.id
-                                    orderProductCommission.user_id = commission_holder['user_id']
-                                    orderProductCommission.amount = his_amount
-                                    orderProductCommission.is_sales = False
-                                    orderProductCommission.is_food = False
-                                    orderProductCommission.shipping_fee = 0
-                                    orderProductCommission.save()
-                                    if orderProductCommission.user_id not in affected_user_list:
-                                        affected_user_list.append(orderProductCommission.user_id)
-                                # elif float(commission_holder['commission']) == 0:
-                                #     his_amount = remaining_amount
-                                #     remaining_amount = remaining_amount - his_amount
-                                #     orderProductCommission = OrderProductCommission()
-                                #     orderProductCommission.order_product_id = orderProduct.id
-                                #     orderProductCommission.user_id = commission_holder['user_id']
-                                #     orderProductCommission.amount = his_amount
-                                #     orderProductCommission.is_sales = False
-                                #     orderProductCommission.is_food = False
-                                #     orderProductCommission.shipping_fee = 0
-                                #     orderProductCommission.save()
-                                #     if orderProductCommission.user_id not in affected_user_list:
-                                        # affected_user_list.append(orderProductCommission.user_id)
-                            # create master seller commission
-                            if remaining_amount > 0:
-                                orderProductCommission = OrderProductCommission()
-                                orderProductCommission.order_product_id = orderProduct.id
-                                orderProductCommission.user_id = order.seller_id
-                                orderProductCommission.amount = remaining_amount
-                                orderProductCommission.is_sales = True
-                                orderProductCommission.is_food = False
-                                orderProductCommission.shipping_fee = j_product.shipping_fee
-                                orderProductCommission.save()
-                                if orderProductCommission.user_id not in affected_user_list:
-                                    affected_user_list.append(orderProductCommission.user_id)
-                        
-                        else: # Non Kinujo Products
-                            seller_commission = 0.65
-                            seller_amount = int(j_product.price * seller_commission) * int(orderProduct.quantity)
-                            remaining_amount = int(j_product.price) * int(orderProduct.quantity)
-                            if orderer_auth_type == AUTHORITY_TYPE['STORE']:
-                                remaining_amount = int(j_product.store_price) * int(orderProduct.quantity)
-                            remaining_amount = remaining_amount - seller_amount
-                            # create seller commission
-                            orderProductCommission = OrderProductCommission()
-                            orderProductCommission.order_product_id = orderProduct.id
-                            orderProductCommission.user_id = order.seller_id
-                            orderProductCommission.amount = seller_amount
-                            orderProductCommission.is_sales = True
-                            orderProductCommission.is_food = False
-                            orderProductCommission.shipping_fee = j_product.shipping_fee
-                            orderProductCommission.save()
-                            if orderProductCommission.user_id not in affected_user_list:
-                                affected_user_list.append(orderProductCommission.user_id)
-                            # now others commission
-                            for commission_holder in commission_holder_list:
-                                if float(commission_holder['commission']) != 0:
-                                    his_amount = int(j_product.price  * int(orderProduct.quantity) * float(commission_holder['commission']))
-                                    remaining_amount = remaining_amount - his_amount
-                                    orderProductCommission = OrderProductCommission()
-                                    orderProductCommission.order_product_id = orderProduct.id
-                                    orderProductCommission.user_id = commission_holder['user_id']
-                                    orderProductCommission.amount = his_amount
-                                    orderProductCommission.is_sales = False
-                                    orderProductCommission.is_food = False
-                                    orderProductCommission.shipping_fee = 0
-                                    orderProductCommission.save()
-                                    if orderProductCommission.user_id not in affected_user_list:
-                                        affected_user_list.append(orderProductCommission.user_id)
-                            if remaining_amount > 0:
-                                last_user = Profile.objects.filter(is_hidden=False, is_master=True, 
-                                        authority_id=AUTHORITY_TYPE['MASTER']).first()
-                                if last_user:
-                                    orderProductCommission = OrderProductCommission()
-                                    orderProductCommission.order_product_id = orderProduct.id
-                                    orderProductCommission.user_id = last_user.id
-                                    orderProductCommission.amount = remaining_amount
-                                    orderProductCommission.is_sales = False
-                                    orderProductCommission.is_food = False
-                                    orderProductCommission.shipping_fee = 0
-                                    orderProductCommission.save()
-                                    if orderProductCommission.user_id not in affected_user_list:
-                                        affected_user_list.append(orderProductCommission.user_id)
-                        
-
-
-            # Update users monthly commission & total commission
-            update_users_monthly_commission_t = threading.Thread(name='update_monthly_commission_t',
-                                                        target=update_monthly_commission_data, 
-                                                        args=(affected_user_list, order.order_date,  ), daemon=True)
-            update_users_monthly_commission_t.start()
-
-            return render(request, 'order_list.html')
-        except Exception as e:
-            print(e)
-
-    orderer_list = list(Profile.objects.filter(is_hidden=False, 
-                authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']])\
-        .values_list('id', 'nickname', 'authority_id')) # need to exclude login user
-    prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
-    seller_id = request.session['login_profile_id']
-    return render(request, 'order_form.html', {'prefecture_list': prefecture_list,
-                                                'orderer_list': orderer_list,
-                                                'order_product_list': [],
-                                                'status_list': ORDER_STATUS,
-                                                'tax_rate': tax_rate,
-                                                'seller_id': seller_id})
-
-@login_required
-def order_edit(request, order_id):
-    """
-    Method to edit a order.
-    """
-
-    try:
-        tax_rate = TaxRate.objects.filter(is_hidden=False, is_enable=True, end_date__isnull=True).last().tax_rate
-    except:
-        tax_rate = None
-
-    if request.method == 'POST':
-        try:
-            order = Order.objects.get(pk=order_id)
-            if order:
-                order.seller_id = request.POST.get('seller_id')
+        seller_id = request.session['login_profile_id']
+        if request.method == 'POST':
+            try:
+                order = Order()
+                order.seller_id = seller_id
                 order.purchaser_id = request.POST.get('orderer')
                 order.amount = request.POST.get('amount')
                 order.tax = request.POST.get('tax')
@@ -513,36 +336,12 @@ def order_edit(request, order_id):
                 order.shipped_date = request.POST.get('shipped_date')
                 order.save()
 
-                affected_user_list = []
-                # delete old order product
-                old_products = OrderProduct.objects.filter(is_hidden=False, order_id=order.id)
-                for old_product in old_products:
-                    product_jan = ProductJancode.objects.filter(is_hidden=False, id=old_product.product_jan_code_id).first()
-                    if product_jan:
-                        product_jan.stock = product_jan.stock + old_product.quantity # restore qty
-                        product_jan.modified = datetime.datetime.now()
-                        product_jan.save()
-
-                    old_product.is_hidden = True
-                    old_product.modified = datetime.datetime.now()
-                    old_product.save()
-
-                    # delete old orderproduct commission
-                    orderProductCommissions = OrderProductCommission.object.filter(order_product_id=old_product.id)
-                    for orderProductCommission in orderProductCommissions:
-                        orderProductCommission.is_hidden = True
-                        orderProductCommission.save()
-
-                        if orderProductCommission.user_id not in affected_user_list:
-                            affected_user_list.append(orderProductCommission.user_id)
-
-                    
-
                 product_list = json.loads(request.POST.get('product_list'))
                 kinujo_product = if_kinujo_product(order.seller_id)
                 commission_holder_list = get_commission_holder_list(order.purchaser_id, kinujo_product)
                 orderer_auth_type = Profile.objects.get(pk=order.purchaser_id).authority_id
-
+                
+                affected_user_list = []
                 for item in product_list:
                     product_jan = ProductJancode.objects.filter(pk=item['jan_id']).first()
                     if (product_jan):
@@ -552,19 +351,22 @@ def order_edit(request, order_id):
                             orderProduct.product_jan_code_id = item['jan_id']
                             orderProduct.order_id = order.id
                             orderProduct.quantity = item['qty']
-                            orderProduct.unit_price = j_product.price
-                            orderProduct.total_price = int(j_product.price) * int(item['qty'])
+                            if orderer_auth_type == AUTHORITY_TYPE['STORE']:
+                                orderProduct.unit_price = j_product.store_price
+                            else:
+                                orderProduct.unit_price = j_product.price
+                            orderProduct.total_price = int(orderProduct.unit_price) * int(item['qty'])
                             if tax_rate:
                                 orderProduct.tax = round_number(orderProduct.total_price * tax_rate, 0)
                             else:
                                 orderProduct.tax = 0
-                            orderProduct.total_amount = int(orderProduct.total_price + orderProduct.tax)
+                            orderProduct.total_amount = orderProduct.total_price + orderProduct.tax
                             orderProduct.save()
 
                             product_jan.stock = product_jan.stock - int(item['qty'])
                             product_jan.modified = datetime.datetime.now()
                             product_jan.save()
-                        
+
                             # commissoion block
                             if kinujo_product:
                                 remaining_amount = int(j_product.price) * int(orderProduct.quantity)
@@ -585,7 +387,19 @@ def order_edit(request, order_id):
                                         orderProductCommission.save()
                                         if orderProductCommission.user_id not in affected_user_list:
                                             affected_user_list.append(orderProductCommission.user_id)
-                                    
+                                    # elif float(commission_holder['commission']) == 0:
+                                    #     his_amount = remaining_amount
+                                    #     remaining_amount = remaining_amount - his_amount
+                                    #     orderProductCommission = OrderProductCommission()
+                                    #     orderProductCommission.order_product_id = orderProduct.id
+                                    #     orderProductCommission.user_id = commission_holder['user_id']
+                                    #     orderProductCommission.amount = his_amount
+                                    #     orderProductCommission.is_sales = False
+                                    #     orderProductCommission.is_food = False
+                                    #     orderProductCommission.shipping_fee = 0
+                                    #     orderProductCommission.save()
+                                    #     if orderProductCommission.user_id not in affected_user_list:
+                                            # affected_user_list.append(orderProductCommission.user_id)
                                 # create master seller commission
                                 if remaining_amount > 0:
                                     orderProductCommission = OrderProductCommission()
@@ -650,47 +464,249 @@ def order_edit(request, order_id):
 
 
                 # Update users monthly commission & total commission
-                update_users_monthly_commission_te = threading.Thread(name='update_monthly_commission_te',
+                update_users_monthly_commission_t = threading.Thread(name='update_monthly_commission_t',
                                                             target=update_monthly_commission_data, 
                                                             args=(affected_user_list, order.order_date,  ), daemon=True)
-                update_users_monthly_commission_te.start()
+                update_users_monthly_commission_t.start()
 
-            return render(request, 'order_list.html')
+                return render(request, 'order_list.html')
+            except Exception as e:
+                print(e)
 
-        except Exception as e:
-            print(e)
+        orderer_list = list(Profile.objects.filter(is_hidden=False, 
+                    authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']])\
+            .exclude(id=seller_id)\
+            .values_list('id', 'real_name', 'authority_id'))
+        prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
+        return render(request, 'order_form.html', {'prefecture_list': prefecture_list,
+                                                    'orderer_list': orderer_list,
+                                                    'order_product_list': [],
+                                                    'status_list': ORDER_STATUS,
+                                                    'tax_rate': tax_rate,
+                                                    'seller_id': seller_id})
+    else:
+        return render(request, '404.html')
 
-    order = Order.objects.get(pk=order_id)
+@login_required
+def order_edit(request, order_id):
+    """
+    Method to edit a order.
+    """
 
-    order_products = OrderProduct.objects.filter(is_hidden=False, order_id=order.id)
-    order_product_list = []
-    for order_product in order_products:
-        product_jan = ProductJancode.objects.filter(pk=order_product.product_jan_code_id).first()
-        # # product
-        # j_product = get_jan_products(product_jan)
-        # # image
-        # p_image = ProductImage.objects.filter(
-        #                 product_id=j_product.id, is_hidden=False).order_by('image_no').exclude(image_no__isnull=True).first()
-        # if p_image:
-        #     image_path = p_image.image.image.url
-        # else:
-        #     image_path = ''
+    if request.session['login_type'] == 'SELLER':
+        try:
+            tax_rate = TaxRate.objects.filter(is_hidden=False, is_enable=True, end_date__isnull=True).last().tax_rate
+        except:
+            tax_rate = None
 
-        # order_product_list.append([order_product.product_jan_code_id, order_product.quantity, image_path])
-        order_product_list.append([order_product.product_jan_code_id, order_product.quantity])
+        seller_id = request.session['login_profile_id']
+        if request.method == 'POST':
+            try:
+                order = Order.objects.filter(pk=order_id, seller_id=seller_id)
+                if order.exists():
+                    order = order.first()
+                    # order.seller_id = request.POST.get('seller_id')
+                    order.purchaser_id = request.POST.get('orderer')
+                    order.amount = request.POST.get('amount')
+                    order.tax = request.POST.get('tax')
+                    order.shipping_fee = request.POST.get('shipping_fee')
+                    order.total_amount = request.POST.get('total_amount')
+                    order.name = request.POST.get('name')
+                    order.zip1 = request.POST.get('zip1')
+                    order.prefecture_id = request.POST.get('prefecture')
+                    order.address1 = request.POST.get('address1')
+                    order.address2 = request.POST.get('address2')
+                    order.tel = request.POST.get('tel')
+                    order.status = request.POST.get('order_status')
+                    order.inquiry_number = request.POST.get('inquiry_number')
+                    order.order_date = request.POST.get('order_date')
+                    order.shipped_date = request.POST.get('shipped_date')
+                    order.save()
 
-    orderer_list = list(Profile.objects.filter(is_hidden=False, 
-                authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']])\
-        .values_list('id', 'nickname', 'authority_id')) # need to exclude login user
-    prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
-    seller_id = request.session['login_profile_id']
-    return render(request, 'order_form.html', {'prefecture_list': prefecture_list,
-                                                'order': order,
-                                                'orderer_list': orderer_list,
-                                                'order_product_list': order_product_list,
-                                                'status_list': ORDER_STATUS,
-                                                'tax_rate': tax_rate,
-                                                'seller_id': seller_id})
+                    affected_user_list = []
+                    # delete old order product
+                    old_products = OrderProduct.objects.filter(is_hidden=False, order_id=order.id)
+                    for old_product in old_products:
+                        product_jan = ProductJancode.objects.filter(is_hidden=False, id=old_product.product_jan_code_id).first()
+                        if product_jan:
+                            product_jan.stock = product_jan.stock + old_product.quantity # restore qty
+                            product_jan.modified = datetime.datetime.now()
+                            product_jan.save()
+
+                        old_product.is_hidden = True
+                        old_product.modified = datetime.datetime.now()
+                        old_product.save()
+
+                        # delete old orderproduct commission
+                        orderProductCommissions = OrderProductCommission.object.filter(order_product_id=old_product.id)
+                        for orderProductCommission in orderProductCommissions:
+                            orderProductCommission.is_hidden = True
+                            orderProductCommission.save()
+
+                            if orderProductCommission.user_id not in affected_user_list:
+                                affected_user_list.append(orderProductCommission.user_id)
+
+                        
+
+                    product_list = json.loads(request.POST.get('product_list'))
+                    kinujo_product = if_kinujo_product(order.seller_id)
+                    commission_holder_list = get_commission_holder_list(order.purchaser_id, kinujo_product)
+                    orderer_auth_type = Profile.objects.get(pk=order.purchaser_id).authority_id
+
+                    for item in product_list:
+                        product_jan = ProductJancode.objects.filter(pk=item['jan_id']).first()
+                        if (product_jan):
+                            j_product = get_jan_products(product_jan)
+                            if j_product:
+                                orderProduct = OrderProduct()
+                                orderProduct.product_jan_code_id = item['jan_id']
+                                orderProduct.order_id = order.id
+                                orderProduct.quantity = item['qty']
+                                orderProduct.unit_price = j_product.price
+                                orderProduct.total_price = int(j_product.price) * int(item['qty'])
+                                if tax_rate:
+                                    orderProduct.tax = round_number(orderProduct.total_price * tax_rate, 0)
+                                else:
+                                    orderProduct.tax = 0
+                                orderProduct.total_amount = int(orderProduct.total_price + orderProduct.tax)
+                                orderProduct.save()
+
+                                product_jan.stock = product_jan.stock - int(item['qty'])
+                                product_jan.modified = datetime.datetime.now()
+                                product_jan.save()
+                            
+                                # commissoion block
+                                if kinujo_product:
+                                    remaining_amount = int(j_product.price) * int(orderProduct.quantity)
+                                    if orderer_auth_type == AUTHORITY_TYPE['STORE']:
+                                        remaining_amount = int(j_product.store_price) * int(orderProduct.quantity)
+                                    # others commission
+                                    for commission_holder in commission_holder_list:
+                                        if float(commission_holder['commission']) != 0:
+                                            his_amount = int(j_product.price  * int(orderProduct.quantity) * float(commission_holder['commission']))
+                                            remaining_amount = remaining_amount - his_amount
+                                            orderProductCommission = OrderProductCommission()
+                                            orderProductCommission.order_product_id = orderProduct.id
+                                            orderProductCommission.user_id = commission_holder['user_id']
+                                            orderProductCommission.amount = his_amount
+                                            orderProductCommission.is_sales = False
+                                            orderProductCommission.is_food = False
+                                            orderProductCommission.shipping_fee = 0
+                                            orderProductCommission.save()
+                                            if orderProductCommission.user_id not in affected_user_list:
+                                                affected_user_list.append(orderProductCommission.user_id)
+                                        
+                                    # create master seller commission
+                                    if remaining_amount > 0:
+                                        orderProductCommission = OrderProductCommission()
+                                        orderProductCommission.order_product_id = orderProduct.id
+                                        orderProductCommission.user_id = order.seller_id
+                                        orderProductCommission.amount = remaining_amount
+                                        orderProductCommission.is_sales = True
+                                        orderProductCommission.is_food = False
+                                        orderProductCommission.shipping_fee = j_product.shipping_fee
+                                        orderProductCommission.save()
+                                        if orderProductCommission.user_id not in affected_user_list:
+                                            affected_user_list.append(orderProductCommission.user_id)
+                                
+                                else: # Non Kinujo Products
+                                    seller_commission = 0.65
+                                    seller_amount = int(j_product.price * seller_commission) * int(orderProduct.quantity)
+                                    remaining_amount = int(j_product.price) * int(orderProduct.quantity)
+                                    if orderer_auth_type == AUTHORITY_TYPE['STORE']:
+                                        remaining_amount = int(j_product.store_price) * int(orderProduct.quantity)
+                                    remaining_amount = remaining_amount - seller_amount
+                                    # create seller commission
+                                    orderProductCommission = OrderProductCommission()
+                                    orderProductCommission.order_product_id = orderProduct.id
+                                    orderProductCommission.user_id = order.seller_id
+                                    orderProductCommission.amount = seller_amount
+                                    orderProductCommission.is_sales = True
+                                    orderProductCommission.is_food = False
+                                    orderProductCommission.shipping_fee = j_product.shipping_fee
+                                    orderProductCommission.save()
+                                    if orderProductCommission.user_id not in affected_user_list:
+                                        affected_user_list.append(orderProductCommission.user_id)
+                                    # now others commission
+                                    for commission_holder in commission_holder_list:
+                                        if float(commission_holder['commission']) != 0:
+                                            his_amount = int(j_product.price  * int(orderProduct.quantity) * float(commission_holder['commission']))
+                                            remaining_amount = remaining_amount - his_amount
+                                            orderProductCommission = OrderProductCommission()
+                                            orderProductCommission.order_product_id = orderProduct.id
+                                            orderProductCommission.user_id = commission_holder['user_id']
+                                            orderProductCommission.amount = his_amount
+                                            orderProductCommission.is_sales = False
+                                            orderProductCommission.is_food = False
+                                            orderProductCommission.shipping_fee = 0
+                                            orderProductCommission.save()
+                                            if orderProductCommission.user_id not in affected_user_list:
+                                                affected_user_list.append(orderProductCommission.user_id)
+                                    if remaining_amount > 0:
+                                        last_user = Profile.objects.filter(is_hidden=False, is_master=True, 
+                                                authority_id=AUTHORITY_TYPE['MASTER']).first()
+                                        if last_user:
+                                            orderProductCommission = OrderProductCommission()
+                                            orderProductCommission.order_product_id = orderProduct.id
+                                            orderProductCommission.user_id = last_user.id
+                                            orderProductCommission.amount = remaining_amount
+                                            orderProductCommission.is_sales = False
+                                            orderProductCommission.is_food = False
+                                            orderProductCommission.shipping_fee = 0
+                                            orderProductCommission.save()
+                                            if orderProductCommission.user_id not in affected_user_list:
+                                                affected_user_list.append(orderProductCommission.user_id)
+                                
+
+
+                    # Update users monthly commission & total commission
+                    update_users_monthly_commission_te = threading.Thread(name='update_monthly_commission_te',
+                                                                target=update_monthly_commission_data, 
+                                                                args=(affected_user_list, order.order_date,  ), daemon=True)
+                    update_users_monthly_commission_te.start()
+
+                return render(request, 'order_list.html')
+
+            except Exception as e:
+                print(e)
+
+        order = Order.objects.filter(pk=order_id, seller_id=seller_id)
+        if order.exists():
+            order = order.first()
+
+            order_products = OrderProduct.objects.filter(is_hidden=False, order_id=order.id)
+            order_product_list = []
+            for order_product in order_products:
+                product_jan = ProductJancode.objects.filter(pk=order_product.product_jan_code_id).first()
+                # # product
+                # j_product = get_jan_products(product_jan)
+                # # image
+                # p_image = ProductImage.objects.filter(
+                #                 product_id=j_product.id, is_hidden=False).order_by('image_no').exclude(image_no__isnull=True).first()
+                # if p_image:
+                #     image_path = p_image.image.image.url
+                # else:
+                #     image_path = ''
+
+                # order_product_list.append([order_product.product_jan_code_id, order_product.quantity, image_path])
+                order_product_list.append([order_product.product_jan_code_id, order_product.quantity])
+
+            orderer_list = list(Profile.objects.filter(is_hidden=False, 
+                        authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']])\
+                .exclude(id=seller_id)\
+                .values_list('id', 'real_name', 'authority_id'))
+            prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
+            return render(request, 'order_form.html', {'prefecture_list': prefecture_list,
+                                                        'order': order,
+                                                        'orderer_list': orderer_list,
+                                                        'order_product_list': order_product_list,
+                                                        'status_list': ORDER_STATUS,
+                                                        'tax_rate': tax_rate,
+                                                        'seller_id': seller_id})
+        else:
+            return render(request, '404.html')
+    else:
+        return render(request, '404.html')
 
 @login_required
 # @csrf_exempt
@@ -699,44 +715,48 @@ def order_delete(request, order_id):
     Method to delete a order.
     """
 
-    try:
-        order = Order.objects.get(pk=order_id)
-        order.is_hidden = True
-        order.modified = datetime.datetime.now()
-        order.save()
+    if request.session['login_type'] == 'SELLER':
+        try:
+            order = Order.objects.get(pk=order_id)
+            order.is_hidden = True
+            order.modified = datetime.datetime.now()
+            order.save()
 
-        # delete old order product
-        affected_user_list = []
-        old_products = OrderProduct.objects.filter(is_hidden=False, order_id=order.id)
-        for old_product in old_products:
-            product_jan = ProductJancode.objects.filter(is_hidden=False, id=old_product.product_jan_code_id).first()
-            if product_jan:
-                product_jan.stock = product_jan.stock + old_product.quantity # restore qty
-                product_jan.modified = datetime.datetime.now()
-                product_jan.save()
-            
-            old_product.is_hidden = True
-            old_product.modified = datetime.datetime.now()
-            old_product.save()
+            # delete old order product
+            affected_user_list = []
+            old_products = OrderProduct.objects.filter(is_hidden=False, order_id=order.id)
+            for old_product in old_products:
+                product_jan = ProductJancode.objects.filter(is_hidden=False, id=old_product.product_jan_code_id).first()
+                if product_jan:
+                    product_jan.stock = product_jan.stock + old_product.quantity # restore qty
+                    product_jan.modified = datetime.datetime.now()
+                    product_jan.save()
+                
+                old_product.is_hidden = True
+                old_product.modified = datetime.datetime.now()
+                old_product.save()
 
-            # delete old orderproduct commission
-            orderProductCommissions = OrderProductCommission.object.filter(order_product_id=old_product.id)
-            for orderProductCommission in orderProductCommissions:
-                orderProductCommission.is_hidden = True
-                orderProductCommission.save()
+                # delete old orderproduct commission
+                orderProductCommissions = OrderProductCommission.object.filter(order_product_id=old_product.id)
+                for orderProductCommission in orderProductCommissions:
+                    orderProductCommission.is_hidden = True
+                    orderProductCommission.save()
 
-                if orderProductCommission.user_id not in affected_user_list:
-                    affected_user_list.append(orderProductCommission.user_id)
+                    if orderProductCommission.user_id not in affected_user_list:
+                        affected_user_list.append(orderProductCommission.user_id)
 
-        # Update users monthly commission & total commission
-        update_users_monthly_commission_td = threading.Thread(name='update_monthly_commission_td',
-                                                    target=update_monthly_commission_data, 
-                                                    args=(affected_user_list, order.order_date,  ), daemon=True)
-        update_users_monthly_commission_td.start()
+            # Update users monthly commission & total commission
+            update_users_monthly_commission_td = threading.Thread(name='update_monthly_commission_td',
+                                                        target=update_monthly_commission_data, 
+                                                        args=(affected_user_list, order.order_date,  ), daemon=True)
+            update_users_monthly_commission_td.start()
 
-    except Exception as e:
-        print(e)
-    return render(request, 'order_list.html')
+        except Exception as e:
+            print(e)
+        return render(request, 'order_list.html')
+
+    else:
+        return render(request, '404.html')
 
 
 def check_for_duplicate(request, type, value):
@@ -859,8 +879,8 @@ def UserCommissionList__asJson(request):
                 "image_path": image_path,
                 "name": j_product.name,
                 "amount": field.amount,
-                "selling_price": field.order_product.total_proce,
-                "seller": field.order_product.order.seller.nickname if field.order_product.order.seller else ''
+                "selling_price": field.order_product.total_price,
+                "seller": field.order_product.order.seller.real_name if field.order_product.order.seller else ''
             }
             array.append(data)
 

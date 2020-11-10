@@ -99,6 +99,7 @@
 
     <!--sidebar start-->
     <aside>
+        {% if request.session.login_type == 'MASTER' %}
         <div id="sidebar" class="nav-collapse ">
             <!-- sidebar menu start-->
             <ul class="sidebar-menu" id="nav-accordion">
@@ -138,6 +139,47 @@
                 </li>
             </ul>
         </div>
+        {% else %} <!-- request.session.login_type == 'SELLER'-->
+        <div id="sidebar" class="nav-collapse ">
+            <!-- sidebar menu start-->
+            <ul class="sidebar-menu" id="nav-accordion">
+                <li class="sub-menu">
+                    <a href="javascript:;" class="{% block item_a_active %}{% endblock %}">
+                        <i class="fas fa-boxes fa-lg {% block item_i_active %}{% endblock %}"></i>
+                        {% trans 'Item Management' %}
+                    </a>
+                    <ul class="sub">
+                        <li class="{% block item_list_active %}{% endblock %}">
+                            <a href="{% url 'product_list' %}" >{% trans 'Item List' %}</a>
+                        </li>
+                        <li class="{% block item_add_active %}{% endblock %}">
+                            <a href="{% url 'product_add' %}">{% trans 'Item Registration' %}</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;" class="{% block order_a_active %}{% endblock %}">
+                        <i class="fas fa-list fa-lg{% block order_i_active %}{% endblock %}"></i>
+                        {% trans 'Order Management' %}
+                    </a>
+                    <ul class="sub">
+                        <li class="{% block order_list_active %}{% endblock %}">
+                            <a href="{% url 'order_list' %}" >{% trans 'Order List' %}</a>
+                        </li>
+                        <li class="{% block order_add_active %}{% endblock %}">
+                            <a href="{% url 'order_add' %}">{% trans 'Order Registration' %}</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sub-menu">
+                    <a href="{% url 'listing_sales_list' %}" class="{% block listing_sales_a_active %}{% endblock %}">
+                        <i class="fas fa-dollar-sign fa-lg {% block listing_sales_i_active %}{% endblock %}"></i>
+                        {% trans 'Sales Management' %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        {% endif %}
     </aside>
     <!--sidebar end-->
 
