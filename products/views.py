@@ -28,7 +28,7 @@ def product_list(request):
     return render(request, 'product_list.html', {'profile_id': profile_id})
 
 
-@login_required
+# @login_required
 def ProductList__asJson(request):
     """
     Method to get product list as JSON.
