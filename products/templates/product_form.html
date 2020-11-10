@@ -574,8 +574,8 @@
                 <p style="width: 20px;" class="m-2"> </p>
                 <p style="width: 20px;" class="m-2"> </p>
                 <label for="message-text" class="col-form-label" style="width: 160px;">{% trans 'Choices' %}</label>
-                <label for="message-text" class="col-form-label" style="width: 140px;">{% trans 'JAN Code' %}</label>
-                <label for="message-text" class="col-form-label" style="width: 50px;">{% trans 'Stock' %}</label>
+                <label for="message-text" class="col-form-label label-hide" style="width: 140px;">{% trans 'JAN Code' %}</label>
+                <label for="message-text" class="col-form-label label-hide" style="width: 50px;">{% trans 'Stock' %}</label>
                 <p class="m-2" style="width: 50px;"> </p>
               </div>
               
@@ -850,6 +850,8 @@
         let oneGroupItemWrapper =  document.getElementById('oneItemGroup');
         let tableOne = document.getElementById('variety-table');
         if(tableOne.innerHTML.trim() !== ''){
+          $('.label-hide').css('display', 'none');
+          $('#oneItemVariant .modal-body').css('margin-left', '5rem');
 
           //empty modal form
           oneGroupItemWrapper.innerHTML = '';
@@ -893,10 +895,8 @@
                           <p style="width: 20px;" class="m-2"> </p>
                           <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
                           <input value="${varChoices}" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                          
-                          <input value="${varJanCode}" type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
-                          
-                          <input value="${varStock}" type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
+                          <input value="${varJanCode}" type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px; display: none;">
+                          <input value="${varStock}" type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px; display: none;">
                           <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                           </div>`;
             
@@ -905,6 +905,11 @@
             }
           }
 
+        } else {
+          $('#oneItemVariant .modal-body').css('margin-left', '');
+          $('.label-hide').css('display', 'block');
+          $('.one-item-jan-code').css('display', 'block');
+          $('.one-item-stock').css('display', 'block');
         }
       }
 
@@ -1168,16 +1173,25 @@
       let optCounter = optionArray.length + 1;
 
       let newContent = document.createElement('div');
-      newContent.innerHTML = `<div class='form-group'>
-                    <p style="width: 20px;" class="m-2"> </p>
-                    <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
-                    <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                    
-                    <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
-                    
-                    <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                    </div>`;
+      if($('.label-hide').is(":visible")) {
+        newContent.innerHTML = `<div class='form-group'>
+                      <p style="width: 20px;" class="m-2"> </p>
+                      <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
+                      <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                      <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
+                      <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
+                      <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                      </div>`;
+      } else {
+        newContent.innerHTML = `<div class='form-group'>
+                      <p style="width: 20px;" class="m-2"> </p>
+                      <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
+                      <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                      <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px; display: none;">
+                      <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px; display: none;">
+                      <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                      </div>`;
+      }
       
       while (newContent.firstChild) {
         document.getElementById('oneItemGroup').appendChild(newContent.firstChild);
@@ -1567,9 +1581,7 @@
                     <p style="width: 20px;" class="m-2"> </p>
                     <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
                     <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                    
-                    <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
-                    
+                    <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
                     <input value="" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
@@ -1577,13 +1589,10 @@
                     <p style="width: 20px;" class="m-2"> </p>
                     <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
                     <input value=""  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                    
-                    <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
-                    
+                    <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
                     <input value=""  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
-
                 `;
 
       //change add item button
