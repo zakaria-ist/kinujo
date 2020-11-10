@@ -23,9 +23,10 @@ class NameChoiceField(ModelChoiceField):
 
 class ProfileForm(forms.ModelForm):
     tel = forms.CharField(required=True,
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'phone number', 'maxlength': '15'}))
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':"off", 
+                                    'placeholder': '', 'maxlength': '15'}))
     password = forms.CharField(required=False,
-                            widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'off'}))
+                            widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete':'new-password'}))
     nickname = forms.CharField(required=True,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     real_name = forms.CharField(required=True,

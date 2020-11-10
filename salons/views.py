@@ -1,17 +1,11 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponsePermanentRedirect
-from django.urls import reverse
-from django.template import RequestContext
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
-from .models import Salon
-from django.conf import settings as s
 import datetime
 import json
-from django.contrib import messages
 from django.db.models import Q
+from django.http import HttpResponse, HttpResponsePermanentRedirect
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from .models import Salon
+
 
 
 @csrf_exempt
@@ -148,7 +142,7 @@ def SalonList__asJson(request):
     records_total = salon_list.count()
 
     if search:  # Filter data base on search
-        salon_list = salon_list.filter(Q(name__icontains=search)|Q(pic__name__icontains=search)|Q(pic_tel__icontains=search)).order_by('-name')
+        salon_list = salon_list.filter(Q(name__icontains=search)|Q(pic_name__icontains=search)|Q(pic_tel__icontains=search)).order_by('-name')
 
     # All data
     records_filtered = salon_list.count()

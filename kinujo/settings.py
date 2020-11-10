@@ -31,25 +31,13 @@ ALLOWED_HOSTS = ['*', '127.0.0.1', 'kinujo-develop.c2sg.asia',
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'kinujo_develop_db',
-        'USER': 'kinujo_develop',
-        'PASSWORD': 'Pa55w0rd',
-        'HOST': 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com',
+        'NAME': 'kinujo_local_db',
+        'USER': 'root',
+        'PASSWORD': 'password',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     }
 }
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'kinujo_local_db',
-#         'USER': 'root',
-#         'PASSWORD': '',
-#         'HOST': '127.0.0.1',
-#         'PORT': '3306',
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

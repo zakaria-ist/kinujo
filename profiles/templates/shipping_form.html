@@ -95,8 +95,8 @@
         ],
         address : {
             '#prefecture'  : '%3',
-            '#address1'  : '%4, %5',
-            '#address2'  : '%8, %9, %10',
+            '#address1'  : '%4 %5',
+            //'#address2'  : '%8, %9, %10',
         }
     });
 
@@ -104,5 +104,10 @@
         setTimeout(() => {
             $('#prefecture').val($('#prefecture').val()).trigger('change');
         }, 800);
+    });
+    $('#zip_code').on('keyup', function() {
+        setTimeout(() => {
+            $('#prefecture').val($('#prefecture').val()).trigger('change');
+        }, 100);
     });
 </script>

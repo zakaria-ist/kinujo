@@ -8,6 +8,16 @@ from taxes.models import TaxRate
 from images.models import Image
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
+from rest_framework.test import APIRequestFactory
+from rest_framework.request import Request
+
+def getContext():
+    factory = APIRequestFactory()
+    n = factory.get('/')
+    context = {
+        'request': Request(APIRequestFactory().get('/')),
+    }
+    return context
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(
@@ -26,6 +36,25 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                 validated_data['password'])
         return user
     
+class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+    password = serializers.CharField(write_only=True)
+    profit = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Profile
+        fields = ['id', 'profit', 'url', 'user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
+    def get_profit(self, instance):
+        orders = Order.objects.filter(seller=instance.id).values_list('id', flat=True)
+        orderProducts = OrderProduct.objects.all().filter(order__in=orders)
+        orderProductsCommission = OrderProductCommission.objects.all().filter(order_product__in=orderProducts.values_list('id', flat=True))
+
+        total = 0
+        for item in orderProductsCommission:
+            total = total + item.amount
+        for item in orderProducts:
+            total = total + item.unit_price
+        return total
+
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Image
@@ -35,22 +64,6 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
         fields = ['url', 'name']
-class OrderSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Order
-        fields = ['seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','created','modified']
-class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = OrderProduct
-        fields = ['product_jan_code','order','quantity','unit_price','total_price','tax','total_amount','is_hidden','created','modified']
-class OrderProductCommissionSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = OrderProductCommission
-        fields = ['order_product','user','amount','is_sales','is_food','shipping_fee','is_hidden','created','modified']
-class OrderReceiptSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = OrderReceipt
-        fields = ['is_copy','to_name','amount','output_date','order_date','product_name','shop_name','address','payment','is_hidden','created','modified']
 class TotalSaleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TotalSale
@@ -66,7 +79,7 @@ class PolicySerializer(serializers.HyperlinkedModelSerializer):
 class PrefectureSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Prefecture
-        fields = ['name','is_hidden','created','modified']
+        fields = ['url', 'name','is_hidden','created','modified']
 class ProductCategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductCategory
@@ -74,20 +87,24 @@ class ProductCategorySerializer(serializers.HyperlinkedModelSerializer):
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Product
-        fields = ['name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified']
+        fields = ['name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified', 'user']
 class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductImage
         fields = ['product','image','is_hidden','created','modified',]
 class ProductVarietySerializer(serializers.HyperlinkedModelSerializer):
+    product = ProductSerializer()
     class Meta:
         model = ProductVariety
         fields = ['name','product','vertical_and_horizontal','is_hidden','created','modified']
 class ProductVarietySelectionSerializer(serializers.HyperlinkedModelSerializer):
+    product_variety = ProductVarietySerializer()
     class Meta:
         model = ProductVarietySelection
         fields = ['product_variety','selection','is_hidden','created','modified']
 class ProductJancodeSerializer(serializers.HyperlinkedModelSerializer):
+    horizontal = ProductVarietySelectionSerializer()
+    vertical = ProductVarietySelectionSerializer()
     class Meta:
         model = ProductJancode
         fields = ['horizontal','vertical','jan_code','stock','is_hidden','created','modified']
@@ -95,13 +112,29 @@ class AuthoritySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Authority
         fields = ['url', 'name','commission_rate','official_commission_rate','is_hidden','created','modified']
-
-class ProfileSerializer(serializers.HyperlinkedModelSerializer):
-    password = serializers.CharField(write_only=True)
+class OrderSerializer(serializers.HyperlinkedModelSerializer):
+    seller = ProfileSerializer()
+    purchaser = ProfileSerializer()
+    prefecture = PrefectureSerializer()
     class Meta:
-        model = Profile
-        fields = ['url', 'user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
-
+        model = Order
+        fields = ['seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','created','modified']
+class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
+    order = OrderSerializer()
+    product_jan_code = ProductJancodeSerializer()
+    class Meta:
+        model = OrderProduct
+        fields = ['id', 'url', 'product_jan_code', 'order', 'quantity','unit_price','total_price','tax','total_amount','is_hidden','created','modified']
+class OrderProductCommissionSerializer(serializers.HyperlinkedModelSerializer):
+    order_product = OrderProductSerializer()
+    class Meta:
+        model = OrderProductCommission
+        fields = ['order_product','user','amount','is_sales','is_food','shipping_fee','is_hidden','created','modified']
+class OrderReceiptSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = OrderReceipt
+        fields = ['is_copy','to_name','amount','output_date','order_date','product_name','shop_name','address','payment','is_hidden','created','modified']
+        
 class FinancialAccountSerialier(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = FinancialAccount

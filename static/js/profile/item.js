@@ -1,3 +1,4 @@
+var last_varieties = [];
 function loadItemTableData() {
     $('#item-table').DataTable().destroy();
     $('#item-table').DataTable({
@@ -66,8 +67,8 @@ function deleteProductConfirm(id) {
         success: function (json) {
             g_product_id = '';
             $.confirm({
-                title: 'Delete Successfull',
-                content: 'Product information is deleted.',
+                title: get_translate('Delete Successful'),
+                content: get_translate('Product information is deleted.'),
                 buttons: {
                     Ok: {
                         btnClass: 'btn-success',
@@ -79,7 +80,7 @@ function deleteProductConfirm(id) {
         },
         error: function (e) {
             $.confirm({
-                title: 'Error',
+                title: get_translate('Error'),
                 content: e.message,
                 buttons: {
                     Ok: {
@@ -92,38 +93,6 @@ function deleteProductConfirm(id) {
     });
 }
 
-function setEditFormInputs(json) {
-    $('#name').val(json.name);
-    $('#brand_name').val(json.brand_name);
-    $('#description').val(json.description);
-    $('#pr').val(json.pr);
-    $('#url_str').val(json.url_str);
-    $('#store_price').val(comma_format(json.store_price) + ' ' + JPCUR);
-    $('#price').val(comma_format(json.price) + ' ' + JPCUR);
-    $('#shipping_fee').val(comma_format(json.shipping_fee) + ' ' + JPCUR);
-    $('#category').val(json.category).trigger('change');
-    $('#opened_date').val(json.opened_date).trigger('change');
-    $("input[name=target]").val([json.target]);
-    $("input[name=status]").val([json.is_opened]);
-    $("input[name=is_used]").val([json.is_used]);
-    $("input[name=variety]").val([json.variety]).trigger('change');
-    
-    for(let i=0; i<json.images.length; i++) {
-        $('#img_image'+i).attr("src", json.images[i]);
-    }
-
-    if (json.variety == '0') {
-        let vrty = json.varieties[0];
-        $('#jan_code').val(vrty.jan_code);
-        $('#stock').val(vrty.stock);
-        deleteAny();
-    } else if (json.variety == '1') {
-        prepareVarientOneTable(json);
-    } else if (json.variety == '2') {
-        prepareVarientTwoTable(json);
-    }
-}
-
 function prepareVarientTwoTable(json){
     let variety2 = json.varieties;
     let v_names2 = [];
@@ -133,6 +102,12 @@ function prepareVarientTwoTable(json){
     let verticals = [];
     let v_selections2 = [];
     for (let i=0; i<variety2.length; i++) {
+        last_varieties.push({
+            "id": variety2[i].id,
+            "jan_code": variety2[i].jan_code,
+            "hor": variety2[i].varieties[0].selection,
+            "ver": variety2[i].varieties[1].selection,
+        });
         v_jancodes2.push(variety2[i].jan_code);
         v_stocks2.push(variety2[i].stock);
 
@@ -300,40 +275,40 @@ function prepareVarientTwoTable(json){
 
     varietyTableTwo1.style.height = '250px';
 
-    document.getElementById('firstOfTwoItemGroup').innerHTML = `
-                <div class="form-group">
+    // document.getElementById('firstOfTwoItemGroup').innerHTML = `
+    //             <div class="form-group">
                 
-                <p style="width: 20px;" class="m-2"> </p>
-                <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
-                <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+    //             <p style="width: 20px;" class="m-2"> </p>
+    //             <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
+    //             <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                 
-                <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                </div>
-                <div class="form-group">
-                <p style="width: 20px;" class="m-2"> </p>
-                <p class="m-2 first-of-two-variant-counter" style="width: 20px;">2</p>
-                <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+    //             <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; deleteOptionsFirstOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+    //             </div>
+    //             <div class="form-group">
+    //             <p style="width: 20px;" class="m-2"> </p>
+    //             <p class="m-2 first-of-two-variant-counter" style="width: 20px;">2</p>
+    //             <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                 
-                <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsFirstOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                </div>
-            `;
-    document.getElementById('lastOfTwoItemGroup').innerHTML = `
-                <div class="form-group">
-                    <p style="width: 20px;" class="m-2"> </p>
-                    <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
-                    <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+    //             <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; deleteOptionsFirstOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+    //             </div>
+    //         `;
+    // document.getElementById('lastOfTwoItemGroup').innerHTML = `
+    //             <div class="form-group">
+    //                 <p style="width: 20px;" class="m-2"> </p>
+    //                 <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
+    //                 <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                </div>
+    //                 <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+    //             </div>
                 
-                <div class="form-group">
-                    <p style="width: 20px;" class="m-2"> </p>
-                    <p class="m-2 last-of-two-variant-counter" style="width: 20px;">2</p>
-                    <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
+    //             <div class="form-group">
+    //                 <p style="width: 20px;" class="m-2"> </p>
+    //                 <p class="m-2 last-of-two-variant-counter" style="width: 20px;">2</p>
+    //                 <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                </div>
-                `;
+    //                 <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+    //             </div>
+    //             `;
 
     document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="two-items-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant" onclick="changeModalTwo();">+ Items / Options</button></div>`;
     //change add item button
@@ -347,7 +322,9 @@ function prepareVarientOneTable(json){
     let v_jancodes = [];
     let v_stocks = [];
     let v_selections = [];
+    let v_ids = [];
     for (let i=0; i<variety1.length; i++) {
+        v_ids.push(variety1[i].id);
         v_jancodes.push(variety1[i].jan_code);
         v_stocks.push(variety1[i].stock);
         v_selections.push(variety1[i].varieties[0].selection);
@@ -391,6 +368,12 @@ function prepareVarientOneTable(json){
       let choicesValue = v_selections[i];
       let janValue = v_jancodes[i];
       let stockValue = v_stocks[i];
+      last_varieties.push({
+        "id": v_ids[i],
+        "jan_code": v_jancodes[i],
+        "hor": v_selections[i],
+        "ver": '',
+      });
       newTableChoices.innerHTML = `<div class="variant-title variant-col" id="cell-name-value-${i}">${choicesValue}</div>`;
       newTableContent.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">Stock:${stockValue}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
       
@@ -408,29 +391,29 @@ function prepareVarientOneTable(json){
     document.getElementById("scrollable").style.overflow= 'scroll';
 
     //reset modal form
-    document.getElementById('oneItemGroup').innerHTML = `
-                <div class="form-group">
-                  <p style="width: 20px;" class="m-2"> </p>
-                  <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
-                  <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+    // document.getElementById('oneItemGroup').innerHTML = `
+    //             <div class="form-group">
+    //               <p style="width: 20px;" class="m-2"> </p>
+    //               <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
+    //               <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
                   
-                  <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+    //               <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
                   
-                  <input value="" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
-                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                </div>
-                <div class="form-group">
-                  <p style="width: 20px;" class="m-2"> </p>
-                  <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
-                  <input value=""  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+    //               <input value="" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+    //               <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+    //             </div>
+    //             <div class="form-group">
+    //               <p style="width: 20px;" class="m-2"> </p>
+    //               <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
+    //               <input value=""  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
                   
-                  <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
+    //               <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
                   
-                  <input value=""  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
-                  <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                </div>
+    //               <input value=""  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+    //               <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+    //             </div>
 
-              `;
+    //           `;
 
     //change add item button
     document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ Item / Option</button></div>`;
@@ -438,6 +421,7 @@ function prepareVarientOneTable(json){
   }
 
 var g_product_id = '';
+
 function showProductForm(product_id='') {
     $('#item_tab').html('');
     $.get("/profiles/templates/product_form/", function(data){
@@ -472,25 +456,131 @@ function showProductForm(product_id='') {
             $('#published').click();
             $('#new').click();
             $('#all-users').click();
+            $('#opened_date').val(new Date().toDateInputValue());
         }
     });
 }
 
-function saveProductInfo() {
-
-    var is_valid = validateProductForm();
-
-    if (is_valid) {
-        let varieties = [];
-        let variety = $('input[name="variety"]:checked').val();
-        if (variety == '0') { //None
-            varieties.push({
-                "jan_code": $('#jan_code').val(),
-                "stock": $('#stock').val(),
-                "varieties": []
-                })
+function setEditFormInputs(json) {
+    $('#name').val(json.name);
+    $('#brand_name').val(json.brand_name);
+    $('#description').val(json.description);
+    $('#pr').val(json.pr);
+    $('#url_str').val(json.url_str);
+    $('#store_price').val(comma_format(json.store_price, 0) + ' ' + JPCUR);
+    $('#price').val(comma_format(json.price, 0) + ' ' + JPCUR);
+    $('#shipping_fee').val(comma_format(json.shipping_fee, 0) + ' ' + JPCUR);
+    $('#category').val(json.category).trigger('change');
+    $('#opened_date').val(json.opened_date).trigger('change');
+    $("input[name=target]").val([json.target]);
+    $("input[name=status]").val([json.is_opened]);
+    $("input[name=is_used]").val([json.is_used]);
+    $("input[name=variety]").val([json.variety]).trigger('change');
+    
+    for(let i=0; i<json.images.length; i++) {
+        if (json.images[i].image_no == '1') {
+            $('#img_image0').attr("src", json.images[i].url);
+        } else if (json.images[i].image_no == '2') {
+            $('#img_image1').attr("src", json.images[i].url);
+        } else if (json.images[i].image_no == '3') {
+            $('#img_image2').attr("src", json.images[i].url);
+        } else if (json.images[i].image_no == '4') {
+            $('#img_image3').attr("src", json.images[i].url);
+        } else if (json.images[i].image_no == '5') {
+            $('#img_image4').attr("src", json.images[i].url);
         }
-        else if (variety == '1') { // 1 Item
+    }
+
+    if (json.variety == '0') {
+        let vrty = json.varieties[0];
+        $('#jan_code').val(vrty.jan_code);
+        $('#stock').val(vrty.stock);
+        last_varieties.push({
+            "id": vrty.id,
+            "jan_code": vrty.jan_code,
+            "hor": '',
+            "ver": '',
+        });
+        deleteAny();
+    } else if (json.variety == '1') {
+        document.getElementById("none-div").style.display = "none";
+        prepareVarientOneTable(json);
+    } else if (json.variety == '2') {
+        document.getElementById("none-div").style.display = "none";
+        prepareVarientTwoTable(json);
+    }
+
+    console.log('last_varieties', last_varieties);
+}
+
+// Method to instanly push changes to DB, without submitting form
+function pushStockToDB() {
+    let variety = $('input[name="variety"]:checked').val();
+    let varieties = prepareVarietiesData(variety);
+
+    if (g_product_id && g_product_id != '') {
+        $.ajax({
+            url: '/products/update_varieties/',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'product_id': g_product_id,
+                'variety': variety,
+                'varieties': varieties,
+                'old_varieties': last_varieties
+            }
+        })
+        .done(function(data) {
+            console.log(data.message);
+            $.ajax({
+                method: "POST",
+                url: '/products/get_product_info/',
+                dataType: 'JSON',
+                data: {
+                    'product_id': product_id,
+                },
+                success: function (json) {
+                    // setEditFormInputs(json);
+                    last_varieties = [];
+                    if (json.variety == '0') {
+                        let vrty = json.varieties[0];
+                        $('#jan_code').val(vrty.jan_code);
+                        $('#stock').val(vrty.stock);
+                        last_varieties.push({
+                            "id": vrty.id,
+                            "jan_code": vrty.jan_code,
+                            "hor": '',
+                            "ver": '',
+                        });
+                        deleteAny();
+                    } else if (json.variety == '1') {
+                        document.getElementById("none-div").style.display = "none";
+                        prepareVarientOneTable(json);
+                    } else if (json.variety == '2') {
+                        document.getElementById("none-div").style.display = "none";
+                        prepareVarientTwoTable(json);
+                    }
+                
+                    console.log('last_varieties', last_varieties);
+                }
+            });
+        })
+        .fail(function(e) {
+            
+        })
+    }
+}
+
+function prepareVarietiesData(variety) {
+    let varieties = [];
+    if (variety == '0') { //None
+        varieties.push({
+            "jan_code": $('#jan_code').val(),
+            "stock": $('#stock').val(),
+            "varieties": []
+            })
+    }
+    else if (variety == '1') { // 1 Item
         let name = document.getElementById('cell-name').innerHTML;
         let variantTableTitle = document.getElementsByClassName('variant-title');
         let variantTableCol = document.getElementsByClassName('variant-info');
@@ -498,13 +588,13 @@ function saveProductInfo() {
         for(let i = 0; i < variantTableCol.length; i++) {
             try{
                 varieties.push({
-                "jan_code": document.getElementById('jan-id-'+i).innerHTML,
-                "stock": document.getElementById('stock-id-'+i).innerHTML.split(':')[1].trim(),
+                "jan_code": (document.getElementById('jan-id-'+i).innerHTML.trim() != '') ? document.getElementById('jan-id-'+i).innerHTML : '',
+                "stock": (document.getElementById('stock-id-'+i).innerHTML.trim() != '') ? document.getElementById('stock-id-'+i).innerHTML.split(':')[1].trim() : 0,
                 "varieties": [
                     {
                         "name": name,
                         "selection": variantTableTitle[i+1].innerHTML,
-                        "vertical_and_horizontal": "1"
+                        "vertical_and_horizontal": "0"
                     }
                 ]
                 })
@@ -512,55 +602,72 @@ function saveProductInfo() {
 
             }
         }
-        }
-        else if (variety == '2') { // 2 Items
-            let preservedData = [];
-            let variantTableCol = document.getElementsByClassName('variant-info');
+    }
+    else if (variety == '2') { // 2 Items
+        let preservedData = [];
+        let variantTableCol = document.getElementsByClassName('variant-info');
 
-            for(let i = 0; i < variantTableCol.length; i++){
-                    //get id num
-                let idNum = variantTableCol[i].firstChild.id.split('-')[3];
+        for(let i = 0; i < variantTableCol.length; i++){
+                //get id num
+            let idNum = variantTableCol[i].firstChild.id.split('-')[3];
 
-                //get jancode
-                let janId = `jan-id-${idNum}`;
-                let jancode = document.getElementById(janId).innerHTML;
-
-                //get stock
-                let stockId = `stock-id-${idNum}`;
-                let stock = document.getElementById(stockId).innerHTML.split(':')[1].trim();
-
-                let dataToken = variantTableCol[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
-                
-                preservedData.push({
-                    jancode: jancode,
-                    stock: stock,
-                    token: dataToken
-                })
+            //get jancode
+            let janId = `jan-id-${idNum}`;
+            let jancode = '';
+            if (document.getElementById(janId).innerHTML.trim() != '') {
+            jancode = document.getElementById(janId).innerHTML;
             }
-            
-            //second cell name
-            let twoItemCellName = document.getElementById('cell-name');
-            // crate varieties
-            for(let i = 0; i < preservedData.length; i++){
-                varieties.push({
-                    "jan_code": preservedData[i].jancode,
-                    "stock": preservedData[i].stock,
-                    "varieties": [
-                        {
-                            "name": twoItemCellName.innerHTML.split('/')[0].trim(),
-                            "selection": preservedData[i].token.split('_')[0].trim(),
-                            "vertical_and_horizontal": "0"
-                        },
-                        {
-                            "name": twoItemCellName.innerHTML.split('/')[1].trim(),
-                            "selection": preservedData[i].token.split('_')[1].trim(),
-                            "vertical_and_horizontal": "1"
-                        },
-                    ]
-                })
+
+            //get stock
+            let stockId = `stock-id-${idNum}`;
+            let stock = 0;
+            if (document.getElementById(stockId).innerHTML.trim() != '') {
+            stock = document.getElementById(stockId).innerHTML.split(':')[1].trim()
             }
+
+            let dataToken = variantTableCol[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
             
+            preservedData.push({
+                jancode: jancode,
+                stock: stock,
+                token: dataToken
+            })
         }
+        
+        //second cell name
+        let twoItemCellName = document.getElementById('cell-name');
+        // crate varieties
+        for(let i = 0; i < preservedData.length; i++){
+            varieties.push({
+                "jan_code": preservedData[i].jancode,
+                "stock": preservedData[i].stock,
+                "varieties": [
+                    {
+                        "name": twoItemCellName.innerHTML.split('/')[0].trim(),
+                        "selection": preservedData[i].token.split('_')[0].trim(),
+                        "vertical_and_horizontal": "0"
+                    },
+                    {
+                        "name": twoItemCellName.innerHTML.split('/')[1].trim(),
+                        "selection": preservedData[i].token.split('_')[1].trim(),
+                        "vertical_and_horizontal": "1"
+                    },
+                ]
+            })
+        }
+        
+    }
+
+    return varieties;
+}
+
+function saveProductInfo() {
+
+    var is_valid = validateProductForm();
+
+    if (is_valid) {
+        let variety = $('input[name="variety"]:checked').val();
+        let varieties = prepareVarietiesData(variety);
 
         var data = new FormData();
         data.append("profile_id", profile_id);
@@ -581,6 +688,7 @@ function saveProductInfo() {
         data.append("is_draft", '0');
         data.append("variety", variety);
         data.append("varieties", JSON.stringify(varieties));
+        data.append("old_varieties", JSON.stringify(last_varieties));
 
         // let imageLength = document.getElementsByClassName('images').length;
         // for(let i = 0; i < imageLength; i++){
@@ -610,8 +718,8 @@ function saveProductInfo() {
             contentType: false,
             success: function (json) {
                 $.confirm({
-                    title: 'Update Successfull',
-                    content: 'Product information is updated.',
+                    title: get_translate('Update Successful'),
+                    content: get_translate('Product information is updated.'),
                     buttons: {
                         Ok: {
                             btnClass: 'btn-success',
@@ -624,7 +732,7 @@ function saveProductInfo() {
             },
             error: function (e) {
                 $.confirm({
-                    title: 'Error',
+                    title: get_translate('Error'),
                     content: e.message,
                     buttons: {
                         Ok: {
@@ -637,8 +745,8 @@ function saveProductInfo() {
         });
     } else {
         $.confirm({
-            title: 'Warning',
-            content: 'Please fill in the required fields',
+            title: get_translate('Warning'),
+            content: get_translate('Please fill in the required fields'),
             buttons: {
                 Ok: {
                     btnClass: 'btn-success',
