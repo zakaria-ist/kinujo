@@ -19,13 +19,17 @@ def product_list(request):
     """
     Method to redirect to product list page.
     """
-    try:
-        profile_id = request.session['login_profile_id']
-    except Exception as e:
-        print(e)
-        profile_id = ''
 
-    return render(request, 'product_list.html', {'profile_id': profile_id})
+    if request.session['login_type'] == 'SELLER':
+        try:
+            profile_id = request.session['login_profile_id']
+        except Exception as e:
+            print(e)
+            profile_id = ''
+
+        return render(request, 'product_list.html', {'profile_id': profile_id})
+    else:
+        return render(request, '404.html')
 
 
 # @login_required
@@ -299,52 +303,56 @@ def product_add(request):
     Method to add new product.
     """
 
-    if request.method == 'POST':
-        try:
-            product = Product()
-            product.user_id = request.POST.get('profile_id')
-            product.name = request.POST.get('name')
-            product.brand_name = request.POST.get('brand_name')
-            product.description = request.POST.get('description')
-            product.pr = request.POST.get('pr')
-            product.url_str = request.POST.get('url_str')
-            product.category_id = request.POST.get('category')
-            product.target = request.POST.get('target')
-            product.price = request.POST.get('price')
-            product.store_price = request.POST.get('store_price')
-            product.shipping_fee = request.POST.get('shipping_fee')
-            product.opened_date = request.POST.get('opened_date')
-            product.is_opened = int(request.POST.get('is_opened'))
-            product.is_used = int(request.POST.get('is_used'))
-            product.is_draft = int(request.POST.get('is_draft'))
-            product.variety = int(request.POST.get('variety'))
-            product.save()
+    if request.session['login_type'] == 'SELLER':
+        seller_id = request.session['login_profile_id']
+        if request.method == 'POST':
+            try:
+                product = Product()
+                product.user_id = seller_id
+                product.name = request.POST.get('name')
+                product.brand_name = request.POST.get('brand_name')
+                product.description = request.POST.get('description')
+                product.pr = request.POST.get('pr')
+                product.url_str = request.POST.get('url_str')
+                product.category_id = request.POST.get('category')
+                product.target = request.POST.get('target')
+                product.price = request.POST.get('price')
+                product.store_price = request.POST.get('store_price')
+                product.shipping_fee = request.POST.get('shipping_fee')
+                product.opened_date = request.POST.get('opened_date')
+                product.is_opened = int(request.POST.get('is_opened'))
+                product.is_used = int(request.POST.get('is_used'))
+                product.is_draft = int(request.POST.get('is_draft'))
+                product.variety = int(request.POST.get('variety'))
+                product.save()
 
-            # product image save
-            if request.FILES.get('product_image0', False):
-                save_product_image(request.FILES.get('product_image0'), 1, product.id)
-            if request.FILES.get('product_image1', False):
-                save_product_image(request.FILES.get('product_image1'), 2, product.id)
-            if request.FILES.get('product_image2', False):
-                save_product_image(request.FILES.get('product_image2'), 3, product.id)
-            if request.FILES.get('product_image3', False):
-                save_product_image(request.FILES.get('product_image3'), 4, product.id)
-            if request.FILES.get('product_image4', False):
-                save_product_image(request.FILES.get('product_image4'), 5, product.id)
+                # product image save
+                if request.FILES.get('product_image0', False):
+                    save_product_image(request.FILES.get('product_image0'), 1, product.id)
+                if request.FILES.get('product_image1', False):
+                    save_product_image(request.FILES.get('product_image1'), 2, product.id)
+                if request.FILES.get('product_image2', False):
+                    save_product_image(request.FILES.get('product_image2'), 3, product.id)
+                if request.FILES.get('product_image3', False):
+                    save_product_image(request.FILES.get('product_image3'), 4, product.id)
+                if request.FILES.get('product_image4', False):
+                    save_product_image(request.FILES.get('product_image4'), 5, product.id)
 
-            # save product varieties
-            varieties = json.loads(request.POST.get('varieties'))
-            saveNewVareities(product, varieties)
+                # save product varieties
+                varieties = json.loads(request.POST.get('varieties'))
+                saveNewVareities(product, varieties)
 
-            return render(request, 'product_list.html')
-        except Exception as e:
-            print(e)
-            messages.add_message(request, messages.ERROR,
-                                 e, extra_tags='product_add')
+                return render(request, 'product_list.html')
+            except Exception as e:
+                print(e)
+                messages.add_message(request, messages.ERROR,
+                                    e, extra_tags='product_add')
 
-    category_list = list(ProductCategory.objects.filter(
-        is_hidden=False).values_list('id', 'name'))
-    return render(request, 'product_form.html', {'category_list': category_list, 'media_url': s.MEDIA_URL})
+        category_list = list(ProductCategory.objects.filter(
+            is_hidden=False).values_list('id', 'name'))
+        return render(request, 'product_form.html', {'category_list': category_list, 'media_url': s.MEDIA_URL})
+    else:
+        return render(request, '404.html')
 
 
 @login_required
@@ -353,106 +361,115 @@ def product_edit(request, product_id):
     Method to edit a product.
     """
 
-    if request.method == 'POST':
-        try:
-            product = Product.objects.get(pk=product_id)
-            last_variety_type = product.variety
-            product.name = request.POST.get('name')
-            product.brand_name = request.POST.get('brand_name')
-            product.description = request.POST.get('description')
-            product.pr = request.POST.get('pr')
-            product.url_str = request.POST.get('url_str')
-            product.category_id = request.POST.get('category')
-            product.target = request.POST.get('target')
-            product.price = request.POST.get('price')
-            product.store_price = request.POST.get('store_price')
-            product.shipping_fee = request.POST.get('shipping_fee')
-            product.opened_date = request.POST.get('opened_date')
-            product.is_opened = int(request.POST.get('is_opened'))
-            product.is_used = int(request.POST.get('is_used'))
-            product.is_draft = int(request.POST.get('is_draft'))
-            product.variety = int(request.POST.get('variety'))
-            product.modified = datetime.datetime.now()
-            product.save()
+    if request.session['login_type'] == 'SELLER':
+        seller_id = request.session['login_profile_id']
+        if request.method == 'POST':
+            try:
+                product = Product.objects.filter(pk=product_id, user_id=seller_id)
+                if product.exists():
+                    product = product.first()
+                    last_variety_type = product.variety
+                    product.name = request.POST.get('name')
+                    product.brand_name = request.POST.get('brand_name')
+                    product.description = request.POST.get('description')
+                    product.pr = request.POST.get('pr')
+                    product.url_str = request.POST.get('url_str')
+                    product.category_id = request.POST.get('category')
+                    product.target = request.POST.get('target')
+                    product.price = request.POST.get('price')
+                    product.store_price = request.POST.get('store_price')
+                    product.shipping_fee = request.POST.get('shipping_fee')
+                    product.opened_date = request.POST.get('opened_date')
+                    product.is_opened = int(request.POST.get('is_opened'))
+                    product.is_used = int(request.POST.get('is_used'))
+                    product.is_draft = int(request.POST.get('is_draft'))
+                    product.variety = int(request.POST.get('variety'))
+                    product.modified = datetime.datetime.now()
+                    product.save()
 
-            # product image update
-            if request.FILES.get('product_image0', False):
-                update_product_image(request.FILES.get('product_image0'), 1, product.id)
-            if request.FILES.get('product_image1', False):
-                update_product_image(request.FILES.get('product_image1'), 2, product.id)
-            if request.FILES.get('product_image2', False):
-                update_product_image(request.FILES.get('product_image2'), 3, product.id)
-            if request.FILES.get('product_image3', False):
-                update_product_image(request.FILES.get('product_image3'), 4, product.id)
-            if request.FILES.get('product_image4', False):
-                update_product_image(request.FILES.get('product_image4'), 5, product.id)
+                    # product image update
+                    if request.FILES.get('product_image0', False):
+                        update_product_image(request.FILES.get('product_image0'), 1, product.id)
+                    if request.FILES.get('product_image1', False):
+                        update_product_image(request.FILES.get('product_image1'), 2, product.id)
+                    if request.FILES.get('product_image2', False):
+                        update_product_image(request.FILES.get('product_image2'), 3, product.id)
+                    if request.FILES.get('product_image3', False):
+                        update_product_image(request.FILES.get('product_image3'), 4, product.id)
+                    if request.FILES.get('product_image4', False):
+                        update_product_image(request.FILES.get('product_image4'), 5, product.id)
 
-            # check if variety type changes
-            # if so then delete 0ld data
-            if last_variety_type != product.veriety:
-                deleteOldVarieties(product)
-            
-            # save product new varieties
-            varieties = json.loads(request.POST.get('varieties'))
-            old_varieties = json.loads(request.POST.get('old_varieties'))
-            if last_variety_type != product.veriety:
-                old_varieties = []
-            updateProductVarieties(product, product.variety, varieties, old_varieties)
-            
+                    # check if variety type changes
+                    # if so then delete 0ld data
+                    if last_variety_type != product.veriety:
+                        deleteOldVarieties(product)
+                    
+                    # save product new varieties
+                    varieties = json.loads(request.POST.get('varieties'))
+                    old_varieties = json.loads(request.POST.get('old_varieties'))
+                    if last_variety_type != product.veriety:
+                        old_varieties = []
+                    updateProductVarieties(product, product.variety, varieties, old_varieties)
+                
+                    return render(request, 'product_list.html')
+            except Exception as e:
+                print(e)
+                messages.add_message(request, messages.ERROR,
+                                    e, extra_tags='product_edit')
 
-            return render(request, 'product_list.html')
-        except Exception as e:
-            print(e)
-            messages.add_message(request, messages.ERROR,
-                                 e, extra_tags='product_edit')
+        image_array = []
+        product = Product.objects.filter(pk=product_id, user_id=seller_id)
+        if product.exists():
+            product = product.first()
 
-    product = Product.objects.get(pk=product_id)
+            productImages = ProductImage.objects.filter(
+                product_id=product.id, is_hidden=False).order_by('image_no').exclude(image_no__isnull=True)
+            for productImage in productImages:
+                image_array.append(productImage.image.image.url)
 
-    image_array = []
-    productImages = ProductImage.objects.filter(
-        product_id=product.id, is_hidden=False).order_by('image_no').exclude(image_no__isnull=True)
-    for productImage in productImages:
-        image_array.append(productImage.image.image.url)
+            # p_varieties = []
+            # jancode_ids = get_products_jancodes(product.id, type='id')
+            # for jan_id in jancode_ids:
+            #     varieties = []
+            #     productJancode = ProductJancode.objects.get(pk=jan_id)
+            #     if productJancode.horizontal_id:
+            #         productVarietySelection = ProductVarietySelection.objects.get(
+            #             pk=productJancode.horizontal_id)
+            #         productVariety = ProductVariety.objects.get(
+            #             pk=productVarietySelection.product_variety_id)
+            #         varieties.append({
+            #             "name": str(productVariety.name),
+            #             "selection": str(productVarietySelection.selection),
+            #             "vertical_and_horizontal": str(productVariety.vertical_and_horizontal),
+            #         })
+            #     if productJancode.vertical_id:
+            #         productVarietySelection = ProductVarietySelection.objects.get(
+            #             pk=productJancode.vertical_id)
+            #         productVariety = ProductVariety.objects.get(
+            #             pk=productVarietySelection.product_variety_id)
+            #         varieties.append({
+            #             "name": str(productVariety.name),
+            #             "selection": str(productVarietySelection.selection),
+            #             "vertical_and_horizontal": str(productVariety.vertical_and_horizontal),
+            #         })
+            #     p_varieties.append({
+            #         "jan_code": str(productJancode.jan_code),
+            #         "stock": str(productJancode.stock),
+            #         "varieties": varieties
+            #     })
 
-    # p_varieties = []
-    # jancode_ids = get_products_jancodes(product.id, type='id')
-    # for jan_id in jancode_ids:
-    #     varieties = []
-    #     productJancode = ProductJancode.objects.get(pk=jan_id)
-    #     if productJancode.horizontal_id:
-    #         productVarietySelection = ProductVarietySelection.objects.get(
-    #             pk=productJancode.horizontal_id)
-    #         productVariety = ProductVariety.objects.get(
-    #             pk=productVarietySelection.product_variety_id)
-    #         varieties.append({
-    #             "name": str(productVariety.name),
-    #             "selection": str(productVarietySelection.selection),
-    #             "vertical_and_horizontal": str(productVariety.vertical_and_horizontal),
-    #         })
-    #     if productJancode.vertical_id:
-    #         productVarietySelection = ProductVarietySelection.objects.get(
-    #             pk=productJancode.vertical_id)
-    #         productVariety = ProductVariety.objects.get(
-    #             pk=productVarietySelection.product_variety_id)
-    #         varieties.append({
-    #             "name": str(productVariety.name),
-    #             "selection": str(productVarietySelection.selection),
-    #             "vertical_and_horizontal": str(productVariety.vertical_and_horizontal),
-    #         })
-    #     p_varieties.append({
-    #         "jan_code": str(productJancode.jan_code),
-    #         "stock": str(productJancode.stock),
-    #         "varieties": varieties
-    #     })
+            category_list = list(ProductCategory.objects.filter(
+                is_hidden=False).values_list('id', 'name'))
 
-    category_list = list(ProductCategory.objects.filter(
-        is_hidden=False).values_list('id', 'name'))
-
-    return render(request, 'product_form.html', {'product': product,
-                                                 'images': image_array,
-                                                #  'varieties': p_varieties,
-                                                 'category_list': category_list,
-                                                 'media_url': s.MEDIA_URL})
+            return render(request, 'product_form.html', {'product': product,
+                                                        'images': image_array,
+                                                        #  'varieties': p_varieties,
+                                                        'category_list': category_list,
+                                                        'media_url': s.MEDIA_URL})
+        else:
+            return render(request, '404.html')
+    else:
+        return render(request, '404.html')
 
 
 def deleteOldVarieties(product):
@@ -529,9 +546,12 @@ def product_delete(request, product_id):
     Method to delete a product.
     """
 
-    result = hide_product(product_id)
+    if request.session['login_type'] == 'SELLER':
+        result = hide_product(product_id)
 
-    return render(request, 'product_list.html')
+        return render(request, 'product_list.html')
+    else:
+        return render(request, '404.html')
 
 
 
