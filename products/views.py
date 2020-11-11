@@ -321,9 +321,9 @@ def product_add(request):
                 product.shipping_fee = request.POST.get('shipping_fee')
                 product.opened_date = request.POST.get('opened_date')
                 product.is_opened = int(request.POST.get('is_opened'))
-                product.is_used = int(request.POST.get('is_used'))
-                product.is_draft = int(request.POST.get('is_draft'))
-                product.variety = int(request.POST.get('variety'))
+                product.is_used = int(request.POST.get('used'))
+                product.is_draft = int(request.POST.get('draft'))
+                product.variety = int(request.POST.get('sel_variety'))
                 product.save()
 
                 # product image save
@@ -381,9 +381,9 @@ def product_edit(request, product_id):
                     product.shipping_fee = request.POST.get('shipping_fee')
                     product.opened_date = request.POST.get('opened_date')
                     product.is_opened = int(request.POST.get('is_opened'))
-                    product.is_used = int(request.POST.get('is_used'))
-                    product.is_draft = int(request.POST.get('is_draft'))
-                    product.variety = int(request.POST.get('variety'))
+                    product.is_used = int(request.POST.get('used'))
+                    product.is_draft = int(request.POST.get('draft'))
+                    product.variety = int(request.POST.get('sel_variety'))
                     product.modified = datetime.datetime.now()
                     product.save()
 
@@ -398,6 +398,11 @@ def product_edit(request, product_id):
                         update_product_image(request.FILES.get('product_image3'), 4, product.id)
                     if request.FILES.get('product_image4', False):
                         update_product_image(request.FILES.get('product_image4'), 5, product.id)
+                    
+                    # remove selected image
+                    deleted_images_list = json.loads(request.POST.get('image_delete'))
+                    if len(deleted_images_list):
+                        delete_product_images(product.id, deleted_images_list)
 
                     # check if variety type changes
                     # if so then delete 0ld data
@@ -772,6 +777,11 @@ def add_update_product(request):
                 if request.FILES.get('product_image4', False):
                     update_product_image(request.FILES.get('product_image4'), 5, product.id)
 
+                # remove selected image
+                deleted_images_list = json.loads(request.POST.get('image_delete'))
+                if len(deleted_images_list):
+                    delete_product_images(product.id, deleted_images_list)
+
                 # check if variety type changes
                 # if so then delete old data
                 if last_variety_type != product.variety:
@@ -914,6 +924,32 @@ def saveNewVareities(product, varieties):
     except Exception as e:
         print('saveNewVareities', e)
 
+
+
+def delete_product_images(product_id, deleted_images_list):
+    """
+    Method to delete a product images.
+    """
+
+    try:
+        # delete selected images
+        for image_no in deleted_images_list:
+            productImages = ProductImage.objects.filter(product_id=product_id, image_no=image_no, is_hidden=False)
+            if productImages.exists():
+                for productImage in productImages:
+                    old_image = Image.objects.get(pk=productImage.image_id)
+                    old_image.modified = datetime.datetime.now()
+                    old_image.is_hidden = True
+                    old_image.save()
+
+                    productImage.is_hidden = True
+                    productImage.modified = datetime.datetime.now()
+                    productImage.save()
+
+    except Exception as e:
+        print('delete_product_images', e)
+
+    return True
 
 
 def update_product_image(image, image_no, product_id):

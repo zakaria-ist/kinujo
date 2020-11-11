@@ -498,8 +498,8 @@ $('#product_form').submit(function (e) {
         let variety = $('input[name="variety"]:checked').val();
         let varieties = prepareVarietiesData(variety);
 
-        $('#variety').val($('input[name="variety"]:checked').val());
-        $('#is_used').val($('input[name="is_used"]:checked').val());
+        $('#sel_variety').val($('input[name="variety"]:checked').val());
+        $('#used').val($('input[name="is_used"]:checked').val());
         $('#is_opened').val($('input[name="status"]:checked').val());
 
         $('#price').val(pure_number($('#price').val()));
@@ -508,6 +508,20 @@ $('#product_form').submit(function (e) {
 
         $('#varieties').val(JSON.stringify(varieties));
         $('#old_varieties').val(JSON.stringify(last_varieties));
+
+        if (product_id && product_id != '') {
+            let delete_list = [];
+            for(let i=0; i<5; i++) {
+                if ($('#product_image'+i).prop('files')[0] === undefined) {
+                    if ($('#img_image'+i).parent().parent().hasClass('fileupload-new')) {
+                        delete_list.push(i+1);
+                    }
+                }
+            }
+            $('#image_delete').val(JSON.stringify(delete_list));
+        } else {
+            $('#image_delete').val(JSON.stringify([]));
+        }
     } else {
         $.confirm({
             title: get_translate('Warning'),
