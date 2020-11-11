@@ -248,7 +248,7 @@ class UserRegister(APIView):
                 print(userSerializer.errors)
                 return Response({"success" : False, "errors": userSerializer.errors}, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({"success" : False, "error": e}, status=status.HTTP_200_OK)
+            return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
      
 class CheckRegister(APIView):
     def post(self, request, format='json'):
