@@ -401,13 +401,13 @@ def product_edit(request, product_id):
 
                     # check if variety type changes
                     # if so then delete 0ld data
-                    if last_variety_type != product.veriety:
+                    if last_variety_type != product.variety:
                         deleteOldVarieties(product)
                     
                     # save product new varieties
                     varieties = json.loads(request.POST.get('varieties'))
                     old_varieties = json.loads(request.POST.get('old_varieties'))
-                    if last_variety_type != product.veriety:
+                    if last_variety_type != product.variety:
                         old_varieties = []
                     updateProductVarieties(product, product.variety, varieties, old_varieties)
                 
@@ -774,13 +774,13 @@ def add_update_product(request):
 
                 # check if variety type changes
                 # if so then delete old data
-                if last_variety_type != product.veriety:
+                if last_variety_type != product.variety:
                     deleteOldVarieties(product)
                 
                 # save product new varieties
                 varieties = json.loads(request.POST.get('varieties'))
                 old_varieties = json.loads(request.POST.get('old_varieties'))
-                if last_variety_type != product.veriety:
+                if last_variety_type != product.variety:
                     old_varieties = []
                 updateProductVarieties(product, product.variety, varieties, old_varieties)
 
