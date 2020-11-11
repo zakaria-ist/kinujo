@@ -419,15 +419,30 @@ function setEditFormInputs(json) {
     
     for(let i=0; i<json.images.length; i++) {
         if (json.images[i].image_no == '1') {
-            $('#img_image0').attr("src", json.images[i].url);
+            element = $('#img_image0').parent().parent();
+            preview = $(element).find('.fileupload-preview');
+            $(preview).html('<img src="' + json.images[i].url + '"' + 'style="max-height:120px"' + '/>');
+            $(element).addClass('fileupload-exists').removeClass('fileupload-new');
         } else if (json.images[i].image_no == '2') {
-            $('#img_image1').attr("src", json.images[i].url);
+            element = $('#img_image1').parent().parent();
+            preview = $(element).find('.fileupload-preview');
+            $(preview).html('<img src="' + json.images[i].url + '"' + 'style="max-height:120px"' + '/>');
+            $(element).addClass('fileupload-exists').removeClass('fileupload-new');
         } else if (json.images[i].image_no == '3') {
-            $('#img_image2').attr("src", json.images[i].url);
+            element = $('#img_image2').parent().parent();
+            preview = $(element).find('.fileupload-preview');
+            $(preview).html('<img src="' + json.images[i].url + '"' + 'style="max-height:120px"' + '/>');
+            $(element).addClass('fileupload-exists').removeClass('fileupload-new');
         } else if (json.images[i].image_no == '4') {
-            $('#img_image3').attr("src", json.images[i].url);
+            element = $('#img_image3').parent().parent();
+            preview = $(element).find('.fileupload-preview');
+            $(preview).html('<img src="' + json.images[i].url + '"' + 'style="max-height:120px"' + '/>');
+            $(element).addClass('fileupload-exists').removeClass('fileupload-new');
         } else if (json.images[i].image_no == '5') {
-            $('#img_image4').attr("src", json.images[i].url);
+            element = $('#img_image4').parent().parent();
+            preview = $(element).find('.fileupload-preview');
+            $(preview).html('<img src="' + json.images[i].url + '"' + 'style="max-height:120px"' + '/>');
+            $(element).addClass('fileupload-exists').removeClass('fileupload-new');
         }
     }
 
