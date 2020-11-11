@@ -21,19 +21,19 @@ from prefectures.models import Prefecture
 from images.models import Image
 
 
-# @login_required    
+@login_required    
 def home_load(request):
     """
     Method to redirect to home/dashboard.
     """
     return render(request, 'base.html')
 
-# @login_required 
+@login_required 
 def listing_home_load(request):
     """
     Method to redirect to listing home/dashboard.
     """
-    return render(request, 'listing_base.html')
+    return render(request, 'base.html')
 
 def pass_reset(request):
     """
@@ -143,13 +143,17 @@ def logout_user(request):
     logout(request)
     return render(request, 'master_login.html')
 
-# @login_required
+@login_required
 def profile_list(request):
     """
     Method to redirect to profile list page.
     """
 
-    return render(request, 'profile_list.html')
+    if request.session['login_type'] == 'MASTER':
+        return render(request, 'profile_list.html')
+    else:
+        return render(request, '404.html')
+
 
 # @login_required
 def ProfileList__asJson(request):
@@ -174,7 +178,7 @@ def ProfileList__asJson(request):
     records_total = profile_list.count()
 
     if search:  # Filter data base on search
-        profile_list = profile_list.filter(Q(nickname__icontains=search)).order_by('-nickname')
+        profile_list = profile_list.filter(Q(real_name__icontains=search)).order_by('-real_name')
 
     # All data
     records_filtered = profile_list.count()
@@ -182,7 +186,7 @@ def ProfileList__asJson(request):
     order_column = request.GET['order[0][column]']
     column_name = ""
     if order_column == "2":
-        column_name = "nickname"
+        column_name = "real_name"
     
     order_dir = request.GET['order[0][dir]']
     list = []
@@ -201,7 +205,7 @@ def ProfileList__asJson(request):
         data = {"no": str(i),
                 "id": str(field.id),
                 "type": field.authority.name,
-                "nickname": field.nickname,
+                "real_name": field.real_name,
                 "store_total": str(store_total),
                 "user_total": str(user_total)
                 }
@@ -234,7 +238,7 @@ def ClientList__asJson(request):
     records_total = profile_list.count()
 
     if search:  # Filter data base on search
-        profile_list = profile_list.filter(Q(nickname__icontains=search) | Q(created__icontains=search)).order_by('-nickname')
+        profile_list = profile_list.filter(Q(real_name__icontains=search) | Q(created__icontains=search)).order_by('-real_name')
 
     # All data
     records_filtered = profile_list.count()
@@ -242,7 +246,7 @@ def ClientList__asJson(request):
     order_column = request.GET['order[0][column]']
     column_name = ""
     if order_column == "2":
-        column_name = "nickname"
+        column_name = "real_name"
     if order_column == "3":
         column_name = "created"
     
@@ -260,7 +264,7 @@ def ClientList__asJson(request):
         data = {"no": str(i),
                 "id": str(field.id),
                 "type": field.authority.name,
-                "nickname": field.nickname,
+                "real_name": field.real_name,
                 "created": field.created.strftime("%Y-%m-%d")
                 }
         array.append(data)
@@ -280,194 +284,205 @@ def ClientList__asJson(request):
 #             json_content = json.dumps({'image': m}, ensure_ascii=False)
 #             return HttpResponse(json_content, content_type='application/json')
 
-# @login_required
+@login_required
 def profile_add(request):
     """
     Method to add new user profile.
     """
 
-    if request.method == 'POST':
-        form = ProfileForm(request.POST)
-        if form.is_valid:
-            try:
-                user = User.objects.create_user(request.POST.get('tel'), 'test@test.com', request.POST.get('password'))
-                user.first_name = request.POST.get('user_code')
-                user.save()
-                profile = form.save(commit=False)
-                profile.user = user
-                profile.user_code = request.POST.get('user_code')
-                if request.POST.get('birthday'):
-                    profile.birthday = request.POST.get('birthday')
-                
-                if request.POST.get('is_seller') == '1':
-                    profile.is_seller = True
-                else:
-                    profile.is_seller = False
+    if request.session['login_type'] == 'MASTER':
+        if request.method == 'POST':
+            form = ProfileForm(request.POST)
+            if form.is_valid:
+                try:
+                    user = User.objects.create_user(request.POST.get('tel'), 'test@test.com', request.POST.get('password'))
+                    user.first_name = request.POST.get('user_code')
+                    user.save()
+                    profile = form.save(commit=False)
+                    profile.user = user
+                    profile.user_code = request.POST.get('user_code')
+                    if request.POST.get('birthday'):
+                        profile.birthday = request.POST.get('birthday')
+                    
+                    if request.POST.get('is_seller') == '1':
+                        profile.is_seller = True
+                    else:
+                        profile.is_seller = False
 
-                if profile.authority_id in (AUTHORITY_TYPE['AMBASSADOR'], AUTHORITY_TYPE['GENERAL'],
-                    AUTHORITY_TYPE['MASTER'], AUTHORITY_TYPE['SPECIAL']):
-                    profile.is_approved = True
-                else:
-                    profile.is_approved = False
-                
-                if profile.authority_id == AUTHORITY_TYPE['AMBASSADOR']:
-                    if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
-                        profile.introducer_id = int(request.POST.get('general_store'))
-                
-                elif profile.authority_id in (AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']):
-                    if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
-                        profile.introducer_id = int(request.POST.get('introducer'))
+                    if profile.authority_id in (AUTHORITY_TYPE['AMBASSADOR'], AUTHORITY_TYPE['GENERAL'],
+                        AUTHORITY_TYPE['MASTER'], AUTHORITY_TYPE['SPECIAL']):
+                        profile.is_approved = True
+                    else:
+                        profile.is_approved = False
+                    
+                    if profile.authority_id == AUTHORITY_TYPE['AMBASSADOR']:
+                        if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
+                            profile.introducer_id = int(request.POST.get('general_store'))
+                    
+                    elif profile.authority_id in (AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']):
+                        if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
+                            profile.introducer_id = int(request.POST.get('introducer'))
 
-                profile.save()
-
-                profile_image = request.FILES.get('profile_image', False)
-                if profile_image:
-                    if profile.image:
-                        image = Image.objects.get(pk=profile.image_id)
-                        image.delete()
-
-                    new_image = Image()
-                    new_image.image.save(profile_image.name, profile_image)
-                    new_image.save()
-
-                    profile.image = new_image
                     profile.save()
 
-                return render(request, 'profile_list.html')
-            except Exception as e:
-                print(e)
-                messages.add_message(request, messages.ERROR, e, extra_tags='profile_add')
-    else:
-        form = ProfileForm()
-    
-    store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['SPECIAL']).values('id', 'nickname')
-    profile_list = list(Profile.objects.filter(is_hidden=False).values_list('id', 'nickname', 'authority_id'))
-    return render(request, 'profile_form.html', {'form': form, 
-                                                'media_url': s.MEDIA_URL, 
-                                                'store_list': store_list,
-                                                'profile_list': profile_list})
+                    profile_image = request.FILES.get('profile_image', False)
+                    if profile_image:
+                        if profile.image:
+                            image = Image.objects.get(pk=profile.image_id)
+                            image.delete()
 
-# @login_required
+                        new_image = Image()
+                        new_image.image.save(profile_image.name, profile_image)
+                        new_image.save()
+
+                        profile.image = new_image
+                        profile.save()
+
+                    return render(request, 'profile_list.html')
+                except Exception as e:
+                    print(e)
+                    messages.add_message(request, messages.ERROR, e, extra_tags='profile_add')
+        else:
+            form = ProfileForm()
+        
+        store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['SPECIAL']).values('id', 'real_name')
+        profile_list = list(Profile.objects.filter(is_hidden=False).values_list('id', 'real_name', 'authority_id'))
+        return render(request, 'profile_form.html', {'form': form, 
+                                                    'media_url': s.MEDIA_URL, 
+                                                    'store_list': store_list,
+                                                    'profile_list': profile_list})
+    else:
+        return render(request, '404.html')
+
+
+@login_required
 def profile_edit(request, profile_id):
     """
     Method to edit a user profile.
     """
 
-    if request.method == 'POST':
-        profile = Profile.objects.get(pk=profile_id)
-        form = ProfileForm(request.POST, instance=profile)
-        if form.is_valid:
-            try:
-                user = User.objects.filter(pk=profile.user_id).first()
-                if user:
-                    if user.username != request.POST.get('tel'):
-                        user.username = request.POST.get('tel')
-                        user.save()
-                    if user.first_name != request.POST.get('nickname'):
-                        user.first_name = request.POST.get('nickname')
-                        user.save()
-                    if request.POST.get('password') != '' and request.POST.get('password') != None:
-                        user.set_password(request.POST.get('password'))
-                        user.save()
-                else:
-                    if request.POST.get('password') != '' and request.POST.get('password') != None:
-                        user = User.objects.create_user(request.POST.get('tel'), 'test@test.com', request.POST.get('password'))
-                        user.first_name = request.POST.get('nickname')
-                        user.save()
-                
-                profile = form.save(commit=False)
-                if user:
-                    profile.user_id = user.id
-                else:
-                    profile.user_id = request.POST.get('user_id')
-                
-                if profile.authority_id == AUTHORITY_TYPE['AMBASSADOR']:
-                    if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
-                        profile.introducer_id = int(request.POST.get('general_store'))
-                
-                elif profile.authority_id in (AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']):
-                    if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
-                        profile.introducer_id = int(request.POST.get('introducer'))
+    if request.session['login_type'] == 'MASTER':
+        if request.method == 'POST':
+            profile = Profile.objects.get(pk=profile_id)
+            form = ProfileForm(request.POST, instance=profile)
+            if form.is_valid:
+                try:
+                    user = User.objects.filter(pk=profile.user_id).first()
+                    if user:
+                        if user.username != request.POST.get('tel'):
+                            user.username = request.POST.get('tel')
+                            user.save()
+                        if user.first_name != request.POST.get('real_name'):
+                            user.first_name = request.POST.get('real_name')
+                            user.save()
+                        if request.POST.get('password') != '' and request.POST.get('password') != None:
+                            user.set_password(request.POST.get('password'))
+                            user.save()
+                    else:
+                        if request.POST.get('password') != '' and request.POST.get('password') != None:
+                            user = User.objects.create_user(request.POST.get('tel'), 'test@test.com', request.POST.get('password'))
+                            user.first_name = request.POST.get('real_name')
+                            user.save()
+                    
+                    profile = form.save(commit=False)
+                    if user:
+                        profile.user_id = user.id
+                    else:
+                        profile.user_id = request.POST.get('user_id')
+                    
+                    if profile.authority_id == AUTHORITY_TYPE['AMBASSADOR']:
+                        if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
+                            profile.introducer_id = int(request.POST.get('general_store'))
+                    
+                    elif profile.authority_id in (AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']):
+                        if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
+                            profile.introducer_id = int(request.POST.get('introducer'))
 
-                if request.POST.get('birthday'):
-                    profile.birthday = request.POST.get('birthday')
+                    if request.POST.get('birthday'):
+                        profile.birthday = request.POST.get('birthday')
 
-                if request.POST.get('is_seller') == '1':
-                    profile.is_seller = True
-                else:
-                    profile.is_seller = False
-                if request.POST.get('is_approved') == '1':
-                    profile.is_approved = True
-                else:
-                    profile.is_approved = False
+                    if request.POST.get('is_seller') == '1':
+                        profile.is_seller = True
+                    else:
+                        profile.is_seller = False
+                    if request.POST.get('is_approved') == '1':
+                        profile.is_approved = True
+                    else:
+                        profile.is_approved = False
 
-                profile.modified = datetime.datetime.now()
-                profile.save()
-                
-                profile_image = request.FILES.get('profile_image', False)
-                if profile_image:
-                    if profile.image:
-                        image = Image.objects.get(pk=profile.image_id)
-                        image.is_hidden = True
-                        image.modified = datetime.datetime.now()
-                        image.save()
+                    profile.modified = datetime.datetime.now()
+                    profile.save()
+                    
+                    profile_image = request.FILES.get('profile_image', False)
+                    if profile_image:
+                        if profile.image:
+                            image = Image.objects.get(pk=profile.image_id)
+                            image.is_hidden = True
+                            image.modified = datetime.datetime.now()
+                            image.save()
 
-                    new_image = Image()
-                    new_image.image.save(profile_image.name, profile_image)
-                    new_image.save()
+                        new_image = Image()
+                        new_image.image.save(profile_image.name, profile_image)
+                        new_image.save()
 
-                    profile.image = new_image
+                        profile.image = new_image
+                        profile.save()
+
+                    active = request.POST.get('active_checkbox', '') == 'on'
+                    if not active:
+                        profile.is_hidden = True
+                    
                     profile.save()
 
-                active = request.POST.get('active_checkbox', '') == 'on'
-                if not active:
-                    profile.is_hidden = True
-                
-                profile.save()
+                    return render(request, 'profile_list.html')
+                except Exception as e:
+                    print(e)
+                    messages.add_message(request, messages.ERROR, e, extra_tags='profile_edit')
+            else:
+                print(form.errors)
 
-                return render(request, 'profile_list.html')
-            except Exception as e:
-                print(e)
-                messages.add_message(request, messages.ERROR, e, extra_tags='profile_edit')
-        else:
-            print(form.errors)
+        profile = Profile.objects.get(pk=profile_id)
+        form = ProfileForm(instance=profile)
+        
+        store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['SPECIAL']).exclude(id=profile_id).values('id', 'real_name')
+        profile_list = list(Profile.objects.filter(is_hidden=False).exclude(id=profile_id).values_list('id', 'real_name', 'authority_id'))
+        prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
+        category_list = list(ProductCategory.objects.filter(is_hidden=False).order_by('id').values_list('id', 'name'))
+        return render(request, 'profile_form.html', {'form': form, 
+                                                    'media_url': s.MEDIA_URL, 
+                                                    'store_list': store_list,
+                                                    'profile_list': profile_list,
+                                                    'profile': profile,
+                                                    'category_list': category_list,
+                                                    'prefecture_list': prefecture_list})
+    else:
+        return render(request, '404.html')
 
-    profile = Profile.objects.get(pk=profile_id)
-    form = ProfileForm(instance=profile)
-    
-    store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['SPECIAL']).exclude(id=profile_id).values('id', 'nickname')
-    profile_list = list(Profile.objects.filter(is_hidden=False).exclude(id=profile_id).values_list('id', 'nickname', 'authority_id'))
-    prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
-    category_list = list(ProductCategory.objects.filter(is_hidden=False).order_by('id').values_list('id', 'name'))
-    return render(request, 'profile_form.html', {'form': form, 
-                                                'media_url': s.MEDIA_URL, 
-                                                'store_list': store_list,
-                                                'profile_list': profile_list,
-                                                'profile': profile,
-                                                'category_list': category_list,
-                                                'prefecture_list': prefecture_list})
 
-# @login_required
+@login_required
 @csrf_exempt
 def profile_delete(request, profile_id):
     """
     Method to delete a user profile.
     """
 
-    try:
-        profile = Profile.objects.get(pk=profile_id)
-        profile.is_hidden = 1
-        profile.modified = datetime.datetime.now()
-        profile.save()
-        
-        if profile.image:
-            image = Image.objects.get(pk=profile.image_id)
-            image.is_hidden = True
-            image.modified = datetime.datetime.now()
-            image.save()
-    except Exception as e:
-        print(e)
-    return render(request, 'profile_list.html')
+    if request.session['login_type'] == 'MASTER':
+        try:
+            profile = Profile.objects.get(pk=profile_id)
+            profile.is_hidden = 1
+            profile.modified = datetime.datetime.now()
+            profile.save()
+            
+            if profile.image:
+                image = Image.objects.get(pk=profile.image_id)
+                image.is_hidden = True
+                image.modified = datetime.datetime.now()
+                image.save()
+        except Exception as e:
+            print(e)
+        return render(request, 'profile_list.html')
+    else:
+        return render(request, '404.html')
 
     
 # @login_required
@@ -861,7 +876,10 @@ def sales_list(request):
     Method to redirect to sales list page.
     """
 
-    return render(request, 'sales_list.html')
+    if request.session['login_type'] == 'MASTER':
+        return render(request, 'sales_list.html')
+    else:
+        return render(request, '404.html')
 
 # @login_required
 def payment_list(request):
@@ -869,7 +887,10 @@ def payment_list(request):
     Method to redirect to payment list page.
     """
 
-    return render(request, 'payment_list.html')
+    if request.session['login_type'] == 'MASTER':
+        return render(request, 'payment_list.html')
+    else:
+        return render(request, '404.html')
 
 
 # @login_required
@@ -878,7 +899,10 @@ def listing_sales_list(request):
     Method to redirect to sales list page.
     """
 
-    return render(request, 'listing_sales_list.html')
+    if request.session['login_type'] == 'SELLER':
+        return render(request, 'listing_sales_list.html')
+    else:
+        return render(request, '404.html')
 
 def get_product_form(request):
     """

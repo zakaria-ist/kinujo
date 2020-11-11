@@ -15,7 +15,7 @@ function loadClientTableData(filter_str='[]') {
         "columns": [
             {"data": "no", "orderable": false},
             {"data": "type", "orderable": false},
-            {"data": "nickname"},
+            {"data": "real_name"},
             {"data": "created", "orderable": false},
             
             {

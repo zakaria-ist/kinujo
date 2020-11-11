@@ -1,5 +1,5 @@
 
-{% extends "listing_base.html" %}
+{% extends "base.html" %}
 {% block extrahead %}
     {% load static %}
     {% load i18n %}
@@ -208,10 +208,11 @@
           {% csrf_token %}
           <input class="form-control" type="hidden" name="varieties" id="varieties">
           <input class="form-control" type="hidden" name="old_varieties" id="old_varieties">
-          <input class="form-control" type="hidden" name="is_draft" id="is_draft" value="0">
-          <input class="form-control" type="hidden" name="is_used" id="is_used">
+          <input class="form-control" type="hidden" name="draft" id="draft" value="0">
+          <input class="form-control" type="hidden" name="used" id="used">
           <input class="form-control" type="hidden" name="is_opened" id="is_opened">
-          <input class="form-control" type="hidden" name="variety" id="is_draft">
+          <input class="form-control" type="hidden" name="sel_variety" id="sel_variety">
+          <input class="form-control" type="hidden" name="image_delete" id="image_delete">
           <div class="row">
 
             <!--Starts left side inputs-->
@@ -574,8 +575,8 @@
                 <p style="width: 20px;" class="m-2"> </p>
                 <p style="width: 20px;" class="m-2"> </p>
                 <label for="message-text" class="col-form-label" style="width: 160px;">{% trans 'Choices' %}</label>
-                <label for="message-text" class="col-form-label" style="width: 140px;">{% trans 'JAN Code' %}</label>
-                <label for="message-text" class="col-form-label" style="width: 50px;">{% trans 'Stock' %}</label>
+                <label for="message-text" class="col-form-label label-hide" style="width: 140px;">{% trans 'JAN Code' %}</label>
+                <label for="message-text" class="col-form-label label-hide" style="width: 50px;">{% trans 'Stock' %}</label>
                 <p class="m-2" style="width: 50px;"> </p>
               </div>
               
@@ -729,6 +730,7 @@
 
 {% endblock %}
 {% block js %}
+<script type="text/javascript" src="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.js' %}"></script>
 <script src="{% static "js/select2/select2.js" %}"></script>
 <script src="{% static "js/product/product.js" %}"></script>
 <script type="text/javascript">
@@ -798,13 +800,17 @@
     function addItemBtnChange(tableItem, btnItem){
       //change add item button
       if(tableItem.innerHTML.trim() !== ''){
-        btnItem.style.background = 'transparent';
-        btnItem.style.color = '#0056b3';
-        btnItem.style.border = '0px';
-        btnItem.style.float = 'right';
-        btnItem.style.fontSize = '0.8rem';
-        btnItem.style.padding = '0px';
-        btnItem.innerHTML = `add / edit / delete items`;
+        try{
+          btnItem.style.background = 'transparent';
+          btnItem.style.color = '#0056b3';
+          btnItem.style.border = '0px';
+          btnItem.style.float = 'right';
+          btnItem.style.fontSize = '0.8rem';
+          btnItem.style.padding = '0px';
+          btnItem.innerHTML = `add / edit / delete items`;
+        } catch (e) {
+
+        }
       }else{
         if(tableItem === document.getElementById('variety-table')){
           document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ Item / Option</button></div>`;
@@ -846,6 +852,8 @@
         let oneGroupItemWrapper =  document.getElementById('oneItemGroup');
         let tableOne = document.getElementById('variety-table');
         if(tableOne.innerHTML.trim() !== ''){
+          $('.label-hide').css('display', 'none');
+          $('#oneItemVariant .modal-body').css('margin-left', '5rem');
 
           //empty modal form
           oneGroupItemWrapper.innerHTML = '';
@@ -889,10 +897,8 @@
                           <p style="width: 20px;" class="m-2"> </p>
                           <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
                           <input value="${varChoices}" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                          
-                          <input value="${varJanCode}" type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
-                          
-                          <input value="${varStock}" type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
+                          <input value="${varJanCode}" type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px; display: none;">
+                          <input value="${varStock}" type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px; display: none;">
                           <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                           </div>`;
             
@@ -901,6 +907,11 @@
             }
           }
 
+        } else {
+          $('#oneItemVariant .modal-body').css('margin-left', '');
+          $('.label-hide').css('display', 'block');
+          $('.one-item-jan-code').css('display', 'block');
+          $('.one-item-stock').css('display', 'block');
         }
       }
 
@@ -1144,8 +1155,8 @@
     //one item variant code for adding more option
     function deleteOptions(trget){
       $.confirm({
-          title: 'Warning',
-          content: 'Are you sure?',
+          title: get_translate('Warning'),
+          content: get_translate('Are you sure?'),
           buttons: {
               Yes: function () {
                   trget.parentNode.parentNode.removeChild(trget.parentNode);
@@ -1164,16 +1175,25 @@
       let optCounter = optionArray.length + 1;
 
       let newContent = document.createElement('div');
-      newContent.innerHTML = `<div class='form-group'>
-                    <p style="width: 20px;" class="m-2"> </p>
-                    <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
-                    <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                    
-                    <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
-                    
-                    <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                    </div>`;
+      if($('.label-hide').is(":visible")) {
+        newContent.innerHTML = `<div class='form-group'>
+                      <p style="width: 20px;" class="m-2"> </p>
+                      <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
+                      <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                      <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
+                      <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
+                      <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                      </div>`;
+      } else {
+        newContent.innerHTML = `<div class='form-group'>
+                      <p style="width: 20px;" class="m-2"> </p>
+                      <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
+                      <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                      <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px; display: none;">
+                      <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px; display: none;">
+                      <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                      </div>`;
+      }
       
       while (newContent.firstChild) {
         document.getElementById('oneItemGroup').appendChild(newContent.firstChild);
@@ -1187,8 +1207,8 @@
     //first of two items variant
     function deleteOptionsFirstOfTwo(trget){
       $.confirm({
-          title: 'Warning',
-          content: 'Are you sure?',
+          title: get_translate('Warning'),
+          content: get_translate('Are you sure?'),
           buttons: {
               Yes: function () {
                   trget.parentNode.parentNode.removeChild(trget.parentNode);
@@ -1226,8 +1246,8 @@
     //last of two items variant
     function deleteOptionsLastOfTwo(trget){
       $.confirm({
-          title: 'Warning',
-          content: 'Are you sure?',
+          title: get_translate('Warning'),
+          content: get_translate('Are you sure?'),
           buttons: {
               Yes: function () {
                   trget.parentNode.parentNode.removeChild(trget.parentNode);
@@ -1285,7 +1305,7 @@
 
       // //save new value to the table
       if(newJanCode.value.trim() === ''){
-        document.getElementById('janErrorEdit').innerHTML = `JAN code can't be empty`;
+        document.getElementById('janErrorEdit').innerHTML = get_translate("JAN code can't be empty");
         newJanCode.focus();
         return;
       }else{
@@ -1305,7 +1325,7 @@
       }else{
         if(isNaN(Number(newStock.value))){
 
-          document.getElementById('janErrorEdit').innerHTML = 'Stock should contain only number, -, + ';
+          document.getElementById('janErrorEdit').innerHTML = get_translate("Stock should contain only number") + ', -, + ';
           newStock.focus();
           return;
           //keep the value same
@@ -1324,7 +1344,7 @@
       stockDiv.innerHTML = 'Stock:' + newStockValue;
 
       $('#edit-modal-one').modal('hide');
-
+      pushStockToDB();
     }
 
     //edit btn one function
@@ -1402,12 +1422,12 @@
         modalWrapper.innerHTML = `
         <div class="modal fade" id="edit-modal-one" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
-          <div class="modal-content row">
-            <h6 class="m-2 p-2" style="font-weight:bold">{% trans 'JAN code / inventory editing' %}</h6>
-            <button type="button" class="close edit-close pt-2 pr-3" data-dismiss="modal" aria-label="Close">
+          <div class="modal-content row">` +
+            '<h6 class="m-2 p-2" style="font-weight:bold">'+get_translate("JAN code / inventory editing")+'</h6>'+
+            `<button type="button" class="close edit-close pt-2 pr-3" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
             </button>
-            <p class="col-md-12 text-center p-3">{% trans 'The number of stocks will change during editing. When changing, increase or decrease the absolute value such as “+1” or “-1” Please enter (If you want to change the entire stock quantity, enter “100” etc. as a numerical value) If the stock quantity field is blank, the stock quantity will not be changed.' %}</p>
+            <p class="col-md-12 text-center p-3">`+get_translate("The number of stocks will change during editing. When changing, increase or decrease the absolute value such as \"+1\" or \"-1\" Please enter (If you want to change the entire stock quantity, enter \"100\" etc. as a numerical value) If the stock quantity field is blank, the stock quantity will not be changed.")+`</p>
             <p class="col-md-12" style="font-weight:bold"><span class="m-2">${leftCellName} ${leftCellNameValue}</span> <span class="m-2">${rightCellName} ${rightCellNameValue}</span></p>
             <p class="col-md-12 text-danger" id="janErrorEdit"></p>
             <div class="row">
@@ -1434,9 +1454,6 @@
         
 
         $('#edit-modal-one').modal();
-
-      
-      
     }
 
     
@@ -1472,7 +1489,7 @@
       function checkError(classes, errorName){
         for(let i = 0; i < classes.length; i++){
           if(classes[i].value === ''){
-            errorMsg.innerHTML = `${errorName} field (<span id="errLine">${i + 1}</span>) can't be empty`;
+            errorMsg.innerHTML = `${errorName}` + get_translate("Choices field") + `(<span id="errLine">${i + 1}</span>) ` + get_translate("can't be empty");
             classes[i].focus();
             return false;
           }
@@ -1566,9 +1583,7 @@
                     <p style="width: 20px;" class="m-2"> </p>
                     <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
                     <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                    
-                    <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
-                    
+                    <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
                     <input value="" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
@@ -1576,13 +1591,10 @@
                     <p style="width: 20px;" class="m-2"> </p>
                     <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
                     <input value=""  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                    
-                    <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
-                    
+                    <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
                     <input value=""  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
-
                 `;
 
       //change add item button
@@ -1590,6 +1602,8 @@
 
       //hide modal
       $('#oneItemVariant').modal('hide');
+
+      pushStockToDB();
     }
     
 
@@ -1618,7 +1632,7 @@
       function checkError(classes, errorMsgId, errLine){
         for(let i = 0; i < classes.length; i++){
           if(classes[i].value === '' || classes[i].value === ' ' || classes[i].value === undefined){
-            errorMsgId.innerHTML = `Choices field (<span id="${errLine}">${i + 1}</span>) can't be empty`;
+            errorMsgId.innerHTML = get_translate("Choices field") + ` (<span id="${errLine}">${i + 1}</span>) ` + get_translate("can't be empty");
             classes[i].focus();
             return false;
           }
@@ -2055,6 +2069,7 @@
 
       $('#twoItemsVariant').modal('hide');
 
+      pushStockToDB();
     }
 
     var product_id = "{{product.id}}";
@@ -2064,8 +2079,8 @@
     {% endfor %}
 
     $(document).ready(function(){
+        changeLang();
         deleteAny();
-        console.log(category_list);
         var options = '';
         $.each(category_list, function(i, v) {
             options += "<option value='"+v[0]+"'>"+v[1]+"</option>";
@@ -2127,8 +2142,8 @@
                 if (data.message == 'Success') {
                     if (type == 'url_str') {
                         $.confirm({
-                            title: 'URL String is duplicate',
-                            content: value + ' is in use. Try a new one. It must be unique',
+                            title: get_translate('URL String is duplicate'),
+                            content: value + get_translate(' is in use. Try a new one. It must be unique'),
                             buttons: {
                                 Ok: {
                                     btnClass: 'btn-success',

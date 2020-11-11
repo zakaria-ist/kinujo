@@ -54,7 +54,7 @@ msgstr "注文者"
 
 #: orders/templates/order_form.html:102
 msgid "Receiver Name"
-msgstr ""
+msgstr "受信名"
 
 #: orders/templates/order_form.html:112 orders/templates/order_list.html:60
 #: profiles/templates/payment_list.html:62
@@ -70,7 +70,7 @@ msgstr "郵便番号"
 
 #: orders/templates/order_form.html:131
 msgid "Address Book"
-msgstr ""
+msgstr "住所録"
 
 #: orders/templates/order_form.html:137
 msgid "Gst"
@@ -127,7 +127,7 @@ msgstr "出荷日"
 
 #: orders/templates/order_form.html:228 orders/templates/order_list.html:63
 msgid "Tracking Number"
-msgstr ""
+msgstr "追跡番号"
 
 #: orders/templates/order_form.html:239
 #: products/templates/product_form.html:513
@@ -408,7 +408,7 @@ msgstr "閉じる"
 #: products/templates/product_form.html:525
 #: profiles/templates/item_form.html:500
 msgid "Are you sure? This is gonna erase content in 2 item variants."
-msgstr ""
+msgstr "本気ですか？これにより、2つのアイテムバリアントのコンテンツが消去されます。"
 
 #: products/templates/product_form.html:526
 #: products/templates/product_form.html:538
@@ -430,12 +430,12 @@ msgstr "進む"
 #: products/templates/product_form.html:537
 #: profiles/templates/item_form.html:512
 msgid "Are you sure? This is gonna erase content in 1 item variants."
-msgstr ""
+msgstr "本気ですか？これにより、1つのアイテムバリアントのコンテンツが消去されます。"
 
 #: products/templates/product_form.html:549
 #: profiles/templates/item_form.html:524
 msgid "Are you sure? This is gonna erase content in one or two item variants."
-msgstr ""
+msgstr "本気ですか？これにより、1つまたは2つのアイテムバリアントのコンテンツが消去されます。"
 
 #: products/templates/product_form.html:562
 #: profiles/templates/item_form.html:537
@@ -498,7 +498,7 @@ msgstr "項目名"
 #: products/templates/product_form.html:677
 #: profiles/templates/item_form.html:652
 msgid "Vertical axis"
-msgstr ""
+msgstr "縦軸"
 
 #: products/templates/product_form.html:716
 #: profiles/templates/item_form.html:691
@@ -510,7 +510,7 @@ msgstr "※選択肢を削除すると登録済のJANコード・在庫情報も
 #: products/templates/product_form.html:1407
 #: profiles/templates/item_form.html:1376
 msgid "JAN code / inventory editing"
-msgstr ""
+msgstr "JANコード/在庫編集"
 
 #: products/templates/product_form.html:1411
 #: profiles/templates/item_form.html:1380

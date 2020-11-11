@@ -26,7 +26,7 @@
 {% block content %}
     <div id="content">
         <header class="panel-heading" style="font-size: 25px; margin-bottom: 20px;" >
-                {% trans 'Profile Details' %}{{profile.nickname}}
+                {% trans 'Profile Details' %}  {{profile.real_name}}
         </header>
         <ul id="tabs" class="nav nav-tabs" data-tabs="tabs" role="tablist"
             style="padding-left: 20px; margin-left: 18px; margin-right: 24px;">
@@ -210,6 +210,7 @@
         } 
 
         $(document).ready(function () {
+            changeLang();
             if (profile_id == '' || profile_id == undefined || profile_id == null) {
                 profile_id = '';
                 $('#id_authority').trigger('change');

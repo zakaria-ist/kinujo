@@ -67,8 +67,8 @@ function deleteProductConfirm(id) {
         success: function (json) {
             g_product_id = '';
             $.confirm({
-                title: 'Delete Successfull',
-                content: 'Product information is deleted.',
+                title: get_translate('Delete Successful'),
+                content: get_translate('Product information is deleted.'),
                 buttons: {
                     Ok: {
                         btnClass: 'btn-success',
@@ -80,7 +80,7 @@ function deleteProductConfirm(id) {
         },
         error: function (e) {
             $.confirm({
-                title: 'Error',
+                title: get_translate('Error'),
                 content: e.message,
                 buttons: {
                     Ok: {
@@ -275,41 +275,6 @@ function prepareVarientTwoTable(json){
 
     varietyTableTwo1.style.height = '250px';
 
-    // document.getElementById('firstOfTwoItemGroup').innerHTML = `
-    //             <div class="form-group">
-                
-    //             <p style="width: 20px;" class="m-2"> </p>
-    //             <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
-    //             <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
-                
-    //             <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; deleteOptionsFirstOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-    //             </div>
-    //             <div class="form-group">
-    //             <p style="width: 20px;" class="m-2"> </p>
-    //             <p class="m-2 first-of-two-variant-counter" style="width: 20px;">2</p>
-    //             <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
-                
-    //             <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; deleteOptionsFirstOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-    //             </div>
-    //         `;
-    // document.getElementById('lastOfTwoItemGroup').innerHTML = `
-    //             <div class="form-group">
-    //                 <p style="width: 20px;" class="m-2"> </p>
-    //                 <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
-    //                 <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
-                    
-    //                 <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-    //             </div>
-                
-    //             <div class="form-group">
-    //                 <p style="width: 20px;" class="m-2"> </p>
-    //                 <p class="m-2 last-of-two-variant-counter" style="width: 20px;">2</p>
-    //                 <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
-                    
-    //                 <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}};this.parentNode.parentNode.removeChild(this.parentNode); deleteOptionsLastOfTwo();"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-    //             </div>
-    //             `;
-
     document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="two-items-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant" onclick="changeModalTwo();">+ Items / Options</button></div>`;
     //change add item button
     addItemBtnChange(document.getElementById('variety-table-two'), document.getElementById('two-items-btn'));
@@ -390,31 +355,6 @@ function prepareVarientOneTable(json){
     //make sure it's scroll able
     document.getElementById("scrollable").style.overflow= 'scroll';
 
-    //reset modal form
-    // document.getElementById('oneItemGroup').innerHTML = `
-    //             <div class="form-group">
-    //               <p style="width: 20px;" class="m-2"> </p>
-    //               <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
-    //               <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                  
-    //               <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
-                  
-    //               <input value="" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
-    //               <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-    //             </div>
-    //             <div class="form-group">
-    //               <p style="width: 20px;" class="m-2"> </p>
-    //               <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
-    //               <input value=""  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                  
-    //               <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
-                  
-    //               <input value=""  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
-    //               <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-    //             </div>
-
-    //           `;
-
     //change add item button
     document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ Item / Option</button></div>`;
     addItemBtnChange(document.getElementById('variety-table'), document.getElementById('one-item-btn'));
@@ -479,15 +419,30 @@ function setEditFormInputs(json) {
     
     for(let i=0; i<json.images.length; i++) {
         if (json.images[i].image_no == '1') {
-            $('#img_image0').attr("src", json.images[i].url);
+            element = $('#img_image0').parent().parent();
+            preview = $(element).find('.fileupload-preview');
+            $(preview).html('<img src="' + json.images[i].url + '"' + 'style="max-height:120px"' + '/>');
+            $(element).addClass('fileupload-exists').removeClass('fileupload-new');
         } else if (json.images[i].image_no == '2') {
-            $('#img_image1').attr("src", json.images[i].url);
+            element = $('#img_image1').parent().parent();
+            preview = $(element).find('.fileupload-preview');
+            $(preview).html('<img src="' + json.images[i].url + '"' + 'style="max-height:120px"' + '/>');
+            $(element).addClass('fileupload-exists').removeClass('fileupload-new');
         } else if (json.images[i].image_no == '3') {
-            $('#img_image2').attr("src", json.images[i].url);
+            element = $('#img_image2').parent().parent();
+            preview = $(element).find('.fileupload-preview');
+            $(preview).html('<img src="' + json.images[i].url + '"' + 'style="max-height:120px"' + '/>');
+            $(element).addClass('fileupload-exists').removeClass('fileupload-new');
         } else if (json.images[i].image_no == '4') {
-            $('#img_image3').attr("src", json.images[i].url);
+            element = $('#img_image3').parent().parent();
+            preview = $(element).find('.fileupload-preview');
+            $(preview).html('<img src="' + json.images[i].url + '"' + 'style="max-height:120px"' + '/>');
+            $(element).addClass('fileupload-exists').removeClass('fileupload-new');
         } else if (json.images[i].image_no == '5') {
-            $('#img_image4').attr("src", json.images[i].url);
+            element = $('#img_image4').parent().parent();
+            preview = $(element).find('.fileupload-preview');
+            $(preview).html('<img src="' + json.images[i].url + '"' + 'style="max-height:120px"' + '/>');
+            $(element).addClass('fileupload-exists').removeClass('fileupload-new');
         }
     }
 
@@ -513,30 +468,83 @@ function setEditFormInputs(json) {
     console.log('last_varieties', last_varieties);
 }
 
-function saveProductInfo() {
+// Method to instanly push changes to DB, without submitting form
+function pushStockToDB() {
+    let variety = $('input[name="variety"]:checked').val();
+    let varieties = prepareVarietiesData(variety);
 
-    var is_valid = validateProductForm();
+    if (g_product_id && g_product_id != '') {
+        $.ajax({
+            url: '/products/update_varieties/',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'product_id': g_product_id,
+                'variety': variety,
+                'varieties': JSON.stringify(varieties),
+                'old_varieties': JSON.stringify(last_varieties)
+            }
+        })
+        .done(function(data) {
+            console.log(data.message);
+            $.ajax({
+                method: "POST",
+                url: '/products/get_product_info/',
+                dataType: 'JSON',
+                data: {
+                    'product_id': g_product_id,
+                },
+                success: function (json) {
+                    // setEditFormInputs(json);
+                    last_varieties = [];
+                    if (json.variety == '0') {
+                        let vrty = json.varieties[0];
+                        $('#jan_code').val(vrty.jan_code);
+                        $('#stock').val(vrty.stock);
+                        last_varieties.push({
+                            "id": vrty.id,
+                            "jan_code": vrty.jan_code,
+                            "hor": '',
+                            "ver": '',
+                        });
+                        deleteAny();
+                    } else if (json.variety == '1') {
+                        document.getElementById("none-div").style.display = "none";
+                        prepareVarientOneTable(json);
+                    } else if (json.variety == '2') {
+                        document.getElementById("none-div").style.display = "none";
+                        prepareVarientTwoTable(json);
+                    }
+                
+                    console.log('last_varieties', last_varieties);
+                }
+            });
+        })
+        .fail(function(e) {
+            
+        })
+    }
+}
 
-    if (is_valid) {
-        let varieties = [];
-        let variety = $('input[name="variety"]:checked').val();
-        if (variety == '0') { //None
-            varieties.push({
-                "jan_code": $('#jan_code').val(),
-                "stock": $('#stock').val(),
-                "varieties": []
-                })
-        }
-        else if (variety == '1') { // 1 Item
+function prepareVarietiesData(variety) {
+    let varieties = [];
+    if (variety == '0') { //None
+        varieties.push({
+            "jan_code": $('#jan_code').val(),
+            "stock": $('#stock').val(),
+            "varieties": []
+            })
+    }
+    else if (variety == '1') { // 1 Item
         let name = document.getElementById('cell-name').innerHTML;
         let variantTableTitle = document.getElementsByClassName('variant-title');
         let variantTableCol = document.getElementsByClassName('variant-info');
-        // crate varieties
+        // create varieties
         for(let i = 0; i < variantTableCol.length; i++) {
             try{
                 varieties.push({
-                "jan_code": document.getElementById('jan-id-'+i).innerHTML,
-                "stock": document.getElementById('stock-id-'+i).innerHTML.split(':')[1].trim(),
+                "jan_code": (document.getElementById('jan-id-'+i).innerHTML.trim() != '') ? document.getElementById('jan-id-'+i).innerHTML : '',
+                "stock": (document.getElementById('stock-id-'+i).innerHTML.trim() != '') ? document.getElementById('stock-id-'+i).innerHTML.split(':')[1].trim() : 0,
                 "varieties": [
                     {
                         "name": name,
@@ -549,55 +557,72 @@ function saveProductInfo() {
 
             }
         }
-        }
-        else if (variety == '2') { // 2 Items
-            let preservedData = [];
-            let variantTableCol = document.getElementsByClassName('variant-info');
+    }
+    else if (variety == '2') { // 2 Items
+        let preservedData = [];
+        let variantTableCol = document.getElementsByClassName('variant-info');
 
-            for(let i = 0; i < variantTableCol.length; i++){
-                    //get id num
-                let idNum = variantTableCol[i].firstChild.id.split('-')[3];
+        for(let i = 0; i < variantTableCol.length; i++){
+                //get id num
+            let idNum = variantTableCol[i].firstChild.id.split('-')[3];
 
-                //get jancode
-                let janId = `jan-id-${idNum}`;
-                let jancode = document.getElementById(janId).innerHTML;
-
-                //get stock
-                let stockId = `stock-id-${idNum}`;
-                let stock = document.getElementById(stockId).innerHTML.split(':')[1].trim();
-
-                let dataToken = variantTableCol[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
-                
-                preservedData.push({
-                    jancode: jancode,
-                    stock: stock,
-                    token: dataToken
-                })
+            //get jancode
+            let janId = `jan-id-${idNum}`;
+            let jancode = '';
+            if (document.getElementById(janId).innerHTML.trim() != '') {
+            jancode = document.getElementById(janId).innerHTML;
             }
-            
-            //second cell name
-            let twoItemCellName = document.getElementById('cell-name');
-            // crate varieties
-            for(let i = 0; i < preservedData.length; i++){
-                varieties.push({
-                    "jan_code": preservedData[i].jancode,
-                    "stock": preservedData[i].stock,
-                    "varieties": [
-                        {
-                            "name": twoItemCellName.innerHTML.split('/')[0].trim(),
-                            "selection": preservedData[i].token.split('_')[0].trim(),
-                            "vertical_and_horizontal": "0"
-                        },
-                        {
-                            "name": twoItemCellName.innerHTML.split('/')[1].trim(),
-                            "selection": preservedData[i].token.split('_')[1].trim(),
-                            "vertical_and_horizontal": "1"
-                        },
-                    ]
-                })
+
+            //get stock
+            let stockId = `stock-id-${idNum}`;
+            let stock = 0;
+            if (document.getElementById(stockId).innerHTML.trim() != '') {
+            stock = document.getElementById(stockId).innerHTML.split(':')[1].trim()
             }
+
+            let dataToken = variantTableCol[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
             
+            preservedData.push({
+                jancode: jancode,
+                stock: stock,
+                token: dataToken
+            })
         }
+        
+        //second cell name
+        let twoItemCellName = document.getElementById('cell-name');
+        // crate varieties
+        for(let i = 0; i < preservedData.length; i++){
+            varieties.push({
+                "jan_code": preservedData[i].jancode,
+                "stock": preservedData[i].stock,
+                "varieties": [
+                    {
+                        "name": twoItemCellName.innerHTML.split('/')[0].trim(),
+                        "selection": preservedData[i].token.split('_')[0].trim(),
+                        "vertical_and_horizontal": "0"
+                    },
+                    {
+                        "name": twoItemCellName.innerHTML.split('/')[1].trim(),
+                        "selection": preservedData[i].token.split('_')[1].trim(),
+                        "vertical_and_horizontal": "1"
+                    },
+                ]
+            })
+        }
+        
+    }
+    
+    return varieties;
+  }
+
+function saveProductInfo() {
+
+    var is_valid = validateProductForm();
+
+    if (is_valid) {
+        let variety = $('input[name="variety"]:checked').val();
+        let varieties = prepareVarietiesData(variety);
 
         var data = new FormData();
         data.append("profile_id", profile_id);
@@ -640,6 +665,21 @@ function saveProductInfo() {
         if ($('#product_image4').prop('files')[0] !== undefined) {
             data.append("product_image4", $('#product_image4').prop('files')[0]);
         }
+
+        if (g_product_id && g_product_id != '') {
+            let delete_list = [];
+            for(let i=0; i<5; i++) {
+                if ($('#product_image'+i).prop('files')[0] === undefined) {
+                    if ($('#img_image'+i).parent().parent().hasClass('fileupload-new')) {
+                        delete_list.push(i+1);
+                    }
+                }
+            }
+            data.append("image_delete", JSON.stringify(delete_list));
+        } else {
+            data.append("image_delete", JSON.stringify([]));
+        }
+        
         $.ajax({
             method: "POST",
             url: '/products/add_update_product/',
@@ -648,8 +688,8 @@ function saveProductInfo() {
             contentType: false,
             success: function (json) {
                 $.confirm({
-                    title: 'Update Successfull',
-                    content: 'Product information is updated.',
+                    title: get_translate('Update Successful'),
+                    content: get_translate('Product information is updated.'),
                     buttons: {
                         Ok: {
                             btnClass: 'btn-success',
@@ -662,7 +702,7 @@ function saveProductInfo() {
             },
             error: function (e) {
                 $.confirm({
-                    title: 'Error',
+                    title: get_translate('Error'),
                     content: e.message,
                     buttons: {
                         Ok: {
@@ -675,8 +715,8 @@ function saveProductInfo() {
         });
     } else {
         $.confirm({
-            title: 'Warning',
-            content: 'Please fill in the required fields',
+            title: get_translate('Warning'),
+            content: get_translate('Please fill in the required fields'),
             buttons: {
                 Ok: {
                     btnClass: 'btn-success',
