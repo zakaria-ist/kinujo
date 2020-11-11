@@ -210,42 +210,45 @@ class TaxRateViewSet(viewsets.ModelViewSet):
 
 class UserRegister(APIView):
     def post(self, request, format='json'):
-        userSerializer = UserSerializer(data=request.data, context=getContext())
-        if userSerializer.is_valid():
-            user = userSerializer.save()
+        try:
+            userSerializer = UserSerializer(data=request.data, context=getContext())
+            if userSerializer.is_valid():
+                user = userSerializer.save()
 
-            authority = Authority.objects.get(id=5)
-            is_seller = 0
-            if request.data['authority'] == 'store':
-                authority = Authority.objects.get(id=4)
-                is_seller = 1
-                
-            authoritySerializer = AuthoritySerializer(authority, context=getContext())
-        
-            profileSerializer = ProfileSerializer(data={
-                'user' : userSerializer.data['url'],
-                'tel' : request.data['username'],
-                'password' : request.data['password'],
-                'nickname' : request.data['nickname'],
-                'user_code' : user.id,
-                'authority' : authoritySerializer.data['url'],
-                'is_seller' : is_seller
-            }, context=getContext())
-            if profileSerializer.is_valid():
-                profile = profileSerializer.save()
-                if user:
-                    data = profileSerializer.data
-                    # data['authority'] = getObject(data['authority'])
-                    # data['user'] = getObject(data['user'])
-                    return Response({"success": True, "data" : {
-                        "user" : data
-                    }}, status=status.HTTP_201_CREATED)
+                authority = Authority.objects.get(id=5)
+                is_seller = 0
+                if request.data['authority'] == 'store':
+                    authority = Authority.objects.get(id=4)
+                    is_seller = 1
+                    
+                authoritySerializer = AuthoritySerializer(authority, context=getContext())
+            
+                profileSerializer = ProfileSerializer(data={
+                    'user' : userSerializer.data['url'],
+                    'tel' : request.data['username'],
+                    'password' : request.data['password'],
+                    'nickname' : request.data['nickname'],
+                    'user_code' : user.id,
+                    'authority' : authoritySerializer.data['url'],
+                    'is_seller' : is_seller
+                }, context=getContext())
+                if profileSerializer.is_valid():
+                    profile = profileSerializer.save()
+                    if user:
+                        data = profileSerializer.data
+                        # data['authority'] = getObject(data['authority'])
+                        # data['user'] = getObject(data['user'])
+                        return Response({"success": True, "data" : {
+                            "user" : data
+                        }}, status=status.HTTP_201_CREATED)
+                else:
+                    print(profileSerializer.errors)
+                    return Response({"success" : False, "errors" : profileSerializer.errors}, status=status.HTTP_200_OK)
             else:
-                print(profileSerializer.errors)
-                return Response({"success" : False, "errors" : profileSerializer.errors}, status=status.HTTP_200_OK)
-        else:
-            print(userSerializer.errors)
-            return Response({"success" : False, "errors": userSerializer.errors}, status=status.HTTP_200_OK)
+                print(userSerializer.errors)
+                return Response({"success" : False, "errors": userSerializer.errors}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"success" : False, "error": e}, status=status.HTTP_200_OK)
      
 class CheckRegister(APIView):
     def post(self, request, format='json'):
