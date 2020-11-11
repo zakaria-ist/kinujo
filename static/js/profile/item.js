@@ -665,6 +665,21 @@ function saveProductInfo() {
         if ($('#product_image4').prop('files')[0] !== undefined) {
             data.append("product_image4", $('#product_image4').prop('files')[0]);
         }
+
+        if (g_product_id && g_product_id != '') {
+            let delete_list = [];
+            for(let i=0; i<5; i++) {
+                if ($('#product_image'+i).prop('files')[0] === undefined) {
+                    if ($('#img_image'+i).parent().parent().hasClass('fileupload-new')) {
+                        delete_list.push(i+1);
+                    }
+                }
+            }
+            data.append("image_delete", JSON.stringify(delete_list));
+        } else {
+            data.append("image_delete", JSON.stringify([]));
+        }
+        
         $.ajax({
             method: "POST",
             url: '/products/add_update_product/',
