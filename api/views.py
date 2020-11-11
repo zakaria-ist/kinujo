@@ -257,33 +257,46 @@ class CheckRegister(APIView):
 
 class UserLogin(APIView):
     def post(self, request, format='json'):
+        profile = None
         try:
             profile = Profile.objects.get(tel=request.data['tel'])
-            if profile:
+        except Exception as e:
+            print(e)
+        if profile:
+            user = None
+            try:
                 user = User.objects.get(id = profile.user_id)
-                if user:
-                    if user.check_password(request.data['password']):
-                        profileSerializer = ProfileSerializer(profile, context=getContext())
-                        data = profileSerializer.data
-                        # data['authority'] = getObject(data['authority'])
-                        # data['user'] = getObject(data['user'])
-                        return Response({"success" : True, "data" : {
-                            "user" : data
-                        }}, status=status.HTTP_200_OK)
-                    else:
-                        return Response({"success" : False, "error" : "incorrect_password"}, status=status.HTTP_200_OK)
+            except Exception as e:
+                print(e)
+            if user:
+                if user.check_password(request.data['password']):
+                    profileSerializer = ProfileSerializer(profile, context=getContext())
+                    data = profileSerializer.data
+                    # data['authority'] = getObject(data['authority'])
+                    # data['user'] = getObject(data['user'])
+                    return Response({"success" : True, "data" : {
+                        "user" : data
+                    }}, status=status.HTTP_200_OK)
                 else:
-                    return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "error" : "Incorrect Password"}, status=status.HTTP_200_OK)
             else:
-                return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
-        except:
-            return Response({"success" : False, "error" : e}, status=status.HTTP_200_OK)
+                return Response({"success" : False, "error" : "Account Not Exists"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success" : False, "error" : "Account Not Exists"}, status=status.HTTP_200_OK)
 
 class PasswordReset(APIView):
     def post(self, request, format='json'):
-        profile = Profile.objects.get(tel=request.data['tel'])
+        profile = None
+        try:
+            profile = Profile.objects.get(tel=request.data['tel'])
+        except Exception as e:
+            print(e)
         if profile:
-            user = User.objects.get(id = profile.user_id)
+            user = None
+            try:
+                user = User.objects.get(id = profile.user_id)
+            except Exception as e:
+                print(e)
             if user:
                 if request.data['password'] == request.data['confirm_password']:
                     user.set_password(request.data['password'])
@@ -307,8 +320,11 @@ class ProductList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-
-        profile = Profile.objects.get(id=5)
+        profile = None
+        try:
+            profile = Profile.objects.get(id=5)
+        except Exception as e:
+            print(e)
         profileSerializer = ProfileSerializer(profile, context=getContext())
         products = Product.objects.filter(user=userId);
         productSerializer = ProductSerializer(products, many=True, context=getContext())
