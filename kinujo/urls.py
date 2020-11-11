@@ -17,6 +17,8 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.urls import include, path
 from profiles import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     # path('api/try/test', api_views.TextView.as_view({"post" : "send_the_mail"})),
@@ -38,4 +40,4 @@ urlpatterns = [
     url(r'^master_login/$', views.login_master, name='login_master'),
     url(r'^sales_login/$', views.login_sales, name='login_sales'),
     url(r'^logout/$', views.logout_user, name='logout_user'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,6 +2,7 @@ from django.contrib.auth.models import User, Group
 from orders.models import Order, OrderProduct, OrderProductCommission, OrderReceipt, TotalSale, TotalCommission
 from policies.models import Policy
 from images.models import Image
+from rest_framework import filters
 from prefectures.models import Prefecture
 from products.models import ProductCategory, Product, ProductImage, ProductVariety, ProductVarietySelection, ProductJancode
 from profiles.models import FinancialAccount, Authority, Profile, UserSale, UserCommision, MonthlyPayment, Address
@@ -16,6 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import activate, deactivate_all
 from .serializers import ImageSerializer, FinancialAccountSerialier, UserSerializer, GroupSerializer,  OrderSerializer, OrderProductSerializer, OrderProductCommissionSerializer, OrderReceiptSerializer, TotalSaleSerializer, TotalCommissionSerializer, PolicySerializer, PrefectureSerializer, ProductCategorySerializer, ProductSerializer, ProductImageSerializer, ProductVarietySerializer, ProductVarietySelectionSerializer, ProductJancodeSerializer, AuthoritySerializer, ProfileSerializer, UserSaleSerializer, UserCommisionSerializer, MonthlyPaymentSerializer, AddressSerializer, TaxRateSerializer
 from rest_framework.test import APIRequestFactory
+from rest_framework.parsers import MultiPartParser
 import requests 
 import json
 from django.conf import settings
@@ -160,6 +162,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
     API endpoint that allows groups to be viewed or edited.
     """
     queryset = Profile.objects.all()
+    search_fields = ['nickname']
+    filter_backends = [filters.SearchFilter]
     serializer_class = ProfileSerializer
 
 class FinancialAccountViewSet(viewsets.ModelViewSet):
@@ -249,7 +253,7 @@ class CheckRegister(APIView):
         if userSerializer.is_valid():
             return Response({"success" : True}, status=status.HTTP_200_OK)
         else:
-            return Response({"success" : False, "error" : "invalid"}, status=status.HTTP_200_OK)
+            return Response({"success" : False, "errors" : userSerializer.errors}, status=status.HTTP_200_OK)
 
 class UserLogin(APIView):
     def post(self, request, format='json'):
@@ -396,6 +400,27 @@ class FinancialAccountGet(APIView):
         financialAccountSerialier = FinancialAccountSerialier(financialAccount, context=getContext())
         return Response({"success" : True, "financialAccount" : financialAccountSerialier.data}, status=status.HTTP_200_OK)
 
+class ProductByIds(APIView):
+    serializer_class = ProductSerializer
+
+    def get(self, request, format='json'):
+        products = Product.objects.filter(id__in=request.GET.getlist('ids[]'))
+        productSerializer = ProductSerializer(products, many=True, context=getContext())
+        return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
+
+class UserByIds(APIView):
+    serializer_class = ProductSerializer
+
+    def get(self, request, format='json'):
+        profiles = Profile.objects.filter(id__in=request.GET.getlist('ids[]'))
+        profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
+        return Response({"success" : True, "users" : profileSerializer.data}, status=status.HTTP_200_OK)
+
+class UserUpdateBackground(APIView):
+    parser_classes = [MultiPartParser]
+    def post(self, request, userId, format='json'):
+        return Response({"success" : True})
+        
 @csrf_exempt
 def change_language(request):
     """
