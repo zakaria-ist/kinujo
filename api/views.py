@@ -235,8 +235,8 @@ class UserRegister(APIView):
                 profile = profileSerializer.save()
                 if user:
                     data = profileSerializer.data
-                    data['authority'] = getObject(data['authority'])
-                    data['user'] = getObject(data['user'])
+                    # data['authority'] = getObject(data['authority'])
+                    # data['user'] = getObject(data['user'])
                     return Response({"success": True, "data" : {
                         "user" : data
                     }}, status=status.HTTP_201_CREATED)
@@ -264,8 +264,8 @@ class UserLogin(APIView):
                 if user.check_password(request.data['password']):
                     profileSerializer = ProfileSerializer(profile, context=getContext())
                     data = profileSerializer.data
-                    data['authority'] = getObject(data['authority'])
-                    data['user'] = getObject(data['user'])
+                    # data['authority'] = getObject(data['authority'])
+                    # data['user'] = getObject(data['user'])
                     return Response({"success" : True, "data" : {
                         "user" : data
                     }}, status=status.HTTP_200_OK)
@@ -319,7 +319,7 @@ class OrderList(APIView):
         orderSerializer = OrderSerializer(orders, many=True, context=getContext())
         updateOrders = []
         for order in orderSerializer.data:
-            order['seller'] = getObject(order['seller'])
+            # order['seller'] = getObject(order['seller'])
             updateOrders.append(order)
         return Response({"success" : True, "orders" : updateOrders}, status=status.HTTP_200_OK)
 
@@ -375,7 +375,7 @@ class AddressList(APIView):
         addressSerializer = AddressSerializer(addresses, many=True, context=getContext())
         updatedAddress = []
         for address in addressSerializer.data:
-            address['prefecture'] = getObject(address['prefecture'])
+            # address['prefecture'] = getObject(address['prefecture'])
             updatedAddress.append(address)
         return Response({"success" : True, "addresses" : updatedAddress}, status=status.HTTP_200_OK)
 
