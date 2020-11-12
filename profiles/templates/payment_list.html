@@ -76,9 +76,20 @@
 {% block js %}
     <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script>
     <script type="text/javascript">
+
+    var selected_year;
+    var selected_month;
+    var auth_list = [3, 4];
+    var status_list = [1, 0];
+
     $(document).ready(function () {
         moment.locale('ja');
         $('#payment_changable_date').html(moment().format('YYYY年MMM'));
+        selected_year = moment().format('YYYY');
+        selected_month = moment().format('MM');
+
+        //get paymnt data
+        loadPaymentData();
     })
 
     function changeDate(to) {
@@ -86,69 +97,83 @@
             var date = $('#payment_changable_date').text();
             var momnt = moment(date, "YYYY年MMM").add(1, 'months').format("YYYY年MMM");
             $('#payment_changable_date').html(momnt);
+            selected_year = moment(date, "YYYY年MMM").add(1, 'months').format("YYYY");
+            selected_month = moment(date, "YYYY年MMM").add(1, 'months').format("MM");
         } else {
             var date = $('#payment_changable_date').text();
             var momnt = moment(date, "YYYY年MMM").subtract(1, 'months').format("YYYY年MMM");
             $('#payment_changable_date').html(momnt);
+            selected_year = moment(date, "YYYY年MMM").subtract(1, 'months').format("YYYY");
+            selected_month = moment(date, "YYYY年MMM").subtract(1, 'months').format("MM");
         }
+
+        //refresh the list again
+        loadPaymentData();
     }
 
-    {% comment %} var filter_list = [];
-    $('input[type="checkbox"]').click(function(){
-        filter_list.length = 0;
-        if($('#ambassador_check').prop("checked") == true){
-            filter_list.push(3); // 3 is ambassador authority id 
-        }
-        if($('#store_check').prop("checked") == true){
-            filter_list.push(4); // 4 is store authority id 
-        }
-        if($('#paid_check').prop("checked") == true){
-            filter_list.push(5); // 5 is general authority id 
-        }
-        if($('#not_yet_check').prop("checked") == true){
-            filter_list.push(1); // 1 is master authority id 
-        }
-
-        if (filter_list.length == 0) {
-            filter_list = [1, 3, 4, 5];
-        }
-        filter_str = JSON.stringify(filter_list);
-
-        $('#dynamic-table').DataTable().destroy();
-        $('#dynamic-table').DataTable({
-            "order": [[2, "asc"]],
+    function loadPaymentData() {
+        $('#sales-table').DataTable().destroy();
+        $('#sales-table').DataTable({
+            "order": [[1, "asc"]],
             "serverSide": true,
             "scrollX": true,
             stateSave: true,
             "ajax": {
-                "url": "{% url 'ProfileList__asJson' %}",
+                "url": "{% url 'UserSalesList__asJson' %}",
                 "data": {
-                    "filter_str": filter_str
+                    "auth_str": JSON.stringfy(auth_list),
+                    "status_str": JSON.stringfy(status_list),
+                    "year": selected_year,
+                    "month": selected_month
                 }
             },
             "columns": [
                 {"data": "no", "orderable": false},
-                {"data": "type", "orderable": false},
-                {"data": "real_name", "orderable": false},
-                {"data": "store_total", "orderable": false},
-                {"data": "user_total", "orderable": false},
-                
+                {"data": "name"},
+                {"data": "bank_name", "orderable": false},
+                {"data": "branch_name", "orderable": false},
+                {"data": "account_number", "orderable": false},
+                {"data": "account_name", "orderable": false},
                 {
                     "sClass": "text-center",
                     "orderable": false,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        var btn =
-                                '<div class="btn-group">' +
-                                '<a class="btn-group-item" href="/profiles/profile_edit/' + row.id + '/' + '"><i class="fas fa-pencil-alt fa-2x text-info"></i></a>' + 
-                                '<a class="btn-group-item" onclick="deleteProfile(' + row.id + ')"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + 
-                                '</div>';
-                        return btn;
+                        return comma_format(row.amount, 0) + ' ' + JPCUR;
                     }
-                }
+                },
+                {"data": "payment_date", "orderable": false},
             ]
         });
-    }); {% endcomment %}
+    }
+
+    $('input[type="checkbox"]').click(function(){
+        auth_list.length = 0;
+        if($('#ambassador_check').prop("checked") == true){
+            auth_list.push(3); // 3 is ambassador authority id 
+        }
+        if($('#store_check').prop("checked") == true){
+            auth_list.push(4); // 4 is store authority id 
+        }
+        if (auth_list.length == 0) {
+            auth_list = [3, 4]
+        }
+
+        status_list.length = 0;
+        if($('#paid_check').prop("checked") == true){
+            status_list.push(1); // paid
+        }
+        if($('#not_yet_check').prop("checked") == true){
+            filter_list.push(0); // not paid
+        }
+
+        if (status_list.length == 0) {
+            status_list = [1, 0];
+        }
+        
+        //refresh the list again
+        loadPaymentData();
+    });
 
     $(document).click(function (event) {
         //hide al‘l our dropdowns

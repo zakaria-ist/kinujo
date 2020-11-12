@@ -578,7 +578,8 @@ def updateProductVarieties(product, prdct_variety, varieties, old_varieties):
                     obj_varieties = obj['varieties']
                     found = False
                     for old in old_varieties:
-                        if old['hor'] == obj_varieties[0]['selection']:
+                        if old['hor'] == obj_varieties[0]['selection'] or \
+                            old['jan_code'] == obj['jan_code']:
                             found = True
                             productJancode = ProductJancode.objects.get(pk=old['id'])
                             productJancode.jan_code = obj['jan_code']
@@ -627,8 +628,9 @@ def updateProductVarieties(product, prdct_variety, varieties, old_varieties):
                     obj_varieties = obj['varieties']
                     found = False
                     for old in old_varieties:
-                        if old['hor'] == obj_varieties[0]['selection'] and \
-                            old['ver'] == obj_varieties[1]['selection']:
+                        if (old['hor'] == obj_varieties[0]['selection'] and \
+                            old['ver'] == obj_varieties[1]['selection']) or \
+                            old['jan_code'] == obj['jan_code']:
                             found = True
                             productJancode = ProductJancode.objects.get(pk=old['id'])
                             productJancode.jan_code = obj['jan_code']
