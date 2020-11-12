@@ -19,6 +19,11 @@ def getContext():
     }
     return context
 
+class ImageSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Image
+        fields = ['url', 'image', 'is_hidden', 'created', 'modified']
+        
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(
             validators=[UniqueValidator(queryset=User.objects.all())]
@@ -39,6 +44,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     password = serializers.CharField(write_only=True)
     profit = serializers.SerializerMethodField()
+    image = ImageSerializer(required=False)
 
     class Meta:
         model = Profile
@@ -54,11 +60,6 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         for item in orderProducts:
             total = total + item.unit_price
         return total
-
-class ImageSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Image
-        fields = ['url', 'image', 'is_hidden', 'created', 'modified']
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -87,7 +88,7 @@ class ProductCategorySerializer(serializers.HyperlinkedModelSerializer):
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Product
-        fields = ['name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified', 'user']
+        fields = ['id', 'name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified', 'user']
 class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductImage
@@ -111,7 +112,7 @@ class ProductJancodeSerializer(serializers.HyperlinkedModelSerializer):
 class AuthoritySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Authority
-        fields = ['url', 'name','commission_rate','official_commission_rate','is_hidden','created','modified']
+        fields = ['id', 'url', 'name','commission_rate','official_commission_rate','is_hidden','created','modified']
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     seller = ProfileSerializer()
     purchaser = ProfileSerializer()

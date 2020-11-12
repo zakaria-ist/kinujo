@@ -150,9 +150,9 @@
                                 <option value="">Select Store</option>
                                 {% for pr in store_list %}
                                     {% if profile.introducer_id == pr.id %}
-                                        <option value="{{pr.id}}" selected>{{pr.nickname}}</option>
+                                        <option value="{{pr.id}}" selected>{{pr.real_name}}</option>
                                     {% else %}
-                                        <option value="{{pr.id}}">{{pr.nickname}}</option>
+                                        <option value="{{pr.id}}">{{pr.real_name}}</option>
                                     {% endif %}
                                 {% endfor %}
                             </select>

@@ -1,5 +1,5 @@
 
-{% extends "listing_base.html" %}
+{% extends "base.html" %}
 {% block extrahead %}
     {% load static %}
     {% load i18n %}
@@ -208,10 +208,11 @@
           {% csrf_token %}
           <input class="form-control" type="hidden" name="varieties" id="varieties">
           <input class="form-control" type="hidden" name="old_varieties" id="old_varieties">
-          <input class="form-control" type="hidden" name="is_draft" id="is_draft" value="0">
-          <input class="form-control" type="hidden" name="is_used" id="is_used">
+          <input class="form-control" type="hidden" name="draft" id="draft" value="0">
+          <input class="form-control" type="hidden" name="used" id="used">
           <input class="form-control" type="hidden" name="is_opened" id="is_opened">
-          <input class="form-control" type="hidden" name="variety" id="is_draft">
+          <input class="form-control" type="hidden" name="sel_variety" id="sel_variety">
+          <input class="form-control" type="hidden" name="image_delete" id="image_delete">
           <div class="row">
 
             <!--Starts left side inputs-->
@@ -282,7 +283,7 @@
 
               <div id="status-div" class="form-group row form-check form-check-inline" style="align-items: baseline;">
                 <label class="col-md-4 p-2" for="status">{% trans 'Status' %}</label>
-                <div class="custom-control custom-radio custom-control-inline col-md-2 ml-3">
+                <div class="custom-control custom-radio custom-control-inline col-md-2">
                   <input type="radio" id="published" value="1" name="status" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="published">{% trans 'Published' %}</label>
                 </div>
@@ -315,7 +316,7 @@
 
               <div id="target-div" class="form-group row form-check form-check-inline" style="align-items: baseline;">
                 <label class="col-md-4 p-2" for="target">{% trans 'For Sale' %}</label>
-                <div class="custom-control custom-radio custom-control-inline col-md-2 ml-1">
+                <div class="custom-control custom-radio custom-control-inline col-md-2">
                   <input type="radio" id="all-users" name="target" value="0" class="custom-control-input form-check-input">
                   <label class="form-check-label custom-control-label" for="all-users">{% trans 'All Users' %}</label>
                 </div>
@@ -574,8 +575,8 @@
                 <p style="width: 20px;" class="m-2"> </p>
                 <p style="width: 20px;" class="m-2"> </p>
                 <label for="message-text" class="col-form-label" style="width: 160px;">{% trans 'Choices' %}</label>
-                <label for="message-text" class="col-form-label" style="width: 140px;">{% trans 'JAN Code' %}</label>
-                <label for="message-text" class="col-form-label" style="width: 50px;">{% trans 'Stock' %}</label>
+                <label for="message-text" class="col-form-label label-hide" style="width: 140px;">{% trans 'JAN Code' %}</label>
+                <label for="message-text" class="col-form-label label-hide" style="width: 50px;">{% trans 'Stock' %}</label>
                 <p class="m-2" style="width: 50px;"> </p>
               </div>
               
@@ -729,6 +730,7 @@
 
 {% endblock %}
 {% block js %}
+<script type="text/javascript" src="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.js' %}"></script>
 <script src="{% static "js/select2/select2.js" %}"></script>
 <script src="{% static "js/product/product.js" %}"></script>
 <script type="text/javascript">
@@ -850,6 +852,8 @@
         let oneGroupItemWrapper =  document.getElementById('oneItemGroup');
         let tableOne = document.getElementById('variety-table');
         if(tableOne.innerHTML.trim() !== ''){
+          $('.label-hide').css('display', 'none');
+          $('#oneItemVariant .modal-body').css('margin-left', '5rem');
 
           //empty modal form
           oneGroupItemWrapper.innerHTML = '';
@@ -893,10 +897,8 @@
                           <p style="width: 20px;" class="m-2"> </p>
                           <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
                           <input value="${varChoices}" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                          
-                          <input value="${varJanCode}" type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
-                          
-                          <input value="${varStock}" type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
+                          <input value="${varJanCode}" type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px; display: none;">
+                          <input value="${varStock}" type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px; display: none;">
                           <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                           </div>`;
             
@@ -905,6 +907,11 @@
             }
           }
 
+        } else {
+          $('#oneItemVariant .modal-body').css('margin-left', '');
+          $('.label-hide').css('display', 'block');
+          $('.one-item-jan-code').css('display', 'block');
+          $('.one-item-stock').css('display', 'block');
         }
       }
 
@@ -1168,16 +1175,25 @@
       let optCounter = optionArray.length + 1;
 
       let newContent = document.createElement('div');
-      newContent.innerHTML = `<div class='form-group'>
-                    <p style="width: 20px;" class="m-2"> </p>
-                    <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
-                    <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                    
-                    <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
-                    
-                    <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
-                    <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                    </div>`;
+      if($('.label-hide').is(":visible")) {
+        newContent.innerHTML = `<div class='form-group'>
+                      <p style="width: 20px;" class="m-2"> </p>
+                      <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
+                      <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                      <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
+                      <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
+                      <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                      </div>`;
+      } else {
+        newContent.innerHTML = `<div class='form-group'>
+                      <p style="width: 20px;" class="m-2"> </p>
+                      <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
+                      <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
+                      <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px; display: none;">
+                      <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px; display: none;">
+                      <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
+                      </div>`;
+      }
       
       while (newContent.firstChild) {
         document.getElementById('oneItemGroup').appendChild(newContent.firstChild);
@@ -1567,9 +1583,7 @@
                     <p style="width: 20px;" class="m-2"> </p>
                     <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
                     <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                    
-                    <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
-                    
+                    <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
                     <input value="" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
@@ -1577,13 +1591,10 @@
                     <p style="width: 20px;" class="m-2"> </p>
                     <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
                     <input value=""  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                    
-                    <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 100px;">
-                    
+                    <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
                     <input value=""  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
-
                 `;
 
       //change add item button
