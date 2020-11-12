@@ -35,5 +35,8 @@ urlpatterns = [
 
     # for listing user
     url(r'^listing_sales_list/$', views.listing_sales_list, name='listing_sales_list'),
+
+    # for payment list
+    url(r'^payment_list_json/$', views.PaymentList__asJson, name='PaymentList__asJson'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
