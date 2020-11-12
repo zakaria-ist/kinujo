@@ -1320,8 +1320,7 @@
         if(stockDiv.innerHTML !== '') {
           oldStock = stockDiv.innerHTML.split(':')[1].trim();
         }
-        newStockValue = Number(oldStock) + Number(newStock.value);
-        
+        newStockValue = Number(oldStock);
       }else{
         if(isNaN(Number(newStock.value))){
 
@@ -1336,7 +1335,14 @@
           if(stockDiv.innerHTML !== '') {
             oldStock = stockDiv.innerHTML.split(':')[1].trim();
           }
-          newStockValue = Number(oldStock) + Number(newStock.value);
+          if (newStock.value.indexOf('+') != -1) {
+              newStockValue = Number(oldStock) + Number(newStock.value.replace('+', ''));
+          } else if (newStock.value.indexOf('-') != -1) {
+              newStockValue = (Number(oldStock) - Number(newStock.value.replace('-', '')) >= 0) ? 
+                                    Number(oldStock) - Number(newStock.value.replace('-', '')) : 0;
+          } else {
+              newStockValue = Number(newStock.value);
+          }
         }
       }
       
