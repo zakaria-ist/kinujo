@@ -348,9 +348,12 @@ def product_add(request):
                 messages.add_message(request, messages.ERROR,
                                     e, extra_tags='product_add')
 
+        seller_auth_id = Profile.objects.get(pk=seller_id).authority_id
         category_list = list(ProductCategory.objects.filter(
             is_hidden=False).values_list('id', 'name'))
-        return render(request, 'product_form.html', {'category_list': category_list, 'media_url': s.MEDIA_URL})
+        return render(request, 'product_form.html', {'category_list': category_list, 
+                                                    'media_url': s.MEDIA_URL,
+                                                    'seller_auth_id': seller_auth_id})
     else:
         return render(request, '404.html')
 
@@ -462,7 +465,8 @@ def product_edit(request, product_id):
             #         "stock": str(productJancode.stock),
             #         "varieties": varieties
             #     })
-
+            
+            seller_auth_id = Profile.objects.get(pk=seller_id).authority_id
             category_list = list(ProductCategory.objects.filter(
                 is_hidden=False).values_list('id', 'name'))
 
@@ -470,6 +474,7 @@ def product_edit(request, product_id):
                                                         'images': image_array,
                                                         #  'varieties': p_varieties,
                                                         'category_list': category_list,
+                                                        'seller_auth_id': seller_auth_id,
                                                         'media_url': s.MEDIA_URL})
         else:
             return render(request, '404.html')
