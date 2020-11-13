@@ -2119,11 +2119,12 @@
         }
     });
 
+    var seller_auth_id = "{{seller_auth_id}}"
     $('#price').on('change', function() {
       var general_price = parseInt($(this).val());
       $('#price').val(comma_format(general_price, 0) + ' ' + JPCUR);
       var store_price =  general_price - (0.2 * general_price);
-      if(authority_id == '1') { // master
+      if(seller_auth_id == '1') { // master
           store_price = general_price - (0.3 * general_price);
       }
       store_price = comma_format(store_price, 0) + ' ' + JPCUR
