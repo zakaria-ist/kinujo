@@ -141,8 +141,13 @@ def logout_user(request):
     """
     Method to logout.
     """
+
+    login_type_was = request.session['login_type']
     logout(request)
-    return render(request, 'master_login.html')
+    if login_type_was == 'MASTER':
+        return render(request, 'master_login.html')
+    else:
+        return render(request, 'sales_login.html')
 
 @login_required
 def profile_list(request):
