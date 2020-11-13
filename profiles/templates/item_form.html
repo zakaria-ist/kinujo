@@ -702,6 +702,7 @@
 <script type="text/javascript">
   try{
     let preservedDatas = {};
+    let preservedDatasAgain = {};
 
     let counter = 0;
     const imgWrapper = document.getElementById('img-wrapper');
@@ -905,6 +906,7 @@
           let varInfo = document.getElementsByClassName('variant-info');
 
           preservedDatas = {};
+          preservedDatasAgain = {};
 
           for(let i = 0; i < varInfo.length; i++){
             //get id num
@@ -928,6 +930,10 @@
             let dataToken = varInfo[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
             
             preservedDatas[dataToken] = {
+              jancode: jancode,
+              stock: stock,
+            }
+            preservedDatasAgain[idNum] = {
               jancode: jancode,
               stock: stock,
             }
@@ -1994,6 +2000,11 @@
               if(preservedDatas[dataToken]){
                 njancode.innerHTML = preservedDatas[dataToken].jancode;
                 nstock.innerHTML = 'Stock:' + preservedDatas[dataToken].stock;
+              } else {
+                if(preservedDatasAgain[idNum]) {
+                  njancode.innerHTML = preservedDatasAgain[idNum].jancode;
+                  nstock.innerHTML = 'Stock:' + preservedDatasAgain[idNum].stock;
+                }
               }
         }
      }

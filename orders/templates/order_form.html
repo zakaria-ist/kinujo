@@ -767,24 +767,24 @@
                 $('#shipping_fee').addClass('highlight-mandatory');
                 is_valid = false;
             }
-            if ( $('#shipped_date').val() != '' ) {
+            {% comment %} if ( $('#shipped_date').val() != '' ) {
                 $('#shipped_date').removeClass('highlight-mandatory');
             } else {
                 $('#shipped_date').addClass('highlight-mandatory');
                 is_valid = false;
-            }
+            } {% endcomment %}
             if ( $('#order_date').val() != '' ) {
                 $('#order_date').removeClass('highlight-mandatory');
             } else {
                 $('#order_date').addClass('highlight-mandatory');
                 is_valid = false;
             }
-            if ( $('#inquiry_number').val() != '' ) {
+            {% comment %} if ( $('#inquiry_number').val() != '' ) {
                 $('#inquiry_number').removeClass('highlight-mandatory');
             } else {
                 $('#inquiry_number').addClass('highlight-mandatory');
                 is_valid = false;
-            }
+            } {% endcomment %}
 
             // Product validation
             for (let i=0; i<$("[id*='product_line']").length; i++) {

@@ -590,6 +590,18 @@ def updateProductVarieties(product, prdct_variety, varieties, old_varieties):
                             productJancode.jan_code = obj['jan_code']
                             productJancode.stock = obj['stock']
                             productJancode.save()
+                            try:
+                                productVarietySelection = ProductVarietySelection.objects.get(pk=productJancode.horizontal_id)
+                                productVarietySelection.selection = obj_varieties[0]['selection']
+                                productVarietySelection.save()
+                            except:
+                                pass
+                            try:
+                                productVarietySelection = ProductVarietySelection.objects.get(pk=productJancode.vertical_id)
+                                productVarietySelection.selection = obj_varieties[0]['selection']
+                                productVarietySelection.save()
+                            except:
+                                pass
 
                             old['id'] = ''
                             break
@@ -641,6 +653,19 @@ def updateProductVarieties(product, prdct_variety, varieties, old_varieties):
                             productJancode.jan_code = obj['jan_code']
                             productJancode.stock = obj['stock']
                             productJancode.save()
+
+                            try:
+                                productVarietySelection1 = ProductVarietySelection.objects.get(pk=productJancode.horizontal_id)
+                                productVarietySelection1.selection = obj_varieties[0]['selection']
+                                productVarietySelection1.save()
+                            except:
+                                pass
+                            try:
+                                productVarietySelection2 = ProductVarietySelection.objects.get(pk=productJancode.vertical_id)
+                                productVarietySelection2.selection = obj_varieties[1]['selection']
+                                productVarietySelection2.save()
+                            except:
+                                pass
 
                             old['id'] = ''
                             break
