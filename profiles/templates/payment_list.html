@@ -112,24 +112,24 @@
     }
 
     function loadPaymentData() {
-        $('#sales-table').DataTable().destroy();
-        $('#sales-table').DataTable({
-            "order": [[1, "asc"]],
+        $('#payment-table').DataTable().destroy();
+        $('#payment-table').DataTable({
+            //"order": [[1, "asc"]],
             "serverSide": true,
             "scrollX": true,
             stateSave: true,
             "ajax": {
-                "url": "{% url 'UserSalesList__asJson' %}",
+                "url": "{% url 'PaymentList__asJson' %}",
                 "data": {
-                    "auth_str": JSON.stringfy(auth_list),
-                    "status_str": JSON.stringfy(status_list),
+                    "auth_str": JSON.stringify(auth_list),
+                    "status_str": JSON.stringify(status_list),
                     "year": selected_year,
                     "month": selected_month
                 }
             },
             "columns": [
                 {"data": "no", "orderable": false},
-                {"data": "name"},
+                {"data": "name", "orderable": false},
                 {"data": "bank_name", "orderable": false},
                 {"data": "branch_name", "orderable": false},
                 {"data": "account_number", "orderable": false},
@@ -142,7 +142,19 @@
                         return comma_format(row.amount, 0) + ' ' + JPCUR;
                     }
                 },
-                {"data": "payment_date", "orderable": false},
+                {
+                    "sClass": "text-center",
+                    "orderable": false,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        if (row.paid_date != '') {
+                            return row.paid_date;
+                        } else {
+                            return `<input class="form-control trs-field paid_date" type="date"
+                                    name="paid_date" row="` + row.no + `">`;
+                        }
+                    }
+                }
             ]
         });
     }
@@ -164,7 +176,7 @@
             status_list.push(1); // paid
         }
         if($('#not_yet_check').prop("checked") == true){
-            filter_list.push(0); // not paid
+            status_list.push(0); // not paid
         }
 
         if (status_list.length == 0) {
@@ -174,6 +186,38 @@
         //refresh the list again
         loadPaymentData();
     });
+
+    $(document).on('change', '.paid_date', function(event) {
+        let date = $(this).val();
+        let line = $(event.target).attr('row');
+        var dtTable = $('#payment-table').DataTable();
+        var paymentObj = dtTable.rows(line-1).data()[0];
+        console.log(paymentObj);
+        if (paymentObj !== undefined && date != '') {
+            updatePaidDate(paymentObj, date);
+        }
+    });
+
+    function updatePaidDate(paymentObj, date) {
+        $.ajax({
+            method: "POST",
+            url: '/profiles/update_payment/',
+            dataType: 'JSON',
+            data: {
+                'payment_id': paymentObj.id,
+                'payment_date': date,
+            },
+        })
+        .done(function(json) {
+            if (json.message == 'Success') {
+                //refresh the list again
+                loadPaymentData();
+            }
+        })
+        .fail(function(e) {
+            console.log(e);
+        })
+    }
 
     $(document).click(function (event) {
         //hide al‘l our dropdowns

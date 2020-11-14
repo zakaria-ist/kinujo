@@ -38,5 +38,6 @@ urlpatterns = [
 
     # for payment list
     url(r'^payment_list_json/$', views.PaymentList__asJson, name='PaymentList__asJson'),
+    url(r'^update_payment/$', views.update_payment, name='update_payment'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
