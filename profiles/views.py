@@ -949,7 +949,7 @@ def PaymentList__asJson(request):
     records_total = payment_list.count()
 
     if search:  # Filter data base on search
-        payment_list = payment_list.filter(Q(user__real_name__icontains=search)).order_by('-real_name')
+        payment_list = payment_list.filter(Q(user__real_name__icontains=search))
 
     # All data
     records_filtered = payment_list.count()
@@ -957,18 +957,18 @@ def PaymentList__asJson(request):
     order_column = request.GET['order[0][column]']
     column_name = ""
     if order_column == "1":
-        column_name = "real_name"
+        column_name = "name"
     
-    order_dir = request.GET['order[0][dir]']
-    list = []
-    if order_dir == "asc":
-        list = payment_list.order_by(column_name)[int(start):(int(start) + int(length))]
-    elif order_dir == "desc":
-        list = payment_list.order_by('-' + column_name)[int(start):(int(start) + int(length))]
+    # order_dir = request.GET['order[0][dir]']
+    # list = []
+    # if order_dir == "asc":
+    #     list = payment_list.order_by(column_name)[int(start):(int(start) + int(length))]
+    # elif order_dir == "desc":
+    #     list = payment_list.order_by('-' + column_name)[int(start):(int(start) + int(length))]
 
     array = []
     i = 0
-    for field in list:
+    for field in payment_list:
         i = i + 1
         bank_info = FinancialAccount.objects.filter(is_hidden=False, user_id=field.user_id)
         if bank_info.exists():
@@ -977,13 +977,13 @@ def PaymentList__asJson(request):
             bank_info = None
         data = {
             "no": str(i),
-            "name": field.real_name,
+            "name": field.user.real_name,
             "bank_name": bank_info.financial_code + ' ' + bank_info.financial_name if bank_info else '',
             "branch_name": bank_info.branch_code + ' ' + bank_info.branch_name if bank_info else '',
             "account_number": bank_info.account_number if bank_info else '',
             "account_name": bank_info.account_name if bank_info else '',
             "amount": str(field.amount),
-            "payment_date": field.payment_date.strftime('%Y-%m-%d') if field.payment_date else '',
+            "paid_date": field.paid_date.strftime('%Y-%m-%d') if field.paid_date else '',
             "id": str(field.id),
         }
         array.append(data)
@@ -991,3 +991,28 @@ def PaymentList__asJson(request):
     content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
     json_content = json.dumps(content, ensure_ascii=False)
     return HttpResponse(json_content, content_type='application/json')
+
+
+@csrf_exempt
+def update_payment(request):
+    """
+    Method to update payment info.
+    """
+
+    message = 'Error'
+    if request.method == 'POST':
+        payment_id = request.POST.get('payment_id')
+        date = request.POST.get('payment_date')
+        try:
+            payment = MonthlyPayment.objects.get(pk=payment_id)
+            payment.paid_date = date
+            payment.status = True
+            payment.modified = datetime.datetime.now()
+            payment.save()
+
+            message = 'Success'
+        except Exception as e:
+            print(e)
+
+    context = { 'message': message }
+    return HttpResponse(json.dumps(context), content_type="application/json")
