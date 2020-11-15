@@ -240,7 +240,8 @@ class UserRegister(APIView):
                         print(e)
                     if introducerProfile:
                         introducerProfileSerializer = ProfileSerializer(data=introducerProfile, context=getContext())
-                        profileItem['introducer'] = introducerProfileSerializer.data['url']
+                        if introducerProfileSerializer.is_valid():
+                            profileItem['introducer'] = introducerProfileSerializer.data['url']
 
                 profileSerializer = ProfileSerializer(data=profileItem, context=getContext())
                 if profileSerializer.is_valid():
