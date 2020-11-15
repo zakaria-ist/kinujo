@@ -348,9 +348,12 @@ def product_add(request):
                 messages.add_message(request, messages.ERROR,
                                     e, extra_tags='product_add')
 
+        seller_auth_id = Profile.objects.get(pk=seller_id).authority_id
         category_list = list(ProductCategory.objects.filter(
             is_hidden=False).values_list('id', 'name'))
-        return render(request, 'product_form.html', {'category_list': category_list, 'media_url': s.MEDIA_URL})
+        return render(request, 'product_form.html', {'category_list': category_list, 
+                                                    'media_url': s.MEDIA_URL,
+                                                    'seller_auth_id': seller_auth_id})
     else:
         return render(request, '404.html')
 
@@ -462,7 +465,8 @@ def product_edit(request, product_id):
             #         "stock": str(productJancode.stock),
             #         "varieties": varieties
             #     })
-
+            
+            seller_auth_id = Profile.objects.get(pk=seller_id).authority_id
             category_list = list(ProductCategory.objects.filter(
                 is_hidden=False).values_list('id', 'name'))
 
@@ -470,6 +474,7 @@ def product_edit(request, product_id):
                                                         'images': image_array,
                                                         #  'varieties': p_varieties,
                                                         'category_list': category_list,
+                                                        'seller_auth_id': seller_auth_id,
                                                         'media_url': s.MEDIA_URL})
         else:
             return render(request, '404.html')
@@ -578,12 +583,25 @@ def updateProductVarieties(product, prdct_variety, varieties, old_varieties):
                     obj_varieties = obj['varieties']
                     found = False
                     for old in old_varieties:
-                        if old['hor'] == obj_varieties[0]['selection']:
+                        if old['hor'] == obj_varieties[0]['selection'] or \
+                            old['jan_code'] == obj['jan_code']:
                             found = True
                             productJancode = ProductJancode.objects.get(pk=old['id'])
                             productJancode.jan_code = obj['jan_code']
                             productJancode.stock = obj['stock']
                             productJancode.save()
+                            try:
+                                productVarietySelection = ProductVarietySelection.objects.get(pk=productJancode.horizontal_id)
+                                productVarietySelection.selection = obj_varieties[0]['selection']
+                                productVarietySelection.save()
+                            except:
+                                pass
+                            try:
+                                productVarietySelection = ProductVarietySelection.objects.get(pk=productJancode.vertical_id)
+                                productVarietySelection.selection = obj_varieties[0]['selection']
+                                productVarietySelection.save()
+                            except:
+                                pass
 
                             old['id'] = ''
                             break
@@ -627,13 +645,27 @@ def updateProductVarieties(product, prdct_variety, varieties, old_varieties):
                     obj_varieties = obj['varieties']
                     found = False
                     for old in old_varieties:
-                        if old['hor'] == obj_varieties[0]['selection'] and \
-                            old['ver'] == obj_varieties[1]['selection']:
+                        if (old['hor'] == obj_varieties[0]['selection'] and \
+                            old['ver'] == obj_varieties[1]['selection']) or \
+                            old['jan_code'] == obj['jan_code']:
                             found = True
                             productJancode = ProductJancode.objects.get(pk=old['id'])
                             productJancode.jan_code = obj['jan_code']
                             productJancode.stock = obj['stock']
                             productJancode.save()
+
+                            try:
+                                productVarietySelection1 = ProductVarietySelection.objects.get(pk=productJancode.horizontal_id)
+                                productVarietySelection1.selection = obj_varieties[0]['selection']
+                                productVarietySelection1.save()
+                            except:
+                                pass
+                            try:
+                                productVarietySelection2 = ProductVarietySelection.objects.get(pk=productJancode.vertical_id)
+                                productVarietySelection2.selection = obj_varieties[1]['selection']
+                                productVarietySelection2.save()
+                            except:
+                                pass
 
                             old['id'] = ''
                             break
