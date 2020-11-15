@@ -45,6 +45,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     password = serializers.CharField(write_only=True)
     profit = serializers.SerializerMethodField()
     image = ImageSerializer(required=False)
+    introducer = ProfileSerializer(required=False)
 
     class Meta:
         model = Profile
