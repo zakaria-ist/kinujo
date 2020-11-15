@@ -232,10 +232,10 @@ class UserRegister(APIView):
                     'authority' : authoritySerializer.data['url'],
                     'is_seller' : is_seller
                 }
-                if(request.data['introducer']):
+                if request.data['introducer']:
                     introducerProfile = None
                     try:
-                        introducerProfile = Profile.objects.get(id=request.data['introducer'])
+                        introducerProfile = Profile.objects.get(id=int(request.data['introducer']))
                     except Exception as e:
                         print(e)
                     if introducerProfile:
