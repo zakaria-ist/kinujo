@@ -222,8 +222,8 @@ class UserRegister(APIView):
                     is_seller = 1
                     
                 authoritySerializer = AuthoritySerializer(authority, context=getContext())
-            
-                profileSerializer = ProfileSerializer(data={
+                
+                profileItem = {
                     'user' : userSerializer.data['url'],
                     'tel' : request.data['username'],
                     'password' : request.data['password'],
@@ -231,7 +231,18 @@ class UserRegister(APIView):
                     'user_code' : user.id,
                     'authority' : authoritySerializer.data['url'],
                     'is_seller' : is_seller
-                }, context=getContext())
+                }
+                if request.data['introducer']:
+                    introducerProfile = None
+                    try:
+                        introducerProfile = Profile.objects.get(id=int(request.data['introducer']))
+                    except Exception as e:
+                        print(e)
+                    if introducerProfile:
+                        introducerProfileSerializer = ProfileSerializer(data=introducerProfile, context=getContext())
+                        profileItem['introducer'] = introducerProfileSerializer.data['url']
+
+                profileSerializer = ProfileSerializer(data=profileItem, context=getContext())
                 if profileSerializer.is_valid():
                     profile = profileSerializer.save()
                     if user:
