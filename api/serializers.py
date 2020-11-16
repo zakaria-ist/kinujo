@@ -41,6 +41,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                 validated_data['password'])
         return user
     
+class AuthoritySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Authority
+        fields = ['id', 'url', 'name','commission_rate','official_commission_rate','is_hidden','created','modified']
+        
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     password = serializers.CharField(write_only=True)
     profit = serializers.SerializerMethodField()
@@ -113,10 +118,6 @@ class ProductJancodeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductJancode
         fields = ['horizontal','vertical','jan_code','stock','is_hidden','created','modified']
-class AuthoritySerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Authority
-        fields = ['id', 'url', 'name','commission_rate','official_commission_rate','is_hidden','created','modified']
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     seller = ProfileSerializer()
     purchaser = ProfileSerializer()
