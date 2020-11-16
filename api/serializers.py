@@ -41,10 +41,16 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                 validated_data['password'])
         return user
     
+class AuthoritySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Authority
+        fields = ['id', 'url', 'name','commission_rate','official_commission_rate','is_hidden','created','modified']
+
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     password = serializers.CharField(write_only=True)
     profit = serializers.SerializerMethodField()
     image = ImageSerializer(required=False)
+    authority = AuthoritySerializer()
     # introducer = ProfileSerializer(required=False)
 
     class Meta:
@@ -87,9 +93,12 @@ class ProductCategorySerializer(serializers.HyperlinkedModelSerializer):
         model = ProductCategory
         fields = ['name','is_hidden','created','modified']
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
+    user = ProfileSerializer()
+    category = ProductCategorySerializer()
     class Meta:
         model = Product
         fields = ['id', 'name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified', 'user']
+
 class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductImage
@@ -110,10 +119,6 @@ class ProductJancodeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductJancode
         fields = ['horizontal','vertical','jan_code','stock','is_hidden','created','modified']
-class AuthoritySerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Authority
-        fields = ['id', 'url', 'name','commission_rate','official_commission_rate','is_hidden','created','modified']
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     seller = ProfileSerializer()
     purchaser = ProfileSerializer()

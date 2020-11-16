@@ -551,7 +551,6 @@
 
             var options = '<option value="">Select Product</option>';
             for (i in list) {
-
                 options += "<option value="+list[i].jan_id+">"+list[i].jan_code + ': ' + list[i].name + ' - ' + list[i].varieties + ' - ' + list[i].stock+"</option>";
             }
             $('#' + id).html(options);
@@ -567,7 +566,7 @@
                 for(i in list){
                     if (s_val == list[i].jan_id) {
                         let image_path = list[i].image_path;
-                        $('#product_image'+line).attr('src', image_path);
+                        $('#product_image_'+line).attr('src', image_path);
                         $('#quantity_'+line).attr('max_order', list[i].stock);
                     }
                 }
@@ -608,7 +607,7 @@
                 addProduct(0);
             }
             for (i in order_product_list) {
-                $('#product_image_'+i).attr("src" ,order_product_list[i][2]);
+                //$('#product_image_'+i).attr("src" ,order_product_list[i][2]);
                 $('#quantity_'+i).val(order_product_list[i][1]);
                 $('#product_select_'+i).val(order_product_list[i][0]).trigger('change');
             }
