@@ -99,10 +99,10 @@ class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     user = ProfileSerializer()
     category = ProductCategorySerializer
-    productImages = ProductImageSerializer(many=True, read_only=True)
+    productImages = ProductImageSerializer(many=True, required=False)
     class Meta:
         model = Product
-        fields = ['id', 'name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified', 'user', 'images']
+        fields = ['id', 'name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified', 'user', 'productImages']
 class ProductVarietySerializer(serializers.HyperlinkedModelSerializer):
     product = ProductSerializer()
     class Meta:
