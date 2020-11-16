@@ -93,6 +93,7 @@ class ProductCategorySerializer(serializers.HyperlinkedModelSerializer):
         model = ProductCategory
         fields = ['name','is_hidden','created','modified']
 class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
+    image = ImageSerializer()
     class Meta:
         model = ProductImage
         fields = ['product','image','is_hidden','created','modified',]
