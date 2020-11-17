@@ -80,10 +80,10 @@ VALUES
 
 INSERT INTO `products_productcategory` (`name`, `is_hidden`, `created`, `modified`)
 VALUES
-	('美容家電', 1, now(), now()),
-	('シャンプー', 1, now(), now()),
-	('スタイリング', 1, now(), now()),
-	('コスメ', 1, now(), now());
+	('美容家電', 0, now(), now()),
+	('シャンプー', 0, now(), now()),
+	('スタイリング', 0, now(), now()),
+	('コスメ', 0, now(), now());
 
 
 INSERT INTO `auth_user` (`password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`)
