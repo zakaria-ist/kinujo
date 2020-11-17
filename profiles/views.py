@@ -36,6 +36,15 @@ def listing_home_load(request):
     """
     return render(request, 'base.html')
 
+@login_required 
+def sales_listing_site(request):
+    """
+    Method to redirect to listing home/dashboard.
+    """
+
+    request.session['login_type'] = 'SELLER'
+    return render(request, 'base.html')
+
 def pass_reset(request):
     """
     Method to redirect to password reset page.
@@ -753,6 +762,9 @@ def ShippingList__asJson(request):
                 "address_name": field.address_name,
                 "name": field.name,
                 "address": field.address1 + '</br>' + field.address2 + ' Zip:' + field.zip1,
+                "address1": field.address1,
+                "address2": field.address2,
+                "zip1": field.zip1,
                 "prefecture": field.prefecture.name,
                 "prefecture_id": field.prefecture.id,
                 "tel": field.tel

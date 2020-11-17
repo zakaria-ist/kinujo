@@ -445,9 +445,9 @@
             sel_address['tel'] = dtRow[0].tel;
             sel_address['prefecture'] = dtRow[0].prefecture;
             sel_address['prefecture_id'] = dtRow[0].prefecture_id;
-            sel_address['address1'] = dtRow[0].address.split(' ')[0].trim();
-            sel_address['address2'] = dtRow[0].address.split(' ')[1].replace('</br>', '').trim() + ' ' + dtRow[0].address.split(' ')[2].trim();
-            sel_address['zip1'] = dtRow[0].address.split(' ')[4].split(':')[1].trim();
+            sel_address['address1'] = dtRow[0].address1;
+            sel_address['address2'] = dtRow[0].address2;
+            sel_address['zip1'] = dtRow[0].zip1;
             console.log(sel_address);
             $('#zip1').val(sel_address.zip1).trigger('change');
             $('#tel').val(sel_address.tel);
