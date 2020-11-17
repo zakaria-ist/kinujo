@@ -753,6 +753,9 @@ def ShippingList__asJson(request):
                 "address_name": field.address_name,
                 "name": field.name,
                 "address": field.address1 + '</br>' + field.address2 + ' Zip:' + field.zip1,
+                "address1": field.address1,
+                "address2": field.address2,
+                "zip1": field.zip1,
                 "prefecture": field.prefecture.name,
                 "prefecture_id": field.prefecture.id,
                 "tel": field.tel
