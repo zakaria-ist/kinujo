@@ -28,6 +28,15 @@
         <header class="panel-heading" style="font-size: 25px; margin-bottom: 20px;" >
                 {% trans 'Profile Details' %}  {{profile.real_name}}
         </header>
+        {% if profile.authority_id == 1 %} {#MASTER#}
+            <div class="text-right" style="margin-top: -40px;">
+                <span class="">
+                    <a class="btn btn-primary blue-btn" href="{% url 'sales_listing_site' %}"> 
+                        <span>{% trans 'Listing Management Site' %}</span>
+                    </a>
+                </span>
+            </div>
+        {% endif %}
         <ul id="tabs" class="nav nav-tabs" data-tabs="tabs" role="tablist"
             style="padding-left: 20px; margin-left: 18px; margin-right: 24px;">
             <li class="nav-item" id="basic_tab_li">

@@ -83,7 +83,7 @@ def OrderList__asJson(request):
             "address": field.address1 + '  Zip: ' + field.zip1,
             "amount": intcomma("%.0f" % field.total_amount),
             "status": 'IN PROCESSING' if field.status == 1 else 'SHIPMENT COMPLETE',
-            "shipped_date": field.shipped_date.strftime("%Y-%m-%d"),
+            "shipped_date": field.shipped_date.strftime("%Y-%m-%d") if field.shipped_date else '',
             "inquiry_number": field.inquiry_number
         }
         array.append(data)
@@ -340,7 +340,10 @@ def order_add(request):
                 order.tax = request.POST.get('tax')
                 order.shipping_fee = request.POST.get('shipping_fee')
                 order.total_amount = request.POST.get('total_amount')
-                order.name = request.POST.get('name')
+                if request.POST.get('name'):
+                    order.name = request.POST.get('name')
+                else:
+                    order.name = Profile.objects.get(pk=request.POST.get('orderer')).real_name
                 order.zip1 = request.POST.get('zip1')
                 order.prefecture_id = request.POST.get('prefecture')
                 order.address1 = request.POST.get('address1')
@@ -348,9 +351,12 @@ def order_add(request):
                 order.tel = request.POST.get('tel')
                 order.status = request.POST.get('order_status')
                 order.inquiry_number = request.POST.get('inquiry_number')
-                order.order_date = request.POST.get('order_date')
+                order.order_date = datetime.datetime.strptime(request.POST.get('order_date'), '%Y-%m-%d')
                 if request.POST.get('shipped_date') and request.POST.get('shipped_date') != '':
-                    order.shipped_date = request.POST.get('shipped_date')
+                    try:
+                        order.shipped_date = datetime.datetime.strptime(request.POST.get('shipped_date'), '%Y-%m-%d')
+                    except:
+                        order.shipped_date = None
                 else:
                     order.shipped_date = None
                 order.save()
@@ -530,7 +536,10 @@ def order_edit(request, order_id):
                     order.tax = request.POST.get('tax')
                     order.shipping_fee = request.POST.get('shipping_fee')
                     order.total_amount = request.POST.get('total_amount')
-                    order.name = request.POST.get('name')
+                    if request.POST.get('name'):
+                        order.name = request.POST.get('name')
+                    else:
+                        order.name = Profile.objects.get(pk=request.POST.get('orderer')).real_name
                     order.zip1 = request.POST.get('zip1')
                     order.prefecture_id = request.POST.get('prefecture')
                     order.address1 = request.POST.get('address1')
@@ -538,11 +547,15 @@ def order_edit(request, order_id):
                     order.tel = request.POST.get('tel')
                     order.status = request.POST.get('order_status')
                     order.inquiry_number = request.POST.get('inquiry_number')
-                    order.order_date = request.POST.get('order_date')
+                    order.order_date = datetime.datetime.strptime(request.POST.get('order_date'), '%Y-%m-%d')
                     if request.POST.get('shipped_date') and request.POST.get('shipped_date') != '':
-                        order.shipped_date = request.POST.get('shipped_date')
+                        try:
+                            order.shipped_date = datetime.datetime.strptime(request.POST.get('shipped_date'), '%Y-%m-%d')
+                        except:
+                            order.shipped_date = None
                     else:
                         order.shipped_date = None
+                    order.modified = datetime.datetime.now()
                     order.save()
 
                     affected_user_list = []
@@ -560,7 +573,7 @@ def order_edit(request, order_id):
                         old_product.save()
 
                         # delete old orderproduct commission
-                        orderProductCommissions = OrderProductCommission.object.filter(order_product_id=old_product.id)
+                        orderProductCommissions = OrderProductCommission.objects.filter(order_product_id=old_product.id)
                         for orderProductCommission in orderProductCommissions:
                             orderProductCommission.is_hidden = True
                             orderProductCommission.save()

@@ -14,6 +14,8 @@ function prepareVarientTwoTable(json){
             "jan_code": variety2[i].jan_code,
             "hor": variety2[i].varieties[0].selection,
             "ver": variety2[i].varieties[1].selection,
+            "hor_name": variety2[i].varieties[0].name,
+            "ver_name": variety2[i].varieties[1].name,
         });
         v_jancodes2.push(variety2[i].jan_code);
         v_stocks2.push(variety2[i].stock);
@@ -245,6 +247,8 @@ function prepareVarientOneTable(json){
         "jan_code": v_jancodes[i],
         "hor": v_selections[i],
         "ver": '',
+        "hor_name": v_name,
+        "ver_name": v_name,
       });
       newTableChoices.innerHTML = `<div class="variant-title variant-col" id="cell-name-value-${i}">${choicesValue}</div>`;
       newTableContent.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">Stock:${stockValue}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
@@ -452,7 +456,7 @@ function prepareVarietiesData(variety) {
             let stockId = `stock-id-${idNum}`;
             let stock = 0;
             if (document.getElementById(stockId).innerHTML.trim() != '') {
-            stock = document.getElementById(stockId).innerHTML.split(':')[1].trim()
+                stock = document.getElementById(stockId).innerHTML.split(':')[1].trim();
             }
 
             let dataToken = variantTableCol[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');

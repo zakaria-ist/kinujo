@@ -35,6 +35,10 @@ DATABASES = {
         'PASSWORD': 'dWGx9Gy2QxYz9vgK',
         'HOST': 'tenma.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com',
         'PORT': '3306',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'init_command': 'set collation_connection=utf8mb4_unicode_ci',
+        },
     }
 }
 
