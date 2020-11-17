@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 12:15+0000\n"
+"POT-Creation-Date: 2020-11-17 22:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,12 +19,12 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: kinujo/settings_demo.py:138 kinujo/settings_develop.py:142
-#: kinujo/settings_release.py:138 kinujo/shared_settings.py:128
+#: kinujo/settings_release.py:142 kinujo/shared_settings.py:128
 msgid "English"
 msgstr "英語"
 
 #: kinujo/settings_demo.py:139 kinujo/settings_develop.py:143
-#: kinujo/settings_release.py:139 kinujo/shared_settings.py:129
+#: kinujo/settings_release.py:143 kinujo/shared_settings.py:129
 msgid "Japanese"
 msgstr "日本語"
 
@@ -803,8 +803,7 @@ msgstr "プロファイルの追加/編集"
 msgid "Profile Details"
 msgstr "アカウント詳細"
 
-#: templates/sales_login.html:34
-#: profiles/templates/profile_form.html:35
+#: profiles/templates/profile_form.html:35 templates/sales_login.html:34
 msgid "Listing Management Site"
 msgstr "出品管理サイトへ"
 
@@ -888,8 +887,7 @@ msgstr "日本語"
 msgid "Log Out"
 msgstr "ログアウト"
 
-#: templates/base.html:109 templates/dashboard.html:43
-#: templates/dashboard.html:62
+#: templates/base.html:109
 msgid "Dashboard"
 msgstr "Dashboard"
 
