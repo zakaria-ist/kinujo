@@ -36,6 +36,15 @@ def listing_home_load(request):
     """
     return render(request, 'base.html')
 
+@login_required 
+def sales_listing_site(request):
+    """
+    Method to redirect to listing home/dashboard.
+    """
+
+    request.session['login_type'] = 'SELLER'
+    return render(request, 'base.html')
+
 def pass_reset(request):
     """
     Method to redirect to password reset page.
