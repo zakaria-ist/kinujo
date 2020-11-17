@@ -14,7 +14,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .forms import ProfileForm, ImageUploadForm
-from .models import Address, Profile, FinancialAccount, UserSale, UserCommision
+from .models import Address, Profile, FinancialAccount, UserSale, \
+    UserCommision, MonthlyPayment
 from products.models import ProductCategory
 from utilities.constants import AUTHORITY_TYPE
 from prefectures.models import Prefecture
@@ -140,8 +141,13 @@ def logout_user(request):
     """
     Method to logout.
     """
+
+    login_type_was = request.session['login_type']
     logout(request)
-    return render(request, 'master_login.html')
+    if login_type_was == 'MASTER':
+        return render(request, 'master_login.html')
+    else:
+        return render(request, 'sales_login.html')
 
 @login_required
 def profile_list(request):
@@ -917,3 +923,96 @@ def get_product_list_page(request):
     """
 
     return render(request, 'item_info_tab.html')
+
+
+def PaymentList__asJson(request):
+    """
+    Method to get payment list as JSON.
+    """
+
+    draw = request.GET['draw']
+    start = request.GET['start']
+    length = request.GET['length']
+    search = request.GET['search[value]']
+
+    auth_type = eval(request.GET.get('auth_str'))
+    status_type = eval(request.GET.get('status_str'))
+    month = eval(request.GET.get('month'))
+    year = eval(request.GET.get('year'))
+
+    payment_list = MonthlyPayment.objects.filter(is_hidden=False, year=year, month=month).order_by('user__real_name')
+    if len(auth_type):
+        payment_list = payment_list.filter(user__authority_id__in=auth_type)
+    if len(status_type):
+        payment_list = payment_list.filter(status__in=status_type)
+        
+    records_total = payment_list.count()
+
+    if search:  # Filter data base on search
+        payment_list = payment_list.filter(Q(user__real_name__icontains=search))
+
+    # All data
+    records_filtered = payment_list.count()
+    # Order by list_limit base on order_dir and order_column
+    order_column = request.GET['order[0][column]']
+    column_name = ""
+    if order_column == "1":
+        column_name = "name"
+    
+    # order_dir = request.GET['order[0][dir]']
+    # list = []
+    # if order_dir == "asc":
+    #     list = payment_list.order_by(column_name)[int(start):(int(start) + int(length))]
+    # elif order_dir == "desc":
+    #     list = payment_list.order_by('-' + column_name)[int(start):(int(start) + int(length))]
+
+    array = []
+    i = 0
+    for field in payment_list:
+        i = i + 1
+        bank_info = FinancialAccount.objects.filter(is_hidden=False, user_id=field.user_id)
+        if bank_info.exists():
+            bank_info = bank_info.last()
+        else:
+            bank_info = None
+        data = {
+            "no": str(i),
+            "name": field.user.real_name,
+            "bank_name": bank_info.financial_code + ' ' + bank_info.financial_name if bank_info else '',
+            "branch_name": bank_info.branch_code + ' ' + bank_info.branch_name if bank_info else '',
+            "account_number": bank_info.account_number if bank_info else '',
+            "account_name": bank_info.account_name if bank_info else '',
+            "amount": str(field.amount),
+            "paid_date": field.paid_date.strftime('%Y-%m-%d') if field.paid_date else '',
+            "id": str(field.id),
+        }
+        array.append(data)
+
+    content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
+    json_content = json.dumps(content, ensure_ascii=False)
+    return HttpResponse(json_content, content_type='application/json')
+
+
+@csrf_exempt
+def update_payment(request):
+    """
+    Method to update payment info.
+    """
+
+    message = 'Error'
+    if request.method == 'POST':
+        payment_id = request.POST.get('payment_id')
+        date = request.POST.get('payment_date')
+        try:
+            payment = MonthlyPayment.objects.get(pk=payment_id)
+            payment.paid_date = date
+            payment.status = True
+            payment.modified = datetime.datetime.now()
+            payment.save()
+
+            message = 'Success'
+        except Exception as e:
+            print(e)
+
+    context = { 'message': message }
+    return HttpResponse(json.dumps(context), content_type="application/json")

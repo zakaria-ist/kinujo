@@ -14,7 +14,7 @@ from .models import Order, OrderProduct, OrderProductCommission, TotalCommission
 from products.models import ProductJancode, ProductImage
 from products.views import get_jan_products
 from prefectures.models import Prefecture
-from profiles.models import Profile, Authority, UserSale, UserCommision
+from profiles.models import Profile, Authority, UserSale, UserCommision, MonthlyPayment
 from taxes.models import TaxRate
 from utilities.constants import AUTHORITY_TYPE, ORDER_STATUS
 from utilities.common import round_number
@@ -224,12 +224,12 @@ def update_monthly_commission_data(affected_user_list, order_date):
             user_sale.order_count = user_sales_count
             user_sale.sales_amount = user_sales_total.get('sales_amount', 0)
             if tax_rate:
-                user_sale.tax = user_sale.sales_amount * tax_rate
+                user_sale.tax = float(user_sale.sales_amount) * float(tax_rate)
             else:
                 user_sale.tax = 0
             user_sale.amount_tax_included = user_sale.sales_amount + user_sale.tax
             user_sale.shipping_fee = user_sales_total.get('shipping', 0)
-            user_sale.total_amount = user_sale.amount_tax_included + user_sale.shipping_fee
+            user_sale.total_amount = float(user_sale.amount_tax_included) + float(user_sale.shipping_fee)
             user_sale.modified = datetime.datetime.now()
             user_sale.save()
 
@@ -246,12 +246,28 @@ def update_monthly_commission_data(affected_user_list, order_date):
             user_commission.order_count = user_commission_count
             user_commission.amount = user_commission_total.get('com_amount', 0)
             if tax_rate:
-                user_commission.tax = user_commission.amount * tax_rate
+                user_commission.tax = float(user_commission.amount) * float(tax_rate)
             else:
                 user_commission.tax = 0
-            user_commission.total_amount = user_commission.amount + user_commission.tax
+            user_commission.total_amount = float(user_commission.amount) + float(user_commission.tax)
             user_commission.modified = datetime.datetime.now()
             user_commission.save()
+
+            # Update the Monthly Payment table
+            payment = MonthlyPayment.objects.filter(is_hidden=False, user_id=user,
+                                    year=year, month=month)
+            if payment:
+                payment = payment.first()
+            else:
+                payment = MonthlyPayment()
+                payment.paid_date = None
+                payment.status = False
+            payment.year = year
+            payment.month = month
+            payment.user_id = user
+            payment.amount = float(user_commission.total_amount) + float(user_sale.total_amount)
+            payment.modified = datetime.datetime.now()
+            payment.save()
         
         # update total sales
         total_sales_total = UserSale.objects.filter(is_hidden=False, year=year, month=month)\

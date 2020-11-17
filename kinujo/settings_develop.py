@@ -25,7 +25,7 @@ SECRET_KEY = 'ro6hl1+%(r+oek3sz3j8x!dfyy+_3e+*so0q-zec9f-ycp5fox'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['kinujo-develop.c2sg.asia', 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com' ]
+ALLOWED_HOSTS = ["testserver", 'kinujo-develop.c2sg.asia', 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com' ]
 
 DATABASES = {
     'default': {
@@ -146,6 +146,7 @@ LOCALE_PATHS = (
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+LOGIN_URL = '/login/'
 STATIC_URL = '/static/'
 STATIC_ROOT = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]

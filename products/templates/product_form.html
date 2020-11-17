@@ -585,13 +585,11 @@
                   <p style="width: 20px;" class="m-2"> </p>
                   <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
                   <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                  
                   <input value="" type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
-                  
                   <input value="" type="number" class="form-control one-item-stock  text-right" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
-                <div class="form-group">
+                {% comment %} <div class="form-group">
                   <p style="width: 20px;" class="m-2"> </p>
                   <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
                   <input value=""  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
@@ -600,7 +598,7 @@
                   
                   <input value=""  type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                </div>
+                </div> {% endcomment %}
               </div>
 
               <div style="width: 100%;" class="text-left"><p id="addToOneItemVariant" class="btn btn-secondary">+</p></div>
@@ -648,26 +646,21 @@
                   <p style="width: 20px;" class="m-2"> </p>
                   <p style="width: 20px;" class="m-2"> </p>
                   <label for="message-text" class="col-form-label" style="width: 160px;">{% trans 'Choices' %}</label>
-                  
-                  
                 </div>
                 
                 <div id="firstOfTwoItemGroup">
                   <div class="form-group">
-                  
                     <p style="width: 20px;" class="m-2"> </p>
                     <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
                     <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
-                    
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; deleteOptionsFirstOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
-                  <div class="form-group">
+                  {% comment %} <div class="form-group">
                     <p style="width: 20px;" class="m-2"> </p>
                     <p class="m-2 first-of-two-variant-counter" style="width: 20px;">2</p>
                     <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
-                    
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; deleteOptionsFirstOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                  </div>
+                  </div> {% endcomment %}
                 </div>
 
                 <div style="width: 100%;" class="text-left"><p id="addToFirstOfTwoItemVariant" class="btn btn-secondary">+</p></div>
@@ -685,8 +678,6 @@
                   <p style="width: 20px;" class="m-2"> </p>
                   <p style="width: 20px;" class="m-2"> </p>
                   <label for="message-text" class="col-form-label" style="width: 280px;">{% trans 'Choices' %}</label>
-                  
-                  
                 </div>
                 
                 <div id="lastOfTwoItemGroup">
@@ -694,17 +685,16 @@
                     <p style="width: 20px;" class="m-2"> </p>
                     <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
                     <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
-                    
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}}; deleteOptionsLastOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
                   
-                  <div class="form-group">
+                  {% comment %} <div class="form-group">
                     <p style="width: 20px;" class="m-2"> </p>
                     <p class="m-2 last-of-two-variant-counter" style="width: 20px;">2</p>
                     <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}}; deleteOptionsLastOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
-                  </div>
+                  </div> {% endcomment %}
                 </div>
 
                 <div style="width: 100%;" class="text-left"><p id="addToLastOfTwoItemVariant" class="btn btn-secondary">+</p></div>
@@ -738,6 +728,7 @@
     //starts adding more image button
   try{
     let preservedDatas = {};
+    let preservedDatasAgain = {};
 
     let counter = 0;
     const imgWrapper = document.getElementById('img-wrapper');
@@ -941,6 +932,7 @@
           let varInfo = document.getElementsByClassName('variant-info');
 
           preservedDatas = {};
+          preservedDatasAgain = {};
 
           for(let i = 0; i < varInfo.length; i++){
             //get id num
@@ -964,6 +956,10 @@
             let dataToken = varInfo[i].firstChild.innerHTML.split('/').map((item) => item.trim()).join('_');
             
             preservedDatas[dataToken] = {
+              jancode: jancode,
+              stock: stock,
+            }
+            preservedDatasAgain[idNum] = {
               jancode: jancode,
               stock: stock,
             }
@@ -1320,8 +1316,7 @@
         if(stockDiv.innerHTML !== '') {
           oldStock = stockDiv.innerHTML.split(':')[1].trim();
         }
-        newStockValue = Number(oldStock) + Number(newStock.value);
-        
+        newStockValue = Number(oldStock);
       }else{
         if(isNaN(Number(newStock.value))){
 
@@ -1336,7 +1331,14 @@
           if(stockDiv.innerHTML !== '') {
             oldStock = stockDiv.innerHTML.split(':')[1].trim();
           }
-          newStockValue = Number(oldStock) + Number(newStock.value);
+          if (newStock.value.indexOf('+') != -1) {
+              newStockValue = Number(oldStock) + Number(newStock.value.replace('+', ''));
+          } else if (newStock.value.indexOf('-') != -1) {
+              newStockValue = (Number(oldStock) - Number(newStock.value.replace('-', '')) >= 0) ? 
+                                    Number(oldStock) - Number(newStock.value.replace('-', '')) : 0;
+          } else {
+              newStockValue = Number(newStock.value);
+          }
         }
       }
       
@@ -2023,6 +2025,11 @@
               if(preservedDatas[dataToken]){
                 njancode.innerHTML = preservedDatas[dataToken].jancode;
                 nstock.innerHTML = 'Stock:' + preservedDatas[dataToken].stock;
+              } else {
+                if(preservedDatasAgain[idNum]) {
+                  njancode.innerHTML = preservedDatasAgain[idNum].jancode;
+                  nstock.innerHTML = 'Stock:' + preservedDatasAgain[idNum].stock;
+                }
               }
         }
      }
@@ -2113,11 +2120,12 @@
         }
     });
 
+    var seller_auth_id = "{{seller_auth_id}}"
     $('#price').on('change', function() {
       var general_price = parseInt($(this).val());
       $('#price').val(comma_format(general_price, 0) + ' ' + JPCUR);
       var store_price =  general_price - (0.2 * general_price);
-      if(authority_id == '1') { // master
+      if(seller_auth_id == '1') { // master
           store_price = general_price - (0.3 * general_price);
       }
       store_price = comma_format(store_price, 0) + ' ' + JPCUR

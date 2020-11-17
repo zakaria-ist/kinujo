@@ -210,42 +210,56 @@ class TaxRateViewSet(viewsets.ModelViewSet):
 
 class UserRegister(APIView):
     def post(self, request, format='json'):
-        userSerializer = UserSerializer(data=request.data, context=getContext())
-        if userSerializer.is_valid():
-            user = userSerializer.save()
+        try:
+            userSerializer = UserSerializer(data=request.data, context=getContext())
+            if userSerializer.is_valid():
+                user = userSerializer.save()
 
-            authority = Authority.objects.get(id=5)
-            is_seller = 0
-            if request.data['authority'] == 'store':
-                authority = Authority.objects.get(id=4)
-                is_seller = 1
+                authority = Authority.objects.get(id=5)
+                is_seller = 0
+                if request.data['authority'] == 'store':
+                    authority = Authority.objects.get(id=4)
+                    is_seller = 1
+                    
+                authoritySerializer = AuthoritySerializer(authority, context=getContext())
                 
-            authoritySerializer = AuthoritySerializer(authority, context=getContext())
-        
-            profileSerializer = ProfileSerializer(data={
-                'user' : userSerializer.data['url'],
-                'tel' : request.data['username'],
-                'password' : request.data['password'],
-                'nickname' : request.data['nickname'],
-                'user_code' : user.id,
-                'authority' : authoritySerializer.data['url'],
-                'is_seller' : is_seller
-            }, context=getContext())
-            if profileSerializer.is_valid():
-                profile = profileSerializer.save()
-                if user:
-                    data = profileSerializer.data
-                    data['authority'] = getObject(data['authority'])
-                    data['user'] = getObject(data['user'])
-                    return Response({"success": True, "data" : {
-                        "user" : data
-                    }}, status=status.HTTP_201_CREATED)
+                profileItem = {
+                    'user' : userSerializer.data['url'],
+                    'tel' : request.data['username'],
+                    'password' : request.data['password'],
+                    'nickname' : request.data['nickname'],
+                    'user_code' : user.id,
+                    'authority' : authoritySerializer.data['url'],
+                    'is_seller' : is_seller
+                }
+                if request.data['introducer']:
+                    introducerProfile = None
+                    try:
+                        introducerProfile = Profile.objects.get(id=int(request.data['introducer']))
+                    except Exception as e:
+                        print(e)
+                    if introducerProfile:
+                        introducerProfileSerializer = ProfileSerializer(data=introducerProfile, context=getContext())
+                        profileItem['introducer'] = introducerProfileSerializer.data['url']
+
+                profileSerializer = ProfileSerializer(data=profileItem, context=getContext())
+                if profileSerializer.is_valid():
+                    profile = profileSerializer.save()
+                    if user:
+                        data = profileSerializer.data
+                        # data['authority'] = getObject(data['authority'])
+                        # data['user'] = getObject(data['user'])
+                        return Response({"success": True, "data" : {
+                            "user" : data
+                        }}, status=status.HTTP_201_CREATED)
+                else:
+                    print(profileSerializer.errors)
+                    return Response({"success" : False, "errors" : profileSerializer.errors}, status=status.HTTP_200_OK)
             else:
-                print(profileSerializer.errors)
-                return Response({"success" : False, "errors" : profileSerializer.errors}, status=status.HTTP_200_OK)
-        else:
-            print(userSerializer.errors)
-            return Response({"success" : False, "errors": userSerializer.errors}, status=status.HTTP_200_OK)
+                print(userSerializer.errors)
+                return Response({"success" : False, "errors": userSerializer.errors}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
      
 class CheckRegister(APIView):
     def post(self, request, format='json'):
@@ -257,30 +271,46 @@ class CheckRegister(APIView):
 
 class UserLogin(APIView):
     def post(self, request, format='json'):
-        profile = Profile.objects.get(tel=request.data['tel'])
+        profile = None
+        try:
+            profile = Profile.objects.get(tel=request.data['tel'])
+        except Exception as e:
+            print(e)
         if profile:
-            user = User.objects.get(id = profile.user_id)
+            user = None
+            try:
+                user = User.objects.get(id = profile.user_id)
+            except Exception as e:
+                print(e)
             if user:
                 if user.check_password(request.data['password']):
                     profileSerializer = ProfileSerializer(profile, context=getContext())
                     data = profileSerializer.data
-                    data['authority'] = getObject(data['authority'])
-                    data['user'] = getObject(data['user'])
+                    # data['authority'] = getObject(data['authority'])
+                    # data['user'] = getObject(data['user'])
                     return Response({"success" : True, "data" : {
                         "user" : data
                     }}, status=status.HTTP_200_OK)
                 else:
-                    return Response({"success" : False, "error" : "incorrect_password"}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "error" : "Incorrect Password"}, status=status.HTTP_200_OK)
             else:
-                return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+                return Response({"success" : False, "error" : "Account Not Exists"}, status=status.HTTP_200_OK)
         else:
-            return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+            return Response({"success" : False, "error" : "Account Not Exists"}, status=status.HTTP_200_OK)
 
 class PasswordReset(APIView):
     def post(self, request, format='json'):
-        profile = Profile.objects.get(tel=request.data['tel'])
+        profile = None
+        try:
+            profile = Profile.objects.get(tel=request.data['tel'])
+        except Exception as e:
+            print(e)
         if profile:
-            user = User.objects.get(id = profile.user_id)
+            user = None
+            try:
+                user = User.objects.get(id = profile.user_id)
+            except Exception as e:
+                print(e)
             if user:
                 if request.data['password'] == request.data['confirm_password']:
                     user.set_password(request.data['password'])
@@ -304,8 +334,11 @@ class ProductList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-
-        profile = Profile.objects.get(id=5)
+        profile = None
+        try:
+            profile = Profile.objects.get(id=5)
+        except Exception as e:
+            print(e)
         profileSerializer = ProfileSerializer(profile, context=getContext())
         products = Product.objects.filter(user=userId);
         productSerializer = ProductSerializer(products, many=True, context=getContext())
@@ -319,7 +352,7 @@ class OrderList(APIView):
         orderSerializer = OrderSerializer(orders, many=True, context=getContext())
         updateOrders = []
         for order in orderSerializer.data:
-            order['seller'] = getObject(order['seller'])
+            # order['seller'] = getObject(order['seller'])
             updateOrders.append(order)
         return Response({"success" : True, "orders" : updateOrders}, status=status.HTTP_200_OK)
 
@@ -375,7 +408,7 @@ class AddressList(APIView):
         addressSerializer = AddressSerializer(addresses, many=True, context=getContext())
         updatedAddress = []
         for address in addressSerializer.data:
-            address['prefecture'] = getObject(address['prefecture'])
+            # address['prefecture'] = getObject(address['prefecture'])
             updatedAddress.append(address)
         return Response({"success" : True, "addresses" : updatedAddress}, status=status.HTTP_200_OK)
 
