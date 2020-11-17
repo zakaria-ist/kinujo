@@ -349,7 +349,10 @@ def order_add(request):
                 order.status = request.POST.get('order_status')
                 order.inquiry_number = request.POST.get('inquiry_number')
                 order.order_date = request.POST.get('order_date')
-                order.shipped_date = request.POST.get('shipped_date')
+                if request.POST.get('shipped_date') and request.POST.get('shipped_date') != '':
+                    order.shipped_date = request.POST.get('shipped_date')
+                else:
+                    order.shipped_date = None
                 order.save()
 
                 product_list = json.loads(request.POST.get('product_list'))
@@ -536,7 +539,10 @@ def order_edit(request, order_id):
                     order.status = request.POST.get('order_status')
                     order.inquiry_number = request.POST.get('inquiry_number')
                     order.order_date = request.POST.get('order_date')
-                    order.shipped_date = request.POST.get('shipped_date')
+                    if request.POST.get('shipped_date') and request.POST.get('shipped_date') != '':
+                        order.shipped_date = request.POST.get('shipped_date')
+                    else:
+                        order.shipped_date = None
                     order.save()
 
                     affected_user_list = []
