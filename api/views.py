@@ -455,7 +455,7 @@ class Pay(APIView):
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
         try:
-            if(request.data['products'].length == 0):
+            if(len(request.data['products']) == 0):
                 return Response({"success" : False, "errors": {"no_products" : "No products"}}, status=status.HTTP_200_OK)
             
             token = stripe.Token.create(
