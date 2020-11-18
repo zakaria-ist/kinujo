@@ -537,37 +537,37 @@ class Pay(APIView):
                                 price = product['store_price']
                             total_price = price
                             tax = 0
-                            # order = newOrder['url']
-                            # productVarieties = ProductVariety.objects.filter(product_id__in=product['id']).values_list('id', flat=True)
-                            # productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
-                            # horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections)
-                            # vertical = ProductJancode.objects.filter(vertical_id__in=productVarietySelections)
-                            # horizontalSerializer = ProductJancodeSerializer(horizontal, many=True, context=getContext())
-                            # verticalSerializer = ProductJancodeSerializer(vertical, many=True, context=getContext())
+                            order = newOrder['url']
+                            productVarieties = ProductVariety.objects.filter(product_id__in=product['id']).values_list('id', flat=True)
+                            productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
+                            horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections)
+                            vertical = ProductJancode.objects.filter(vertical_id__in=productVarietySelections)
+                            horizontalSerializer = ProductJancodeSerializer(horizontal, many=True, context=getContext())
+                            verticalSerializer = ProductJancodeSerializer(vertical, many=True, context=getContext())
                             
-                            # variety = None
+                            variety = None
 
-                            # for item in horizontalSerializer.data:
-                            #     if variety is None and item['stock'] > 0:
-                            #         variety = item['url']
-                            # for item in verticalSerializer.data:
-                            #     if variety is None and item['stock'] > 0:
-                            #         variety = item['url']
+                            for item in horizontalSerializer.data:
+                                if variety is None and item['stock'] > 0:
+                                    variety = item['url']
+                            for item in verticalSerializer.data:
+                                if variety is None and item['stock'] > 0:
+                                    variety = item['url']
 
-                            # orderProduct = {
-                            #     'quantity': 1,
-                            #     'unit_price' : price,
-                            #     'total_price' : total_price,
-                            #     'tax': tax,
-                            #     'total_amount': float(total_price) + float(tax),
-                            #     'order': newOrder['url'],
-                            #     'product_jan_code': variety
-                            # }
-                            # orderProductSerializer = InsertOrderProductSerializer(data=OrderProduct, context=getContext())
-                            # if orderProductSerializer.is_valid():
-                            #     orderProductSerializer.save()
-                            # else:
-                            #     return Response({"success" : False, "errors" : orderProductSerializer.errors}, status=status.HTTP_200_OK)
+                            orderProduct = {
+                                'quantity': 1,
+                                'unit_price' : price,
+                                'total_price' : total_price,
+                                'tax': tax,
+                                'total_amount': float(total_price) + float(tax),
+                                'order': newOrder['url'],
+                                'product_jan_code': variety
+                            }
+                            orderProductSerializer = InsertOrderProductSerializer(data=OrderProduct, context=getContext())
+                            if orderProductSerializer.is_valid():
+                                orderProductSerializer.save()
+                            else:
+                                return Response({"success" : False, "errors" : orderProductSerializer.errors}, status=status.HTTP_200_OK)
                     else:
                         return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
                 # stripe.Charge.create(
