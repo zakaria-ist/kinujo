@@ -471,7 +471,7 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
                 orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
                 if orderProductCommissionSerializer.is_valid():
                     orderProductCommissionSerializer.save()
-                else
+                else:
                     return orderProductCommissionSerializer.errors()
             return calculateCommission(price, OrderProduct, introducer['id'])
     return
