@@ -20,6 +20,7 @@ from rest_framework.test import APIRequestFactory
 from rest_framework.parsers import MultiPartParser
 import requests 
 import json
+import stripe
 from django.conf import settings
 
 def getContext():
@@ -448,6 +449,20 @@ class UserByIds(APIView):
         profiles = Profile.objects.filter(id__in=request.GET.getlist('ids[]'))
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
         return Response({"success" : True, "users" : profileSerializer.data}, status=status.HTTP_200_OK)
+
+class Pay(APIView):
+    def post(self, request, userId, format='json'):
+        stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
+
+        # stripe.Token.create(
+        #     card={
+        #         "number": request.POST['card'],
+        #         "exp_month": 11,
+        #         "exp_year": 2021,
+        #         "cvc": "314",
+        #     },
+        # )
+        return Response({"success" : True, "params" : request.POST})
 
 class UserUpdateBackground(APIView):
     parser_classes = [MultiPartParser]
