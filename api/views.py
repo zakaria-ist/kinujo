@@ -549,10 +549,10 @@ class Pay(APIView):
 
                             for item in horizontalSerializer.data:
                                 if variety is None and item['stock'] > 0:
-                                    variety = item.url
+                                    variety = item['url']
                             for item in verticalSerializer.data:
                                 if variety is None and item['stock'] > 0:
-                                    variety = item.url
+                                    variety = item['url']
 
                             orderProduct = {
                                 'quantity': 1,
