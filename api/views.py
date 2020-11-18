@@ -601,7 +601,7 @@ class Pay(APIView):
                         return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
                 
                 stripe.Charge.create(
-                    amount=total_amount,
+                    amount=int(total_amount),
                     currency="jpy",
                     source=token_id,
                     description="Order by" + str(profileSerializer.data['id']),
