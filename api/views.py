@@ -457,23 +457,23 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
     if profile:
         profileSerializer = ProfileSerializer(profile, context=getContext())
         introducer = profileSerializer.data['introducer']
-        if introducer:
-            commission = introducer['authority']['official_commission_rate']
-            if commission > 0:
-                orderProductComm = {
-                    'amount' : float(price) * float(commission),
-                    'is_sales' : 1,
-                    'shipping_fee' : shipping_fee,
-                    'order_product' : orderProduct,
-                    'user' : profileSerializer.data['url']
+        # if introducer:
+        #     commission = introducer['authority']['official_commission_rate']
+        #     if commission > 0:
+        #         orderProductComm = {
+        #             'amount' : float(price) * float(commission),
+        #             'is_sales' : 1,
+        #             'shipping_fee' : shipping_fee,
+        #             'order_product' : orderProduct,
+        #             'user' : profileSerializer.data['url']
 
-                }
-                orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
-                if orderProductCommissionSerializer.is_valid():
-                    orderProductCommissionSerializer.save()
-                else:
-                    return orderProductCommissionSerializer.errors()
-            return calculateCommission(price, OrderProduct, introducer['id'], shipping_fee)
+        #         }
+        #         orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+        #         if orderProductCommissionSerializer.is_valid():
+        #             orderProductCommissionSerializer.save()
+        #         else:
+        #             return orderProductCommissionSerializer.errors()
+        #     return calculateCommission(price, OrderProduct, introducer['id'], shipping_fee)
     return
 
 class Pay(APIView):
