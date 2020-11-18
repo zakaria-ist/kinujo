@@ -468,7 +468,7 @@ class Pay(APIView):
             customer_id = None
 
             if user:
-                userSerializer = UserSerializer(user, context=getContext())
+                userSerializer = UserSerializer(data=user, context=getContext())
                 payload = userSerializer.data['payload']
                 # if payload is not None and payload['customerId']:
                 #     customer_id = payload['customerId']
