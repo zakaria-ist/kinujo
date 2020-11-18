@@ -473,7 +473,7 @@ class Pay(APIView):
                 if payload is not None:
                     payload = json.loads(payload)
 
-                if  payload is not None and payload.has_key('customerId'):
+                if  payload is not None and 'customerId' in payload:
                     customer_id = payload['customerId']
                 # else:
                 #     customer = stripe.Customer.create(
