@@ -484,12 +484,12 @@ class Pay(APIView):
                 productSerializer = ProductSerializer(products, many=True, context=getContext())
 
                 for product in productSerializer.data:
-                    if product['url'] in groupProducts:
-                        tmpProducts = groupProducts[product['url']]
+                    if product['user']['url'] in groupProducts:
+                        tmpProducts = groupProducts[product['user']['url']]
                         tmpProducts.append(product)
-                        groupProducts[product['url']] = tmpProducts
+                        groupProducts[product['user']['url']] = tmpProducts
                     else:
-                        groupProducts[product['url']] = [product]
+                        groupProducts[product['user']['url']] = [product]
                 # order = {
                 #     amount : 100,
                 #     tax: 0,
