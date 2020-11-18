@@ -564,7 +564,7 @@ class Pay(APIView):
                                 'product_jan_code': variety
                             }
                             return Response({"success" : True, "params" : orderProduct})
-                            orderProductSerializer = InsertOrderProductSerializer(data=OrderProduct, context=getContext())
+                            orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
                             if orderProductSerializer.is_valid():
                                 orderProductSerializer.save()
                             else:
