@@ -530,7 +530,7 @@ class Pay(APIView):
                     orderSerializer = InsertOrderSerializer(data=order, context=getContext())
                     if orderSerializer.is_valid():
                         newOrder = orderSerializer.save()
-
+                        newOrder = orderSerializer.data
                         for product in groupProduct:
                             price = product['price']
                             if profileSerializer.data['is_seller']:
