@@ -604,7 +604,7 @@ class Pay(APIView):
                     amount=total_amount,
                     currency="jpy",
                     source=token_id,
-                    description="Order by" + profileSerializer.data['id'],
+                    description="Order by" + str(profileSerializer.data['id']),
                 )
             else:
                 return Response({"success" : False, "errors": ["Invalid data."]}, status=status.HTTP_200_OK)
