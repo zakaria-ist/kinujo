@@ -464,7 +464,7 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
             commission = introducerSerializer.data['authority']['official_commission_rate']
             if float(commission) > 0:
                 orderProductComm = {
-                    'amount' : float(price) * float(commission),
+                    'amount' : int(float(price) * float(commission)),
                     'is_sales' : 1,
                     'shipping_fee' : shipping_fee,
                     'order_product' : orderProduct,
