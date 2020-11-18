@@ -35,6 +35,10 @@ DATABASES = {
         'PASSWORD': 'Pa55w0rd',
         'HOST': 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com',
         'PORT': '3306',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'init_command': 'set collation_connection=utf8mb4_unicode_ci',
+        },
     }
 }
 
@@ -100,7 +104,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'kinujo.wsgi.application'
-
+CORS_ORIGIN_ALLOW_ALL = True  # If this is used then `CORS_ORIGIN_WHITELIST` will not have any effect
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -146,6 +150,7 @@ LOCALE_PATHS = (
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+LOGIN_URL = '/login/'
 STATIC_URL = '/static/'
 STATIC_ROOT = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]

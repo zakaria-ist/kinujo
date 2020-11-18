@@ -25,20 +25,16 @@ SECRET_KEY = 'ro6hl1+%(r+oek3sz3j8x!dfyy+_3e+*so0q-zec9f-ycp5fox'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["testserver", 'kinujo-release.c2sg.asia', 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com' ]
+ALLOWED_HOSTS = ["testserver", 'kinujo-demo.c2sg.asia', 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com' ]
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'kinujo_release_db',
-        'USER': 'kinujo_release',
+        'NAME': 'kinujo_demo_db',
+        'USER': 'kinujo_demo',
         'PASSWORD': 'Pa55w0rd',
         'HOST': 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com',
         'PORT': '3306',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'init_command': 'set collation_connection=utf8mb4_unicode_ci',
-        },
     }
 }
 
@@ -149,7 +145,6 @@ LOCALE_PATHS = (
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
 LOGIN_URL = '/login/'
 STATIC_URL = '/static/'
 STATIC_ROOT = '/static/'
@@ -162,7 +157,7 @@ AWS_STORAGE_BUCKET_NAME = 'c2sg-kinujo'
 S3_URL = 'https://%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
 DEFAULT_FILE_STORAGE = 'utilities.s3utils.MediaS3BotoStorageRelease'
-MEDIA_DIRECTORY = '/release/media/'
+MEDIA_DIRECTORY = '/demo/media/'
 MEDIA_URL = S3_URL + MEDIA_DIRECTORY
 MEDIA_ROOT = MEDIA_URL
 WEB_URL = MEDIA_URL

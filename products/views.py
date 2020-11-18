@@ -584,7 +584,7 @@ def updateProductVarieties(product, prdct_variety, varieties, old_varieties):
                     found = False
                     for old in old_varieties:
                         if old['hor'] == obj_varieties[0]['selection'] or \
-                            old['jan_code'] == obj['jan_code']:
+                            (old['jan_code'] != '' and old['jan_code'] == obj['jan_code']):
                             found = True
                             productJancode = ProductJancode.objects.get(pk=old['id'])
                             productJancode.jan_code = obj['jan_code']
@@ -594,12 +594,20 @@ def updateProductVarieties(product, prdct_variety, varieties, old_varieties):
                                 productVarietySelection = ProductVarietySelection.objects.get(pk=productJancode.horizontal_id)
                                 productVarietySelection.selection = obj_varieties[0]['selection']
                                 productVarietySelection.save()
+
+                                productVariety = ProductVariety.objects.get(pk=productVarietySelection.product_variety_id)
+                                productVariety.name = obj_varieties[0]['name']
+                                productVariety.save()
                             except:
                                 pass
                             try:
                                 productVarietySelection = ProductVarietySelection.objects.get(pk=productJancode.vertical_id)
                                 productVarietySelection.selection = obj_varieties[0]['selection']
                                 productVarietySelection.save()
+
+                                productVariety = ProductVariety.objects.get(pk=productVarietySelection.product_variety_id)
+                                productVariety.name = obj_varieties[0]['name']
+                                productVariety.save()
                             except:
                                 pass
 
@@ -647,7 +655,7 @@ def updateProductVarieties(product, prdct_variety, varieties, old_varieties):
                     for old in old_varieties:
                         if (old['hor'] == obj_varieties[0]['selection'] and \
                             old['ver'] == obj_varieties[1]['selection']) or \
-                            old['jan_code'] == obj['jan_code']:
+                            (old['jan_code'] != '' and old['jan_code'] == obj['jan_code']):
                             found = True
                             productJancode = ProductJancode.objects.get(pk=old['id'])
                             productJancode.jan_code = obj['jan_code']
@@ -658,12 +666,20 @@ def updateProductVarieties(product, prdct_variety, varieties, old_varieties):
                                 productVarietySelection1 = ProductVarietySelection.objects.get(pk=productJancode.horizontal_id)
                                 productVarietySelection1.selection = obj_varieties[0]['selection']
                                 productVarietySelection1.save()
+
+                                productVariety = ProductVariety.objects.get(pk=productVarietySelection1.product_variety_id)
+                                productVariety.name = obj_varieties[0]['name']
+                                productVariety.save()
                             except:
                                 pass
                             try:
                                 productVarietySelection2 = ProductVarietySelection.objects.get(pk=productJancode.vertical_id)
                                 productVarietySelection2.selection = obj_varieties[1]['selection']
                                 productVarietySelection2.save()
+
+                                productVariety = ProductVariety.objects.get(pk=productVarietySelection2.product_variety_id)
+                                productVariety.name = obj_varieties[1]['name']
+                                productVariety.save()
                             except:
                                 pass
 
