@@ -484,7 +484,7 @@ class Pay(APIView):
                 #     payload["customerId"] = customer_id
                 #     profile.payload = json.dumps(payload)
                 #     profile.save()
-            return Response({"success" : True, "token" : token, "params" : payload})
+            return Response({"success" : True, "params" : payload})
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
