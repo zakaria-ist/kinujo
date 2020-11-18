@@ -16,6 +16,7 @@ from django.utils import translation
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import activate, deactivate_all
 from .serializers import ImageSerializer, FinancialAccountSerialier, UserSerializer, GroupSerializer,  OrderSerializer, OrderProductSerializer, OrderProductCommissionSerializer, OrderReceiptSerializer, TotalSaleSerializer, TotalCommissionSerializer, PolicySerializer, PrefectureSerializer, ProductCategorySerializer, ProductSerializer, ProductImageSerializer, ProductVarietySerializer, ProductVarietySelectionSerializer, ProductJancodeSerializer, AuthoritySerializer, ProfileSerializer, UserSaleSerializer, UserCommisionSerializer, MonthlyPaymentSerializer, AddressSerializer, TaxRateSerializer
+from .insertSerializers import InsertImageSerializer, InsertFinancialAccountSerialier, UserSerializer, InsertGroupSerializer, InsertOrderSerializer, InsertOrderProductSerializer, InsertOrderProductCommissionSerializer, InsertOrderReceiptSerializer, InsertTotalSaleSerializer, InsertTotalCommissionSerializer, InsertPolicySerializer, InsertPrefectureSerializer, InsertProductCategorySerializer, InsertProductSerializer, InsertProductImageSerializer, InsertProductVarietySerializer, InsertProductVarietySelectionSerializer, InsertProductJancodeSerializer, InsertAuthoritySerializer, InsertProfileSerializer, InsertUserSaleSerializer, InsertUserCommisionSerializer, InsertMonthlyPaymentSerializer, InsertAddressSerializer, InsertTaxRateSerializer
 from rest_framework.test import APIRequestFactory
 from rest_framework.parsers import MultiPartParser
 import requests 
@@ -526,7 +527,7 @@ class Pay(APIView):
                         'purchaser' : profileSerializer.data['url'],
                         'status': 1
                     }
-                    orderSerializer = OrderSerializer(data=order, context=getContext())
+                    orderSerializer = InsertOrderSerializer(data=order, context=getContext())
                     if orderSerializer.is_valid():
                         newOrder = orderSerializer.save()
 
@@ -562,7 +563,7 @@ class Pay(APIView):
                                 'order': newOrder['url'],
                                 'product_jan_code': variety
                             }
-                            orderProductSerializer = OrderProductSerializer(data=OrderProduct, context=getContext())
+                            orderProductSerializer = InsertOrderProductSerializer(data=OrderProduct, context=getContext())
                             if orderProductSerializer.is_valid():
                                 orderProductSerializer.save()
                             else:
