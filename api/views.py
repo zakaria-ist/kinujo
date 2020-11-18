@@ -487,10 +487,10 @@ class Pay(APIView):
 
                 for product in productSerializer.data:
                     if profileSerializer.data['is_seller']:
-                        total_amount = total_amount + product['store_price']
+                        total_amount = float(total_amount) + float(product['store_price'])
                     else:
-                        total_amount = total_amount + product['price']
-                    total_amount = total_amount + product['shipping_fee']
+                        total_amount = float(total_amount) + float(product['price'])
+                    total_amount = float(total_amount) + float(product['shipping_fee'])
 
                     if product['user']['url'] in groupProducts:
                         tmpProducts = groupProducts[product['user']['url']]
@@ -505,16 +505,16 @@ class Pay(APIView):
                     groupShippingFee = 0
                     for product in groupProduct:
                         if profileSerializer.data['is_seller']:
-                            groupTotal = groupTotal + product['store_price']
+                            groupTotal = float(groupTotal) + float(product['store_price'])
                         else:
-                            groupTotal = groupTotal + product['price']
-                        groupShippingFee = groupShippingFee + product['shipping_fee']
+                            groupTotal = float(groupTotal) + float(product['price'])
+                        groupShippingFee = float(groupShippingFee) + float(product['shipping_fee'])
 
                     order = {
                         amount : groupTotal,
                         tax: groupTax,
                         shipping_fee: groupShippingFee,
-                        total_amount: groupTotal + groupTax + groupShippingFee,
+                        total_amount: float(groupTotal) + float(groupTax) + float(groupShippingFee),
                         name: profileSerializer.data['real_name'],
                         zip1: "00100",
                         address1: "test",
@@ -557,7 +557,7 @@ class Pay(APIView):
                                 unit_price : price,
                                 total_price : total_price,
                                 tax : tax,
-                                total_amount: total_price + tax,
+                                total_amount: float(total_price) + float(tax),
                                 order: newOrder['url'],
                                 product_jan_code: variety
                             }
