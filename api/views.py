@@ -240,7 +240,7 @@ class UserRegister(APIView):
                     except Exception as e:
                         print(e)
                     if introducerProfile:
-                        introducerProfileSerializer = ProfileSerializer(data=introducerProfile, context=getContext())
+                        introducerProfileSerializer = ProfileSerializer(introducerProfile, context=getContext())
                         profileItem['introducer'] = introducerProfileSerializer.data['url']
 
                 profileSerializer = ProfileSerializer(data=profileItem, context=getContext())
@@ -463,24 +463,24 @@ class Pay(APIView):
                 },
             )
 
-            user = User.objects.get(id=userId)
+            profile = Profile.objects.get(id=userId)
             token_id = token.id
             customer_id = None
 
-            if user:
-                userSerializer = UserSerializer(data=user, context=getContext())
-                payload = userSerializer.data['payload']
-                # if payload is not None and payload['customerId']:
-                #     customer_id = payload['customerId']
-                # else:
-                #     customer = stripe.Customer.create(
-                #         description=userSerializer.data['id'],
-                #     )
-                #     customer_id = customer.id
+            if profile:
+                profileSerializer = ProfileSerializer(profile, context=getContext())
+                payload = profileSerializer.data['payload']
+                if payload is not None and payload['customerId']:
+                    customer_id = payload['customerId']
+                else:
+                    customer = stripe.Customer.create(
+                        description=profileSerializer.data['id'],
+                    )
+                    customer_id = customer.id
 
-                #     payload['customerId'] = customer_id
-                #     user['payload'] = payload
-                #     user.save()
+                    payload['customerId'] = customer_id
+                    profile['payload'] = payload
+                    profile.save()
             return Response({"success" : True, "token" : token, "params" : request.data})
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
