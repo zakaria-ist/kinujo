@@ -470,20 +470,21 @@ class Pay(APIView):
             if profile:
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 payload = profileSerializer.data['payload']
-                # if payload is not None:
-                #     payload = json.loads(payload)
+                if payload is not None:
+                    payload = payload.replace("'", '"')
+                    payload = json.loads(payload)
 
-                # if  payload is not None and 'customerId' in payload:
-                #     customer_id = payload["customerId"]
-                # else:
-                #     customer = stripe.Customer.create(
-                #         description=profileSerializer.data['id'],
-                #     )
-                #     customer_id = customer.id
+                if  payload is not None and 'customerId' in payload:
+                    customer_id = payload["customerId"]
+                else:
+                    customer = stripe.Customer.create(
+                        description=profileSerializer.data['id'],
+                    )
+                    customer_id = customer.id
 
-                #     payload["customerId"] = customer_id
-                #     profile.payload = json.dumps(payload)
-                #     profile.save()
+                    payload["customerId"] = customer_id
+                    profile.payload = json.dumps(payload)
+                    profile.save()
             return Response({"success" : True, "params" : payload})
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
