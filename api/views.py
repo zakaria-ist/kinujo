@@ -499,7 +499,7 @@ class Pay(APIView):
                     else:
                         groupProducts[product['user']['url']] = [product]
 
-                for key, groupProduct in groupProducts:
+                for key, groupProduct in groupProducts.items():
                     groupTotal = 0
                     groupTax = 0
                     groupShippingFee = 0
