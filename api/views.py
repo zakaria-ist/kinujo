@@ -470,8 +470,8 @@ class Pay(APIView):
             if profile:
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 payload = profileSerializer.data['payload']
-                if payload is not None:
-                    payload = json.loads(payload)
+                # if payload is not None:
+                #     payload = json.loads(payload)
 
                 # if  payload is not None and 'customerId' in payload:
                 #     customer_id = payload["customerId"]
@@ -484,7 +484,7 @@ class Pay(APIView):
                 #     payload["customerId"] = customer_id
                 #     profile.payload = json.dumps(payload)
                 #     profile.save()
-            return Response({"success" : True, "token" : token, "params" : request.data})
+            return Response({"success" : True, "token" : token, "params" : payload})
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
