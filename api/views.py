@@ -521,7 +521,7 @@ class Pay(APIView):
                         'address2': "test",
                         'tel': "tel",
                         'is_hidden': 0,
-                        'prefecture': "https://kinujo-develop.c2sg.asia/api/prefectures/8/",
+                        'prefecture': "http://kinujo-develop.c2sg.asia/api/prefectures/8/",
                         'seller': key,
                         'purchaser' : profileSerializer.data['url'],
                         'status': 1
