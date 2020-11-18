@@ -482,7 +482,7 @@ class Pay(APIView):
                     customer_id = customer.id
 
                     payload['customerId'] = customer_id
-                    profile.payload = payload
+                    profile.payload = json.dumps(payload)
                     profile.save()
             return Response({"success" : True, "token" : token, "params" : request.data})
         except Exception as e:
