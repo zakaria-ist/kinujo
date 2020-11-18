@@ -470,7 +470,7 @@ class Pay(APIView):
             if user:
                 userSerializer = UserSerializer(user, context=getContext())
                 payload = userSerializer.data['payload']
-                if payload and payload['customerId']:
+                if payload is not None and payload['customerId']:
                     customer_id = payload['customerId']
                 else:
                     customer = stripe.Customer.create(
