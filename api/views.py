@@ -470,11 +470,11 @@ class Pay(APIView):
             if profile:
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 payload = profileSerializer.data['payload']
-                if payload is not None:
+                if payload and payload is not None:
                     payload = payload.replace("'", '"')
                     payload = json.loads(payload)
 
-                if  payload is not None and 'customerId' in payload:
+                if  payload and payload is not None and 'customerId' in payload:
                     customer_id = payload["customerId"]
                 else:
                     customer = stripe.Customer.create(
