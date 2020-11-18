@@ -473,7 +473,7 @@ class Pay(APIView):
 
             ids = []
             for product in request.data['products']:
-                ids.push(product['id'])
+                ids.append(product['id'])
 
             products = Product.objects.filter(id__in=ids)
 
@@ -486,7 +486,7 @@ class Pay(APIView):
                 for product in productSerializer.data:
                     if product.url in groupProducts:
                         tmpProducts = groupProducts[product.url]
-                        tmpProducts.push(product)
+                        tmpProducts.append(product)
                         groupProducts[product.url] = tmpProducts
                     else:
                         groupProducts[product.url] = [product]
