@@ -455,7 +455,8 @@ class Pay(APIView):
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
         try:
-            if(request.data['products'].length == 0) return Response({"success" : False, "errors": {"no_products" : "No products"}}, status=status.HTTP_200_OK)
+            if(len(request.data['products']) == 0):
+                return Response({"success" : False, "errors": {"no_products" : "No products"}}, status=status.HTTP_200_OK)
             
             token = stripe.Token.create(
                 card={
@@ -471,8 +472,8 @@ class Pay(APIView):
             customer_id = None
 
             ids = []
-            for product in request.data['products']
-                ids.push(product['id'])
+            for product in request.data['products']:
+                ids.append(product['id'])
 
             products = Product.objects.filter(id__in=ids)
 
@@ -483,10 +484,12 @@ class Pay(APIView):
                 productSerializer = ProductSerializer(products, many=True, context=getContext())
 
                 for product in productSerializer.data:
-                    if product.url in groupProducts:
-                        groupProducts[product.url].push(product)
+                    if product['user']['url'] in groupProducts:
+                        tmpProducts = groupProducts[product['user']['url']]
+                        tmpProducts.append(product)
+                        groupProducts[product['user']['url']] = tmpProducts
                     else:
-                        groupProducts[product.url] = [product]
+                        groupProducts[product['user']['url']] = [product]
                 # order = {
                 #     amount : 100,
                 #     tax: 0,

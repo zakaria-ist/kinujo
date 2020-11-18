@@ -49,7 +49,7 @@ def OrderList__asJson(request):
     if not seller_id:
         seller_id = request.session['login_profile_id']
 
-    order_list = Order.objects.filter(is_hidden=False, seller_id=seller_id).order_by('authority_id')
+    order_list = Order.objects.filter(is_hidden=False, seller_id=seller_id)
     if len(filter_str):
         order_list = order_list.filter(status__in=filter_str)
         
@@ -846,7 +846,7 @@ def UserSalesList__asJson(request):
 
     array = []
     for field in sales_list:
-        product_jan = ProductJancode.objects.filter(pk=field.order_product.id).first()
+        product_jan = ProductJancode.objects.filter(pk=field.order_product.product_jan_code_id).first()
         if (product_jan):
             j_product = get_jan_products(product_jan)
             productImage = ProductImage.objects.filter(product_id=j_product.id, is_hidden=False)\
@@ -900,7 +900,7 @@ def UserCommissionList__asJson(request):
 
     array = []
     for field in sales_list:
-        product_jan = ProductJancode.objects.filter(pk=field.order_product.id).first()
+        product_jan = ProductJancode.objects.filter(pk=field.order_product.product_jan_code_id).first()
         if (product_jan):
             j_product = get_jan_products(product_jan)
             productImage = ProductImage.objects.filter(product_id=j_product.id, is_hidden=False)\

@@ -55,7 +55,7 @@ msgstr "注文者"
 
 #: orders/templates/order_form.html:102
 msgid "Receiver Name"
-msgstr "受信名"
+msgstr "送付先氏名"
 
 #: orders/templates/order_form.html:112 orders/templates/order_list.html:60
 #: profiles/templates/payment_list.html:62
@@ -191,7 +191,7 @@ msgstr "出荷済み"
 
 #: orders/templates/order_list.html:37
 msgid "Undispatched"
-msgstr ""
+msgstr "未発送"
 
 #: orders/templates/order_list.html:43 products/templates/product_list.html:45
 msgid "CSV Export"
@@ -214,7 +214,7 @@ msgstr "届け先"
 #: profiles/templates/profile_form.html:142
 #: profiles/templates/profile_list.html:82
 msgid "Delete Confirm Dialog"
-msgstr "確認ダイアログの削除"
+msgstr "削除の確認"
 
 #: orders/templates/order_list.html:90 products/templates/product_list.html:98
 #: profiles/templates/profile_form.html:123
@@ -227,14 +227,14 @@ msgstr "削除してもよろしいですか？"
 #: profiles/templates/profile_form.html:154
 #: profiles/templates/profile_list.html:94
 msgid "No"
-msgstr "不可"
+msgstr "いいえ"
 
 #: orders/templates/order_list.html:97 products/templates/product_list.html:105
 #: profiles/templates/profile_form.html:129
 #: profiles/templates/profile_form.html:155
 #: profiles/templates/profile_list.html:96
 msgid "Yes"
-msgstr "可"
+msgstr "はい"
 
 #: products/templates/product_form.html:181
 #: products/templates/product_list.html:8
@@ -409,8 +409,8 @@ msgstr "閉じる"
 #: products/templates/product_form.html:526
 #: profiles/templates/item_form.html:500
 msgid "Are you sure? This is gonna erase content in 2 item variants."
-msgstr ""
-"本気ですか？これにより、2つのアイテムバリアントのコンテンツが消去されます。"
+msgstr "削除しますか？これにより、2つのアイテムバリアントのコンテンツが消去されます。"
+
 
 #: products/templates/product_form.html:527
 #: products/templates/product_form.html:539
@@ -419,7 +419,7 @@ msgstr ""
 #: profiles/templates/item_form.html:501 profiles/templates/item_form.html:513
 #: profiles/templates/item_form.html:525 profiles/templates/item_form.html:1393
 msgid "Go back"
-msgstr "戻る"
+msgstr "キャンセル"
 
 #: products/templates/product_form.html:528
 #: products/templates/product_form.html:540
@@ -427,20 +427,19 @@ msgstr "戻る"
 #: profiles/templates/item_form.html:502 profiles/templates/item_form.html:514
 #: profiles/templates/item_form.html:526
 msgid "Proceed"
-msgstr "進む"
+msgstr "OK"
 
 #: products/templates/product_form.html:538
 #: profiles/templates/item_form.html:512
 msgid "Are you sure? This is gonna erase content in 1 item variants."
-msgstr ""
-"本気ですか？これにより、1つのアイテムバリアントのコンテンツが消去されます。"
+msgstr "削除しますか？これにより、1つのアイテムバリアントのコンテンツが消去されます。"
+
 
 #: products/templates/product_form.html:550
 #: profiles/templates/item_form.html:524
 msgid "Are you sure? This is gonna erase content in one or two item variants."
-msgstr ""
-"本気ですか？これにより、1つまたは2つのアイテムバリアントのコンテンツが消去さ"
-"れます。"
+msgstr "既に登録されているバリエーションが全て削除されますが、よろしいですか？"
+
 
 #: products/templates/product_form.html:563
 #: profiles/templates/item_form.html:537
@@ -518,7 +517,7 @@ msgstr "非公開"
 
 #: products/templates/product_list.html:39
 msgid "Draft"
-msgstr "ドラフト"
+msgstr "下書き"
 
 #: products/templates/product_list.html:67
 #: profiles/templates/basic_info_tab.html:74
@@ -840,7 +839,7 @@ msgstr "この商品の全てのバリエーションが削除されますが、
 #: profiles/templates/profile_list.html:8
 #: profiles/templates/profile_list.html:31
 msgid "Profile List"
-msgstr "プロファイルリスト"
+msgstr "アカウント一覧"
 
 #: profiles/templates/profile_list.html:41
 msgid "Master"
@@ -922,7 +921,7 @@ msgstr "アイテム管理"
 
 #: templates/base.html:156 templates/listing_base.html:115
 msgid "Item Registration"
-msgstr "アイテム登録"
+msgstr "出品登録"
 
 #: templates/base.html:163 templates/listing_base.html:122
 msgid "Order Management"
