@@ -471,12 +471,12 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
                     'user' : profileSerializer.data['url']
 
                 }
-        #         orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
-        #         if orderProductCommissionSerializer.is_valid():
-        #             orderProductCommissionSerializer.save()
-        #         else:
-        #             return orderProductCommissionSerializer.errors()
-        #     return calculateCommission(price, OrderProduct, introducer['id'], shipping_fee)
+                orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+                if orderProductCommissionSerializer.is_valid():
+                    orderProductCommissionSerializer.save()
+                else:
+                    return orderProductCommissionSerializer.errors()
+            return calculateCommission(price, orderProduct, introducer['id'], shipping_fee)
     return
 
 class Pay(APIView):
