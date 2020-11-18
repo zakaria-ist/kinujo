@@ -511,19 +511,19 @@ class Pay(APIView):
                         groupShippingFee = float(groupShippingFee) + float(product['shipping_fee'])
 
                     order = {
-                        amount : groupTotal,
-                        tax: groupTax,
-                        shipping_fee: groupShippingFee,
-                        total_amount: float(groupTotal) + float(groupTax) + float(groupShippingFee),
-                        name: profileSerializer.data['real_name'],
-                        zip1: "00100",
-                        address1: "test",
-                        address2: "test",
-                        tel: "tel",
-                        is_hidden: 0,
-                        prefecture_id: "https://kinujo-develop.c2sg.asia/api/prefectures/8/",
-                        seller_id: key,
-                        status: 1
+                        'amount' : groupTotal,
+                        'tax': groupTax,
+                        'shipping_fee': groupShippingFee,
+                        'total_amount': float(groupTotal) + float(groupTax) + float(groupShippingFee),
+                        'name': profileSerializer.data['real_name'],
+                        'zip1': "00100",
+                        'address1': "test",
+                        'address2': "test",
+                        'tel': "tel",
+                        'is_hidden': 0,
+                        'prefecture_id': "https://kinujo-develop.c2sg.asia/api/prefectures/8/",
+                        'seller_id': key,
+                        'status': 1
                     }
                     orderSerializer = OrderSerializer(data=order, context=getContext())
                     if orderSerializer.is_valid():
@@ -553,13 +553,13 @@ class Pay(APIView):
                                     variety = item.url
 
                             orderProduct = {
-                                quantity: 1,
-                                unit_price : price,
-                                total_price : total_price,
-                                tax : tax,
-                                total_amount: float(total_price) + float(tax),
-                                order: newOrder['url'],
-                                product_jan_code: variety
+                                'quantity': 1,
+                                'unit_price' : price,
+                                'total_price' : total_price,
+                                'tax': tax,
+                                'total_amount': float(total_price) + float(tax),
+                                'order': newOrder['url'],
+                                'product_jan_code': variety
                             }
                             orderProductSerializer = OrderProductSerializer(data=OrderProduct, context=getContext())
                             if orderProductSerializer.is_valid():
