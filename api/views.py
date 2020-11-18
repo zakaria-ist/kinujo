@@ -22,7 +22,6 @@ import requests
 import json
 import stripe
 from django.conf import settings
-stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
 
 def getContext():
     factory = APIRequestFactory()
@@ -454,7 +453,14 @@ class UserByIds(APIView):
 class Pay(APIView):
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
-
+        token = stripe.Token.create(
+            card={
+                "number": request.data['card']['number'].replace(" ", ""),
+                "exp_month": request.data['card']['expiry'].split("/")[0],
+                "exp_year": "20" + request.data['card']['expiry'].split("/")[1],
+                "cvc": request.data['card']['cvc'],
+            },
+        )
         # stripe.Token.create(
         #     card={
         #         "number": request.POST['card'],
@@ -463,7 +469,7 @@ class Pay(APIView):
         #         "cvc": "314",
         #     },
         # )
-        return Response({"success" : True, "params" : request.POST})
+        return Response({"success" : True, "token" : token, "params" : request.data})
 
 class UserUpdateBackground(APIView):
     parser_classes = [MultiPartParser]
