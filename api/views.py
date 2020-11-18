@@ -453,23 +453,37 @@ class UserByIds(APIView):
 class Pay(APIView):
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
-        token = stripe.Token.create(
-            card={
-                "number": request.data['card']['number'].replace(" ", ""),
-                "exp_month": request.data['card']['expiry'].split("/")[0],
-                "exp_year": "20" + request.data['card']['expiry'].split("/")[1],
-                "cvc": request.data['card']['cvc'],
-            },
-        )
-        # stripe.Token.create(
-        #     card={
-        #         "number": request.POST['card'],
-        #         "exp_month": 11,
-        #         "exp_year": 2021,
-        #         "cvc": "314",
-        #     },
-        # )
-        return Response({"success" : True, "token" : token, "params" : request.data})
+        try:
+            token = stripe.Token.create(
+                card={
+                    "number": request.data['card']['number'].replace(" ", ""),
+                    "exp_month": request.data['card']['expiry'].split("/")[0],
+                    "exp_year": "20" + request.data['card']['expiry'].split("/")[1],
+                    "cvc": request.data['card']['cvc'],
+                },
+            )
+
+            user = User.objects.get(id=userId)
+            token_id = token.id
+            customer_id = None
+
+            if user:
+                userSerializer = UserSerializer(user, context=getContext())
+                payload = userSerializer.data['payload']
+                if payload and payload['customerId']:
+                    customer_id = payload['customerId']
+                else:
+                    customer = stripe.Customer.create(
+                        description=userSerializer.data['id'],
+                    )
+                    customer_id = customer.id
+
+                    payload['customerId'] = customer_id
+                    user['payload'] = payload
+                    user.save()
+            return Response({"success" : True, "token" : token, "params" : request.data})
+        except Exception as e:
+            return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
 class UserUpdateBackground(APIView):
     parser_classes = [MultiPartParser]
