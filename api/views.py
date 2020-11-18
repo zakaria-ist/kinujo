@@ -471,7 +471,7 @@ class Pay(APIView):
             customer_id = None
 
             ids = []
-            for product in request.data['products']
+            for product in request.data['products']:
                 ids.push(product['id'])
 
             products = Product.objects.filter(id__in=ids)
