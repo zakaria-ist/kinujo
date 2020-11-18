@@ -121,9 +121,9 @@ class ProductJancodeSerializer(serializers.HyperlinkedModelSerializer):
         model = ProductJancode
         fields = ['horizontal','vertical','jan_code','stock','is_hidden','created','modified']
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
-    seller = ProfileSerializer()
-    purchaser = ProfileSerializer()
-    prefecture = PrefectureSerializer()
+    seller = ProfileSerializer(read_only=True)
+    purchaser = ProfileSerializer(read_only=True)
+    prefecture = PrefectureSerializer(read_only=True)
     class Meta:
         model = Order
         fields = ['seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','created','modified']
