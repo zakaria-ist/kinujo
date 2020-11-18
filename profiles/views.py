@@ -27,7 +27,8 @@ def home_load(request):
     """
     Method to redirect to home/dashboard.
     """
-    return render(request, 'base.html')
+    # return render(request, 'base.html')
+    return render(request, 'dashboard.html')
 
 @login_required 
 def listing_home_load(request):
@@ -1027,4 +1028,49 @@ def update_payment(request):
             print(e)
 
     context = { 'message': message }
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+
+def get_dashboard_data(request, year, month):
+    """
+    Method to get user sales & commission data.
+    """
+
+    data = {
+        "sales": 0,
+        "commission": 0,
+        "total": 0
+    }
+    try:
+        profile_id = request.session['login_profile_id']
+        auth_type = request.session['login_authority_id']
+
+        if auth_type == AUTHORITY_TYPE['MASTER']:
+            sales_list = UserSale.objects.filter(is_hidden=False,
+                                    user__authority_id=auth_type,
+                                    year=year, month=month)\
+                    .aggregate(sale_amount=Coalesce(Sum('sales_amount'), Value(0)))
+            commission_list = UserCommision.objects.filter(is_hidden=False,
+                                    user__authority_id=auth_type,
+                                    year=year, month=month)\
+                    .aggregate(com_amount=Coalesce(Sum('amount'), Value(0)))
+        else:
+            sales_list = UserSale.objects.filter(is_hidden=False,
+                                    user_id=profile_id,
+                                    year=year, month=month)\
+                    .aggregate(sale_amount=Coalesce(Sum('sales_amount'), Value(0)))
+            commission_list = UserCommision.objects.filter(is_hidden=False,
+                                    user_id=profile_id,
+                                    year=year, month=month)\
+                    .aggregate(com_amount=Coalesce(Sum('amount'), Value(0)))
+
+        data = {
+            "sales": sales_list.get('sale_amount', 0),
+            "commission": commission_list.get('com_amount', 0),
+            "total": sales_list.get('sale_amount', 0) + commission_list.get('com_amount', 0)
+        }
+    except Exception as e:
+        print(e)
+
+    context = { 'data': data }
     return HttpResponse(json.dumps(context), content_type="application/json")

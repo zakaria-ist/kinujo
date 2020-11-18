@@ -40,5 +40,8 @@ urlpatterns = [
     # for payment list
     url(r'^payment_list_json/$', views.PaymentList__asJson, name='PaymentList__asJson'),
     url(r'^update_payment/$', views.update_payment, name='update_payment'),
+
+    # for dashboard
+    url(r'^get_dashboard_data/(?P<year>.*)/(?P<month>.*)/$', views.get_dashboard_data, name='get_dashboard_data'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
