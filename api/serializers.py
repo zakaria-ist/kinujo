@@ -119,7 +119,7 @@ class ProductJancodeSerializer(serializers.HyperlinkedModelSerializer):
     vertical = ProductVarietySelectionSerializer()
     class Meta:
         model = ProductJancode
-        fields = ['horizontal','vertical','jan_code','stock','is_hidden','created','modified']
+        fields = ['url', 'horizontal','vertical','jan_code','stock','is_hidden','created','modified']
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     seller = ProfileSerializer(read_only=True)
     purchaser = ProfileSerializer(read_only=True)
