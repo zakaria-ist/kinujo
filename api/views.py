@@ -20,6 +20,8 @@ from rest_framework.test import APIRequestFactory
 from rest_framework.parsers import MultiPartParser
 import requests 
 import json
+import stripe
+import ast
 from django.conf import settings
 
 def getContext():
@@ -239,7 +241,7 @@ class UserRegister(APIView):
                     except Exception as e:
                         print(e)
                     if introducerProfile:
-                        introducerProfileSerializer = ProfileSerializer(data=introducerProfile, context=getContext())
+                        introducerProfileSerializer = ProfileSerializer(introducerProfile, context=getContext())
                         profileItem['introducer'] = introducerProfileSerializer.data['url']
 
                 profileSerializer = ProfileSerializer(data=profileItem, context=getContext())
@@ -448,6 +450,90 @@ class UserByIds(APIView):
         profiles = Profile.objects.filter(id__in=request.GET.getlist('ids[]'))
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
         return Response({"success" : True, "users" : profileSerializer.data}, status=status.HTTP_200_OK)
+
+class Pay(APIView):
+    def post(self, request, userId, format='json'):
+        stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
+        try:
+            if(request.data['products'].length == 0) return Response({"success" : False, "errors": {"no_products" : "No products"}}, status=status.HTTP_200_OK)
+            
+            token = stripe.Token.create(
+                card={
+                    "number": request.data['card']['number'].replace(" ", ""),
+                    "exp_month": request.data['card']['expiry'].split("/")[0],
+                    "exp_year": "20" + request.data['card']['expiry'].split("/")[1],
+                    "cvc": request.data['card']['cvc'],
+                },
+            )
+
+            profile = Profile.objects.get(id=userId)
+            token_id = token.id
+            customer_id = None
+
+            ids = []
+            for product in request.data['products']
+                ids.push(product['id'])
+
+            products = Product.objects.filter(id__in=ids)
+
+            groupProducts = {}
+
+            if products and profile:
+                profileSerializer = ProfileSerializer(profile, context=getContext())
+                productSerializer = ProductSerializer(products, many=True, context=getContext())
+
+                for product in productSerializer.data:
+                    if product.url in groupProducts:
+                        groupProducts[product.url].push(product)
+                    else:
+                        groupProducts[product.url] = [product]
+                # order = {
+                #     amount : 100,
+                #     tax: 0,
+                #     shipping_fee: 0,
+                #     total_amount: 0,
+                #     name: "Test",
+                #     zip1: "00100",
+                #     address1: "test",
+                #     address2: "test",
+                #     tel: "tel",
+                #     is_hidden: 0,
+                #     prefecture_id: 0,
+                #     seller_id: 2,
+                #     status: 1
+                # }
+
+            # if profile:
+            #     profileSerializer = ProfileSerializer(profile, context=getContext())
+            #     payload = profileSerializer.data['payload']
+            #     payload = payload.replace("'", '"')
+            #     if payload and payload is not None:
+            #         payload = payload.replace("'", '"')
+            #         payload = ast.literal_eval(payload)
+
+            #     if  payload and payload is not None and 'customerId' in payload:
+            #         customer_id = payload["customerId"]
+            #     else:
+            #         customer = stripe.Customer.create(
+            #             description=profileSerializer.data['id'],
+            #         )
+            #         customer_id = customer.id
+
+            #         payload["customerId"] = customer_id
+            #         profile.payload = json.dumps(payload)
+            #         profile.save()
+            
+
+            
+            # stripe.Charge.create(
+            #     amount=2000,
+            #     currency="jpy",
+            #     source=token_id,
+            #     description="My First Test Charge (created for API docs)",
+            # )
+            return Response({"success" : True, "params" : groupProducts})
+        except Exception as e:
+            return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
 class UserUpdateBackground(APIView):
     parser_classes = [MultiPartParser]

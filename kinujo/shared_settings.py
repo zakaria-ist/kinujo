@@ -148,4 +148,4 @@ WEB_URL = 'http://127.0.0.1:8000' + MEDIA_URL
 LOGIN_URL = '/login/'
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-CORS_ORIGIN_ALLOW_ALL = DEBUG
+CORS_ORIGIN_ALLOW_ALL = True  # If this is used then `CORS_ORIGIN_WHITELIST` will not have any effect
