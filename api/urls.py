@@ -39,7 +39,7 @@ urlpatterns = [
     url(r'user/byIds', views.UserByIds.as_view(), name='user-by-ids'),
     url(r'app/config', views.AppConfig.as_view(), name='app-config'),
     url('^sellerProducts/(?P<userId>.+)/$', views.ProductList.as_view()),
-    url('^orders/(?P<userId>.+)/$', views.OrderList.as_view()),
+    url('^userOrders/(?P<userId>.+)/$', views.OrderList.as_view()),
     url('^customers/(?P<userId>.+)/$', views.CustomerList.as_view()),
     url('^addressList/(?P<userId>.+)/$', views.AddressList.as_view()),
     url('^orderProducts/(?P<userId>.+)/$', views.OrderProductList.as_view()),
