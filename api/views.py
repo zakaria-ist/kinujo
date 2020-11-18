@@ -515,14 +515,15 @@ class Pay(APIView):
                         'tax': groupTax,
                         'shipping_fee': groupShippingFee,
                         'total_amount': float(groupTotal) + float(groupTax) + float(groupShippingFee),
-                        'name': profileSerializer.data['real_name'],
+                        'name': "test",
                         'zip1': "00100",
                         'address1': "test",
                         'address2': "test",
                         'tel': "tel",
                         'is_hidden': 0,
-                        'prefecture_id': "https://kinujo-develop.c2sg.asia/api/prefectures/8/",
-                        'seller_id': key,
+                        'prefecture': "https://kinujo-develop.c2sg.asia/api/prefectures/8/",
+                        'seller': key,
+                        'purchaser' : profileSerializer.data['url']
                         'status': 1
                     }
                     orderSerializer = OrderSerializer(data=order, context=getContext())
