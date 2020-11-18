@@ -482,7 +482,7 @@ class Pay(APIView):
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 productSerializer = ProductSerializer(products, many=True, context=getContext())
 
-                for product in productSerializer.data():
+                for product in productSerializer.data:
                     if product.url in groupProducts:
                         groupProducts[product.url].push(product)
                     else:
