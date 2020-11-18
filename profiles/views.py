@@ -833,25 +833,25 @@ def get_data(request, year, month):
             sales_list = UserSale.objects.filter(is_hidden=False,
                                     user__authority_id=auth_type,
                                     year=year, month=month)\
-                    .aggregate(sales_amount=Coalesce(Sum('total_amount'), Value(0)))
+                    .aggregate(sale_amount=Coalesce(Sum('sales_amount'), Value(0)))
             commission_list = UserCommision.objects.filter(is_hidden=False,
                                     user__authority_id=auth_type,
                                     year=year, month=month)\
-                    .aggregate(com_amount=Coalesce(Sum('total_amount'), Value(0)))
+                    .aggregate(com_amount=Coalesce(Sum('amount'), Value(0)))
         else:
             sales_list = UserSale.objects.filter(is_hidden=False,
                                     user_id=profile_id,
                                     year=year, month=month)\
-                    .aggregate(sales_amount=Coalesce(Sum('total_amount'), Value(0)))
+                    .aggregate(sale_amount=Coalesce(Sum('sales_amount'), Value(0)))
             commission_list = UserCommision.objects.filter(is_hidden=False,
                                     user_id=profile_id,
                                     year=year, month=month)\
-                    .aggregate(com_amount=Coalesce(Sum('total_amount'), Value(0)))
+                    .aggregate(com_amount=Coalesce(Sum('amount'), Value(0)))
 
         data = {
-            "sales": sales_list.get('sales_amount', 0),
+            "sales": sales_list.get('sale_amount', 0),
             "commission": commission_list.get('com_amount', 0),
-            "total": sales_list.get('sales_amount', 0) + commission_list.get('com_amount', 0)
+            "total": sales_list.get('sale_amount', 0) + commission_list.get('com_amount', 0)
         }
     except Exception as e:
         print(e)
