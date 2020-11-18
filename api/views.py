@@ -22,6 +22,7 @@ import requests
 import json
 import stripe
 from django.conf import settings
+stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
 
 def getContext():
     factory = APIRequestFactory()
