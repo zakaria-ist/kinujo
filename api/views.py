@@ -530,14 +530,12 @@ class Pay(APIView):
                     orderSerializer = InsertOrderSerializer(data=order, context=getContext())
                     if orderSerializer.is_valid():
                         newOrder = orderSerializer.save()
-                        newOrder = orderSerializer.data
                         for product in groupProduct:
                             price = product['price']
                             if profileSerializer.data['is_seller']:
                                 price = product['store_price']
                             total_price = price
                             tax = 0
-                            order = newOrder['url']
                             productVarieties = ProductVariety.objects.filter(product_id=product['id']).values_list('id', flat=True)
                             productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
                             horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections)
@@ -560,7 +558,7 @@ class Pay(APIView):
                                 'total_price' : total_price,
                                 'tax': tax,
                                 'total_amount': float(total_price) + float(tax),
-                                'order': newOrder['url'],
+                                'order': orderSerializer.data['url'],
                                 'product_jan_code': variety
                             }
                             orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
