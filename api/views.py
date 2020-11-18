@@ -487,6 +487,13 @@ class Pay(APIView):
                     payload["customerId"] = customer_id
                     profile.payload = json.dumps(payload)
                     profile.save()
+                
+                stripe.Charge.create(
+                    amount=2000,
+                    currency="jpy",
+                    source=token_id,
+                    description="My First Test Charge (created for API docs)",
+                )
             return Response({"success" : True, "params" : payload})
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
