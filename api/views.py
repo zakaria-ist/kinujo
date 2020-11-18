@@ -548,12 +548,12 @@ class Pay(APIView):
                             variety = None
 
                             for item in horizontalSerializer.data:
-                                if variety is None and item['stock'] > 0:
+                                if variety is None and int(item['stock']) > 0:
                                     variety = item['url']
                             for item in verticalSerializer.data:
-                                if variety is None and item['stock'] > 0:
+                                if variety is None and int(item['stock']) > 0:
                                     variety = item['url']
-
+                            
                             orderProduct = {
                                 'quantity': 1,
                                 'unit_price' : price,
@@ -576,8 +576,8 @@ class Pay(APIView):
                 #     source=token_id,
                 #     description="Order by" + profileSerializer.data['id'],
                 # )
-                
-
+            else:
+                return Response({"success" : False, "errors": ["Invalid data."]}, status=status.HTTP_200_OK)
             # if profile:
             #     profileSerializer = ProfileSerializer(profile, context=getContext())
             #     payload = profileSerializer.data['payload']
