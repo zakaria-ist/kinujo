@@ -21,6 +21,7 @@ from rest_framework.parsers import MultiPartParser
 import requests 
 import json
 import stripe
+import ast
 from django.conf import settings
 
 def getContext():
@@ -454,6 +455,9 @@ class Pay(APIView):
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
         try:
+            if(len(request.data['products']) == 0):
+                return Response({"success" : False, "errors": {"no_products" : "No products"}}, status=status.HTTP_200_OK)
+            
             token = stripe.Token.create(
                 card={
                     "number": request.data['card']['number'].replace(" ", ""),
@@ -467,26 +471,70 @@ class Pay(APIView):
             token_id = token.id
             customer_id = None
 
-            if profile:
+            ids = []
+            for product in request.data['products']:
+                ids.append(product['id'])
+
+            products = Product.objects.filter(id__in=ids)
+
+            groupProducts = {}
+
+            if products and profile:
                 profileSerializer = ProfileSerializer(profile, context=getContext())
-                payload = profileSerializer.data['payload']
-                payload = payload.replace("'", '"')
-                # if payload and payload is not None:
-                #     payload = payload.replace("'", '"')
-                #     payload = json.loads(payload)
+                productSerializer = ProductSerializer(products, many=True, context=getContext())
 
-                # if  payload and payload is not None and 'customerId' in payload:
-                #     customer_id = payload["customerId"]
-                # else:
-                #     customer = stripe.Customer.create(
-                #         description=profileSerializer.data['id'],
-                #     )
-                #     customer_id = customer.id
+                for product in productSerializer.data:
+                    if product['user']['url'] in groupProducts:
+                        tmpProducts = groupProducts[product['user']['url']]
+                        tmpProducts.append(product)
+                        groupProducts[product['user']['url']] = tmpProducts
+                    else:
+                        groupProducts[product['user']['url']] = [product]
+                # order = {
+                #     amount : 100,
+                #     tax: 0,
+                #     shipping_fee: 0,
+                #     total_amount: 0,
+                #     name: "Test",
+                #     zip1: "00100",
+                #     address1: "test",
+                #     address2: "test",
+                #     tel: "tel",
+                #     is_hidden: 0,
+                #     prefecture_id: 0,
+                #     seller_id: 2,
+                #     status: 1
+                # }
 
-                #     payload["customerId"] = customer_id
-                #     profile.payload = json.dumps(payload)
-                #     profile.save()
-            return Response({"success" : True, "params" : payload})
+            # if profile:
+            #     profileSerializer = ProfileSerializer(profile, context=getContext())
+            #     payload = profileSerializer.data['payload']
+            #     payload = payload.replace("'", '"')
+            #     if payload and payload is not None:
+            #         payload = payload.replace("'", '"')
+            #         payload = ast.literal_eval(payload)
+
+            #     if  payload and payload is not None and 'customerId' in payload:
+            #         customer_id = payload["customerId"]
+            #     else:
+            #         customer = stripe.Customer.create(
+            #             description=profileSerializer.data['id'],
+            #         )
+            #         customer_id = customer.id
+
+            #         payload["customerId"] = customer_id
+            #         profile.payload = json.dumps(payload)
+            #         profile.save()
+            
+
+            
+            # stripe.Charge.create(
+            #     amount=2000,
+            #     currency="jpy",
+            #     source=token_id,
+            #     description="My First Test Charge (created for API docs)",
+            # )
+            return Response({"success" : True, "params" : groupProducts})
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
