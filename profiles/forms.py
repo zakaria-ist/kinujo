@@ -42,7 +42,7 @@ class ProfileForm(forms.ModelForm):
     address2 = forms.CharField(required=False,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     word = forms.CharField(required=False,
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ひとこと'}))
     authority = NameChoiceField(queryset=None, empty_label=None, required=True,
                                    widget=forms.Select(attrs={'class': 'form-control', 'required': 'required'}))
     salon_category = forms.ChoiceField(required=False, choices=SALON_CATEGORY,
