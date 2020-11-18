@@ -599,12 +599,13 @@ class Pay(APIView):
                                 return Response({"success" : False, "errors" : orderProductSerializer.errors}, status=status.HTTP_200_OK)
                     else:
                         return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
-                # stripe.Charge.create(
-                #     amount=total_amount,
-                #     currency="jpy",
-                #     source=token_id,
-                #     description="Order by" + profileSerializer.data['id'],
-                # )
+                
+                stripe.Charge.create(
+                    amount=total_amount,
+                    currency="jpy",
+                    source=token_id,
+                    description="Order by" + profileSerializer.data['id'],
+                )
             else:
                 return Response({"success" : False, "errors": ["Invalid data."]}, status=status.HTTP_200_OK)
             # if profile:
