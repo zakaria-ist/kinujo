@@ -558,7 +558,7 @@ class Pay(APIView):
                                 'total_price' : total_price,
                                 'tax': tax,
                                 'total_amount': float(total_price) + float(tax),
-                                'order': orderSerializer.data['url'],
+                                'order': orderSerializer.data['url'].replace("testserver", "kinujo-develop.c2sg.asia"),
                                 'product_jan_code': variety
                             }
                             return Response({"success" : True, "params" : orderProduct})
