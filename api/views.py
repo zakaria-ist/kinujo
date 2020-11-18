@@ -538,7 +538,7 @@ class Pay(APIView):
                             total_price = price
                             tax = 0
                             order = newOrder['url']
-                            productVarieties = ProductVariety.objects.filter(product_id__in=product['id']).values_list('id', flat=True)
+                            productVarieties = ProductVariety.objects.filter(product_id=product['id']).values_list('id', flat=True)
                             productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
                             horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections)
                             vertical = ProductJancode.objects.filter(vertical_id__in=productVarietySelections)
