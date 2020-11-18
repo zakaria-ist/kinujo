@@ -458,9 +458,10 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
         profileSerializer = ProfileSerializer(profile, context=getContext())
         introducers = profileSerializer.data['introducer'].split("/")
         introducer = introducers[len(introducers)-2]
-        return introducer
+        introducer = Profile.objects.get(id=introducer)
         if introducer:
-            commission = introducer['authority']['official_commission_rate']
+            introducerSerializer = ProfileSerializer(introducer, context=getContext())
+            commission = introducerSerializer.data['authority']['official_commission_rate']
             if float(commission) > 0:
                 orderProductComm = {
                     'amount' : float(price) * float(commission),
