@@ -456,27 +456,28 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
     profile = Profile.objects.get(id=userId)
     if profile:
         profileSerializer = ProfileSerializer(profile, context=getContext())
-        introducers = profileSerializer.data['introducer'].split("/")
-        introducer = introducers[len(introducers)-2]
-        introducer = Profile.objects.get(id=introducer)
-        if introducer:
-            introducerSerializer = ProfileSerializer(introducer, context=getContext())
-            commission = introducerSerializer.data['authority']['official_commission_rate']
-            if float(commission) > 0:
-                orderProductComm = {
-                    'amount' : int(float(price) * float(commission)),
-                    'is_sales' : 1,
-                    'shipping_fee' : shipping_fee,
-                    'order_product' : orderProduct,
-                    'user' : introducerSerializer.data['url']
+        if profileSerializer.data['introducer']:
+            introducers = profileSerializer.data['introducer'].split("/")
+            introducer = introducers[len(introducers)-2]
+            introducer = Profile.objects.get(id=introducer)
+            if introducer:
+                introducerSerializer = ProfileSerializer(introducer, context=getContext())
+                commission = introducerSerializer.data['authority']['official_commission_rate']
+                if float(commission) > 0:
+                    orderProductComm = {
+                        'amount' : int(float(price) * float(commission)),
+                        'is_sales' : 1,
+                        'shipping_fee' : shipping_fee,
+                        'order_product' : orderProduct,
+                        'user' : introducerSerializer.data['url']
 
-                }
-                orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
-                if orderProductCommissionSerializer.is_valid():
-                    orderProductCommissionSerializer.save()
-                else:
-                    return orderProductCommissionSerializer.errors
-            return calculateCommission(price, orderProduct, introducerSerializer.data['id'], shipping_fee)
+                    }
+                    orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+                    if orderProductCommissionSerializer.is_valid():
+                        orderProductCommissionSerializer.save()
+                    else:
+                        return orderProductCommissionSerializer.errors
+                return calculateCommission(price, orderProduct, introducerSerializer.data['id'], shipping_fee)
     return
 
 class Pay(APIView):
