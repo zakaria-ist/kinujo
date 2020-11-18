@@ -484,7 +484,9 @@ class Pay(APIView):
 
                 for product in productSerializer.data:
                     if product.url in groupProducts:
-                        groupProducts[product.url].push(product)
+                        tmpProducts = groupProducts[product.url]
+                        tmpProducts.push(product)
+                        groupProducts[product.url] = tmpProducts
                     else:
                         groupProducts[product.url] = [product]
                 # order = {
