@@ -471,7 +471,7 @@ class Pay(APIView):
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 payload = profileSerializer.data['payload']
                 if payload is not None
-                    payload = json.loads(json.loads(x))
+                    payload = json.loads(payload)
 
                 if  payload is not None and payload['customerId']:
                     customer_id = payload['customerId']
