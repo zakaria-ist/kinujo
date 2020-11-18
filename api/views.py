@@ -564,7 +564,10 @@ class Pay(APIView):
                             orderProductSerializer = OrderProductSerializer(data=OrderProduct, context=getContext())
                             if orderProductSerializer.is_valid():
                                 orderProductSerializer.save()
-                        
+                            else:
+                                return Response({"success" : False, "errors" : orderProductSerializer.errors}, status=status.HTTP_200_OK)
+                    else:
+                        return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
                 # stripe.Charge.create(
                 #     amount=total_amount,
                 #     currency="jpy",
