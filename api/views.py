@@ -452,6 +452,30 @@ class UserByIds(APIView):
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
         return Response({"success" : True, "users" : profileSerializer.data}, status=status.HTTP_200_OK)
 
+def calculateCommission(price, orderProduct, userId, shipping_fee):
+    profile = Profile.objects.get(id=userId)
+    if profile:
+        profileSerializer = ProfileSerializer(profile, context=getContext())
+        introducer = profileSerializer.data['introducer']
+        if introducer:
+            commission = introducer['authority']['official_commission_rate']
+            if commission > 0:
+                orderProductComm = {
+                    'amount' : float(price) * float(commission),
+                    'is_sales' : 1,
+                    'shipping_fee' : shipping_fee,
+                    'order_product' : orderProduct,
+                    'user' : profileSerializer.data['url']
+
+                }
+                orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+                if orderProductCommissionSerializer.is_valid():
+                    orderProductCommissionSerializer.save()
+                else
+                    return orderProductCommissionSerializer.errors()
+            return calculateCommission(price, OrderProduct, introducer['id'])
+    return
+
 class Pay(APIView):
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
@@ -564,6 +588,9 @@ class Pay(APIView):
                             orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
                             if orderProductSerializer.is_valid():
                                 orderProductSerializer.save()
+                                errors = calculateCommission(total_price, orderProductSerializer.data['url'], profileSerializer.data['id'])
+                                if errors: 
+                                    return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
                             else:
                                 return Response({"success" : False, "errors" : orderProductSerializer.errors}, status=status.HTTP_200_OK)
                     else:
