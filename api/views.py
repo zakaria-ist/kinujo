@@ -21,6 +21,7 @@ from rest_framework.parsers import MultiPartParser
 import requests 
 import json
 import stripe
+import ast
 from django.conf import settings
 
 def getContext():
@@ -471,21 +472,21 @@ class Pay(APIView):
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 payload = profileSerializer.data['payload']
                 payload = payload.replace("'", '"')
-                # if payload and payload is not None:
-                #     payload = payload.replace("'", '"')
-                #     payload = json.loads(payload)
+                if payload and payload is not None:
+                    payload = payload.replace("'", '"')
+                    payload = ast.literal_eval(payload)
 
-                # if  payload and payload is not None and 'customerId' in payload:
-                #     customer_id = payload["customerId"]
-                # else:
-                #     customer = stripe.Customer.create(
-                #         description=profileSerializer.data['id'],
-                #     )
-                #     customer_id = customer.id
+                if  payload and payload is not None and 'customerId' in payload:
+                    customer_id = payload["customerId"]
+                else:
+                    customer = stripe.Customer.create(
+                        description=profileSerializer.data['id'],
+                    )
+                    customer_id = customer.id
 
-                #     payload["customerId"] = customer_id
-                #     profile.payload = json.dumps(payload)
-                #     profile.save()
+                    payload["customerId"] = customer_id
+                    profile.payload = json.dumps(payload)
+                    profile.save()
             return Response({"success" : True, "params" : payload})
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
