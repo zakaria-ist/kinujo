@@ -51,27 +51,27 @@ class InsertProfileSerializer(serializers.HyperlinkedModelSerializer):
         model = Profile
         fields = ['id', 'profit', 'url', 'user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+class InsertGroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
         fields = ['url', 'name']
-class TotalSaleSerializer(serializers.HyperlinkedModelSerializer):
+class InsertTotalSaleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TotalSale
         fields = ['year','month','sales_amount','tax','amount_tax_included','shipping_fee','total_amount','order_count','is_hidden','created','modified']
-class TotalCommissionSerializer(serializers.HyperlinkedModelSerializer):
+class InsertTotalCommissionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TotalCommission
         fields = ['year','month','authority','order_count','amount','is_hidden','created','modified']
-class PolicySerializer(serializers.HyperlinkedModelSerializer):
+class InsertPolicySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Policy
         fields = ['privacy_policy','is_hidden','created','modified']
-class PrefectureSerializer(serializers.HyperlinkedModelSerializer):
+class InsertPrefectureSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Prefecture
         fields = ['url', 'name','is_hidden','created','modified']
-class ProductCategorySerializer(serializers.HyperlinkedModelSerializer):
+class InsertProductCategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductCategory
         fields = ['name','is_hidden','created','modified']
@@ -84,12 +84,10 @@ class InsertProductSerializer(serializers.HyperlinkedModelSerializer):
         model = Product
         fields = ['url', 'id', 'name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified', 'user', 'productImages']
 class InsertProductVarietySerializer(serializers.HyperlinkedModelSerializer):
-    product = ProductSerializer()
     class Meta:
         model = ProductVariety
         fields = ['name','product','vertical_and_horizontal','is_hidden','created','modified']
 class InsertProductVarietySelectionSerializer(serializers.HyperlinkedModelSerializer):
-    product_variety = ProductVarietySerializer()
     class Meta:
         model = ProductVarietySelection
         fields = ['product_variety','selection','is_hidden','created','modified']
