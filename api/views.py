@@ -505,12 +505,14 @@ class Pay(APIView):
                 ids.append(product['id'])
 
             products = Product.objects.filter(id__in=ids)
+            address = Address.objects.get(id=request.data['address'])
 
             groupProducts = {}
 
-            if products and profile:
+            if products and profile and address:
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 productSerializer = ProductSerializer(products, many=True, context=getContext())
+                addressSerializer = AddressSerializer(address, context=getContext())
 
                 total_amount = 0
 
@@ -538,19 +540,19 @@ class Pay(APIView):
                         else:
                             groupTotal = float(groupTotal) + float(product['price'])
                         groupShippingFee = float(groupShippingFee) + float(product['shipping_fee'])
-
+                    
                     order = {
                         'amount' : groupTotal,
                         'tax': groupTax,
                         'shipping_fee': groupShippingFee,
                         'total_amount': float(groupTotal) + float(groupTax) + float(groupShippingFee),
-                        'name': "test",
-                        'zip1': "00100",
-                        'address1': "test",
-                        'address2': "test",
-                        'tel': "tel",
+                        'name': addressSerializer.data['name'],
+                        'zip1': addressSerializer.data['zip1'],
+                        'address1': addressSerializer.data['address1'],
+                        'address2': addressSerializer.data['address2'],
+                        'tel': addressSerializer.data['tel'],
                         'is_hidden': 0,
-                        'prefecture': "http://kinujo-develop.c2sg.asia/api/prefectures/8/",
+                        'prefecture': addressSerializer.data['prefecture'],
                         'seller': key,
                         'purchaser' : profileSerializer.data['url'],
                         'status': 1
