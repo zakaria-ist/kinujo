@@ -472,15 +472,15 @@ class Pay(APIView):
                 payload = profileSerializer.data['payload']
                 if payload is not None and payload['customerId']:
                     customer_id = payload['customerId']
-                else:
-                    customer = stripe.Customer.create(
-                        description=profileSerializer.data['id'],
-                    )
-                    customer_id = customer.id
+                # else:
+                #     customer = stripe.Customer.create(
+                #         description=profileSerializer.data['id'],
+                #     )
+                #     customer_id = customer.id
 
-                    payload['customerId'] = customer_id
-                    profile['payload'] = payload
-                    profile.save()
+                #     payload['customerId'] = customer_id
+                #     profile['payload'] = payload
+                #     profile.save()
             return Response({"success" : True, "token" : token, "params" : request.data})
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
