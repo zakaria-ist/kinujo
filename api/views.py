@@ -473,7 +473,7 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
                     orderProductCommissionSerializer.save()
                 else:
                     return orderProductCommissionSerializer.errors()
-            return calculateCommission(price, OrderProduct, introducer['id'])
+            return calculateCommission(price, OrderProduct, introducer['id'], shipping_fee)
     return
 
 class Pay(APIView):
@@ -588,7 +588,7 @@ class Pay(APIView):
                             orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
                             if orderProductSerializer.is_valid():
                                 orderProductSerializer.save()
-                                errors = calculateCommission(total_price, orderProductSerializer.data['url'], profileSerializer.data['id'])
+                                errors = calculateCommission(total_price, orderProductSerializer.data['url'], profileSerializer.data['id'], product['shipping_fee'])
                                 if errors: 
                                     return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
                             else:
