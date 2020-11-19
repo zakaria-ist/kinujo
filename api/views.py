@@ -504,9 +504,9 @@ class Pay(APIView):
             quantities = {}
 
             for product in request.data['products']:
-                quantities[product['id']] = product['quantity']
+                quantities[str(product['id'])] = product['quantity']
                 ids.append(product['id'])
-                
+
             products = Product.objects.filter(id__in=ids)
             address = Address.objects.get(id=request.data['address'])
 
@@ -521,9 +521,9 @@ class Pay(APIView):
 
                 for product in productSerializer.data:
                     if profileSerializer.data['is_seller']:
-                        total_amount = float(total_amount) + (float(product['store_price']) * float(quantities[product['id']]))
+                        total_amount = float(total_amount) + (float(product['store_price']) * float(quantities[str(product['id'])]))
                     else:
-                        total_amount = float(total_amount) + (float(product['price']) * float(quantities[product['id']]))
+                        total_amount = float(total_amount) + (float(product['price']) * float(quantities[str(product['id'])]))
                     total_amount = float(total_amount) + float(product['shipping_fee'])
 
                     if product['user']['url'] in groupProducts:
@@ -567,7 +567,7 @@ class Pay(APIView):
                             price = product['price']
                             if profileSerializer.data['is_seller']:
                                 price = product['store_price']
-                            total_price = (float(price) * float(quantities[product['id']]))
+                            total_price = (float(price) * float(quantities[str(product['id'])]))
                             tax = 0
                             productVarieties = ProductVariety.objects.filter(product_id=product['id']).values_list('id', flat=True)
                             productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
@@ -589,7 +589,7 @@ class Pay(APIView):
                                     varietyId = item['id']
                             
                             orderProduct = {
-                                'quantity':  quantities[product['id']],
+                                'quantity':  quantities[str(product['id'])],
                                 'unit_price' : price,
                                 'total_price' : total_price,
                                 'tax': tax,
@@ -600,7 +600,7 @@ class Pay(APIView):
 
                             productJancode = ProductJancode.objects.get(id=varietyId)
                             if productJancode:
-                                productJancode.stock = int(productJancode.stock) - int(quantities[product['id']])
+                                productJancode.stock = int(productJancode.stock) - int(quantities[str(product['id'])])
                                 productJancode.save()
                             orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
                             if orderProductSerializer.is_valid():
