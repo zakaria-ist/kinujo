@@ -519,8 +519,8 @@ class Pay(APIView):
                 total_amount = 0
 
                 for product in productSerializer.data:
-                    return Response({"success" : True, "q": quantities})
                     quantity = quantities[product['id']]
+                    return Response({"success" : True, "q": quantities, "p":product['id']})
                     if profileSerializer.data['is_seller']:
                         total_amount = float(total_amount) + (float(product['store_price']) * float(quantity))
                     else:
