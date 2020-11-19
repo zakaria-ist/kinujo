@@ -504,14 +504,14 @@ class Pay(APIView):
             quantities = {}
 
             for product in request.data['products']:
-                quantities[str(product['id'])] = product['quantity']
+                quantities[product['id']] = product['quantity']
                 ids.append(product['id'])
+            return Response({"success" : True})
 
             products = Product.objects.filter(id__in=ids)
             address = Address.objects.get(id=request.data['address'])
 
             groupProducts = {}
-            return Response({"success" : True})
             if products and profile and address:
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 productSerializer = ProductSerializer(products, many=True, context=getContext())
