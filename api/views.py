@@ -501,11 +501,6 @@ class Pay(APIView):
             customer_id = None
 
             ids = []
-            quantities = {}
-
-            for product in request.data['products']:
-                quantities[str(product['id'])] = product['quantity']
-                ids.append(product['id'])
 
             products = Product.objects.filter(id__in=ids)
             address = Address.objects.get(id=request.data['address'])
@@ -516,6 +511,12 @@ class Pay(APIView):
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 productSerializer = ProductSerializer(products, many=True, context=getContext())
                 addressSerializer = AddressSerializer(address, context=getContext())
+
+                quantities = {}
+
+                for product in request.data['products']:
+                    quantities[str(product['id'])] = product['quantity']
+                    ids.append(product['id'])
 
                 total_amount = 0
 
