@@ -3,6 +3,7 @@ import json
 from django.conf import settings as s
 from django.contrib import messages
 from django.db.models import Q, Sum, Value
+from django.db.models.expressions import Exists
 from django.db.models.functions import Coalesce
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponsePermanentRedirect
@@ -17,6 +18,7 @@ from .forms import ProfileForm, ImageUploadForm
 from .models import Address, Profile, FinancialAccount, UserSale, \
     UserCommision, MonthlyPayment
 from products.models import ProductCategory
+from orders.models import Order, OrderProductCommission
 from utilities.constants import AUTHORITY_TYPE
 from prefectures.models import Prefecture
 from images.models import Image
@@ -1039,38 +1041,58 @@ def get_dashboard_data(request, year, month):
     """
 
     data = {
-        "sales": 0,
-        "commission": 0,
-        "total": 0
+        "orders": 0,
+        "kinujo_orders": 0,
+        "non_kinujo_orders": 0,
+        "orders_amount": 0,
+        "kinujo_orders_amount": 0,
+        "non_kinujo_orders_amount": 0,
+        "stores": 0,
+        "stores_amount": 0,
+        "specials": 0,
+        "specials_amount": 0,
+        "ambassadors": 0,
+        "ambassadors_amount": 0,
     }
     try:
         profile_id = request.session['login_profile_id']
         auth_type = request.session['login_authority_id']
 
-        if auth_type == AUTHORITY_TYPE['MASTER']:
-            sales_list = UserSale.objects.filter(is_hidden=False,
-                                    user__authority_id=auth_type,
-                                    year=year, month=month)\
-                    .aggregate(sale_amount=Coalesce(Sum('sales_amount'), Value(0)))
-            commission_list = UserCommision.objects.filter(is_hidden=False,
-                                    user__authority_id=auth_type,
-                                    year=year, month=month)\
-                    .aggregate(com_amount=Coalesce(Sum('amount'), Value(0)))
-        else:
-            sales_list = UserSale.objects.filter(is_hidden=False,
-                                    user_id=profile_id,
-                                    year=year, month=month)\
-                    .aggregate(sale_amount=Coalesce(Sum('sales_amount'), Value(0)))
-            commission_list = UserCommision.objects.filter(is_hidden=False,
-                                    user_id=profile_id,
-                                    year=year, month=month)\
-                    .aggregate(com_amount=Coalesce(Sum('amount'), Value(0)))
+        orders = Order.objects.filter(is_hidden=False, order_date__year=year, order_date__month=month)
+        if orders.exists():
+            data['orders'] = orders.count()
+            kinujo_orders = orders.filter(seller__authority_id=AUTHORITY_TYPE['MASTER'])
+            data['kinujo_orders'] = kinujo_orders.count()
+            non_kinujo_orders = orders.exclude(seller__authority_id=AUTHORITY_TYPE['MASTER'])
+            data['non_kinujo_orders'] = non_kinujo_orders.count()
 
-        data = {
-            "sales": sales_list.get('sale_amount', 0),
-            "commission": commission_list.get('com_amount', 0),
-            "total": sales_list.get('sale_amount', 0) + commission_list.get('com_amount', 0)
-        }
+            orders_amount = orders.aggregate(orders_amount=Coalesce(Sum('amount'), Value(0)))
+            data['orders_amount'] = orders_amount.get('orders_amount', 0)
+            kinujo_orders_amount = kinujo_orders.aggregate(kinujo_orders_amount=Coalesce(Sum('amount'), Value(0)))
+            data['kinujo_orders_amount'] = kinujo_orders_amount.get('kinujo_orders_amount', 0)
+            non_kinujo_orders_amount = non_kinujo_orders.aggregate(non_kinujo_orders_amount=Coalesce(Sum('amount'), Value(0)))
+            data['non_kinujo_orders_amount'] = non_kinujo_orders_amount.get('non_kinujo_orders_amount', 0)
+
+        order_commissions = OrderProductCommission.objects.filter(is_hidden=False, is_sales=False,
+                                order_product__order__order_date__year=year,
+                                order_product__order__order_date__month=month)\
+                    .order_by('order_product__order__order_date')
+        if order_commissions.exists():
+            stores = order_commissions.filter(user__authority_id=AUTHORITY_TYPE['STORE'])
+            data['stores'] = stores.count()
+            stores_amount = stores.aggregate(stores_amount=Coalesce(Sum('amount'), Value(0)))
+            data['stores_amount'] = stores_amount.get('stores_amount', 0)
+
+            specials = order_commissions.filter(user__authority_id=AUTHORITY_TYPE['SPECIAL'])
+            data['specials'] = specials.count()
+            specials_amount = specials.aggregate(specials_amount=Coalesce(Sum('amount'), Value(0)))
+            data['specials_amount'] = specials_amount.get('specials_amount', 0)
+
+            ambassadors = order_commissions.filter(user__authority_id=AUTHORITY_TYPE['AMBASSADOR'])
+            data['ambassadors'] = specials.count()
+            ambassadors_amount = ambassadors.aggregate(ambassadors_amount=Coalesce(Sum('amount'), Value(0)))
+            data['ambassadors_amount'] = ambassadors_amount.get('ambassadors_amount', 0)
+        
     except Exception as e:
         print(e)
 

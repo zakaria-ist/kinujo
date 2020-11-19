@@ -1,4 +1,5 @@
 var JPCUR = '\u5186';
+var JPCASE = '\u4EF6';
 
 $(document).on('click', 'input[type="text"]', function(){
     $(this).select();
