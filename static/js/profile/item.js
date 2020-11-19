@@ -411,9 +411,9 @@ function setEditFormInputs(json) {
     $('#description').val(json.description);
     $('#pr').val(json.pr);
     $('#url_str').val(json.url_str);
-    $('#store_price').val(comma_format(json.store_price, 0) + ' ' + JPCUR);
-    $('#price').val(comma_format(json.price, 0) + ' ' + JPCUR);
-    $('#shipping_fee').val(comma_format(json.shipping_fee, 0) + ' ' + JPCUR);
+    $('#store_price').val(comma_format(json.store_price, 0) + JPCUR);
+    $('#price').val(comma_format(json.price, 0) + JPCUR);
+    $('#shipping_fee').val(comma_format(json.shipping_fee, 0) + JPCUR);
     $('#category').val(json.category).trigger('change');
     $('#opened_date').val(json.opened_date).trigger('change');
     $("input[name=target]").val([json.target]);
