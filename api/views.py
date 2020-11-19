@@ -16,6 +16,7 @@ from django.utils import translation
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import activate, deactivate_all
 from .serializers import ImageSerializer, FinancialAccountSerialier, UserSerializer, GroupSerializer,  OrderSerializer, OrderProductSerializer, OrderProductCommissionSerializer, OrderReceiptSerializer, TotalSaleSerializer, TotalCommissionSerializer, PolicySerializer, PrefectureSerializer, ProductCategorySerializer, ProductSerializer, ProductImageSerializer, ProductVarietySerializer, ProductVarietySelectionSerializer, ProductJancodeSerializer, AuthoritySerializer, ProfileSerializer, UserSaleSerializer, UserCommisionSerializer, MonthlyPaymentSerializer, AddressSerializer, TaxRateSerializer
+from .insertSerializers import InsertImageSerializer, InsertFinancialAccountSerialier, InsertUserSerializer, InsertGroupSerializer, InsertOrderSerializer, InsertOrderProductSerializer, InsertOrderProductCommissionSerializer, InsertOrderReceiptSerializer, InsertTotalSaleSerializer, InsertTotalCommissionSerializer, InsertPolicySerializer, InsertPrefectureSerializer, InsertProductCategorySerializer, InsertProductSerializer, InsertProductImageSerializer, InsertProductVarietySerializer, InsertProductVarietySelectionSerializer, InsertProductJancodeSerializer, InsertAuthoritySerializer, InsertProfileSerializer, InsertUserSaleSerializer, InsertUserCommisionSerializer, InsertMonthlyPaymentSerializer, InsertAddressSerializer, InsertTaxRateSerializer
 from rest_framework.test import APIRequestFactory
 from rest_framework.parsers import MultiPartParser
 import requests 
@@ -342,7 +343,7 @@ class ProductList(APIView):
         except Exception as e:
             print(e)
         profileSerializer = ProfileSerializer(profile, context=getContext())
-        products = Product.objects.filter(user=userId);
+        products = Product.objects.filter(user=userId)
         productSerializer = ProductSerializer(products, many=True, context=getContext())
         return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
 
@@ -350,7 +351,7 @@ class OrderList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        orders = Order.objects.filter(purchaser=userId);
+        orders = Order.objects.filter(purchaser=userId)
         orderSerializer = OrderSerializer(orders, many=True, context=getContext())
         updateOrders = []
         for order in orderSerializer.data:
@@ -451,6 +452,34 @@ class UserByIds(APIView):
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
         return Response({"success" : True, "users" : profileSerializer.data}, status=status.HTTP_200_OK)
 
+def calculateCommission(price, orderProduct, userId, shipping_fee):
+    profile = Profile.objects.get(id=userId)
+    if profile:
+        profileSerializer = ProfileSerializer(profile, context=getContext())
+        if profileSerializer.data['introducer']:
+            introducers = profileSerializer.data['introducer'].split("/")
+            introducer = introducers[len(introducers)-2]
+            introducer = Profile.objects.get(id=introducer)
+            if introducer:
+                introducerSerializer = ProfileSerializer(introducer, context=getContext())
+                commission = introducerSerializer.data['authority']['official_commission_rate']
+                if float(commission) > 0:
+                    orderProductComm = {
+                        'amount' : int(float(price) * float(commission)),
+                        'is_sales' : 1,
+                        'shipping_fee' : shipping_fee,
+                        'order_product' : orderProduct,
+                        'user' : introducerSerializer.data['url']
+
+                    }
+                    orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+                    if orderProductCommissionSerializer.is_valid():
+                        orderProductCommissionSerializer.save()
+                    else:
+                        return orderProductCommissionSerializer.errors
+                return calculateCommission(price, orderProduct, introducerSerializer.data['id'], shipping_fee)
+    return
+
 class Pay(APIView):
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
@@ -472,40 +501,128 @@ class Pay(APIView):
             customer_id = None
 
             ids = []
+            quantities = {}
+
             for product in request.data['products']:
+                quantities['item_' + str(product['id'])] = product['quantity']
                 ids.append(product['id'])
 
             products = Product.objects.filter(id__in=ids)
+            address = Address.objects.get(id=request.data['address'])
 
             groupProducts = {}
-
-            if products and profile:
+            if products and profile and address:
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 productSerializer = ProductSerializer(products, many=True, context=getContext())
+                addressSerializer = AddressSerializer(address, context=getContext())
+                
+                total_amount = 0
 
                 for product in productSerializer.data:
+                    quantity = quantities['item_' + str(product['id'])]
+                    if profileSerializer.data['is_seller']:
+                        total_amount = float(total_amount) + (float(product['store_price']) * float(quantity))
+                    else:
+                        total_amount = float(total_amount) + (float(product['price']) * float(quantity))
+                    total_amount = float(total_amount) + float(product['shipping_fee'])
+
                     if product['user']['url'] in groupProducts:
                         tmpProducts = groupProducts[product['user']['url']]
                         tmpProducts.append(product)
                         groupProducts[product['user']['url']] = tmpProducts
                     else:
                         groupProducts[product['user']['url']] = [product]
-                # order = {
-                #     amount : 100,
-                #     tax: 0,
-                #     shipping_fee: 0,
-                #     total_amount: 0,
-                #     name: "Test",
-                #     zip1: "00100",
-                #     address1: "test",
-                #     address2: "test",
-                #     tel: "tel",
-                #     is_hidden: 0,
-                #     prefecture_id: 0,
-                #     seller_id: 2,
-                #     status: 1
-                # }
 
+                for key, groupProduct in groupProducts.items():
+                    groupTotal = 0
+                    groupTax = 0
+                    groupShippingFee = 0
+                    for product in groupProduct:
+                        quantity = quantities['item_' + str(product['id'])]
+                        if profileSerializer.data['is_seller']:
+                            groupTotal = float(groupTotal) + (float(product['store_price']) * float(quantity))
+                        else:
+                            groupTotal = float(groupTotal) + (float(product['price']) * float(quantity))
+                        groupShippingFee = float(groupShippingFee) + float(product['shipping_fee'])
+                    
+                    order = {
+                        'amount' : groupTotal,
+                        'tax': groupTax,
+                        'shipping_fee': groupShippingFee,
+                        'total_amount': float(groupTotal) + float(groupTax) + float(groupShippingFee),
+                        'name': addressSerializer.data['name'],
+                        'zip1': addressSerializer.data['zip1'],
+                        'address1': addressSerializer.data['address1'],
+                        'address2': addressSerializer.data['address2'],
+                        'tel': addressSerializer.data['tel'],
+                        'is_hidden': 0,
+                        'prefecture': addressSerializer.data['prefecture']['url'],
+                        'seller': key,
+                        'purchaser' : profileSerializer.data['url'],
+                        'status': 1
+                    }
+                    orderSerializer = InsertOrderSerializer(data=order, context=getContext())
+                    if orderSerializer.is_valid():
+                        newOrder = orderSerializer.save()
+                        for product in groupProduct:
+                            quantity = quantities['item_' + str(product['id'])]
+                            price = product['price']
+                            if profileSerializer.data['is_seller']:
+                                price = product['store_price']
+                            total_price = (float(price) * float(quantity))
+                            tax = 0
+                            productVarieties = ProductVariety.objects.filter(product_id=product['id']).values_list('id', flat=True)
+                            productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
+                            horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections)
+                            vertical = ProductJancode.objects.filter(vertical_id__in=productVarietySelections)
+                            horizontalSerializer = ProductJancodeSerializer(horizontal, many=True, context=getContext())
+                            verticalSerializer = ProductJancodeSerializer(vertical, many=True, context=getContext())
+                            
+                            variety = None
+                            varietyId = None
+
+                            for item in horizontalSerializer.data:
+                                if variety is None and int(item['stock']) > 0:
+                                    variety = item['url']
+                                    varietyId = item['id']
+                            for item in verticalSerializer.data:
+                                if variety is None and int(item['stock']) > 0:
+                                    variety = item['url']
+                                    varietyId = item['id']
+                            
+                            orderProduct = {
+                                'quantity':  quantity,
+                                'unit_price' : price,
+                                'total_price' : total_price,
+                                'tax': tax,
+                                'total_amount': float(total_price) + float(tax),
+                                'order': orderSerializer.data['url'],
+                                'product_jan_code': variety
+                            }
+
+                            productJancode = ProductJancode.objects.get(id=varietyId)
+                            if productJancode:
+                                productJancode.stock = int(productJancode.stock) - int(quantity)
+                                productJancode.save()
+                            orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
+                            if orderProductSerializer.is_valid():
+                                orderProductSerializer.save()
+                                errors = calculateCommission(total_price, orderProductSerializer.data['url'], profileSerializer.data['id'], product['shipping_fee'])
+                                if errors: 
+                                    return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
+                            else:
+                                return Response({"success" : False, "errors" : orderProductSerializer.errors}, status=status.HTTP_200_OK)
+                    else:
+                        return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
+                
+                stripe.Charge.create(
+                    amount=int(total_amount),
+                    currency="jpy",
+                    source=token_id,
+                    description="Order by" + str(profileSerializer.data['id']),
+                )
+            else:
+                return Response({"success" : False, "errors": ["Invalid data."]}, status=status.HTTP_200_OK)
             # if profile:
             #     profileSerializer = ProfileSerializer(profile, context=getContext())
             #     payload = profileSerializer.data['payload']
@@ -526,15 +643,7 @@ class Pay(APIView):
             #         profile.payload = json.dumps(payload)
             #         profile.save()
             
-
-            
-            # stripe.Charge.create(
-            #     amount=2000,
-            #     currency="jpy",
-            #     source=token_id,
-            #     description="My First Test Charge (created for API docs)",
-            # )
-            return Response({"success" : True, "params" : groupProducts})
+            return Response({"success" : True})
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 

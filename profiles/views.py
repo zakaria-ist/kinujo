@@ -155,8 +155,10 @@ def logout_user(request):
     login_type_was = request.session['login_type']
     logout(request)
     if login_type_was == 'MASTER':
+        request.session['login_type'] = 'MASTER'
         return render(request, 'master_login.html')
     else:
+        request.session['login_type'] = 'SELLER'
         return render(request, 'sales_login.html')
 
 @login_required

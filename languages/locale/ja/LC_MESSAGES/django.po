@@ -432,7 +432,7 @@ msgstr "OK"
 #: products/templates/product_form.html:538
 #: profiles/templates/item_form.html:512
 msgid "Are you sure? This is gonna erase content in 1 item variants."
-msgstr "削除しますか？これにより、1つのアイテムバリアントのコンテンツが消去されます。"
+msgstr "バリエーションを変更すると、既に登録されているバリエーションが全て削除されますが、よろしいですか？"
 
 
 #: products/templates/product_form.html:550
