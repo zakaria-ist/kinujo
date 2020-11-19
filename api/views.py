@@ -504,26 +504,26 @@ class Pay(APIView):
             quantities = {}
 
             for product in request.data['products']:
-                quantities[product['id']] = product['quantity']
+                quantities['item_' + str(product['id'])] = product['quantity']
                 ids.append(product['id'])
 
             products = Product.objects.filter(id__in=ids)
             address = Address.objects.get(id=request.data['address'])
 
             groupProducts = {}
-
             if products and profile and address:
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 productSerializer = ProductSerializer(products, many=True, context=getContext())
                 addressSerializer = AddressSerializer(address, context=getContext())
-
+                
                 total_amount = 0
 
                 for product in productSerializer.data:
+                    quantity = quantities['item_' + str(product['id'])]
                     if profileSerializer.data['is_seller']:
-                        total_amount = float(total_amount) + (float(product['store_price']) * float(quantities[product['id']]))
+                        total_amount = float(total_amount) + (float(product['store_price']) * float(quantity))
                     else:
-                        total_amount = float(total_amount) + (float(product['price']) * float(quantities[product['id']]))
+                        total_amount = float(total_amount) + (float(product['price']) * float(quantity))
                     total_amount = float(total_amount) + float(product['shipping_fee'])
 
                     if product['user']['url'] in groupProducts:
@@ -538,10 +538,11 @@ class Pay(APIView):
                     groupTax = 0
                     groupShippingFee = 0
                     for product in groupProduct:
+                        quantity = quantities['item_' + str(product['id'])]
                         if profileSerializer.data['is_seller']:
-                            groupTotal = float(groupTotal) + (float(product['store_price']) * float(quantities[product['id']]))
+                            groupTotal = float(groupTotal) + (float(product['store_price']) * float(quantity))
                         else:
-                            groupTotal = float(groupTotal) + (float(product['price']) * float(quantities[product['id']]))
+                            groupTotal = float(groupTotal) + (float(product['price']) * float(quantity))
                         groupShippingFee = float(groupShippingFee) + float(product['shipping_fee'])
                     
                     order = {
@@ -555,7 +556,7 @@ class Pay(APIView):
                         'address2': addressSerializer.data['address2'],
                         'tel': addressSerializer.data['tel'],
                         'is_hidden': 0,
-                        'prefecture': addressSerializer.data['prefecture'],
+                        'prefecture': addressSerializer.data['prefecture']['url'],
                         'seller': key,
                         'purchaser' : profileSerializer.data['url'],
                         'status': 1
@@ -564,10 +565,11 @@ class Pay(APIView):
                     if orderSerializer.is_valid():
                         newOrder = orderSerializer.save()
                         for product in groupProduct:
+                            quantity = quantities['item_' + str(product['id'])]
                             price = product['price']
                             if profileSerializer.data['is_seller']:
                                 price = product['store_price']
-                            total_price = (float(price) * float(quantities[product['id']]))
+                            total_price = (float(price) * float(quantity))
                             tax = 0
                             productVarieties = ProductVariety.objects.filter(product_id=product['id']).values_list('id', flat=True)
                             productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
@@ -589,7 +591,7 @@ class Pay(APIView):
                                     varietyId = item['id']
                             
                             orderProduct = {
-                                'quantity':  quantities[product['id']],
+                                'quantity':  quantity,
                                 'unit_price' : price,
                                 'total_price' : total_price,
                                 'tax': tax,
@@ -600,7 +602,7 @@ class Pay(APIView):
 
                             productJancode = ProductJancode.objects.get(id=varietyId)
                             if productJancode:
-                                productJancode.stock = int(productJancode.stock) - int(quantities[product['id']])
+                                productJancode.stock = int(productJancode.stock) - int(quantity)
                                 productJancode.save()
                             orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
                             if orderProductSerializer.is_valid():
@@ -641,7 +643,7 @@ class Pay(APIView):
             #         profile.payload = json.dumps(payload)
             #         profile.save()
             
-            return Response({"success" : True, "params" : groupProducts})
+            return Response({"success" : True})
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
