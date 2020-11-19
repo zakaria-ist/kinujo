@@ -511,7 +511,6 @@ class Pay(APIView):
             address = Address.objects.get(id=request.data['address'])
 
             groupProducts = {}
-            return Response({"success" : True})
             if products and profile and address:
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 productSerializer = ProductSerializer(products, many=True, context=getContext())
@@ -520,6 +519,7 @@ class Pay(APIView):
                 total_amount = 0
 
                 for product in productSerializer.data:
+                    return Response({"success" : True, "q", quantities})
                     quantity = quantities[product['id']]
                     if profileSerializer.data['is_seller']:
                         total_amount = float(total_amount) + (float(product['store_price']) * float(quantity))
