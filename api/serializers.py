@@ -169,6 +169,6 @@ class AddressSerializer(serializers.HyperlinkedModelSerializer):
 class TaxRateSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TaxRate
-        fields = ['start_date','end_date','tax_rate','reduced_tax_rate','is_hidden','created','modified']
+        fields = ['url', 'id', 'start_date','end_date','tax_rate','reduced_tax_rate','is_hidden','created','modified']
 
 
