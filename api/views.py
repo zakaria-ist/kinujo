@@ -504,7 +504,7 @@ class Pay(APIView):
             quantities = {}
 
             for product in request.data['products']:
-                quantities[product['id']] = product['quantity']
+                # quantities[product['id']] = product['quantity']
                 ids.append(product['id'])
             return Response({"success" : True})
 
