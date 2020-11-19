@@ -506,7 +506,7 @@ class Pay(APIView):
             for product in request.data['products']:
                 quantities[str(product['id'])] = product['quantity']
                 ids.append(product['id'])
-                
+
             products = Product.objects.filter(id__in=ids)
             address = Address.objects.get(id=request.data['address'])
 
@@ -522,10 +522,11 @@ class Pay(APIView):
                 total_amount = 0
 
                 for product in productSerializer.data:
+                    quantity = quantities[product['id']]
                     if profileSerializer.data['is_seller']:
-                        total_amount = float(total_amount) + (float(product['store_price']) * float(quantities[str(product['id'])]))
+                        total_amount = float(total_amount) + (float(product['store_price']) * float(quantity))
                     else:
-                        total_amount = float(total_amount) + (float(product['price']) * float(quantities[str(product['id'])]))
+                        total_amount = float(total_amount) + (float(product['price']) * float(quantity))
                     total_amount = float(total_amount) + float(product['shipping_fee'])
 
                     if product['user']['url'] in groupProducts:
@@ -540,10 +541,11 @@ class Pay(APIView):
                     groupTax = 0
                     groupShippingFee = 0
                     for product in groupProduct:
+                        quantity = quantities[product['id']]
                         if profileSerializer.data['is_seller']:
-                            groupTotal = float(groupTotal) + (float(product['store_price']) * float(quantities[product['id']]))
+                            groupTotal = float(groupTotal) + (float(product['store_price']) * float(quantity))
                         else:
-                            groupTotal = float(groupTotal) + (float(product['price']) * float(quantities[product['id']]))
+                            groupTotal = float(groupTotal) + (float(product['price']) * float(quantity))
                         groupShippingFee = float(groupShippingFee) + float(product['shipping_fee'])
                     
                     order = {
