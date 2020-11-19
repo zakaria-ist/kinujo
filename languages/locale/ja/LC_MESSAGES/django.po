@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 22:26+0000\n"
+"POT-Creation-Date: 2020-11-19 13:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,12 +18,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: kinujo/settings_demo.py:138 kinujo/settings_develop.py:142
+#: kinujo/settings_demo.py:138 kinujo/settings_develop.py:143
 #: kinujo/settings_release.py:142 kinujo/shared_settings.py:128
 msgid "English"
 msgstr "英語"
 
-#: kinujo/settings_demo.py:139 kinujo/settings_develop.py:143
+#: kinujo/settings_demo.py:139 kinujo/settings_develop.py:144
 #: kinujo/settings_release.py:143 kinujo/shared_settings.py:129
 msgid "Japanese"
 msgstr "日本語"
@@ -32,7 +32,7 @@ msgstr "日本語"
 msgid "Order Add/Edit"
 msgstr "注文追加/編集"
 
-#: orders/templates/order_form.html:42 templates/base.html:170
+#: orders/templates/order_form.html:42 templates/base.html:173
 #: templates/listing_base.html:129
 msgid "Order Registration"
 msgstr "注文登録"
@@ -181,7 +181,7 @@ msgid "Options"
 msgstr "オプション"
 
 #: orders/templates/order_list.html:8 orders/templates/order_list.html:31
-#: templates/base.html:167 templates/listing_base.html:126
+#: templates/base.html:170 templates/listing_base.html:126
 msgid "Order List"
 msgstr "オーダーリスト"
 
@@ -409,8 +409,8 @@ msgstr "閉じる"
 #: products/templates/product_form.html:526
 #: profiles/templates/item_form.html:500
 msgid "Are you sure? This is gonna erase content in 2 item variants."
-msgstr "削除しますか？これにより、2つのアイテムバリアントのコンテンツが消去されます。"
-
+msgstr ""
+"削除しますか？これにより、2つのアイテムバリアントのコンテンツが消去されます。"
 
 #: products/templates/product_form.html:527
 #: products/templates/product_form.html:539
@@ -432,14 +432,14 @@ msgstr "OK"
 #: products/templates/product_form.html:538
 #: profiles/templates/item_form.html:512
 msgid "Are you sure? This is gonna erase content in 1 item variants."
-msgstr "バリエーションを変更すると、既に登録されているバリエーションが全て削除されますが、よろしいですか？"
-
+msgstr ""
+"バリエーションを変更すると、既に登録されているバリエーションが全て削除されま"
+"すが、よろしいですか？"
 
 #: products/templates/product_form.html:550
 #: profiles/templates/item_form.html:524
 msgid "Are you sure? This is gonna erase content in one or two item variants."
 msgstr "既に登録されているバリエーションが全て削除されますが、よろしいですか？"
-
 
 #: products/templates/product_form.html:563
 #: profiles/templates/item_form.html:537
@@ -810,7 +810,7 @@ msgstr "出品管理サイトへ"
 msgid "Basic Information"
 msgstr "基本情報"
 
-#: profiles/templates/profile_form.html:46 templates/base.html:153
+#: profiles/templates/profile_form.html:46 templates/base.html:156
 #: templates/listing_base.html:112
 msgid "Item List"
 msgstr "出品一覧"
@@ -874,58 +874,115 @@ msgstr "宛先名"
 msgid "Is Default"
 msgstr "デフォルトです"
 
-#: templates/base.html:66 templates/listing_base.html:66
+#: templates/base.html:69 templates/listing_base.html:66
 msgid "ENGLISH"
 msgstr "英語"
 
-#: templates/base.html:75 templates/listing_base.html:75
+#: templates/base.html:78 templates/listing_base.html:75
 msgid "JAPANESE"
 msgstr "日本語"
 
-#: templates/base.html:90 templates/listing_base.html:90
+#: templates/base.html:93 templates/listing_base.html:90
 msgid "Log Out"
 msgstr "ログアウト"
 
-#: templates/base.html:109
+#: templates/base.html:112 templates/dashboard.html:44
+#: templates/dashboard.html:63
 msgid "Dashboard"
 msgstr "Dashboard"
 
-#: templates/base.html:115
+#: templates/base.html:118
 msgid "Account Management"
 msgstr "アカウント管理"
 
-#: templates/base.html:119
+#: templates/base.html:122
 msgid "Account List"
 msgstr "アカウント一覧"
 
-#: templates/base.html:122
+#: templates/base.html:125
 msgid "Account Registration"
 msgstr "アカウント登録"
 
-#: templates/base.html:129 templates/base.html:177
+#: templates/base.html:132 templates/base.html:180
 #: templates/listing_base.html:136
 msgid "Sales Management"
 msgstr "売上管理"
 
-#: templates/base.html:133
+#: templates/base.html:136
 msgid "Sales list"
 msgstr "売上一覧"
 
-#: templates/base.html:136
+#: templates/base.html:139
 msgid "Payment list"
 msgstr "支払一覧"
 
-#: templates/base.html:149 templates/listing_base.html:108
+#: templates/base.html:152 templates/listing_base.html:108
 msgid "Item Management"
 msgstr "アイテム管理"
 
-#: templates/base.html:156 templates/listing_base.html:115
+#: templates/base.html:159 templates/listing_base.html:115
 msgid "Item Registration"
 msgstr "出品登録"
 
-#: templates/base.html:163 templates/listing_base.html:122
+#: templates/base.html:166 templates/listing_base.html:122
 msgid "Order Management"
 msgstr "注文管理"
+
+#: templates/dashboard.html:75
+msgid "Total Number of Sales"
+msgstr "総販売件数"
+
+#: templates/dashboard.html:81 templates/dashboard.html:101
+msgid "KINUJO Products"
+msgstr "K製品"
+
+#: templates/dashboard.html:82 templates/dashboard.html:102
+msgid "Other Products"
+msgstr "出品製品"
+
+#: templates/dashboard.html:95
+msgid "Total Sales"
+msgstr "総売上"
+
+#: templates/dashboard.html:113
+msgid "[Store Account Fee]"
+msgstr "【ストア手数料】"
+
+#: templates/dashboard.html:119
+msgid "[Ambassador Account Fee]"
+msgstr "【アンバサダー手数料】"
+
+#: templates/dashboard.html:125
+msgid "[Special Account Fee]"
+msgstr "【SP手数料】"
+
+#: templates/dashboard.html:141
+msgid "Popular Products"
+msgstr "人気商品"
+
+#: templates/dashboard.html:147
+msgid "Product Name"
+msgstr "商品"
+
+#: templates/dashboard.html:148
+msgid "Gross Amount"
+msgstr "収益"
+
+#: templates/dashboard.html:149
+msgid "Total Quantity"
+msgstr "購入数"
+
+#: templates/dashboard.html:156
+msgid "last 7 days"
+msgstr "過去7日間"
+
+#: templates/dashboard.html:157
+msgid "last 1 month"
+msgstr "過去1ヶ月間"
+
+#: templates/dashboard.html:158
+msgid "last 1 year"
+msgstr "過去1年間"
 
 #: templates/master_login.html:62
 msgid "Management system"

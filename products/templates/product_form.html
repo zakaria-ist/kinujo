@@ -2123,18 +2123,18 @@
     var seller_auth_id = "{{seller_auth_id}}"
     $('#price').on('change', function() {
       var general_price = parseInt($(this).val());
-      $('#price').val(comma_format(general_price, 0) + ' ' + JPCUR);
+      $('#price').val(comma_format(general_price, 0) + JPCUR);
       var store_price =  general_price - (0.2 * general_price);
       if(seller_auth_id == '1') { // master
           store_price = general_price - (0.3 * general_price);
       }
-      store_price = comma_format(store_price, 0) + ' ' + JPCUR
+      store_price = comma_format(store_price, 0) + JPCUR
       $('#store_price').val(store_price);
     });
 
     $('#shipping_fee').on('change', function() {
       var shipping_fee = parseInt($(this).val());
-      $('#shipping_fee').val(comma_format(shipping_fee, 0) + ' ' + JPCUR);
+      $('#shipping_fee').val(comma_format(shipping_fee, 0) + JPCUR);
     });
 
     $('#url_str').on('change', function() {

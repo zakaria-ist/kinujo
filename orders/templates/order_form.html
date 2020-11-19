@@ -339,10 +339,10 @@
                 let shipping_fee = parseInt("{{order.shipping_fee}}");
                 let total_amount = parseInt("{{order.total_amount}}");
 
-                $('#amount').val(comma_format(amount, 0) + ' ' + JPCUR);
-                $('#tax').val(comma_format(tax, 0) + ' ' + JPCUR);
-                $('#shipping_fee').val(comma_format(shipping_fee, 0) + ' ' + JPCUR);
-                $('#total_amount').val(comma_format(total_amount, 0) + ' ' + JPCUR);
+                $('#amount').val(comma_format(amount, 0) + JPCUR);
+                $('#tax').val(comma_format(tax, 0) + JPCUR);
+                $('#shipping_fee').val(comma_format(shipping_fee, 0) + JPCUR);
+                $('#total_amount').val(comma_format(total_amount, 0) + JPCUR);
             }
 
             $('#orderer').trigger('change');
@@ -460,13 +460,13 @@
             if (amount > 0) {
                 if (tax_rate) {
                     var tax = roundDecimal(amount * tax_rate, 0);
-                    $('#tax').val(comma_format(tax, 0) + ' ' + JPCUR);
+                    $('#tax').val(comma_format(tax, 0) + JPCUR);
                     calculateTotalAmount();
                 } else {
                     calculateTotalAmount();
                 }
             }
-            $('#amount').val(comma_format(amount, 0) + ' ' + JPCUR);
+            $('#amount').val(comma_format(amount, 0) + JPCUR);
         });
 
         $('#shipping_fee').on('change', function() {
@@ -474,7 +474,7 @@
             if (shipping_fee > 0) {
                 calculateTotalAmount();
             }
-            $('#shipping_fee').val(comma_format(shipping_fee, 0) + ' ' + JPCUR);
+            $('#shipping_fee').val(comma_format(shipping_fee, 0) + JPCUR);
         });
 
         function calculateTotalAmount() {
@@ -482,7 +482,7 @@
             let tax = pure_number($('#tax').val());
             let shipping_fee = pure_number($('#shipping_fee').val());
 
-            $('#total_amount').val(comma_format(amount + tax + shipping_fee, 0) + ' ' + JPCUR);
+            $('#total_amount').val(comma_format(amount + tax + shipping_fee, 0) + JPCUR);
         }
 
         function calculateAmount() {
@@ -503,7 +503,7 @@
                     }
                 }
             }
-            $('#amount').val(comma_format(amount, 0) + ' ' + JPCUR).trigger('change');
+            $('#amount').val(comma_format(amount, 0) + JPCUR).trigger('change');
         }
 
 
