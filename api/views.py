@@ -556,7 +556,7 @@ class Pay(APIView):
                         'address2': addressSerializer.data['address2'],
                         'tel': addressSerializer.data['tel'],
                         'is_hidden': 0,
-                        'prefecture': addressSerializer.data['prefecture'],
+                        'prefecture': addressSerializer.data['prefecture']['url'],
                         'seller': key,
                         'purchaser' : profileSerializer.data['url'],
                         'status': 1
