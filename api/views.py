@@ -511,14 +511,12 @@ class Pay(APIView):
             address = Address.objects.get(id=request.data['address'])
 
             groupProducts = {}
-
+            return Response({"success" : True})
             if products and profile and address:
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 productSerializer = ProductSerializer(products, many=True, context=getContext())
                 addressSerializer = AddressSerializer(address, context=getContext())
-
-
-
+                
                 total_amount = 0
 
                 for product in productSerializer.data:
