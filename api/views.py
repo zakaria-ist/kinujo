@@ -506,7 +506,7 @@ class Pay(APIView):
             for product in request.data['products']:
                 quantities[product['id']] = product['quantity']
                 ids.append(product['id'])
-            return Response({"success" : True, "q" : quantities})
+                
             products = Product.objects.filter(id__in=ids)
             address = Address.objects.get(id=request.data['address'])
 
