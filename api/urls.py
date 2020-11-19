@@ -38,14 +38,15 @@ urlpatterns = [
     url(r'product/byIds', views.ProductByIds.as_view(), name='product-by-ids'),
     url(r'user/byIds', views.UserByIds.as_view(), name='user-by-ids'),
     url(r'app/config', views.AppConfig.as_view(), name='app-config'),
-    url('^products/(?P<userId>.+)/$', views.ProductList.as_view()),
-    url('^orders/(?P<userId>.+)/$', views.OrderList.as_view()),
+    url('^sellerProducts/(?P<userId>.+)/$', views.ProductList.as_view()),
+    url('^userOrders/(?P<userId>.+)/$', views.OrderList.as_view()),
     url('^customers/(?P<userId>.+)/$', views.CustomerList.as_view()),
     url('^addressList/(?P<userId>.+)/$', views.AddressList.as_view()),
     url('^orderProducts/(?P<userId>.+)/$', views.OrderProductList.as_view()),
     url('^saleProducts/(?P<userId>.+)/$', views.SaleProductList.as_view()),
     url('^commissionProducts/(?P<userId>.+)/$', views.CommissionProductList.as_view()),
     url('^financial-account/(?P<userId>.+)/$', views.FinancialAccountGet.as_view()),
+    url('^pay/(?P<userId>.+)/$', views.Pay.as_view()),
     url(r'^change-language/$', views.change_language, name='change_language'),
 ]
 urlpatterns += router.urls
