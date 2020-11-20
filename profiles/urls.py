@@ -43,5 +43,6 @@ urlpatterns = [
 
     # for dashboard
     url(r'^get_dashboard_data/(?P<year>.*)/(?P<month>.*)/$', views.get_dashboard_data, name='get_dashboard_data'),
+    url(r'^popular_productList__asJson/$', views.PopularProductList__asJson, name='PopularProductList__asJson'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

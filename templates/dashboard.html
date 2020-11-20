@@ -151,7 +151,7 @@
                                                 </thead>
                                             </table>
                                         </div>
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-4" style="margin-left: -15px;">
                                             <select name="ranking_filter" id="ranking_filter" class="form-control trs-field">
                                                 <option value="0" selected>{% trans 'last 7 days' %}</option>
                                                 <option value="1">{% trans 'last 1 month' %}</option>
@@ -191,7 +191,12 @@
             loadDashboardData(selected_year, selected_month);
 
             // get popular products data
-            loadPopularData(7);
+            loadPopularData('0');
+        })
+
+        $('#ranking_filter').on('change', function() {
+            let filter_type = $(this).val();
+            loadPopularData(filter_type);
         })
 
         function loadDashboardData(selected_year, selected_month) {
@@ -206,12 +211,17 @@
                     $('#non_kinujo_orders').html(comma_format(data.non_kinujo_orders, 0) + JPCASE);
 
                     $('#orders_amount').html(comma_format(data.orders_amount, 0) + JPCUR);
-                    $('#kinujo_orders_amount').html('約' + comma_format(data.kinujo_orders_amount, 0) + '万' + JPCUR);
-                    $('#non_kinujo_orders_amount').html('約' + comma_format(data.non_kinujo_orders_amount, 0) + '万' + JPCUR);
+                    //$('#kinujo_orders_amount').html('約' + comma_format(data.kinujo_orders_amount, 0) + '万' + JPCUR);
+                    //$('#non_kinujo_orders_amount').html('約' + comma_format(data.non_kinujo_orders_amount, 0) + '万' + JPCUR);
+                    $('#kinujo_orders_amount').html(comma_format(data.kinujo_orders_amount, 0) + JPCUR);
+                    $('#non_kinujo_orders_amount').html(comma_format(data.non_kinujo_orders_amount, 0) + JPCUR);
 
-                    $('#store_info').html(comma_format(data.stores_amount, 0) + '百万' + JPCUR + '/' + comma_format(data.stores, 0) + JPCASE)
-                    $('#ambassador_info').html(comma_format(data.ambassadors_amount, 0) + '百万' + JPCUR + '/' + comma_format(data.ambassadors, 0) + JPCASE)
-                    $('#special_info').html(comma_format(data.specials_amount, 0) + '百万' + JPCUR + '/' + comma_format(data.specials, 0) + JPCASE)
+                    $('#store_info').html(comma_format(data.stores_amount, 0) + JPCUR + '/' + comma_format(data.stores, 0) + JPCASE)
+                    $('#ambassador_info').html(comma_format(data.ambassadors_amount, 0) + JPCUR + '/' + comma_format(data.ambassadors, 0) + JPCASE)
+                    $('#special_info').html(comma_format(data.specials_amount, 0) + JPCUR + '/' + comma_format(data.specials, 0) + JPCASE)
+                    //$('#store_info').html(comma_format(data.stores_amount, 0) + '百万' + JPCUR + '/' + comma_format(data.stores, 0) + JPCASE)
+                    //$('#ambassador_info').html(comma_format(data.ambassadors_amount, 0) + '百万' + JPCUR + '/' + comma_format(data.ambassadors, 0) + JPCASE)
+                    //$('#special_info').html(comma_format(data.specials_amount, 0) + '百万' + JPCUR + '/' + comma_format(data.specials, 0) + JPCASE)
 
                 },
                 error: function (e) {
@@ -229,38 +239,29 @@
             });
         }
 
-        function loadPopularData(days) {
-            {% comment %} $('#popular-table').DataTable().destroy();
+        function loadPopularData(filter_type) {
+            $('#popular-table').DataTable().destroy();
             $('#popular-table').DataTable({
                 //"order": [[0, "asc"]],
                 "serverSide": true,
                 "scrollX": true,
                 stateSave: true,
+                "paging":   false,
+                "ordering": false,
+                "info":  false,
+                "searching":  false,
                 "ajax": {
                     "url": "{% url 'PopularProductList__asJson' %}",
                     "data": {
-                        "days": days,
+                        "filter_type": filter_type,
                     }
                 },
                 "columns": [
-                    {"data": "id"},
-                    {"data": "name"},
-                    {"data": "address", "orderable": false},
-                    {
-                        "sClass": "text-center",
-                        "orderable": false,
-                        "data": null,
-                        "render": function (data, type, row, meta) {
-                            var btn =
-                                    '<div class="btn-group">' +
-                                    '<a class="btn-group-item" href="/orders/order_edit/' + row.id + '/' + '"><i class="fas fa-pencil-alt fa-2x text-info"></i></a>' + 
-                                    '<a class="btn-group-item" onclick="deleteOrder(' + row.id + ')"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>' + 
-                                    '</div>';
-                            return btn;
-                        }
-                    }
+                    {"data": "product_name", "orderable": false},
+                    {"data": "gross_amount", "orderable": false},
+                    {"data": "total_quantity", "orderable": false},
                 ]
-            }); {% endcomment %}
+            });
         }
     </script>
 {% endblock %}
