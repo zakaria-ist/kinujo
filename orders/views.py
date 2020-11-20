@@ -77,8 +77,19 @@ def OrderList__asJson(request):
 
     array = []
     for field in list:
+        image_path = ''
+        product = OrderProduct.objects.filter(order_id=field.id).first()
+        product_jan = ProductJancode.objects.get(pk=product.product_jan_code_id)
+        j_product = get_jan_products(product_jan)
+        if j_product:
+            productImage = ProductImage.objects.filter(product_id=j_product.id, is_hidden=False)\
+                .order_by('image_no').exclude(image_no__isnull=True).first()
+            if productImage:
+                image_path = productImage.image.image.url
         data = {
             "id": str(field.id),
+            "image_path": image_path,
+            "product_name": j_product.name,
             "name": field.name,
             "address": field.address1 + '  Zip: ' + field.zip1,
             "amount": intcomma("%.0f" % field.total_amount),
@@ -369,7 +380,7 @@ def order_add(request):
                 affected_user_list = []
                 for item in product_list:
                     product_jan = ProductJancode.objects.filter(pk=item['jan_id']).first()
-                    if (product_jan):
+                    if product_jan:
                         j_product = get_jan_products(product_jan)
                         if j_product:
                             orderProduct = OrderProduct()
@@ -590,7 +601,7 @@ def order_edit(request, order_id):
 
                     for item in product_list:
                         product_jan = ProductJancode.objects.filter(pk=item['jan_id']).first()
-                        if (product_jan):
+                        if product_jan:
                             j_product = get_jan_products(product_jan)
                             if j_product:
                                 orderProduct = OrderProduct()
@@ -847,7 +858,7 @@ def UserSalesList__asJson(request):
     array = []
     for field in sales_list:
         product_jan = ProductJancode.objects.filter(pk=field.order_product.product_jan_code_id).first()
-        if (product_jan):
+        if product_jan:
             j_product = get_jan_products(product_jan)
             productImage = ProductImage.objects.filter(product_id=j_product.id, is_hidden=False)\
                 .order_by('image_no').exclude(image_no__isnull=True).first()
@@ -901,7 +912,7 @@ def UserCommissionList__asJson(request):
     array = []
     for field in sales_list:
         product_jan = ProductJancode.objects.filter(pk=field.order_product.product_jan_code_id).first()
-        if (product_jan):
+        if product_jan:
             j_product = get_jan_products(product_jan)
             productImage = ProductImage.objects.filter(product_id=j_product.id, is_hidden=False)\
                 .order_by('image_no').exclude(image_no__isnull=True).first()

@@ -211,8 +211,10 @@
         if (is_seller == 'True') {
             is_seller = true;
             $('#id_is_seller').val('1').trigger('change');
+            $('#shop_name_div').removeAttr('style');
         } else {
             is_seller = false;
+            $('#shop_name_div').css('display', 'none');
         }
         if (is_approved == 'True') {
             $('#id_is_approved').val('1').trigger('change');
@@ -350,9 +352,11 @@
                 if ($('#id_is_seller').val() == '0') {
                     is_seller = false;
                     $('#item_tab_li').css('display', 'none');
+                    $('#shop_name_div').css('display', 'none');
                 } else {
                     is_seller = true;
                     $('#item_tab_li').removeAttr('style');
+                    $('#shop_name_div').removeAttr('style');
                 }
             }
         })
