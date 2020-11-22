@@ -495,6 +495,9 @@ class RemoveReferral(APIView):
         user = request.data['userId']
         parent = request.data['parentId']
         profiles = Profile.objects.filter(id=user).filter(introducer_id=parent)
+        profile = profiles[0]
+        profile.introducer = None
+        profile.save()
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext());
         return Response({"success" : True, "data":profileSerializer.data}, status=status.HTTP_200_OK)
 
