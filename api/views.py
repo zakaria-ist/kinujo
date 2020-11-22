@@ -419,7 +419,7 @@ class CustomerList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        orders = Order.objects.filter(seller=userId).values_list('id', flat=True)
+        orders = Order.objects.filter(seller=userId).values_list('purchaser_id', flat=True)
         profiles = Profile.objects.filter(id__in=orders)
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
         return Response({"success" : True, "customers" : profileSerializer.data}, status=status.HTTP_200_OK)
@@ -479,6 +479,16 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
                         return orderProductCommissionSerializer.errors
                 return calculateCommission(price, orderProduct, introducerSerializer.data['id'], shipping_fee)
     return
+
+class ProductJanCodes(APIView):
+    def get(self, request, productId, format='json'):
+        productVarieties = ProductVariety.objects.filter(product_id=productId).values_list('id', flat=True)
+        productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
+        horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections)
+        vertical = ProductJancode.objects.filter(vertical_id__in=productVarietySelections)
+        horizontalSerializer = ProductJancodeSerializer(horizontal, many=True, context=getContext())
+        verticalSerializer = ProductJancodeSerializer(vertical, many=True, context=getContext())
+        return Response({"success" : True, "verticals" : verticalSerializer.data, "horizontals" : horizontalSerializer.data}, status=status.HTTP_200_OK)
 
 class Pay(APIView):
     def post(self, request, userId, format='json'):
