@@ -23,7 +23,7 @@ def getContext():
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Image
-        fields = ['url', 'image', 'is_hidden', 'created', 'modified']
+        fields = ['id', 'url', 'image', 'is_hidden', 'created', 'modified']
         
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(
