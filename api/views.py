@@ -498,8 +498,7 @@ class RemoveReferral(APIView):
         profile = profiles[0]
         profile.introducer = None
         profile.save()
-        profileSerializer = ProfileSerializer(profiles, many=True, context=getContext());
-        return Response({"success" : True, "data":profileSerializer.data}, status=status.HTTP_200_OK)
+        return Response({"success" : True}, status=status.HTTP_200_OK)
 
 class Pay(APIView):
     def post(self, request, userId, format='json'):
