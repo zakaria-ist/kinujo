@@ -50,7 +50,7 @@ class AuthoritySerializer(serializers.HyperlinkedModelSerializer):
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     password = serializers.CharField(write_only=True)
     profit = serializers.SerializerMethodField()
-    image = ImageSerializer(required=False)
+    # image = ImageSerializer(required=False)
     authority = AuthoritySerializer()
     # introducer = ProfileSerializer(required=False)
 
