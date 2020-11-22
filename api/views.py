@@ -419,7 +419,7 @@ class CustomerList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        orders = Order.objects.filter(seller=userId).values_list('id', flat=True)
+        orders = Order.objects.filter(seller=userId).values_list('purchaser_id', flat=True)
         profiles = Profile.objects.filter(id__in=orders)
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
         return Response({"success" : True, "customers" : profileSerializer.data}, status=status.HTTP_200_OK)
@@ -480,6 +480,26 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
                 return calculateCommission(price, orderProduct, introducerSerializer.data['id'], shipping_fee)
     return
 
+class ProductJanCodes(APIView):
+    def get(self, request, productId, format='json'):
+        productVarieties = ProductVariety.objects.filter(product_id=productId).values_list('id', flat=True)
+        productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
+        horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections)
+        vertical = ProductJancode.objects.filter(vertical_id__in=productVarietySelections)
+        horizontalSerializer = ProductJancodeSerializer(horizontal, many=True, context=getContext())
+        verticalSerializer = ProductJancodeSerializer(vertical, many=True, context=getContext())
+        return Response({"success" : True, "verticals" : verticalSerializer.data, "horizontals" : horizontalSerializer.data}, status=status.HTTP_200_OK)
+
+class RemoveReferral(APIView):
+    def post(self, request, format='json'):
+        user = request.data['userId']
+        parent = request.data['parentId']
+        profiles = Profile.objects.filter(id=user).filter(introducer_id=parent)
+        profile = profiles[0]
+        profile.introducer = None
+        profile.save()
+        return Response({"success" : True}, status=status.HTTP_200_OK)
+
 class Pay(APIView):
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
@@ -497,6 +517,7 @@ class Pay(APIView):
             )
 
             profile = Profile.objects.get(id=userId)
+            tax = TaxRate.objects.get(id=request.data['tax'])
             token_id = token.id
             customer_id = None
 
@@ -545,6 +566,7 @@ class Pay(APIView):
                             groupTotal = float(groupTotal) + (float(product['price']) * float(quantity))
                         groupShippingFee = float(groupShippingFee) + float(product['shipping_fee'])
                     
+                    groupTax = int(float(groupTotal) * float(tax.tax_rate))
                     order = {
                         'amount' : groupTotal,
                         'tax': groupTax,
@@ -570,7 +592,7 @@ class Pay(APIView):
                             if profileSerializer.data['is_seller']:
                                 price = product['store_price']
                             total_price = (float(price) * float(quantity))
-                            tax = 0
+                            tax = int(float(total_price) * float(tax.tax_rate))
                             productVarieties = ProductVariety.objects.filter(product_id=product['id']).values_list('id', flat=True)
                             productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
                             horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections)

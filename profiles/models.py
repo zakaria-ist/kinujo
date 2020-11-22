@@ -30,6 +30,7 @@ class Profile(models.Model):
     introducer = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     is_approved = models.BooleanField(default=False)
     image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True)
+    background_img = models.ForeignKey(Image, on_delete=models.CASCADE, null=True, related_name='background_img')
     real_name = models.CharField(max_length=255, default='')
     gender = models.SmallIntegerField(null=True, choices=GENDER_TYPE)
     birthday = models.DateField(null=True)
