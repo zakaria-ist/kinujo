@@ -669,6 +669,17 @@ class Pay(APIView):
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
+class UpdateProfileImage(APIView):
+    def post(self, request, userId, format='json'):
+        profile = Profile.objects.get(id=userId)
+        image = Image.objects.get(id=request.data['image_id'])
+        if request.data['type'] == 'image'
+            profile.image = image
+        if request.data['type'] == 'background_img'
+            profile.background_img = image
+        profile.save()
+        return Response({"success" : True}, status=status.HTTP_200_OK)
+        
 class UserUpdateBackground(APIView):
     parser_classes = [MultiPartParser]
     def post(self, request, userId, format='json'):
