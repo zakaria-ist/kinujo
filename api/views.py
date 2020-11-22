@@ -497,6 +497,7 @@ class Pay(APIView):
             )
 
             profile = Profile.objects.get(id=userId)
+            tax = TaxRate.objects.get(id=request.data['tax'])
             token_id = token.id
             customer_id = None
 
@@ -545,6 +546,7 @@ class Pay(APIView):
                             groupTotal = float(groupTotal) + (float(product['price']) * float(quantity))
                         groupShippingFee = float(groupShippingFee) + float(product['shipping_fee'])
                     
+                    groupTax = int(float(groupTotal) * float(tax.tax_rate))
                     order = {
                         'amount' : groupTotal,
                         'tax': groupTax,
@@ -570,7 +572,7 @@ class Pay(APIView):
                             if profileSerializer.data['is_seller']:
                                 price = product['store_price']
                             total_price = (float(price) * float(quantity))
-                            tax = 0
+                            tax = int(float(total_price) * float(tax.tax_rate))
                             productVarieties = ProductVariety.objects.filter(product_id=product['id']).values_list('id', flat=True)
                             productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
                             horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections)
