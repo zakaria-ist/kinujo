@@ -1,8 +1,10 @@
 import datetime
 import json
+from dateutil.relativedelta import relativedelta
 from django.conf import settings as s
 from django.contrib import messages
-from django.db.models import Q, Sum, Value
+from django.db.models import Q, Sum, Value, Count
+from django.db.models.expressions import Exists
 from django.db.models.functions import Coalesce
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponsePermanentRedirect
@@ -16,10 +18,12 @@ from django.contrib.auth.models import User
 from .forms import ProfileForm, ImageUploadForm
 from .models import Address, Profile, FinancialAccount, UserSale, \
     UserCommision, MonthlyPayment
-from products.models import ProductCategory
+from products.models import ProductCategory, ProductJancode
+from orders.models import Order, OrderProduct, OrderProductCommission
 from utilities.constants import AUTHORITY_TYPE
 from prefectures.models import Prefecture
 from images.models import Image
+from products.views import get_jan_products
 
 
 @login_required    
@@ -27,7 +31,8 @@ def home_load(request):
     """
     Method to redirect to home/dashboard.
     """
-    return render(request, 'base.html')
+    # return render(request, 'base.html')
+    return render(request, 'dashboard.html')
 
 @login_required 
 def listing_home_load(request):
@@ -154,8 +159,10 @@ def logout_user(request):
     login_type_was = request.session['login_type']
     logout(request)
     if login_type_was == 'MASTER':
+        request.session['login_type'] = 'MASTER'
         return render(request, 'master_login.html')
     else:
+        request.session['login_type'] = 'SELLER'
         return render(request, 'sales_login.html')
 
 @login_required
@@ -1028,3 +1035,141 @@ def update_payment(request):
 
     context = { 'message': message }
     return HttpResponse(json.dumps(context), content_type="application/json")
+
+
+def get_dashboard_data(request, year, month):
+    """
+    Method to get user sales & commission data.
+    """
+
+    data = {
+        "orders": 0,
+        "kinujo_orders": 0,
+        "non_kinujo_orders": 0,
+        "orders_amount": 0,
+        "kinujo_orders_amount": 0,
+        "non_kinujo_orders_amount": 0,
+        "stores": 0,
+        "stores_amount": 0,
+        "specials": 0,
+        "specials_amount": 0,
+        "ambassadors": 0,
+        "ambassadors_amount": 0,
+    }
+    try:
+        profile_id = request.session['login_profile_id']
+        auth_type = request.session['login_authority_id']
+
+        orders = Order.objects.filter(is_hidden=False, order_date__year=year, order_date__month=month)
+        if orders.exists():
+            data['orders'] = orders.count()
+            kinujo_orders = orders.filter(seller__authority_id=AUTHORITY_TYPE['MASTER'])
+            data['kinujo_orders'] = kinujo_orders.count()
+            non_kinujo_orders = orders.exclude(seller__authority_id=AUTHORITY_TYPE['MASTER'])
+            data['non_kinujo_orders'] = non_kinujo_orders.count()
+
+            orders_amount = orders.aggregate(orders_amount=Coalesce(Sum('amount'), Value(0)))
+            data['orders_amount'] = orders_amount.get('orders_amount', 0)
+            kinujo_orders_amount = kinujo_orders.aggregate(kinujo_orders_amount=Coalesce(Sum('amount'), Value(0)))
+            data['kinujo_orders_amount'] = kinujo_orders_amount.get('kinujo_orders_amount', 0)
+            non_kinujo_orders_amount = non_kinujo_orders.aggregate(non_kinujo_orders_amount=Coalesce(Sum('amount'), Value(0)))
+            data['non_kinujo_orders_amount'] = non_kinujo_orders_amount.get('non_kinujo_orders_amount', 0)
+
+        order_commissions = OrderProductCommission.objects.filter(is_hidden=False, is_sales=False,
+                                order_product__order__order_date__year=year,
+                                order_product__order__order_date__month=month)\
+                    .order_by('order_product__order__order_date')
+        if order_commissions.exists():
+            stores = order_commissions.filter(user__authority_id=AUTHORITY_TYPE['STORE'])
+            data['stores'] = stores.order_by('order_product__order_id').distinct().count()
+            stores_amount = stores.aggregate(stores_amount=Coalesce(Sum('amount'), Value(0)))
+            data['stores_amount'] = stores_amount.get('stores_amount', 0)
+
+            specials = order_commissions.filter(user__authority_id=AUTHORITY_TYPE['SPECIAL'])
+            data['specials'] = specials.order_by('order_product__order_id').distinct().count()
+            specials_amount = specials.aggregate(specials_amount=Coalesce(Sum('amount'), Value(0)))
+            data['specials_amount'] = specials_amount.get('specials_amount', 0)
+
+            ambassadors = order_commissions.filter(user__authority_id=AUTHORITY_TYPE['AMBASSADOR'])
+            data['ambassadors'] = specials.order_by('order_product__order_id').distinct().count()
+            ambassadors_amount = ambassadors.aggregate(ambassadors_amount=Coalesce(Sum('amount'), Value(0)))
+            data['ambassadors_amount'] = ambassadors_amount.get('ambassadors_amount', 0)
+        
+    except Exception as e:
+        print(e)
+
+    context = { 'data': data }
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+
+def PopularProductList__asJson(request):
+    """
+    Method to get payment list as JSON.
+    """
+
+    draw = request.GET['draw']
+    start = request.GET['start']
+    length = request.GET['length']
+    search = request.GET['search[value]']
+
+    filter_type = eval(request.GET.get('filter_type'))
+
+    today = datetime.datetime.now()
+    last_day = today + relativedelta(days=-7)
+    if filter_type == 1: # last 1 month
+        last_day = today + relativedelta(months=-1)
+    elif filter_type == 2: # last 1 year
+        last_day = today + relativedelta(years=-1)
+
+    orders = Order.objects.filter(is_hidden=False, order_date__lte=today, order_date__gte=last_day).values_list('id', flat=True)
+    order_products = OrderProduct.objects.filter(order_id__in=orders)
+    sorted_order_products = order_products.values('product_jan_code_id').annotate(Count('product_jan_code_id')).order_by('-product_jan_code_id__count')
+    
+    # records_total = payment_list.count()
+
+    # if search:  # Filter data base on search
+    #     payment_list = payment_list.filter(Q(user__real_name__icontains=search))
+
+    # All data
+    # records_filtered = payment_list.count()
+    # Order by list_limit base on order_dir and order_column
+    # order_column = request.GET['order[0][column]']
+    # column_name = ""
+    # if order_column == "1":
+    #     column_name = "name"
+    
+    # order_dir = request.GET['order[0][dir]']
+    # list = []
+    # if order_dir == "asc":
+    #     list = payment_list.order_by(column_name)[int(start):(int(start) + int(length))]
+    # elif order_dir == "desc":
+    #     list = payment_list.order_by('-' + column_name)[int(start):(int(start) + int(length))]
+
+    array = []
+    for item in sorted_order_products:
+        this_order_products = order_products.filter(product_jan_code_id=item['product_jan_code_id'])
+        this_order_prod_ids = this_order_products.values_list('id', flat=True)
+
+        product_jan = ProductJancode.objects.get(pk=item['product_jan_code_id'])
+        product = get_jan_products(product_jan)
+        product_name = product.name
+        total_qty = this_order_products.filter(product_jan_code_id=item['product_jan_code_id'])\
+            .aggregate(total_qty=Coalesce(Sum('quantity'), Value(0)))
+        total_quantity = total_qty.get('total_qty', 0)
+
+        total_price = this_order_products.filter(product_jan_code_id=item['product_jan_code_id'])\
+            .aggregate(price=Coalesce(Sum('total_price'), Value(0)))
+        total_commsission = OrderProductCommission.objects.filter(order_product_id__in=this_order_prod_ids, is_sales=False)\
+            .aggregate(commission=Coalesce(Sum('amount'), Value(0)))
+        gross_amount = total_price.get('price', 0) - total_commsission.get('commission', 0)
+        
+        data = {
+            "product_name": product_name,
+            "total_quantity": total_quantity,
+            "gross_amount": gross_amount,
+        }
+        array.append(data)
+
+    content = {"draw": draw, "data": array, "recordsTotal": 0, "recordsFiltered": 0}
+    json_content = json.dumps(content, ensure_ascii=False)
+    return HttpResponse(json_content, content_type='application/json')

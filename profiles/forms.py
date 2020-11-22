@@ -41,6 +41,8 @@ class ProfileForm(forms.ModelForm):
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     address2 = forms.CharField(required=False,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
+    shop_name = forms.CharField(required=False,
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     word = forms.CharField(required=False,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ひとこと'}))
     authority = NameChoiceField(queryset=None, empty_label=None, required=True,
@@ -59,7 +61,7 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('tel', 'password', 'nickname', 'real_name', 'corporate_name', 'address1', 'address2', 'word', 'authority',
-                    'representative_name', 'corporate_tel', 'salon_category', 'zipcode', 'gender')
+                    'representative_name', 'corporate_tel', 'salon_category', 'zipcode', 'gender', 'shop_name')
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
