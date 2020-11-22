@@ -490,6 +490,14 @@ class ProductJanCodes(APIView):
         verticalSerializer = ProductJancodeSerializer(vertical, many=True, context=getContext())
         return Response({"success" : True, "verticals" : verticalSerializer.data, "horizontals" : horizontalSerializer.data}, status=status.HTTP_200_OK)
 
+class RemoveReferral(APIView):
+    def post(self, request, format='json'):
+        user = request.data['userId']
+        parent = request.data['parentId']
+        profiles = Profile.objects.filter(id=user).filter(introducer_id=parent)
+        profileSerializer = ProfileSerializer(profiles, many=True, context=getContext());
+        return Response({"success" : True, "data":profileSerializer.data}, status=status.HTTP_200_OK)
+
 class Pay(APIView):
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
