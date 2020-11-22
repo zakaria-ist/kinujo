@@ -10,6 +10,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework.test import APIRequestFactory
 from rest_framework.request import Request
+from .insertSerializers import InsertImageSerializer, InsertFinancialAccountSerialier, InsertUserSerializer, InsertGroupSerializer, InsertOrderSerializer, InsertOrderProductSerializer, InsertOrderProductCommissionSerializer, InsertOrderReceiptSerializer, InsertTotalSaleSerializer, InsertTotalCommissionSerializer, InsertPolicySerializer, InsertPrefectureSerializer, InsertProductCategorySerializer, InsertProductSerializer, InsertProductImageSerializer, InsertProductVarietySerializer, InsertProductVarietySelectionSerializer, InsertProductJancodeSerializer, InsertAuthoritySerializer, InsertProfileSerializer, InsertUserSaleSerializer, InsertUserCommisionSerializer, InsertMonthlyPaymentSerializer, InsertAddressSerializer, InsertTaxRateSerializer
 
 def getContext():
     factory = APIRequestFactory()
@@ -101,9 +102,10 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
     user = ProfileSerializer()
     category = ProductCategorySerializer
     productImages = ProductImageSerializer(many=True, required=False)
+    productVarieties = InsertProductVarietySerializer(many=True, required=False)
     class Meta:
         model = Product
-        fields = ['url', 'id', 'name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified', 'user', 'productImages']
+        fields = ['productVarieties', 'url', 'id', 'name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified', 'user', 'productImages']
 class ProductVarietySerializer(serializers.HyperlinkedModelSerializer):
     product = ProductSerializer()
     class Meta:
