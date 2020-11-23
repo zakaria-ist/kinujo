@@ -570,7 +570,7 @@ class Pay(APIView):
                     
                     groupTax = int(float(groupTotal) * float(tax.tax_rate))
                     order = {
-                        'amount' : int(groupTotal),
+                        'amount' : int(float(groupTotal)),
                         'tax': groupTax,
                         'shipping_fee': groupShippingFee,
                         'total_amount': int(float(groupTotal) + float(groupTax) + float(groupShippingFee)),
@@ -605,9 +605,9 @@ class Pay(APIView):
 
                             orderProduct = {
                                 'quantity':  quantity,
-                                'unit_price' : int(price),
-                                'total_price' : int(total_price),
-                                'tax': int(tax),
+                                'unit_price' : int(float(price)),
+                                'total_price' : int(float(total_price)),
+                                'tax': int(float(tax)),
                                 'total_amount': int(float(total_price) + float(tax)),
                                 'order': orderSerializer.data['url'],
                                 'product_jan_code': variety
@@ -629,7 +629,7 @@ class Pay(APIView):
                         return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
                 
                 stripe.Charge.create(
-                    amount=int(total_amount),
+                    amount=int(float(total_amount)),
                     currency="jpy",
                     source=token_id,
                     description="Order by" + str(profileSerializer.data['id']),
