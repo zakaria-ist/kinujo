@@ -523,9 +523,11 @@ class Pay(APIView):
 
             ids = []
             quantities = {}
+            varieties = {}
 
             for product in request.data['products']:
                 quantities['item_' + str(product['id'])] = product['quantity']
+                varieties['item_' + str(product['id'])] = product['id']
                 ids.append(product['id'])
 
             products = Product.objects.filter(id__in=ids)
@@ -588,29 +590,18 @@ class Pay(APIView):
                         newOrder = orderSerializer.save()
                         for product in groupProduct:
                             quantity = quantities['item_' + str(product['id'])]
+                            varietyId = varieties['item_' + str(product['id'])]
+
                             price = product['price']
                             if profileSerializer.data['is_seller']:
                                 price = product['store_price']
                             total_price = (float(price) * float(quantity))
                             tax = int(float(total_price) * float(tax.tax_rate))
-                            productVarieties = ProductVariety.objects.filter(product_id=product['id']).values_list('id', flat=True)
-                            productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
-                            horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections)
-                            vertical = ProductJancode.objects.filter(vertical_id__in=productVarietySelections)
-                            horizontalSerializer = ProductJancodeSerializer(horizontal, many=True, context=getContext())
-                            verticalSerializer = ProductJancodeSerializer(vertical, many=True, context=getContext())
                             
                             variety = None
-                            varietyId = None
-
-                            for item in horizontalSerializer.data:
-                                if variety is None and int(item['stock']) > 0:
-                                    variety = item['url']
-                                    varietyId = item['id']
-                            for item in verticalSerializer.data:
-                                if variety is None and int(item['stock']) > 0:
-                                    variety = item['url']
-                                    varietyId = item['id']
+                            variety = ProductJancode.objects.get(id=varietyId)
+                            varietySerializer = ProductJancodeSerializer(variety, content=getContext())
+                            variety = varietySerializer.data['url']
                             
                             orderProduct = {
                                 'quantity':  quantity,
