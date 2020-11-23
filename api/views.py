@@ -600,7 +600,7 @@ class Pay(APIView):
                             
                             variety = None
                             variety = ProductJancode.objects.get(id=varietyId)
-                            varietySerializer = ProductJancodeSerializer(variety, content=getContext())
+                            varietySerializer = ProductJancodeSerializer(variety, context=getContext())
                             variety = varietySerializer.data['url']
 
                             orderProduct = {
