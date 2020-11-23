@@ -570,10 +570,10 @@ class Pay(APIView):
                     
                     groupTax = int(float(groupTotal) * float(tax.tax_rate))
                     order = {
-                        'amount' : groupTotal,
+                        'amount' : int(groupTotal),
                         'tax': groupTax,
                         'shipping_fee': groupShippingFee,
-                        'total_amount': float(groupTotal) + float(groupTax) + float(groupShippingFee),
+                        'total_amount': int(float(groupTotal) + float(groupTax) + float(groupShippingFee)),
                         'name': addressSerializer.data['name'],
                         'zip1': addressSerializer.data['zip1'],
                         'address1': addressSerializer.data['address1'],
@@ -602,13 +602,13 @@ class Pay(APIView):
                             variety = ProductJancode.objects.get(id=varietyId)
                             varietySerializer = ProductJancodeSerializer(variety, content=getContext())
                             variety = varietySerializer.data['url']
-                            
+
                             orderProduct = {
                                 'quantity':  quantity,
-                                'unit_price' : price,
-                                'total_price' : total_price,
-                                'tax': tax,
-                                'total_amount': float(total_price) + float(tax),
+                                'unit_price' : int(price),
+                                'total_price' : int(total_price),
+                                'tax': int(tax),
+                                'total_amount': int(float(total_price) + float(tax)),
                                 'order': orderSerializer.data['url'],
                                 'product_jan_code': variety
                             }
