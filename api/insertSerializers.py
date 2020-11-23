@@ -49,7 +49,7 @@ class InsertAuthoritySerializer(serializers.HyperlinkedModelSerializer):
 class InsertProfileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Profile
-        fields = ['id', 'profit', 'url', 'user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
+        fields = ['background_img', 'id', 'profit', 'url', 'user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
 
 class InsertGroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -86,18 +86,18 @@ class InsertProductSerializer(serializers.HyperlinkedModelSerializer):
 class InsertProductJancodeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductJancode
-        fields = ['id', 'horizontal','vertical','jan_code','stock','is_hidden','created','modified']
+        fields = ['url', 'id', 'horizontal','vertical','jan_code','stock','is_hidden','created','modified']
 class InsertProductVarietySelectionSerializer(serializers.HyperlinkedModelSerializer):
     jancode_horizontal = InsertProductJancodeSerializer(many=True, required=False)
     jancode_vertical = InsertProductJancodeSerializer(many=True, required=False)
     class Meta:
         model = ProductVarietySelection
-        fields = ['id', 'jancode_horizontal', 'jancode_vertical', 'product_variety','selection','is_hidden','created','modified']
+        fields = ['url', 'id', 'jancode_horizontal', 'jancode_vertical', 'product_variety','selection','is_hidden','created','modified']
 class InsertProductVarietySerializer(serializers.HyperlinkedModelSerializer):
     productVarietySelections = InsertProductVarietySelectionSerializer(many=True, required=False)
     class Meta:
         model = ProductVariety
-        fields = ['id', 'productVarietySelections', 'name','product','vertical_and_horizontal','is_hidden','created','modified']
+        fields = ['url', 'id', 'productVarietySelections', 'name','product','vertical_and_horizontal','is_hidden','created','modified']
 class InsertOrderSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Order

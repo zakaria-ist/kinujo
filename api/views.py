@@ -523,9 +523,11 @@ class Pay(APIView):
 
             ids = []
             quantities = {}
+            varieties = {}
 
             for product in request.data['products']:
                 quantities['item_' + str(product['id'])] = product['quantity']
+                varieties['item_' + str(product['id'])] = product['varietyId']
                 ids.append(product['id'])
 
             products = Product.objects.filter(id__in=ids)
@@ -568,10 +570,10 @@ class Pay(APIView):
                     
                     groupTax = int(float(groupTotal) * float(tax.tax_rate))
                     order = {
-                        'amount' : groupTotal,
+                        'amount' : int(float(groupTotal)),
                         'tax': groupTax,
                         'shipping_fee': groupShippingFee,
-                        'total_amount': float(groupTotal) + float(groupTax) + float(groupShippingFee),
+                        'total_amount': int(float(groupTotal) + float(groupTax) + float(groupShippingFee)),
                         'name': addressSerializer.data['name'],
                         'zip1': addressSerializer.data['zip1'],
                         'address1': addressSerializer.data['address1'],
@@ -588,36 +590,25 @@ class Pay(APIView):
                         newOrder = orderSerializer.save()
                         for product in groupProduct:
                             quantity = quantities['item_' + str(product['id'])]
+                            varietyId = varieties['item_' + str(product['id'])]
+
                             price = product['price']
                             if profileSerializer.data['is_seller']:
                                 price = product['store_price']
                             total_price = (float(price) * float(quantity))
                             tax = int(float(total_price) * float(tax.tax_rate))
-                            productVarieties = ProductVariety.objects.filter(product_id=product['id']).values_list('id', flat=True)
-                            productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
-                            horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections)
-                            vertical = ProductJancode.objects.filter(vertical_id__in=productVarietySelections)
-                            horizontalSerializer = ProductJancodeSerializer(horizontal, many=True, context=getContext())
-                            verticalSerializer = ProductJancodeSerializer(vertical, many=True, context=getContext())
                             
                             variety = None
-                            varietyId = None
+                            variety = ProductJancode.objects.get(id=varietyId)
+                            varietySerializer = ProductJancodeSerializer(variety, context=getContext())
+                            variety = varietySerializer.data['url']
 
-                            for item in horizontalSerializer.data:
-                                if variety is None and int(item['stock']) > 0:
-                                    variety = item['url']
-                                    varietyId = item['id']
-                            for item in verticalSerializer.data:
-                                if variety is None and int(item['stock']) > 0:
-                                    variety = item['url']
-                                    varietyId = item['id']
-                            
                             orderProduct = {
                                 'quantity':  quantity,
-                                'unit_price' : price,
-                                'total_price' : total_price,
-                                'tax': tax,
-                                'total_amount': float(total_price) + float(tax),
+                                'unit_price' : int(float(price)),
+                                'total_price' : int(float(total_price)),
+                                'tax': int(float(tax)),
+                                'total_amount': int(float(total_price) + float(tax)),
                                 'order': orderSerializer.data['url'],
                                 'product_jan_code': variety
                             }
@@ -638,7 +629,7 @@ class Pay(APIView):
                         return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
                 
                 stripe.Charge.create(
-                    amount=int(total_amount),
+                    amount=int(float(total_amount)),
                     currency="jpy",
                     source=token_id,
                     description="Order by" + str(profileSerializer.data['id']),
@@ -668,6 +659,17 @@ class Pay(APIView):
             return Response({"success" : True})
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
+
+class UpdateProfileImage(APIView):
+    def post(self, request, userId, format='json'):
+        profile = Profile.objects.get(id=userId)
+        image = Image.objects.get(id=request.data['image_id'])
+        if request.data['type'] == 'image':
+            profile.image = image
+        if request.data['type'] == 'background_img':
+            profile.background_img = image
+        profile.save()
+        return Response({"success" : True}, status=status.HTTP_200_OK)
 
 class UserUpdateBackground(APIView):
     parser_classes = [MultiPartParser]

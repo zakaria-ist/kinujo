@@ -23,7 +23,7 @@ def getContext():
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Image
-        fields = ['url', 'image', 'is_hidden', 'created', 'modified']
+        fields = ['id', 'url', 'image', 'is_hidden', 'created', 'modified']
         
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(
@@ -51,12 +51,13 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     password = serializers.CharField(write_only=True)
     profit = serializers.SerializerMethodField()
     image = ImageSerializer(required=False)
+    background_img = ImageSerializer(required=False)
     authority = AuthoritySerializer()
     # introducer = ProfileSerializer(required=False)
 
     class Meta:
         model = Profile
-        fields = ['id', 'profit', 'url', 'user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
+        fields = ['background_img', 'id', 'profit', 'url', 'user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
     def get_profit(self, instance):
         orders = Order.objects.filter(seller=instance.id).values_list('id', flat=True)
         orderProducts = OrderProduct.objects.all().filter(order__in=orders)
