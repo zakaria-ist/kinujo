@@ -86,7 +86,7 @@ class InsertProductSerializer(serializers.HyperlinkedModelSerializer):
 class InsertProductJancodeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductJancode
-        fields = ['id', 'horizontal','vertical','jan_code','stock','is_hidden','created','modified']
+        fields = ['url', 'id', 'horizontal','vertical','jan_code','stock','is_hidden','created','modified']
 class InsertProductVarietySelectionSerializer(serializers.HyperlinkedModelSerializer):
     jancode_horizontal = InsertProductJancodeSerializer(many=True, required=False)
     jancode_vertical = InsertProductJancodeSerializer(many=True, required=False)
