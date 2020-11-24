@@ -31,15 +31,23 @@ def home_load(request):
     """
     Method to redirect to home/dashboard.
     """
-    # return render(request, 'base.html')
-    return render(request, 'dashboard.html')
+
+    login_type_was = request.session['login_type']
+    if login_type_was == 'MASTER':
+        request.session['login_type'] = 'MASTER'
+        return render(request, 'dashboard.html')
+    else:
+        request.session['login_type'] = 'SELLER'
+        # return render(request, 'base.html')
+        return render(request, 'listing_sales_list.html')
 
 @login_required 
 def listing_home_load(request):
     """
     Method to redirect to listing home/dashboard.
     """
-    return render(request, 'base.html')
+    # return render(request, 'base.html')
+    return render(request, 'listing_sales_list.html')
 
 @login_required 
 def sales_listing_site(request):

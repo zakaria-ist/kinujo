@@ -204,6 +204,13 @@ class AddressViewSet(viewsets.ModelViewSet):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
 
+class InsertAddressViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Address.objects.all()
+    serializer_class = InsertAddressSerializer
+
 class TaxRateViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
@@ -448,9 +455,26 @@ class UserByIds(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, format='json'):
-        profiles = Profile.objects.filter(id__in=request.GET.getlist('ids[]'))
+        profiles = []
+        ids = request.GET.getlist('ids[]')
+        if 'type' in request.GET and request.GET['type'] == 'contact':
+            if 'userId' in request.GET and request.GET['userId']:
+                profile = Profile.objects.get(id=request.GET['userId'])
+                sProfileSerializer = ProfileSerializer(profile, context=getContext())
+                if sProfileSerializer.data['authority']['id'] == 1:
+                    profiles = Profile.objects.all()
+                else:
+                    introducers = sProfileSerializer.data['introducer'].split("/")
+                    introducer = introducers[len(introducers)-2]
+                    ids.append(introducer)
+                    ids.extend(Profile.objects.filter(introducer_id=sProfileSerializer.data['id']).values_list('id', flat=True))
+        
+        profiles = Profile.objects.filter(id__in=ids)
+        if len(profiles) == 0:
+            return Response({"success" : True, "users" : profiles}, status=status.HTTP_200_OK)
+
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
-        return Response({"success" : True, "users" : profileSerializer.data}, status=status.HTTP_200_OK)
+        return Response({"success" : True, "users" : profileSerializer.data, "data" : request.GET}, status=status.HTTP_200_OK)
 
 def calculateCommission(price, orderProduct, userId, shipping_fee):
     profile = Profile.objects.get(id=userId)
@@ -682,11 +706,13 @@ def change_language(request):
     API to change language.
     """
 
-    language = request.POST['language']
+    language = request.POST.get('language', 'ja')
+    request_url = request.POST.get('req_url', '')
     deactivate_all()
     activate(language)
     request.session[translation.LANGUAGE_SESSION_KEY] = language
     # request.LANGUAGE_CODE = translation.get_language()
-    response = HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    # response = HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    response = HttpResponseRedirect(request_url)
     response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
     return response

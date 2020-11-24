@@ -164,7 +164,14 @@
                 {"data": "product_name", "orderable": false},
                 {"data": "name"},
                 {"data": "address", "orderable": false},
-                {"data": "amount", "orderable": false},
+                {
+                    "sClass": "text-right",
+                    "orderable": false,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return comma_format(row.amount);
+                    }
+                },
                 {"data": "status", "orderable": false},
                 {"data": "shipped_date", "orderable": false},
                 {"data": "inquiry_number", "orderable": false},

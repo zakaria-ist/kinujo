@@ -64,6 +64,7 @@
                             <form action="/api/change-language/" method="POST" class="language-form-en">
                                 {% csrf_token %}
                                 <input type="hidden" name="language" value="en">
+                                <input type="hidden" name="req_url" value="{{ request.get_full_path }}">
                                 <a onclick="$('.language-form-en').submit()" style="width: 100%">
                                     <img src="/static/img/en.png" alt="" style="width: 30px">
                                 {%  trans 'ENGLISH' %}</a>
@@ -73,6 +74,7 @@
                             <form action="/api/change-language/" method="POST" class="language-form-ja">
                                 {% csrf_token %}
                                 <input type="hidden" name="language" value="ja">
+                                <input type="hidden" name="req_url" value="{{ request.get_full_path }}">
                                 <a onclick="$('.language-form-ja').submit()" style="width: 100%">
                                     <img src="/static/img/ja.png" alt="" style="width: 30px">
                                 {%  trans 'JAPANESE' %}</a>
