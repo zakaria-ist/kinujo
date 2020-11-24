@@ -455,24 +455,24 @@ class UserByIds(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, format='json'):
-        profiles = []
-        ids = request.GET.getlist('ids[]')
-        if request.data['type'] == 'contact':
-            if request.data['userId']:
-                profile = Profile.objects.get(id=request.data['userId'])
-                sProfileSerializer = ProfileSerializer(profile, context=getContext())
-                if sProfileSerializer.data['authority']['id'] == 1:
-                    profiles = Profile.objects.all()
-                else:
-                    introducers = sProfileSerializer.data['introducer'].split("/")
-                    introducer = introducers[len(introducers)-2]
-                    ids.append(introducer)
-                    ids.extend(Profile.objects.filter(introducer_id=sProfileSerializer.data['id']).values_list('id', flat=True))
-                    profiles = Profile.objects.filter(id__in=ids)
+        # profiles = []
+        # ids = request.GET.getlist('ids[]')
+        # if request.data['type'] == 'contact':
+        #     if request.data['userId']:
+        #         profile = Profile.objects.get(id=request.data['userId'])
+        #         sProfileSerializer = ProfileSerializer(profile, context=getContext())
+        #         if sProfileSerializer.data['authority']['id'] == 1:
+        #             profiles = Profile.objects.all()
+        #         else:
+        #             introducers = sProfileSerializer.data['introducer'].split("/")
+        #             introducer = introducers[len(introducers)-2]
+        #             ids.append(introducer)
+        #             ids.extend(Profile.objects.filter(introducer_id=sProfileSerializer.data['id']).values_list('id', flat=True))
+        #             profiles = Profile.objects.filter(id__in=ids)
                     
 
-        profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
-        return Response({"success" : True, "users" : profileSerializer.data}, status=status.HTTP_200_OK)
+        # profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
+        return Response({"success" : True, "users" : request.data, "data" : request.GET}, status=status.HTTP_200_OK)
 
 def calculateCommission(price, orderProduct, userId, shipping_fee):
     profile = Profile.objects.get(id=userId)
