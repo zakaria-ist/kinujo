@@ -457,8 +457,8 @@ class UserByIds(APIView):
     def get(self, request, format='json'):
         profiles = []
         ids = request.GET.getlist('ids[]')
-        if request.GET['type'] == 'contact':
-            if request.GET['userId']:
+        if 'type' in request.GET and request.GET['type'] == 'contact':
+            if 'userId' in request.GET and request.GET['userId']:
                 profile = Profile.objects.get(id=request.GET['userId'])
                 sProfileSerializer = ProfileSerializer(profile, context=getContext())
                 if sProfileSerializer.data['authority']['id'] == 1:
