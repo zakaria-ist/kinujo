@@ -713,11 +713,13 @@ def change_language(request):
     API to change language.
     """
 
-    language = request.POST['language']
+    language = request.POST.get('language', 'ja')
+    request_url = request.POST.get('req_url', '')
     deactivate_all()
     activate(language)
     request.session[translation.LANGUAGE_SESSION_KEY] = language
     # request.LANGUAGE_CODE = translation.get_language()
-    response = HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    # response = HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    response = HttpResponseRedirect(request_url)
     response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
     return response
