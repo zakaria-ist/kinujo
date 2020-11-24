@@ -48,7 +48,7 @@ class ProductImage(models.Model):
 
 class ProductVariety(models.Model):
     name = models.CharField(max_length=100, default='')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='productVarieties', on_delete=models.CASCADE)
     vertical_and_horizontal = models.SmallIntegerField(null=True, choices=PRODUCT_VARIETY)
 
     is_hidden = models.BooleanField(default=False)
@@ -57,7 +57,7 @@ class ProductVariety(models.Model):
 
 
 class ProductVarietySelection(models.Model):
-    product_variety = models.ForeignKey(ProductVariety, on_delete=models.CASCADE, null=True)
+    product_variety = models.ForeignKey(ProductVariety, related_name='productVarietySelections', on_delete=models.CASCADE, null=True)
     selection = models.CharField(max_length=255, default='')
 
     is_hidden = models.BooleanField(default=False)

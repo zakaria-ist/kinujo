@@ -204,6 +204,13 @@ class AddressViewSet(viewsets.ModelViewSet):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
 
+class InsertAddressViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Address.objects.all()
+    serializer_class = InsertAddressSerializer
+
 class TaxRateViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
@@ -419,7 +426,7 @@ class CustomerList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        orders = Order.objects.filter(seller=userId).values_list('id', flat=True)
+        orders = Order.objects.filter(seller=userId).values_list('purchaser_id', flat=True)
         profiles = Profile.objects.filter(id__in=orders)
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
         return Response({"success" : True, "customers" : profileSerializer.data}, status=status.HTTP_200_OK)
@@ -448,9 +455,26 @@ class UserByIds(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, format='json'):
-        profiles = Profile.objects.filter(id__in=request.GET.getlist('ids[]'))
+        profiles = []
+        ids = request.GET.getlist('ids[]')
+        if 'type' in request.GET and request.GET['type'] == 'contact':
+            if 'userId' in request.GET and request.GET['userId']:
+                profile = Profile.objects.get(id=request.GET['userId'])
+                sProfileSerializer = ProfileSerializer(profile, context=getContext())
+                if sProfileSerializer.data['authority']['id'] == 1:
+                    profiles = Profile.objects.all()
+                else:
+                    introducers = sProfileSerializer.data['introducer'].split("/")
+                    introducer = introducers[len(introducers)-2]
+                    ids.append(introducer)
+                    ids.extend(Profile.objects.filter(introducer_id=sProfileSerializer.data['id']).values_list('id', flat=True))
+        
+        profiles = Profile.objects.filter(id__in=ids)
+        if len(profiles) == 0:
+            return Response({"success" : True, "users" : profiles}, status=status.HTTP_200_OK)
+
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
-        return Response({"success" : True, "users" : profileSerializer.data}, status=status.HTTP_200_OK)
+        return Response({"success" : True, "users" : profileSerializer.data, "data" : request.GET}, status=status.HTTP_200_OK)
 
 def calculateCommission(price, orderProduct, userId, shipping_fee):
     profile = Profile.objects.get(id=userId)
@@ -480,6 +504,26 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
                 return calculateCommission(price, orderProduct, introducerSerializer.data['id'], shipping_fee)
     return
 
+class ProductJanCodes(APIView):
+    def get(self, request, productId, format='json'):
+        productVarieties = ProductVariety.objects.filter(product_id=productId).values_list('id', flat=True)
+        productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
+        horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections)
+        vertical = ProductJancode.objects.filter(vertical_id__in=productVarietySelections)
+        horizontalSerializer = ProductJancodeSerializer(horizontal, many=True, context=getContext())
+        verticalSerializer = ProductJancodeSerializer(vertical, many=True, context=getContext())
+        return Response({"success" : True, "verticals" : verticalSerializer.data, "horizontals" : horizontalSerializer.data}, status=status.HTTP_200_OK)
+
+class RemoveReferral(APIView):
+    def post(self, request, format='json'):
+        user = request.data['userId']
+        parent = request.data['parentId']
+        profiles = Profile.objects.filter(id=user).filter(introducer_id=parent)
+        profile = profiles[0]
+        profile.introducer = None
+        profile.save()
+        return Response({"success" : True}, status=status.HTTP_200_OK)
+
 class Pay(APIView):
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
@@ -497,14 +541,17 @@ class Pay(APIView):
             )
 
             profile = Profile.objects.get(id=userId)
+            tax = TaxRate.objects.get(id=request.data['tax'])
             token_id = token.id
             customer_id = None
 
             ids = []
             quantities = {}
+            varieties = {}
 
             for product in request.data['products']:
                 quantities['item_' + str(product['id'])] = product['quantity']
+                varieties['item_' + str(product['id'])] = product['varietyId']
                 ids.append(product['id'])
 
             products = Product.objects.filter(id__in=ids)
@@ -545,11 +592,12 @@ class Pay(APIView):
                             groupTotal = float(groupTotal) + (float(product['price']) * float(quantity))
                         groupShippingFee = float(groupShippingFee) + float(product['shipping_fee'])
                     
+                    groupTax = int(float(groupTotal) * float(tax.tax_rate))
                     order = {
-                        'amount' : groupTotal,
+                        'amount' : int(float(groupTotal)),
                         'tax': groupTax,
                         'shipping_fee': groupShippingFee,
-                        'total_amount': float(groupTotal) + float(groupTax) + float(groupShippingFee),
+                        'total_amount': int(float(groupTotal) + float(groupTax) + float(groupShippingFee)),
                         'name': addressSerializer.data['name'],
                         'zip1': addressSerializer.data['zip1'],
                         'address1': addressSerializer.data['address1'],
@@ -566,36 +614,25 @@ class Pay(APIView):
                         newOrder = orderSerializer.save()
                         for product in groupProduct:
                             quantity = quantities['item_' + str(product['id'])]
+                            varietyId = varieties['item_' + str(product['id'])]
+
                             price = product['price']
                             if profileSerializer.data['is_seller']:
                                 price = product['store_price']
                             total_price = (float(price) * float(quantity))
-                            tax = 0
-                            productVarieties = ProductVariety.objects.filter(product_id=product['id']).values_list('id', flat=True)
-                            productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
-                            horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections)
-                            vertical = ProductJancode.objects.filter(vertical_id__in=productVarietySelections)
-                            horizontalSerializer = ProductJancodeSerializer(horizontal, many=True, context=getContext())
-                            verticalSerializer = ProductJancodeSerializer(vertical, many=True, context=getContext())
+                            tax = int(float(total_price) * float(tax.tax_rate))
                             
                             variety = None
-                            varietyId = None
+                            variety = ProductJancode.objects.get(id=varietyId)
+                            varietySerializer = ProductJancodeSerializer(variety, context=getContext())
+                            variety = varietySerializer.data['url']
 
-                            for item in horizontalSerializer.data:
-                                if variety is None and int(item['stock']) > 0:
-                                    variety = item['url']
-                                    varietyId = item['id']
-                            for item in verticalSerializer.data:
-                                if variety is None and int(item['stock']) > 0:
-                                    variety = item['url']
-                                    varietyId = item['id']
-                            
                             orderProduct = {
                                 'quantity':  quantity,
-                                'unit_price' : price,
-                                'total_price' : total_price,
-                                'tax': tax,
-                                'total_amount': float(total_price) + float(tax),
+                                'unit_price' : int(float(price)),
+                                'total_price' : int(float(total_price)),
+                                'tax': int(float(tax)),
+                                'total_amount': int(float(total_price) + float(tax)),
                                 'order': orderSerializer.data['url'],
                                 'product_jan_code': variety
                             }
@@ -616,7 +653,7 @@ class Pay(APIView):
                         return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
                 
                 stripe.Charge.create(
-                    amount=int(total_amount),
+                    amount=int(float(total_amount)),
                     currency="jpy",
                     source=token_id,
                     description="Order by" + str(profileSerializer.data['id']),
@@ -646,6 +683,17 @@ class Pay(APIView):
             return Response({"success" : True})
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
+
+class UpdateProfileImage(APIView):
+    def post(self, request, userId, format='json'):
+        profile = Profile.objects.get(id=userId)
+        image = Image.objects.get(id=request.data['image_id'])
+        if request.data['type'] == 'image':
+            profile.image = image
+        if request.data['type'] == 'background_img':
+            profile.background_img = image
+        profile.save()
+        return Response({"success" : True}, status=status.HTTP_200_OK)
 
 class UserUpdateBackground(APIView):
     parser_classes = [MultiPartParser]

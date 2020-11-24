@@ -25,6 +25,7 @@ router.register(r'user_sales', views.UserSaleViewSet)
 router.register(r'user_commissions', views.UserCommisionViewSet)
 router.register(r'monthly_payments', views.MonthlyPaymentViewSet)
 router.register(r'addresses', views.AddressViewSet)
+router.register(r'insertAddresses', views.InsertAddressViewSet)
 router.register(r'tax_rates', views.TaxRateViewSet)
 router.register(r'financial_account', views.FinancialAccountViewSet)
 router.register(r'images', views.ImageViewSet)
@@ -38,7 +39,10 @@ urlpatterns = [
     url(r'product/byIds', views.ProductByIds.as_view(), name='product-by-ids'),
     url(r'user/byIds', views.UserByIds.as_view(), name='user-by-ids'),
     url(r'app/config', views.AppConfig.as_view(), name='app-config'),
+    url(r'removeReferral', views.RemoveReferral.as_view(), name='app-config'),
+    url('^updateProfileImage/(?P<userId>.+)/$', views.UpdateProfileImage.as_view()),
     url('^sellerProducts/(?P<userId>.+)/$', views.ProductList.as_view()),
+    url('^productJancodes/(?P<productId>.+)/$', views.ProductJanCodes.as_view()),
     url('^userOrders/(?P<userId>.+)/$', views.OrderList.as_view()),
     url('^customers/(?P<userId>.+)/$', views.CustomerList.as_view()),
     url('^addressList/(?P<userId>.+)/$', views.AddressList.as_view()),
