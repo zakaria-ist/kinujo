@@ -473,7 +473,7 @@ class UserByIds(APIView):
             return Response({"success" : True, "users" : profiles}, status=status.HTTP_200_OK)
 
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
-        return Response({"success" : True, "users" : request.data, "data" : request.GET}, status=status.HTTP_200_OK)
+        return Response({"success" : True, "users" : profileSerializer.data, "data" : request.GET}, status=status.HTTP_200_OK)
 
 def calculateCommission(price, orderProduct, userId, shipping_fee):
     profile = Profile.objects.get(id=userId)
