@@ -468,7 +468,8 @@ class UserByIds(APIView):
                     introducer = introducers[len(introducers)-2]
                     ids.append(introducer)
                     ids.extend(Profile.objects.filter(introducer_id=sProfileSerializer.data['id']).values_list('id', flat=True))
-                    profiles = Profile.objects.filter(id__in=ids)
+        
+        profiles = Profile.objects.filter(id__in=ids)
         if len(profiles) == 0:
             return Response({"success" : True, "users" : profiles}, status=status.HTTP_200_OK)
 
