@@ -204,6 +204,13 @@ class AddressViewSet(viewsets.ModelViewSet):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
 
+class InsertAddressViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Address.objects.all()
+    serializer_class = InsertAddressSerializer
+
 class TaxRateViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
