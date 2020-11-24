@@ -455,7 +455,22 @@ class UserByIds(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, format='json'):
-        profiles = Profile.objects.filter(id__in=request.GET.getlist('ids[]'))
+        profiles = []
+        ids = request.GET.getlist('ids[]')
+        if request.data['type'] == 'contact':
+            if request.data['userId']:
+                profile = Profile.objects.get(id=request.data['userId'])
+                sProfileSerializer = ProfileSerializer(profile, context=getContext())
+                if sProfileSerializer.data['authority']['id'] == 1:
+                    profiles = Profile.objects.all()
+                else:
+                    introducers = sProfileSerializer.data['introducer'].split("/")
+                    introducer = introducers[len(introducers)-2]
+                    ids.append(introducer)
+                    ids.extend(Profile.objects.filter(introducer_id=sProfileSerializer.data['id']).values_list('id', flat=True))
+                    profiles = Profile.objects.filter(id__in=ids)
+                    
+
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
         return Response({"success" : True, "users" : profileSerializer.data}, status=status.HTTP_200_OK)
 
