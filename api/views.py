@@ -873,8 +873,8 @@ class CreateProduct(APIView):
                         return Response({"success" : False, "errors": secondInsertProductVarietySerializer.errors}, status=status.HTTP_200_OK) 
 
                     mappingValues = twoVariationItems['mappingValue']
-                    for choice1 in firstItem.choices:
-                        for choice2 in firstItem.choices:
+                    for choice1 in firstItem['choices']:
+                        for choice2 in firstItem['choices']:
                             insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
                                 "jan_code" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'],
                                 "stock" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'],
