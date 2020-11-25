@@ -704,70 +704,73 @@ class UpdateProfileImage(APIView):
 
 class CreateProduct(APIView):
     def post(self, request, userId, format='json'):
-        if request.data['productName'] == "":
-            return Response({"success" : True, "errors" : ["Please fill in product name."]}, status=status.HTTP_200_OK)
-        if request.data['brandName'] == "":
-            return Response({"success" : True, "errors" : ["Please fill in brand name."]}, status=status.HTTP_200_OK)
-        if request.data['pr'] == "":
-            return Response({"success" : True, "errors" : ["Please fill in PR statement."]}, status=status.HTTP_200_OK)
-        if request.data['productId'] == "":
-            return Response({"success" : True, "errors" : ["Please fill in product ID."]}, status=status.HTTP_200_OK)
-        if request.data['productCategory'] == "":
-            return Response({"success" : True, "errors" : ["Please fill in product category."]}, status=status.HTTP_200_OK)
-        if request.data['productVariation'] == "":
-            return Response({"success" : True, "errors" : ["Please fill in product variation."]}, status=status.HTTP_200_OK)
-        if request.data['publishState'] == "":
-            return Response({"success" : True, "errors" : ["Please fill in publish state."]}, status=status.HTTP_200_OK)
-        if request.data['publishDate'] == "":
-            return Response({"success" : True, "errors" : ["Please fill in publish date."]}, status=status.HTTP_200_OK)
-        if request.data['price'] == "":
-            return Response({"success" : True, "errors" : ["Please fill in price."]}, status=status.HTTP_200_OK)
-        if request.data['storePrice'] == "":
-            return Response({"success" : True, "errors" : ["Please fill in store price."]}, status=status.HTTP_200_OK)
-        if request.data['shipping'] == "":
-            return Response({"success" : True, "errors" : ["Please fill in shipping."]}, status=status.HTTP_200_OK)
-        if request.data['productPageDisplayMethod'] == "":
-            return Response({"success" : True, "errors" : ["Please fill in product page display method."]}, status=status.HTTP_200_OK)
-        if request.data['productDescription'] == "":
-            return Response({"success" : True, "errors" : ["Please fill in product description."]}, status=status.HTTP_200_OK)
+        try:
+            if request.data['productName'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in product name."]}, status=status.HTTP_200_OK)
+            if request.data['brandName'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in brand name."]}, status=status.HTTP_200_OK)
+            if request.data['pr'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in PR statement."]}, status=status.HTTP_200_OK)
+            if request.data['productId'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in product ID."]}, status=status.HTTP_200_OK)
+            if request.data['productCategory'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in product category."]}, status=status.HTTP_200_OK)
+            if request.data['productVariation'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in product variation."]}, status=status.HTTP_200_OK)
+            if request.data['publishState'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in publish state."]}, status=status.HTTP_200_OK)
+            if request.data['publishDate'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in publish date."]}, status=status.HTTP_200_OK)
+            if request.data['price'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in price."]}, status=status.HTTP_200_OK)
+            if request.data['storePrice'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in store price."]}, status=status.HTTP_200_OK)
+            if request.data['shipping'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in shipping."]}, status=status.HTTP_200_OK)
+            if request.data['productPageDisplayMethod'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in product page display method."]}, status=status.HTTP_200_OK)
+            if request.data['productDescription'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in product description."]}, status=status.HTTP_200_OK)
 
-        variety = 0
-
-        if request.data['productVariation'] == 'none':
-            noneVariationItems = request.data['noneVariationItems']
             variety = 0
-        if request.data['productVariation'] == 'one':
-            oneVariationItems = request.data['oneVariationItems']
-            variety = 1
-        if request.data['productVariation'] == 'two':
-            twoVariationItems = request.data['twoVariationItems']
-            variety = 2
 
-        profile = Profile.objects.get(id=userId)
-        profileSerializer = ProfileSerializer(profile, context=getContext())
-        productCategory = ProductCategory.objects.get(id=1)
-        productCategorySerializer = ProductCategorySerializer(productCategory, context=getContext())
+            if request.data['productVariation'] == 'none':
+                noneVariationItems = request.data['noneVariationItems']
+                variety = 0
+            if request.data['productVariation'] == 'one':
+                oneVariationItems = request.data['oneVariationItems']
+                variety = 1
+            if request.data['productVariation'] == 'two':
+                twoVariationItems = request.data['twoVariationItems']
+                variety = 2
 
-        productSerializer = ProductSerializer(data={
-            "name" : request.data['productName'],
-            "brand_name" : request.data["brandName"],
-            "pr" : request.data["pr"],
-            "url_str" : request.data['productId'],
-            "variety" : variety,
-            "is_opened" : 1,
-            "opened_date" : request.data['publishDate'],
-            "price" : request.data['price'],
-            "store_price" : request.data['storePrice'],
-            "shipping_fee": request.data['shipping'],
-            "description" : request.data['productDescription'],
-            "category" : productCategorySerializer.data['url'],
-            "user" : profileSerializer.data['url']
-        }, context=getContext())
-        if productSerializer.is_valid():
-            productSerializer.save()
-        else:
-            return Response({"success" : False, "errors": productSerializer.errors}, status=status.HTTP_200_OK)    
-        return Response({"success" : True}, status=status.HTTP_200_OK)
+            profile = Profile.objects.get(id=userId)
+            profileSerializer = ProfileSerializer(profile, context=getContext())
+            productCategory = ProductCategory.objects.get(id=1)
+            productCategorySerializer = ProductCategorySerializer(productCategory, context=getContext())
+
+            productSerializer = ProductSerializer(data={
+                "name" : request.data['productName'],
+                "brand_name" : request.data["brandName"],
+                "pr" : request.data["pr"],
+                "url_str" : request.data['productId'],
+                "variety" : variety,
+                "is_opened" : 1,
+                "opened_date" : request.data['publishDate'],
+                "price" : request.data['price'],
+                "store_price" : request.data['storePrice'],
+                "shipping_fee": request.data['shipping'],
+                "description" : request.data['productDescription'],
+                "category" : productCategorySerializer.data['url'],
+                "user" : profileSerializer.data['url']
+            }, context=getContext())
+            if productSerializer.is_valid():
+                productSerializer.save()
+            else:
+                return Response({"success" : False, "errors": productSerializer.errors}, status=status.HTTP_200_OK)    
+            return Response({"success" : True}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
 class UserUpdateBackground(APIView):
     parser_classes = [MultiPartParser]
