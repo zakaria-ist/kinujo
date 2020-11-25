@@ -52,6 +52,11 @@ ORDER_STATUS = (
     (2, 'SHIPMENT COMPLETE')
 )
 
+ORDER_STATUS_JA = (
+    (1, '準備中'),
+    (2, '発送完了')
+)
+
 AUTHORITY_TYPE = {
     'MASTER': 1,
     'SPECIAL': 2,
