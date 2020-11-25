@@ -749,7 +749,7 @@ class CreateProduct(APIView):
             productCategory = ProductCategory.objects.get(id=1)
             productCategorySerializer = ProductCategorySerializer(productCategory, context=getContext())
 
-            productSerializer = ProductSerializer(data={
+            productSerializer = InsertProductSerializer(data={
                 "name" : request.data['productName'],
                 "brand_name" : request.data["brandName"],
                 "pr" : request.data["pr"],
