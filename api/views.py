@@ -824,7 +824,68 @@ class CreateProduct(APIView):
                             else:
                                 return Response({"success" : False, "errors": insertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
                     else:
-                        return Response({"success" : False, "errors": insertProductVarietySerializer.errors}, status=status.HTTP_200_OK) 
+                        return Response({"success" : False, "errors": insertProductVarietySerializer.errors}, status=status.HTTP_200_OK)
+                elif request.data['productVariation'] == 'two':
+                    twoVariationItems = request.data['twoVariationItems']
+                    firstUrls = {}
+                    secondUrls = {}
+                    firstItem = twoVariationItems['items'][0]
+                    secondItem = twoVariationItems['items'][1]
+
+                    firstInsertProductVarietySerializer = InsertProductVarietySerializer(data={
+                        "name" : firstItem['horizontalItem'],
+                        "product" : productSerializer.data['url'],
+                        "vertical_and_horizontal" : 1
+                    }, context=getContext())
+                    if firstInsertProductVarietySerializer.is_valid():
+                        firstInsertProductVarietySerializer.save()
+                        for choice in firstItem['choices']:
+                            firstInsertProductVarietySelectionSerializer = InsertProductVarietySelectionSerializer(data={
+                                "selection" : choice['choiceItem'],
+                                "product_variety" : firstInsertProductVarietySerializer.data['url']
+                            }, context=getContext())
+                            if firstInsertProductVarietySelectionSerializer.is_valid():
+                                firstInsertProductVarietySelectionSerializer.save()
+                                firstUrls[choice['choiceItem']] = firstInsertProductVarietySelectionSerializer.data['url']
+                            else:
+                                return Response({"success" : False, "errors": firstInsertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
+                    else:
+                        return Response({"success" : False, "errors": firstInsertProductVarietySerializer.errors}, status=status.HTTP_200_OK) 
+
+                    secondInsertProductVarietySerializer = InsertProductVarietySerializer(data={
+                        "name" : secondItem['horizontalItem'],
+                        "product" : productSerializer.data['url'],
+                        "vertical_and_horizontal" : 1
+                    }, context=getContext())
+                    if secondInsertProductVarietySerializer.is_valid():
+                        secondInsertProductVarietySerializer.save()
+                        for choice in secondItem['choices']:
+                            secondInsertProductVarietySelectionSerializer = InsertProductVarietySelectionSerializer(data={
+                                "selection" : choice['choiceItem'],
+                                "product_variety" : secondInsertProductVarietySerializer.data['url']
+                            }, context=getContext())
+                            if secondInsertProductVarietySelectionSerializer.is_valid():
+                                secondInsertProductVarietySelectionSerializer.save()
+                                secondUrls[choice['choiceItem']] = secondInsertProductVarietySelectionSerializer.data['url']
+                            else:
+                                return Response({"success" : False, "errors": secondInsertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
+                    else:
+                        return Response({"success" : False, "errors": secondInsertProductVarietySerializer.errors}, status=status.HTTP_200_OK) 
+
+                    mappingValues = twoVariationItems['mappingValue']
+                    for choice1 in firstItem.choices:
+                        for choice2 in firstItem.choices:
+                            insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
+                                "jan_code" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'],
+                                "stock" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'],
+                                "horizontal" : firstUrls[choice1['choiceItem']],
+                                "vertical" : secondUrls[choice2['choiceItem']]
+                            }, context=getContext())
+                            if insertProductJancodeSerializer.is_valid():
+                                insertProductJancodeSerializer.save()
+                            else:
+                                return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK) 
+
             else:
                 return Response({"success" : False, "errors": productSerializer.errors}, status=status.HTTP_200_OK)    
             return Response({"success" : True}, status=status.HTTP_200_OK)
