@@ -558,6 +558,7 @@ class Pay(APIView):
             address = Address.objects.get(id=request.data['address'])
 
             groupProducts = {}
+            orderIds = []
             if products and profile and address:
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 productSerializer = ProductSerializer(products, many=True, context=getContext())
@@ -612,6 +613,7 @@ class Pay(APIView):
                     orderSerializer = InsertOrderSerializer(data=order, context=getContext())
                     if orderSerializer.is_valid():
                         newOrder = orderSerializer.save()
+                        orderIds.append(orderSerializer.data['id'])
                         for product in groupProduct:
                             quantity = quantities['item_' + str(product['id'])]
                             varietyId = varieties['item_' + str(product['id'])]
@@ -658,6 +660,11 @@ class Pay(APIView):
                     source=token_id,
                     description="Order by" + str(profileSerializer.data['id']),
                 )
+
+                for orderId in orderIds:
+                    updateOrder = Order.objects.get(id=id)
+                    updateOrder.status = 1
+                    updateOrder.save()
             else:
                 return Response({"success" : False, "errors": ["Invalid data."]}, status=status.HTTP_200_OK)
             # if profile:
