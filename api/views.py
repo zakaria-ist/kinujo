@@ -771,7 +771,8 @@ class CreateProduct(APIView):
                     noneVariationItems = request.data['noneVariationItems']
                     insertProductVarietySerializer = InsertProductVarietySerializer(data={
                         "name" : "none",
-                        "product" : productSerializer.data['url']
+                        "product" : productSerializer.data['url'],
+                        "vertical_and_horizontal" : 0
                     }, context=getContext())
                     if insertProductVarietySerializer.is_valid():
                         insertProductVarietySerializer.save()
@@ -792,6 +793,36 @@ class CreateProduct(APIView):
                                 return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK) 
                         else:
                             return Response({"success" : False, "errors": insertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
+                    else:
+                        return Response({"success" : False, "errors": insertProductVarietySerializer.errors}, status=status.HTTP_200_OK) 
+                elif request.data['productVariation'] == 'one':
+                    oneVariationItems = request.data['oneVariationItems']
+                    insertProductVarietySerializer = InsertProductVarietySerializer(data={
+                        "name" : oneVariationItems['name'],
+                        "product" : productSerializer.data['url'],
+                        "vertical_and_horizontal" : 0
+                    }, context=getContext())
+                    if insertProductVarietySerializer.is_valid():
+                        insertProductVarietySerializer.save()
+
+                        for item in oneVariationItems['items']:
+                            insertProductVarietySelectionSerializer = InsertProductVarietySelectionSerializer(data={
+                                "selection" : item['choice'],
+                                "product_variety" : insertProductVarietySerializer.data['url']
+                            }, context=getContext())
+                            if insertProductVarietySelectionSerializer.is_valid():
+                                insertProductVarietySelectionSerializer.save()
+                                insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
+                                    "jan_code" : oneVariationItems['janCode'],
+                                    "stock" : oneVariationItems['stock'],
+                                    "horizontal" : insertProductVarietySelectionSerializer.data['url']
+                                }, context=getContext())
+                                if insertProductJancodeSerializer.is_valid():
+                                    insertProductJancodeSerializer.save()
+                                else:
+                                    return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK) 
+                            else:
+                                return Response({"success" : False, "errors": insertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
                     else:
                         return Response({"success" : False, "errors": insertProductVarietySerializer.errors}, status=status.HTTP_200_OK) 
             else:
