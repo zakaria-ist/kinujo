@@ -767,6 +767,17 @@ class CreateProduct(APIView):
             }, context=getContext())
             if productSerializer.is_valid():
                 productSerializer.save()
+                productImages = request.data['productImages']
+                for productImage in productImages:
+                    productImageSerializer = InsertProductImageSerializer(data={
+                        'image': productImage['url'],
+                        'product' : productSerializer.data['url']
+                    }, context=getContext())
+                    if productImageSerializer.is_valid():
+                        productImageSerializer.save()
+                    else:
+                        return Response({"success" : False, "errors": productImageSerializer.errors}, status=status.HTTP_200_OK) 
+
                 if request.data['productVariation'] == 'none':
                     noneVariationItems = request.data['noneVariationItems']
                     insertProductVarietySerializer = InsertProductVarietySerializer(data={
