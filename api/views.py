@@ -465,7 +465,7 @@ class UserByIds(APIView):
                     sProfileSerializer = ProfileSerializer(profile, context=getContext())
                     if sProfileSerializer.data['authority']['id'] == 1:
                         profiles = Profile.objects.all()
-                    else:
+                    else if sProfileSerializer.data['introducer']:
                         introducers = sProfileSerializer.data['introducer'].split("/")
                         introducer = introducers[len(introducers)-2]
                         ids.append(introducer)
