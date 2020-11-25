@@ -770,13 +770,13 @@ class CreateProduct(APIView):
                 if request.data['productVariation'] == 'none':
                     noneVariationItems = request.data['noneVariationItems']
                     insertProductVarietySerializer = InsertProductVarietySerializer(data={
-                        "name" : "",
+                        "name" : "none",
                         "product" : productSerializer.data['url']
                     }, context=getContext())
                     if insertProductVarietySerializer.is_valid():
                         insertProductVarietySerializer.save()
                         insertProductVarietySelectionSerializer = InsertProductVarietySelectionSerializer(data={
-                            "selection" : "",
+                            "selection" : "none",
                             "product_variety" : insertProductVarietySerializer.data['url']
                         }, context=getContext())
                         if insertProductVarietySelectionSerializer.is_valid():
