@@ -876,8 +876,8 @@ class CreateProduct(APIView):
                     for choice1 in firstItem['choices']:
                         for choice2 in firstItem['choices']:
                             insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
-                                "jan_code" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'],
-                                "stock" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'],
+                                "jan_code" : mappingValues[choice1['choiceItem'].replace("'", "")][choice2['choiceItem'].replace("'", "")]['janCode'],
+                                "stock" : mappingValues[choice1['choiceItem'].replace("'", "")][choice2['choiceItem'].replace("'", "")]['stock'],
                                 "horizontal" : firstUrls[choice1['choiceItem']],
                                 "vertical" : secondUrls[choice2['choiceItem']]
                             }, context=getContext())
