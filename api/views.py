@@ -962,7 +962,9 @@ def change_language(request):
     activate(language)
     request.session[translation.LANGUAGE_SESSION_KEY] = language
     # request.LANGUAGE_CODE = translation.get_language()
-    # response = HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    response = HttpResponseRedirect(request_url)
+    if request_url == '':
+        response = HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        response = HttpResponseRedirect(request_url)
     response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
     return response
