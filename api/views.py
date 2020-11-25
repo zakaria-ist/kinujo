@@ -762,10 +762,38 @@ class CreateProduct(APIView):
                 "shipping_fee": request.data['shipping'],
                 "description" : request.data['productDescription'],
                 "category" : productCategorySerializer.data['url'],
-                "user" : profileSerializer.data['url']
+                "user" : profileSerializer.data['url'],
+                "target" : 0
             }, context=getContext())
             if productSerializer.is_valid():
                 productSerializer.save()
+                if request.data['productVariation'] == 'none':
+                    noneVariationItems = request.data['noneVariationItems']
+                    insertProductVarietySerializer = InsertProductVarietySerializer(data={
+                        "name" : "",
+                        "product" : productSerializer.data['url']
+                    }, context=getContext())
+                    if insertProductVarietySerializer.is_valid():
+                        insertProductVarietySerializer.save()
+                        insertProductVarietySelectionSerializer = InsertProductVarietySelectionSerializer(data={
+                            "selection" : "",
+                            "product_variety" : insertProductVarietySerializer.data['url']
+                        }, context=getContext())
+                        if insertProductVarietySelectionSerializer.is_valid():
+                            insertProductVarietySelectionSerializer.save()
+                            insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
+                                "jan_code" : noneVariationItems['janCode'],
+                                "stock" : noneVariationItems['stock'],
+                                "vertical" : insertProductVarietySelectionSerializer.data['url']
+                            }, context=getContext())
+                            if insertProductJancodeSerializer.is_valid():
+                                insertProductJancodeSerializer.save()
+                            else:
+                                return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK) 
+                        else:
+                            return Response({"success" : False, "errors": insertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
+                    else:
+                        return Response({"success" : False, "errors": insertProductVarietySerializer.errors}, status=status.HTTP_200_OK) 
             else:
                 return Response({"success" : False, "errors": productSerializer.errors}, status=status.HTTP_200_OK)    
             return Response({"success" : True}, status=status.HTTP_200_OK)
