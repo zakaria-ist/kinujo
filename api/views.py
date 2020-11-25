@@ -813,8 +813,8 @@ class CreateProduct(APIView):
                             if insertProductVarietySelectionSerializer.is_valid():
                                 insertProductVarietySelectionSerializer.save()
                                 insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
-                                    "jan_code" : oneVariationItems['janCode'],
-                                    "stock" : oneVariationItems['stock'],
+                                    "jan_code" : item['janCode'],
+                                    "stock" : item['stock'],
                                     "horizontal" : insertProductVarietySelectionSerializer.data['url']
                                 }, context=getContext())
                                 if insertProductJancodeSerializer.is_valid():
