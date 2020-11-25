@@ -16,7 +16,7 @@ from products.views import get_jan_products
 from prefectures.models import Prefecture
 from profiles.models import Profile, Authority, UserSale, UserCommision, MonthlyPayment
 from taxes.models import TaxRate
-from utilities.constants import AUTHORITY_TYPE, ORDER_STATUS
+from utilities.constants import AUTHORITY_TYPE, ORDER_STATUS, ORDER_STATUS_JA
 from utilities.common import round_number
 
 
@@ -93,7 +93,8 @@ def OrderList__asJson(request):
             "name": field.name,
             "address": field.address1 + '  Zip: ' + field.zip1,
             "amount": intcomma("%.0f" % field.total_amount),
-            "status": 'IN PROCESSING' if field.status == 1 else 'SHIPMENT COMPLETE',
+            "status": ('IN PROCESSING' if field.status == 1 else 'SHIPMENT COMPLETE') if request.LANGUAGE_CODE == 'en' \
+                        else ('準備中' if field.status == 1 else '発送完了'),
             "shipped_date": field.shipped_date.strftime("%Y-%m-%d") if field.shipped_date else '',
             "inquiry_number": field.inquiry_number
         }
@@ -514,10 +515,14 @@ def order_add(request):
             .exclude(id=seller_id)\
             .values_list('id', 'real_name', 'authority_id'))
         prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
+        if request.LANGUAGE_CODE == 'en':
+            status_list = ORDER_STATUS
+        else:
+            status_list = ORDER_STATUS_JA
         return render(request, 'order_form.html', {'prefecture_list': prefecture_list,
                                                     'orderer_list': orderer_list,
                                                     'order_product_list': [],
-                                                    'status_list': ORDER_STATUS,
+                                                    'status_list': status_list,
                                                     'tax_rate': tax_rate,
                                                     'seller_id': seller_id})
     else:
@@ -742,11 +747,15 @@ def order_edit(request, order_id):
                 .exclude(id=seller_id)\
                 .values_list('id', 'real_name', 'authority_id'))
             prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
+            if request.LANGUAGE_CODE == 'en':
+                status_list = ORDER_STATUS
+            else:
+                status_list = ORDER_STATUS_JA
             return render(request, 'order_form.html', {'prefecture_list': prefecture_list,
                                                         'order': order,
                                                         'orderer_list': orderer_list,
                                                         'order_product_list': order_product_list,
-                                                        'status_list': ORDER_STATUS,
+                                                        'status_list': status_list,
                                                         'tax_rate': tax_rate,
                                                         'seller_id': seller_id})
         else:
