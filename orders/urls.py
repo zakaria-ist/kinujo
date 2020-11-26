@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^order_edit/(?P<order_id>.*)/$', views.order_edit, name='order_edit'),
     url(r'^order_delete/(?P<order_id>.*)/$', views.order_delete, name='order_delete'),
     url(r'^check_for_duplicate/(?P<type>.*)/(?P<value>.*)/$', views.check_for_duplicate, name='order_check_for_duplicate'),
+    url(r'^export_order_list_as_csv/$', views.export_order_list_as_csv, name='export_order_list_as_csv'),
 
     # for commission & sales data
     url(r'^sales_list_json/$', views.UserSalesList__asJson, name='UserSalesList__asJson'),
