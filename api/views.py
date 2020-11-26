@@ -302,6 +302,7 @@ class UserLogin(APIView):
                         "user" : data
                     }}, status=status.HTTP_200_OK)
                 else:
+                    return Response({"success" : False, "error" : "入力された情報が正しくありません"}, status=status.HTTP_200_OK)
                     return Response({"success" : False, "error" : "Incorrect Password"}, status=status.HTTP_200_OK)
             else:
                 return Response({"success" : False, "error" : "Account Not Exists"}, status=status.HTTP_200_OK)
@@ -455,26 +456,29 @@ class UserByIds(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, format='json'):
-        profiles = []
-        ids = request.GET.getlist('ids[]')
-        if 'type' in request.GET and request.GET['type'] == 'contact':
-            if 'userId' in request.GET and request.GET['userId']:
-                profile = Profile.objects.get(id=request.GET['userId'])
-                sProfileSerializer = ProfileSerializer(profile, context=getContext())
-                if sProfileSerializer.data['authority']['id'] == 1:
-                    profiles = Profile.objects.all()
-                else:
-                    introducers = sProfileSerializer.data['introducer'].split("/")
-                    introducer = introducers[len(introducers)-2]
-                    ids.append(introducer)
-                    ids.extend(Profile.objects.filter(introducer_id=sProfileSerializer.data['id']).values_list('id', flat=True))
-        
-        profiles = Profile.objects.filter(id__in=ids)
-        if len(profiles) == 0:
-            return Response({"success" : True, "users" : profiles}, status=status.HTTP_200_OK)
+        try:
+            profiles = []
+            ids = request.GET.getlist('ids[]')
+            if 'type' in request.GET and request.GET['type'] == 'contact':
+                if 'userId' in request.GET and request.GET['userId']:
+                    profile = Profile.objects.get(id=request.GET['userId'])
+                    sProfileSerializer = ProfileSerializer(profile, context=getContext())
+                    if sProfileSerializer.data['authority']['id'] == 1:
+                        profiles = Profile.objects.all()
+                    elif sProfileSerializer.data['introducer'] is not None:
+                        introducers = sProfileSerializer.data['introducer'].split("/")
+                        introducer = introducers[len(introducers)-2]
+                        ids.append(introducer)
+                        ids.extend(Profile.objects.filter(introducer_id=sProfileSerializer.data['id']).values_list('id', flat=True))
+            
+            profiles = Profile.objects.filter(id__in=ids)
+            if len(profiles) == 0:
+                return Response({"success" : True, "users" : profiles}, status=status.HTTP_200_OK)
 
-        profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
-        return Response({"success" : True, "users" : profileSerializer.data, "data" : request.GET}, status=status.HTTP_200_OK)
+            profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
+            return Response({"success" : True, "users" : profileSerializer.data, "data" : request.GET}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
 def calculateCommission(price, orderProduct, userId, shipping_fee):
     profile = Profile.objects.get(id=userId)
@@ -736,12 +740,29 @@ class CreateProduct(APIView):
 
             if request.data['productVariation'] == 'none':
                 noneVariationItems = request.data['noneVariationItems']
+                if noneVariationItems['janCode'] == "":
+                    return Response({"success" : True, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                if noneVariationItems['stock'] == "":
+                    return Response({"success" : True, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 0
             if request.data['productVariation'] == 'one':
                 oneVariationItems = request.data['oneVariationItems']
+                for item in oneVariationItems['items']:
+                    if item['janCode'] == "":
+                        return Response({"success" : True, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                    if item['stock'] == "":
+                        return Response({"success" : True, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 1
             if request.data['productVariation'] == 'two':
                 twoVariationItems = request.data['twoVariationItems']
+                firstItem = twoVariationItems['items'][0]
+                secondItem = twoVariationItems['items'][1]
+                for choice1 in firstItem['choices']:
+                    for choice2 in secondItem['choices']:
+                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'] == "":
+                            return Response({"success" : True, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'] == "":
+                            return Response({"success" : True, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 2
 
             profile = Profile.objects.get(id=userId)
@@ -749,22 +770,43 @@ class CreateProduct(APIView):
             productCategory = ProductCategory.objects.get(id=1)
             productCategorySerializer = ProductCategorySerializer(productCategory, context=getContext())
 
-            productSerializer = InsertProductSerializer(data={
+            productData = {
                 "name" : request.data['productName'],
                 "brand_name" : request.data["brandName"],
                 "pr" : request.data["pr"],
                 "url_str" : request.data['productId'],
                 "variety" : variety,
-                "is_opened" : 1,
                 "opened_date" : request.data['publishDate'],
                 "price" : request.data['price'],
                 "store_price" : request.data['storePrice'],
                 "shipping_fee": request.data['shipping'],
                 "description" : request.data['productDescription'],
                 "category" : productCategorySerializer.data['url'],
-                "user" : profileSerializer.data['url'],
-                "target" : 0
-            }, context=getContext())
+                "user" : profileSerializer.data['url']
+            }
+            if request.data['publishState'] == 'published':
+                productData['is_opened'] = 1
+            else:
+                productData['is_opened'] = 0
+                
+            if request.data['publishState'] == 'published':
+                productData['is_opened'] = 1
+            else:
+                productData['is_opened'] = 0
+
+            if request.data['productStatus'] == 'new':
+                productData['is_used'] = 0
+            else:
+                productData['is_used'] = 1
+
+            if request.data['targetUser'] == 'allUser':
+                productData['target'] = 0
+            elif request.data['targetUser'] == 'generalUser':
+                productData['target'] = 1
+            elif request.data['targetUser'] == 'storeUser':
+                productData['target'] = 2
+
+            productSerializer = InsertProductSerializer(data=productData, context=getContext())
             if productSerializer.is_valid():
                 productSerializer.save()
                 productImages = request.data['productImages']
@@ -796,7 +838,7 @@ class CreateProduct(APIView):
                             insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
                                 "jan_code" : noneVariationItems['janCode'],
                                 "stock" : noneVariationItems['stock'],
-                                "vertical" : insertProductVarietySelectionSerializer.data['url']
+                                "horizontal" : insertProductVarietySelectionSerializer.data['url']
                             }, context=getContext())
                             if insertProductJancodeSerializer.is_valid():
                                 insertProductJancodeSerializer.save()
@@ -826,7 +868,7 @@ class CreateProduct(APIView):
                                 insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
                                     "jan_code" : item['janCode'],
                                     "stock" : item['stock'],
-                                    "horizontal" : insertProductVarietySelectionSerializer.data['url']
+                                    "vertical" : insertProductVarietySelectionSerializer.data['url']
                                 }, context=getContext())
                                 if insertProductJancodeSerializer.is_valid():
                                     insertProductJancodeSerializer.save()
