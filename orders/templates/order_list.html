@@ -39,7 +39,7 @@
                             <div class="table-section white-bg">
                                 <div class="text-right pb-3">
                                     <span class="">
-                                        <a class="btn btn-primary blue-btn" href=""> 
+                                        <a class="btn btn-primary blue-btn" id="export_csv"> 
                                             <span><i class="fas fa-file-export"></i> {% trans 'CSV Export' %}</span>
                                         </a>
                                     </span>
@@ -73,6 +73,17 @@
                     </div>
                 </div>
             </section>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <form id="reportForm" target="frViewPDF"
+            method="post" action="" >
+            {% csrf_token %}
+            <input type="hidden" id="param0" name="param0">
+        </form>
+        <div id="divViewPDF">
+            <iframe id="frViewPDF" name="frViewPDF" width="0%" height="0%" style="max-width: 0px; max-height: 0px;"
+                    src=""></iframe>
         </div>
     </div>
     {#Comfirm Delete#}
@@ -214,5 +225,25 @@
         //hide al‘l our dropdowns
         $('.dropdown-menu[data-parent]').hide();
     });
+
+    $('#export_csv').on('click', function () {
+        filter_list.length = 0;
+        if($('#shipped_check').prop("checked") == true){
+            filter_list.push(2); //
+        }
+        if($('#non_shipped_check').prop("checked") == true){
+            filter_list.push(1); // 
+        }
+
+        if (filter_list.length == 0) {
+            filter_list = [1, 2];
+        }
+        filter_str = JSON.stringify(filter_list);
+        url = '/orders/export_order_list_as_csv/';
+        $('#param0').val(filter_str);
+        $('#reportForm').attr('action', url);
+        $('#reportForm').submit();
+        
+    })
     </script>
 {% endblock %}
