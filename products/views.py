@@ -108,6 +108,7 @@ def ProductList__asJson(request):
                 "jan_id": str(p_jan.id),
                 "id": str(field.id),
                 "name": str(field.name),
+                "price": field.price,
                 "opened_date": field.opened_date.strftime("%Y-%m-%d"),
                 "image_path": str(image_path),
                 "jan_code": str(p_jan.jan_code),
