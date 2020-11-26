@@ -32,7 +32,14 @@ function loadItemTableData() {
                     return row.varieties.split(",").join("<br/>");
                 }
             },
-            {"data": "stock", "orderable": false},
+            {"data": "stock", "sClass": "text-right", "orderable": false},
+            {
+                "sClass": "text-right",
+                "orderable": false,
+                "render": function(data, type, row){
+                    return (comma_format(row.price, 0) + JPCUR);
+                }
+            },
             {"data": "opened_date", "orderable": false},
             {
                 "sClass": "text-center",
