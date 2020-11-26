@@ -82,7 +82,7 @@ class InsertProductImageSerializer(serializers.HyperlinkedModelSerializer):
 class InsertProductSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Product
-        fields = ['url', 'id', 'name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified', 'user', 'productImages']
+        fields = ['url', 'id', 'name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified', 'user']
 class InsertProductJancodeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductJancode
@@ -101,7 +101,7 @@ class InsertProductVarietySerializer(serializers.HyperlinkedModelSerializer):
 class InsertOrderSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Order
-        fields = ['url', 'seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','created','modified']
+        fields = ['id', 'url', 'seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','created','modified', 'status']
 class InsertOrderProductSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = OrderProduct

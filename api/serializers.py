@@ -93,7 +93,7 @@ class PrefectureSerializer(serializers.HyperlinkedModelSerializer):
 class ProductCategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductCategory
-        fields = ['name','is_hidden','created','modified']
+        fields = ['id', 'url', 'name','is_hidden','created','modified']
 class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
     image = ImageSerializer()
     class Meta:
