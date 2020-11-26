@@ -56,7 +56,7 @@
                                         <tr>
                                             <th style="width: 50px !important">{% trans 'Order Number' %}</th>
                                             <th></th>
-                                            <th style="width: 300px !important">{% trans 'Product Name' %}</th>
+                                            <th>{% trans 'Product Name' %}</th>
                                             <th>{% trans 'Orderer' %}</th>
                                             <th>{% trans 'Destination' %}</th>
                                             <th>{% trans 'Amount' %}</th>
@@ -161,7 +161,18 @@
                         return img;
                     }
                 },
-                {"data": "product_name", "orderable": false},
+                {
+                    "sClass": "text-left",
+                    "orderable": false,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        if (row.product_name.length > 15) {
+                            return row.product_name.substring(0, 11) + '...';
+                        } else {
+                            return row.product_name;
+                        }
+                    }
+                },
                 {"data": "name"},
                 {"data": "address", "orderable": false},
                 {
@@ -169,7 +180,7 @@
                     "orderable": false,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        return comma_format(row.amount, 0);
+                        return (comma_format(row.amount, 0) + JPCUR);
                     }
                 },
                 {"data": "status", "orderable": false},

@@ -66,7 +66,8 @@
                                             <th>{% trans 'Name' %}</th>
                                             <th>{% trans 'Jan Code' %}</th>
                                             <th>{% trans 'Varieties' %}</th>
-                                            <th>{% trans 'Stock' %}</th>
+                                            <th class="text-right">{% trans 'Stock' %}</th>
+                                            <th class="text-right">{% trans 'Price' %}</th>
                                             <th>{% trans 'Published Date' %}</th>
                                             <th class="text-center" style="min-width:90px !important;">{% trans 'Options' %}</th>
                                         </tr>
@@ -178,7 +179,14 @@
                         return row.varieties.split(",").join("<br/>");
                     }
                 },
-                {"data": "stock", "orderable": false},
+                {"data": "stock", "sClass": "text-right", "orderable": false},
+                {
+                    "sClass": "text-right",
+                    "orderable": false,
+                    "render": function(data, type, row){
+                        return (comma_format(row.price, 0) + JPCUR);
+                    }
+                },
                 {"data": "opened_date", "orderable": false},
                 {
                     "sClass": "text-center",
