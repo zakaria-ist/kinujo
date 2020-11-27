@@ -39,7 +39,7 @@
                             <div class="table-section white-bg">
                                 <div class="text-right pb-3">
                                     <span class="">
-                                        <a class="btn btn-primary blue-btn" href=""> 
+                                        <a class="btn btn-primary blue-btn" id="export_csv"> 
                                             <span><i class="fas fa-file-export"></i> {% trans 'CSV Export' %}</span>
                                         </a>
                                     </span>
@@ -56,7 +56,7 @@
                                         <tr>
                                             <th style="width: 50px !important">{% trans 'Order Number' %}</th>
                                             <th></th>
-                                            <th style="width: 300px !important">{% trans 'Product Name' %}</th>
+                                            <th>{% trans 'Product Name' %}</th>
                                             <th>{% trans 'Orderer' %}</th>
                                             <th>{% trans 'Destination' %}</th>
                                             <th>{% trans 'Amount' %}</th>
@@ -73,6 +73,17 @@
                     </div>
                 </div>
             </section>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <form id="reportForm" target="frViewPDF"
+            method="post" action="" >
+            {% csrf_token %}
+            <input type="hidden" id="param0" name="param0">
+        </form>
+        <div id="divViewPDF">
+            <iframe id="frViewPDF" name="frViewPDF" width="0%" height="0%" style="max-width: 0px; max-height: 0px;"
+                    src=""></iframe>
         </div>
     </div>
     {#Comfirm Delete#}
@@ -161,7 +172,18 @@
                         return img;
                     }
                 },
-                {"data": "product_name", "orderable": false},
+                {
+                    "sClass": "text-left",
+                    "orderable": false,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        if (row.product_name.length > 15) {
+                            return row.product_name.substring(0, 11) + '...';
+                        } else {
+                            return row.product_name;
+                        }
+                    }
+                },
                 {"data": "name"},
                 {"data": "address", "orderable": false},
                 {
@@ -169,7 +191,7 @@
                     "orderable": false,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        return comma_format(row.amount, 0);
+                        return (comma_format(row.amount, 0) + JPCUR);
                     }
                 },
                 {"data": "status", "orderable": false},
@@ -203,5 +225,25 @@
         //hide al‘l our dropdowns
         $('.dropdown-menu[data-parent]').hide();
     });
+
+    $('#export_csv').on('click', function () {
+        filter_list.length = 0;
+        if($('#shipped_check').prop("checked") == true){
+            filter_list.push(2); //
+        }
+        if($('#non_shipped_check').prop("checked") == true){
+            filter_list.push(1); // 
+        }
+
+        if (filter_list.length == 0) {
+            filter_list = [1, 2];
+        }
+        filter_str = JSON.stringify(filter_list);
+        url = '/orders/export_order_list_as_csv/';
+        $('#param0').val(filter_str);
+        $('#reportForm').attr('action', url);
+        $('#reportForm').submit();
+        
+    })
     </script>
 {% endblock %}

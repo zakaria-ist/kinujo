@@ -41,7 +41,7 @@
                             <div class="table-section white-bg">
                                 <div class="text-right pb-3">
                                     <span class="">
-                                        <a class="btn btn-primary blue-btn" href=""> 
+                                        <a class="btn btn-primary blue-btn" id="export_csv"> 
                                             <span><i class="fas fa-file-export"></i> {% trans 'CSV Export' %}</span>
                                         </a>
                                     </span>
@@ -66,7 +66,8 @@
                                             <th>{% trans 'Name' %}</th>
                                             <th>{% trans 'Jan Code' %}</th>
                                             <th>{% trans 'Varieties' %}</th>
-                                            <th>{% trans 'Stock' %}</th>
+                                            <th class="text-right">{% trans 'Stock' %}</th>
+                                            <th class="text-right">{% trans 'Price' %}</th>
                                             <th>{% trans 'Published Date' %}</th>
                                             <th class="text-center" style="min-width:90px !important;">{% trans 'Options' %}</th>
                                         </tr>
@@ -78,6 +79,17 @@
                     </div>
                 </div>
             </section>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <form id="reportForm" target="frViewPDF"
+            method="post" action="" >
+            {% csrf_token %}
+            <input type="hidden" id="param0" name="param0">
+        </form>
+        <div id="divViewPDF">
+            <iframe id="frViewPDF" name="frViewPDF" width="0%" height="0%" style="max-width: 0px; max-height: 0px;"
+                    src=""></iframe>
         </div>
     </div>
     {#Comfirm Delete#}
@@ -178,7 +190,14 @@
                         return row.varieties.split(",").join("<br/>");
                     }
                 },
-                {"data": "stock", "orderable": false},
+                {"data": "stock", "sClass": "text-right", "orderable": false},
+                {
+                    "sClass": "text-right",
+                    "orderable": false,
+                    "render": function(data, type, row){
+                        return (comma_format(row.price, 0) + JPCUR);
+                    }
+                },
                 {"data": "opened_date", "orderable": false},
                 {
                     "sClass": "text-center",
@@ -201,5 +220,28 @@
         //hide al‘l our dropdowns
         $('.dropdown-menu[data-parent]').hide();
     });
+
+    $('#export_csv').on('click', function () {
+        filter_list.length = 0;
+        if($('#published_check').prop("checked") == true){
+            filter_list.push(1); // published
+        }
+        if($('#non_published_check').prop("checked") == true){
+            filter_list.push(2); // non-published
+        }
+        if($('#draft_check').prop("checked") == true){
+            filter_list.push(3); // draft
+        }
+
+        if (filter_list.length == 0) {
+            filter_list = [1, 2, 3];
+        }
+        filter_str = JSON.stringify(filter_list);
+        url = '/products/export_product_list_as_csv/';
+        $('#param0').val(filter_str);
+        $('#reportForm').attr('action', url);
+        $('#reportForm').submit();
+        
+    })
     </script>
 {% endblock %}
