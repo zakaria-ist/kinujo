@@ -1,6 +1,7 @@
 import datetime
 import json
 import threading
+import csv
 from django.contrib import messages
 from django.db.models import Q, Sum, Value
 from django.db.models.functions import Coalesce
@@ -31,6 +32,41 @@ def order_list(request):
         return render(request, 'order_list.html')
     else:
         return render(request, '404.html')
+
+
+@login_required
+def export_order_list_as_csv(request):
+    """
+    Method to get order list as CSV.
+    """
+
+    filter_str = eval(request.POST.get('param0'))
+    seller_id = request.session['login_profile_id']
+
+    order_list = Order.objects.filter(is_hidden=False, seller_id=seller_id)
+    if len(filter_str):
+        order_list = order_list.filter(status__in=filter_str)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="OrderList.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['order_number', 'product_name', 'orderer', 'address', 'amount', 'status', 'shipped_date', 'tracking_number'])
+
+    for field in order_list:
+        product = OrderProduct.objects.filter(order_id=field.id).first()
+        product_jan = ProductJancode.objects.get(pk=product.product_jan_code_id)
+        j_product = get_jan_products(product_jan)
+        
+        status = ('IN PROCESSING' if field.status == 1 else 'SHIPMENT COMPLETE') if request.LANGUAGE_CODE == 'en' \
+                        else ('準備中' if field.status == 1 else '発送完了')
+        writer.writerow([str(field.id), j_product.name, field.name, 
+                        field.address1 + '  Zip: ' + field.zip1, 
+                        intcomma("%.0f" % field.total_amount), status,
+                        field.shipped_date.strftime("%Y-%m-%d") if field.shipped_date else '', 
+                        field.inquiry_number if field.inquiry_number else ''])
+        
+
+    return response
 
 
 @login_required

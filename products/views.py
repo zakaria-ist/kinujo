@@ -1,8 +1,10 @@
 import datetime
 import json
+import csv
 from django.conf import settings as s
 from django.contrib import messages
 from django.db.models import Q
+from django.contrib.humanize.templatetags.humanize import intcomma
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponsePermanentRedirect
 from django.utils import translation
@@ -108,6 +110,7 @@ def ProductList__asJson(request):
                 "jan_id": str(p_jan.id),
                 "id": str(field.id),
                 "name": str(field.name),
+                "price": field.price,
                 "opened_date": field.opened_date.strftime("%Y-%m-%d"),
                 "image_path": str(image_path),
                 "jan_code": str(p_jan.jan_code),
@@ -1160,3 +1163,54 @@ def delete_product(request):
 
     context = {'message': message}
     return HttpResponse(json.dumps(context), content_type="application/json")
+
+
+
+
+@login_required
+def export_product_list_as_csv(request):
+    """
+    Method to get product list as CSV.
+    """
+
+    profile_id = request.session['login_profile_id']
+    product_list = Product.objects.filter(is_hidden=False, user_id=profile_id).order_by('name')
+    filter_array = eval(request.POST.get('param0'))
+    if len(filter_array):
+        if 1 not in filter_array:
+            product_list = product_list.exclude(is_opened=True)
+        if 2 not in filter_array:
+            product_list = product_list.exclude(is_opened=False)
+        if 3 not in filter_array:
+            product_list = product_list.exclude(is_draft=True)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="ProductList.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['#', 'product_name', 'jan_code', 'varieties', 'stock', 'price', 'opened_date'])
+
+    i = 0
+    for field in product_list:
+        jancode_ids = get_products_jancodes(field.id, type='id')
+        productJancodes = ProductJancode.objects.filter(id__in=jancode_ids)
+        for p_jan in productJancodes:
+            veries = get_jan_varieties(p_jan)
+            very_str = ''
+            for item in veries:
+                if item['name']:
+                    very_str += item['name'] + ' : ' + item['selection'] + ','
+            if len(very_str):
+                very_str = very_str[:-1]
+            else:
+                language = translation.get_language()
+                if language == 'ja':
+                    very_str = '無し'
+                else:
+                    very_str = 'None'
+            i = i + 1
+            writer.writerow([str(i), field.name, str(p_jan.jan_code), very_str,
+                            str(p_jan.stock), intcomma("%.0f" % field.price),
+                            field.opened_date.strftime("%Y-%m-%d")])
+        
+
+    return response
