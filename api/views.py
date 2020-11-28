@@ -651,7 +651,7 @@ class Pay(APIView):
                             'output_date' : date.today(),
                             'order_date' : date.today(),
                             'product_name' : product['name'],
-                            'shop_name' : product['user']['shop_name'] ? ,
+                            'shop_name' : shop_name,
                             'address' : addressSerializer.data['address1'],
                             'order_id' : orderSerializer.data['id'],
                         }
