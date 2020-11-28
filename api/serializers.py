@@ -126,7 +126,7 @@ class ProductJancodeSerializer(serializers.HyperlinkedModelSerializer):
 class OrderReceiptSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = OrderReceipt
-        fields = ['url', 'is_copy','to_name','amount','output_date','order_date','product_name','shop_name','order','address','payment','is_hidden','created','modified']
+        fields = ['url', 'id', 'is_copy','to_name','amount','output_date','order_date','product_name','shop_name','order','address','payment','is_hidden','created','modified']
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     seller = ProfileSerializer(read_only=True)
     purchaser = ProfileSerializer(read_only=True)
