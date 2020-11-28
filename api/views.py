@@ -565,6 +565,7 @@ class Pay(APIView):
 
             groupProducts = {}
             orderIds = []
+
             if products and profile and address:
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 productSerializer = ProductSerializer(products, many=True, context=getContext())
@@ -586,6 +587,13 @@ class Pay(APIView):
                         groupProducts[product['user']['url']] = tmpProducts
                     else:
                         groupProducts[product['user']['url']] = [product]
+
+                stripe.Charge.create(
+                    amount=int(float(total_amount)),
+                    currency="jpy",
+                    source=token_id,
+                    description="Order by " + str(profileSerializer.data['id']),
+                )
 
                 for product in productSerializer.data:
                     quantity = quantities['item_' + str(product['id'])]
@@ -614,8 +622,7 @@ class Pay(APIView):
                         'is_hidden': 0,
                         'prefecture': addressSerializer.data['prefecture']['url'],
                         'seller': product['user']['url'],
-                        'purchaser' : profileSerializer.data['url'],
-                        'status': 0
+                        'purchaser' : profileSerializer.data['url']
                     }
                     orderSerializer = InsertOrderSerializer(data=order, context=getContext())
                     if orderSerializer.is_valid():
@@ -670,18 +677,6 @@ class Pay(APIView):
                             return Response({"success" : False, "errors" : orderProductSerializer.errors}, status=status.HTTP_200_OK)
                     else:
                         return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
-                
-                stripe.Charge.create(
-                    amount=int(float(total_amount)),
-                    currency="jpy",
-                    source=token_id,
-                    description="Order by " + str(profileSerializer.data['id']),
-                )
-
-                for orderId in orderIds:
-                    updateOrder = Order.objects.get(id=orderId)
-                    updateOrder.status = 1
-                    updateOrder.save()
             else:
                 return Response({"success" : False, "errors": ["Invalid data."]}, status=status.HTTP_200_OK)
             # if profile:
