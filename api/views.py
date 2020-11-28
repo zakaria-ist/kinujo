@@ -667,17 +667,17 @@ class Pay(APIView):
                     else:
                         return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
                 
-                # stripe.Charge.create(
-                #     amount=int(float(total_amount)),
-                #     currency="jpy",
-                #     source=token_id,
-                #     description="Order by" + str(profileSerializer.data['id']),
-                # )
+                stripe.Charge.create(
+                    amount=int(float(total_amount)),
+                    currency="jpy",
+                    source=token_id,
+                    description="Order by" + str(profileSerializer.data['id']),
+                )
 
-                # for orderId in orderIds:
-                #     updateOrder = Order.objects.get(id=id)
-                #     updateOrder.status = 1
-                #     updateOrder.save()
+                for orderId in orderIds:
+                    updateOrder = Order.objects.get(id=orderId)
+                    updateOrder.status = 1
+                    updateOrder.save()
             else:
                 return Response({"success" : False, "errors": ["Invalid data."]}, status=status.HTTP_200_OK)
             # if profile:
