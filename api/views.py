@@ -566,7 +566,7 @@ class Pay(APIView):
             orderIds = []
             if products and profile and address:
                 profileSerializer = ProfileSerializer(profile, context=getContext())
-                productSerializer = InsertProductSerializer(products, many=True, context=getContext())
+                productSerializer = ProductSerializer(products, many=True, context=getContext())
                 addressSerializer = AddressSerializer(address, context=getContext())
                 
                 total_amount = 0
@@ -612,7 +612,7 @@ class Pay(APIView):
                         'tel': addressSerializer.data['tel'],
                         'is_hidden': 0,
                         'prefecture': addressSerializer.data['prefecture']['url'],
-                        'seller': product['user'],
+                        'seller': product['user']['url'],
                         'purchaser' : profileSerializer.data['url'],
                         'status': 1
                     }
