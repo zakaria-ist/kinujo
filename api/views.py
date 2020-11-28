@@ -586,19 +586,17 @@ class Pay(APIView):
                     else:
                         groupProducts[product['user']['url']] = [product]
 
-                for key, groupProduct in groupProducts.items():
+                for product in productSerializer.data:
+                    quantity = quantities['item_' + str(product['id'])]
                     groupTotal = 0
-                    groupTax = 0
-                    groupShippingFee = 0
-                    for product in groupProduct:
-                        quantity = quantities['item_' + str(product['id'])]
-                        if profileSerializer.data['is_seller']:
-                            groupTotal = float(groupTotal) + (float(product['store_price']) * float(quantity))
-                        else:
-                            groupTotal = float(groupTotal) + (float(product['price']) * float(quantity))
-                        groupShippingFee = float(groupShippingFee) + float(product['shipping_fee'])
-                    
+                    groupShippingFee = float(product['shipping_fee'])
+
+                    if profileSerializer.data['is_seller']:
+                        groupTotal = (float(product['store_price']) * float(quantity))
+                    else:
+                        groupTotal = (float(product['price']) * float(quantity))
                     groupTax = int(float(groupTotal) * float(tax.tax_rate))
+                    
                     order = {
                         'amount' : int(float(groupTotal)),
                         'tax': groupTax,
@@ -634,6 +632,20 @@ class Pay(APIView):
                             varietySerializer = ProductJancodeSerializer(variety, context=getContext())
                             variety = varietySerializer.data['url']
 
+                            # orderReceipt = {
+                            #     'is_copy' : 0,
+                            #     'to_name' : '',
+                            #     'amount' : '',
+                            #     'output_date' : '',
+                            #     'order_date' : '',
+
+                            # }
+                            # orderReceiptSerializer = OrderReceiptSerializer(data=orderReceipt, context=getContext())
+                            # if orderReceiptSerializer.is_valid():
+                            #     orderReceiptSerializer.save()
+                            # else:
+                            #     return Response({"success" : False, "errors" : orderReceiptSerializer.errors}, status=status.HTTP_200_OK)
+                            
                             orderProduct = {
                                 'quantity':  quantity,
                                 'unit_price' : int(float(price)),
