@@ -465,6 +465,7 @@ class UserByIds(APIView):
                     sProfileSerializer = ProfileSerializer(profile, context=getContext())
                     if sProfileSerializer.data['authority']['id'] == 1:
                         profiles = Profile.objects.all()
+                        ids.extend(Profile.objects.all().values_list('id', flat=True))
                     elif sProfileSerializer.data['introducer'] is not None:
                         introducers = sProfileSerializer.data['introducer'].split("/")
                         introducer = introducers[len(introducers)-2]
@@ -868,7 +869,7 @@ class CreateProduct(APIView):
                                 insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
                                     "jan_code" : item['janCode'],
                                     "stock" : item['stock'],
-                                    "vertical" : insertProductVarietySelectionSerializer.data['url']
+                                    "horizontal" : insertProductVarietySelectionSerializer.data['url']
                                 }, context=getContext())
                                 if insertProductJancodeSerializer.is_valid():
                                     insertProductJancodeSerializer.save()
