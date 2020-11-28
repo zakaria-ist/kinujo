@@ -588,7 +588,7 @@ class Pay(APIView):
                     else:
                         groupProducts[product['user']['url']] = [product]
 
-                stripe.Charge.create(
+                charge = stripe.Charge.create(
                     amount=int(float(total_amount)),
                     currency="jpy",
                     source=token_id,
@@ -654,6 +654,7 @@ class Pay(APIView):
                             'shop_name' : shop_name,
                             'address' : addressSerializer.data['address1'],
                             'order_id' : orderSerializer.data['id'],
+                            'payment' : charge['id']
                         }
                         orderReceiptSerializer = OrderReceiptSerializer(data=orderReceipt, context=getContext())
                         if orderReceiptSerializer.is_valid():
