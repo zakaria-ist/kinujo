@@ -529,6 +529,16 @@ class RemoveReferral(APIView):
         profile.save()
         return Response({"success" : True}, status=status.HTTP_200_OK)
 
+class OrderReceipt(APIView):
+    def post(self, request, orderId, format='json'):
+        user = request.data['userId']
+        parent = request.data['parentId']
+        profiles = Profile.objects.filter(id=user).filter(introducer_id=parent)
+        profile = profiles[0]
+        profile.introducer = None
+        profile.save()
+        return Response({"success" : True}, status=status.HTTP_200_OK)
+
 class Pay(APIView):
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
