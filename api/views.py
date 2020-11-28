@@ -891,9 +891,14 @@ class CreateProduct(APIView):
                             }, context=getContext())
                             if insertProductVarietySelectionSerializer.is_valid():
                                 insertProductVarietySelectionSerializer.save()
+                                hiddenValue = 0
+                                if item['delete']:
+                                    hiddenValue = 1
+
                                 insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
                                     "jan_code" : item['janCode'],
                                     "stock" : item['stock'],
+                                    "is_hidden" : hiddenValue,
                                     "horizontal" : insertProductVarietySelectionSerializer.data['url']
                                 }, context=getContext())
                                 if insertProductJancodeSerializer.is_valid():
@@ -954,9 +959,13 @@ class CreateProduct(APIView):
                     mappingValues = twoVariationItems['mappingValue']
                     for choice1 in firstItem['choices']:
                         for choice2 in secondItem['choices']:
+                            hiddenValue = 0
+                            if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
+                                hiddenValue = 1
                             insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
                                 "jan_code" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'],
                                 "stock" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'],
+                                "is_hidden" : hiddenValue,
                                 "horizontal" : firstUrls[choice1['choiceItem']],
                                 "vertical" : secondUrls[choice2['choiceItem']]
                             }, context=getContext())
