@@ -636,6 +636,14 @@ class Pay(APIView):
 
                         orderIds.append(orderSerializer.data['id'])
 
+                        shop_name = ""
+                        if product['user']['nickname']:
+                            shop_name = product['user']['nickname']
+                        if product['user']['real_name']:
+                            shop_name = product['user']['real_name']
+                        if product['user']['shop_name']:
+                            shop_name = product['user']['shop_name']
+
                         orderReceipt = {
                             'is_copy' : 0,
                             'to_name' : addressSerializer.data['name'],
@@ -643,7 +651,7 @@ class Pay(APIView):
                             'output_date' : date.today(),
                             'order_date' : date.today(),
                             'product_name' : product['name'],
-                            'shop_name' : product['user']['shop_name'],
+                            'shop_name' : product['user']['shop_name'] ? ,
                             'address' : addressSerializer.data['address1'],
                             'order_id' : orderSerializer.data['id'],
                         }
