@@ -428,8 +428,7 @@ class CustomerList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        orders = Order.objects.filter(seller=userId).values_list('purchaser_id', flat=True)
-        profiles = Profile.objects.filter(id__in=orders)
+        profiles = Profile.objects.filter(introducer_id=userId)
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
         return Response({"success" : True, "customers" : profileSerializer.data}, status=status.HTTP_200_OK)
 
