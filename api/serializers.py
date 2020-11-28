@@ -144,7 +144,7 @@ class OrderProductCommissionSerializer(serializers.HyperlinkedModelSerializer):
 class OrderReceiptSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = OrderReceipt
-        fields = ['is_copy','to_name','amount','output_date','order_date','product_name','shop_name','address','payment','is_hidden','created','modified']
+        fields = ['is_copy','to_name','amount','output_date','order_date','product_name','shop_name','order_id','address','payment','is_hidden','created','modified']
         
 class FinancialAccountSerialier(serializers.HyperlinkedModelSerializer):
     class Meta:
