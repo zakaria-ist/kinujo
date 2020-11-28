@@ -659,7 +659,7 @@ class Pay(APIView):
                         orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
                         if orderProductSerializer.is_valid():
                             orderProductSerializer.save()
-                            errors = calculateCommission(total_price, orderProductSerializer.data['url'], profileSerializer.data['id'], product['shipping_fee'])
+                            errors = calculateCommission(price, orderProductSerializer.data['url'], profileSerializer.data['id'], product['shipping_fee'])
                             if errors: 
                                 return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
                         else:
