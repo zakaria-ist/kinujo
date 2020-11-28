@@ -652,7 +652,7 @@ class Pay(APIView):
                             'product_name' : product['name'],
                             'shop_name' : shop_name,
                             'address' : addressSerializer.data['address1'],
-                            'order_id' : str(orderSerializer.data['id']),
+                            'order_id' : orderSerializer.data['url'],
                             'payment' : charge['id']
                         }
                         orderReceiptSerializer = OrderReceiptSerializer(data=orderReceipt, context=getContext())
