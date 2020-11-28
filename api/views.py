@@ -24,6 +24,7 @@ import json
 import stripe
 import ast
 from django.conf import settings
+from datetime import date
 
 def getContext():
     factory = APIRequestFactory()
@@ -614,7 +615,7 @@ class Pay(APIView):
                         'prefecture': addressSerializer.data['prefecture']['url'],
                         'seller': product['user']['url'],
                         'purchaser' : profileSerializer.data['url'],
-                        'status': 1
+                        'status': 0
                     }
                     orderSerializer = InsertOrderSerializer(data=order, context=getContext())
                     if orderSerializer.is_valid():
@@ -628,19 +629,22 @@ class Pay(APIView):
 
                         orderIds.append(orderSerializer.data['id'])
 
-                #             # orderReceipt = {
-                #             #     'is_copy' : 0,
-                #             #     'to_name' : '',
-                #             #     'amount' : '',
-                #             #     'output_date' : '',
-                #             #     'order_date' : '',
-
-                #             # }
-                #             # orderReceiptSerializer = OrderReceiptSerializer(data=orderReceipt, context=getContext())
-                #             # if orderReceiptSerializer.is_valid():
-                #             #     orderReceiptSerializer.save()
-                #             # else:
-                #             #     return Response({"success" : False, "errors" : orderReceiptSerializer.errors}, status=status.HTTP_200_OK)
+                        orderReceipt = {
+                            'is_copy' : 0,
+                            'to_name' : addressSerializer.data['name'],
+                            'amount' : groupTotal,
+                            'output_date' : date.today(),
+                            'order_date' : date.today(),
+                            'product_name' : product['name'],
+                            'shop_name' : product.user.shop_name,
+                            'address' : addressSerializer.data['address1'],
+                            'order_id' : orderSerializer.data['id'],
+                        }
+                        orderReceiptSerializer = OrderReceiptSerializer(data=orderReceipt, context=getContext())
+                        if orderReceiptSerializer.is_valid():
+                            orderReceiptSerializer.save()
+                        else:
+                            return Response({"success" : False, "errors" : orderReceiptSerializer.errors}, status=status.HTTP_200_OK)
                             
                         orderProduct = {
                             'quantity':  quantity,
