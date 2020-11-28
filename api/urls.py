@@ -41,6 +41,7 @@ urlpatterns = [
     url(r'app/config', views.AppConfig.as_view(), name='app-config'),
     url(r'removeReferral', views.RemoveReferral.as_view(), name='app-config'),
     url('^createProduct/(?P<userId>.+)/$', views.CreateProduct.as_view()),
+    url('^latestOrderReceipt/(?P<orderId>.+)/$', views.OrderReceipt.as_view()),
     url('^updateProfileImage/(?P<userId>.+)/$', views.UpdateProfileImage.as_view()),
     url('^sellerProducts/(?P<userId>.+)/$', views.ProductList.as_view()),
     url('^productJancodes/(?P<productId>.+)/$', views.ProductJanCodes.as_view()),
