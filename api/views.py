@@ -626,6 +626,7 @@ class Pay(APIView):
                     orderSerializer = InsertOrderSerializer(data=order, context=getContext())
                     if orderSerializer.is_valid():
                         newOrder = orderSerializer.save()
+                        return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
                         varietyId = varieties['item_' + str(product['id'])]
 
                         variety = None
