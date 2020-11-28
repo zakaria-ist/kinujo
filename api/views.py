@@ -675,7 +675,7 @@ class Pay(APIView):
                     amount=int(float(total_amount)),
                     currency="jpy",
                     source=token_id,
-                    description="Order by" + str(profileSerializer.data['id']),
+                    description="Order by " + str(profileSerializer.data['id']),
                 )
 
                 for orderId in orderIds:

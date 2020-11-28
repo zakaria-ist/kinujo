@@ -48,6 +48,7 @@ PAYMENT_STATUS = (
 )
 
 ORDER_STATUS = (
+    (0, 'NEW'),
     (1, 'IN PROCESSING'),
     (2, 'SHIPMENT COMPLETE')
 )
