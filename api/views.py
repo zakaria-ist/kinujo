@@ -617,16 +617,16 @@ class Pay(APIView):
                         'status': 1
                     }
                     orderSerializer = InsertOrderSerializer(data=order, context=getContext())
-                #     if orderSerializer.is_valid():
-                #         newOrder = orderSerializer.save()
-                #         varietyId = varieties['item_' + str(product['id'])]
+                    if orderSerializer.is_valid():
+                        newOrder = orderSerializer.save()
+                        varietyId = varieties['item_' + str(product['id'])]
 
-                #         variety = None
-                #         variety = ProductJancode.objects.get(id=varietyId)
-                #         varietySerializer = ProductJancodeSerializer(variety, context=getContext())
-                #         variety = varietySerializer.data['url']
+                        variety = None
+                        variety = ProductJancode.objects.get(id=varietyId)
+                        varietySerializer = ProductJancodeSerializer(variety, context=getContext())
+                        variety = varietySerializer.data['url']
 
-                #         orderIds.append(orderSerializer.data['id'])
+                        orderIds.append(orderSerializer.data['id'])
 
                 #             # orderReceipt = {
                 #             #     'is_copy' : 0,
@@ -642,30 +642,30 @@ class Pay(APIView):
                 #             # else:
                 #             #     return Response({"success" : False, "errors" : orderReceiptSerializer.errors}, status=status.HTTP_200_OK)
                             
-                #         orderProduct = {
-                #             'quantity':  quantity,
-                #             'unit_price' : int(float(price)),
-                #             'total_price' : int(float(groupTotal)),
-                #             'tax': int(float(groupTax)),
-                #             'total_amount': int(float(groupTotal) + float(groupTax)),
-                #             'order': orderSerializer.data['url'],
-                #             'product_jan_code': variety
-                #         }
-                #         productJancode = ProductJancode.objects.get(id=varietyId)
+                        orderProduct = {
+                            'quantity':  quantity,
+                            'unit_price' : int(float(price)),
+                            'total_price' : int(float(groupTotal)),
+                            'tax': int(float(groupTax)),
+                            'total_amount': int(float(groupTotal) + float(groupTax)),
+                            'order': orderSerializer.data['url'],
+                            'product_jan_code': variety
+                        }
+                        productJancode = ProductJancode.objects.get(id=varietyId)
                         
-                #         if productJancode:
-                #             productJancode.stock = int(productJancode.stock) - int(quantity)
-                #             productJancode.save()
-                #         orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
-                #         if orderProductSerializer.is_valid():
-                #             orderProductSerializer.save()
-                #             errors = calculateCommission(price, orderProductSerializer.data['url'], profileSerializer.data['id'], product['shipping_fee'])
-                #             if errors: 
-                #                 return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
-                #         else:
-                #             return Response({"success" : False, "errors" : orderProductSerializer.errors}, status=status.HTTP_200_OK)
-                #     else:
-                #         return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
+                        if productJancode:
+                            productJancode.stock = int(productJancode.stock) - int(quantity)
+                            productJancode.save()
+                        orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
+                        if orderProductSerializer.is_valid():
+                            orderProductSerializer.save()
+                            errors = calculateCommission(price, orderProductSerializer.data['url'], profileSerializer.data['id'], product['shipping_fee'])
+                            if errors: 
+                                return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
+                        else:
+                            return Response({"success" : False, "errors" : orderProductSerializer.errors}, status=status.HTTP_200_OK)
+                    else:
+                        return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
                 
                 # stripe.Charge.create(
                 #     amount=int(float(total_amount)),
