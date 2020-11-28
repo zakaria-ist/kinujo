@@ -123,13 +123,18 @@ class ProductJancodeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductJancode
         fields = ['id', 'url', 'horizontal','vertical','jan_code','stock','is_hidden','created','modified']
+class OrderReceiptSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = OrderReceipt
+        fields = ['url', 'id', 'is_copy','to_name','amount','output_date','order_date','product_name','shop_name','order','address','payment','is_hidden','created','modified']
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     seller = ProfileSerializer(read_only=True)
     purchaser = ProfileSerializer(read_only=True)
     prefecture = PrefectureSerializer(read_only=True)
+    orderReceipts = OrderReceiptSerializer(many=True, required=False)
     class Meta:
         model = Order
-        fields = ['seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','created','modified']
+        fields = ['orderReceipts', 'seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','created','modified']
 class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
     order = OrderSerializer()
     product_jan_code = ProductJancodeSerializer()
@@ -141,10 +146,6 @@ class OrderProductCommissionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = OrderProductCommission
         fields = ['order_product','user','amount','is_sales','is_food','shipping_fee','is_hidden','created','modified']
-class OrderReceiptSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = OrderReceipt
-        fields = ['is_copy','to_name','amount','output_date','order_date','product_name','shop_name','address','payment','is_hidden','created','modified']
         
 class FinancialAccountSerialier(serializers.HyperlinkedModelSerializer):
     class Meta:

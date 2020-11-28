@@ -61,7 +61,7 @@ class OrderProductCommission(models.Model):
 
 
 class OrderReceipt(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, related_name='orderReceipts', on_delete=models.CASCADE)
     is_copy = models.BooleanField(default=False)
     to_name = models.CharField(max_length=255)
     amount = models.BigIntegerField(validators=[MaxValueValidator(99999999999)])
