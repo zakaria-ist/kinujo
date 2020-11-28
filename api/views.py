@@ -612,7 +612,7 @@ class Pay(APIView):
                         'tel': addressSerializer.data['tel'],
                         'is_hidden': 0,
                         'prefecture': addressSerializer.data['prefecture']['url'],
-                        'seller': product.user,
+                        'seller': product['user'],
                         'purchaser' : profileSerializer.data['url'],
                         'status': 1
                     }
