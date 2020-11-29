@@ -416,7 +416,7 @@ class AddressList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        addresses = Address.objects.filter(user=userId);
+        addresses = Address.objects.filter(user=userId)
         addressSerializer = AddressSerializer(addresses, many=True, context=getContext())
         updatedAddress = []
         for address in addressSerializer.data:
@@ -1081,16 +1081,18 @@ class EditProduct(APIView):
             # productSerializer = InsertProductSerializer(data=productData, context=getContext())
             # if productSerializer.is_valid():
             #     productSerializer.save()
-            #     productImages = request.data['productImages']
-            #     for productImage in productImages:
-            #         productImageSerializer = InsertProductImageSerializer(data={
-            #             'image': productImage['url'],
-            #             'product' : productSerializer.data['url']
-            #         }, context=getContext())
-            #         if productImageSerializer.is_valid():
-            #             productImageSerializer.save()
-            #         else:
-            #             return Response({"success" : False, "errors": productImageSerializer.errors}, status=status.HTTP_200_OK) 
+
+            productImages = request.data['productImages']
+            for productImage in productImages:
+                if 'id' not in productImage:
+                    productImageSerializer = InsertProductImageSerializer(data={
+                        'image': productImage['url'],
+                        'product' : productSerializer.data['url']
+                    }, context=getContext())
+                    if productImageSerializer.is_valid():
+                        productImageSerializer.save()
+                    else:
+                        return Response({"success" : False, "errors": productImageSerializer.errors}, status=status.HTTP_200_OK) 
 
             #     if request.data['productVariation'] == 'none':
             #         noneVariationItems = request.data['noneVariationItems']
