@@ -794,10 +794,6 @@ class CreateProduct(APIView):
             profile = Profile.objects.get(id=userId)
             profileSerializer = ProfileSerializer(profile, context=getContext())
 
-            productCategories = request.data['productCategory'].split("/")
-            productCategoryId = productCategories[len(productCategories)-2]
-            productCategory = ProductCategory.objects.get(id=productCategoryId)
-
             productData = {
                 "name" : request.data['productName'],
                 "brand_name" : request.data["brandName"],
@@ -809,7 +805,7 @@ class CreateProduct(APIView):
                 "store_price" : request.data['storePrice'],
                 "shipping_fee": request.data['shipping'],
                 "description" : request.data['productDescription'],
-                "category" : productCategory,
+                "category" : request.data['productCategory'],
                 "user" : profileSerializer.data['url']
             }
             if request.data['publishState'] == 'published':
@@ -1058,7 +1054,12 @@ class EditProduct(APIView):
             product.store_price = request.data["storePrice"]
             product.shipping_fee = request.data["shipping"]
             product.description = request.data["productDescription"]
-            product.category = request.data["productCategory"]
+
+            productCategories = request.data['productCategory'].split("/")
+            productCategoryId = productCategories[len(productCategories)-2]
+            productCategory = ProductCategory.objects.get(id=productCategoryId)
+
+            product.category = productCategory
             if request.data['publishState'] == 'published':
                 product.is_opened = 1
             else:
