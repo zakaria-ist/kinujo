@@ -240,7 +240,7 @@ class UserRegister(APIView):
                     'password' : request.data['password'],
                     'nickname' : request.data['nickname'],
                     'user_code' : user.id,
-                    'authority' : authority,
+                    'authority' : authoritySerializer.data['url'],
                     'is_seller' : is_seller
                 }
                 if request.data['introducer']:
@@ -250,7 +250,7 @@ class UserRegister(APIView):
                     except Exception as e:
                         print(e)
                     if introducerProfile:
-                        introducerProfileSerializer = ProfileSerializer(introducerProfile, context=getContext())
+                        introducerProfileSerializer = InsertProfileSerializer(introducerProfile, context=getContext())
                         profileItem['introducer'] = introducerProfileSerializer.data['url']
 
                 profileSerializer = ProfileSerializer(data=profileItem, context=getContext())
