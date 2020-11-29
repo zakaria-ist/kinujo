@@ -240,7 +240,7 @@ class UserRegister(APIView):
                     'password' : request.data['password'],
                     'nickname' : request.data['nickname'],
                     'user_code' : user.id,
-                    'authority' : authoritySerializer.data['url'],
+                    'authority' : authority,
                     'is_seller' : is_seller
                 }
                 if request.data['introducer']:
