@@ -793,8 +793,6 @@ class CreateProduct(APIView):
 
             profile = Profile.objects.get(id=userId)
             profileSerializer = ProfileSerializer(profile, context=getContext())
-            productCategory = ProductCategory.objects.get(id=1)
-            productCategorySerializer = ProductCategorySerializer(productCategory, context=getContext())
 
             productData = {
                 "name" : request.data['productName'],
@@ -807,7 +805,7 @@ class CreateProduct(APIView):
                 "store_price" : request.data['storePrice'],
                 "shipping_fee": request.data['shipping'],
                 "description" : request.data['productDescription'],
-                "category" : productCategorySerializer.data['url'],
+                "category" : request.data['productCategory'],
                 "user" : profileSerializer.data['url']
             }
             if request.data['publishState'] == 'published':
