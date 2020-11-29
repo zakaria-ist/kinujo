@@ -1155,8 +1155,8 @@ class EditProduct(APIView):
                 secondProductVariety.name = firstItem['horizontalItem']
                 secondProductVariety.save()
 
-                firstInsertProductVarietySerializer = InsertProductSerializer(firstProductVariety, context=getContext())
-                secondInsertProductVarietySerializer = InsertProductSerializer(secondProductVariety, context=getContext())
+                firstInsertProductVarietySerializer = InsertProductVarietySerializer(firstProductVariety, context=getContext())
+                secondInsertProductVarietySerializer = InsertProductVarietySerializer(secondProductVariety, context=getContext())
 
                 firstUrls = {}
                 secondUrls = {}
@@ -1211,21 +1211,21 @@ class EditProduct(APIView):
                             productJancode.is_hidden = is_hidden
                             productJancode.stock = tmpChoice['stock']
                             productJancode.save()   
-                        # else:
-                        #     hiddenValue = 0
-                        #     if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
-                        #         hiddenValue = 1
-                        #     insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
-                        #         "jan_code" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'],
-                        #         "stock" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'],
-                        #         "is_hidden" : hiddenValue,
-                        #         "horizontal" : firstUrls[choice1['choiceItem']],
-                        #         "vertical" : secondUrls[choice2['choiceItem']]
-                        #     }, context=getContext())
-                        #     if insertProductJancodeSerializer.is_valid():
-                        #         insertProductJancodeSerializer.save()
-                        #     else:
-                        #         return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK)
+                        else:
+                            hiddenValue = 0
+                            if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
+                                hiddenValue = 1
+                            insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
+                                "jan_code" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'],
+                                "stock" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'],
+                                "is_hidden" : hiddenValue,
+                                "horizontal" : firstUrls[choice1['choiceItem']],
+                                "vertical" : secondUrls[choice2['choiceItem']]
+                            }, context=getContext())
+                            if insertProductJancodeSerializer.is_valid():
+                                insertProductJancodeSerializer.save()
+                            else:
+                                return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK)
 
             return Response({"success" : True}, status=status.HTTP_200_OK)
         except Exception as e:
