@@ -1117,7 +1117,7 @@ class EditProduct(APIView):
                         else:
                             productVarietySerializer = ProductVarietySerializer(productVariety, context=getContext())
                             productVarietySelectionSerializer = InsertProductVarietySelectionSerializer(data={
-                                "selection" : item['name'],
+                                "selection" : item['choice'],
                                 "product_variety" : productVarietySerializer.data['url']
                             }, context=getContext())
                             if productVarietySelectionSerializer.is_valid():
