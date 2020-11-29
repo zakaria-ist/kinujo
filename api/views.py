@@ -1193,19 +1193,19 @@ class EditProduct(APIView):
                         else:
                             return Response({"success" : False, "errors": secondInsertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
 
-                # for choice1 in firstItem['choices']:
-                #     for choice2 in secondItem['choices']:
-                #         tmpChoice = mappingValues[choice1['choiceItem']][choice2['choiceItem']]
-                #         if 'id' in tmpChoice:
-                #             productJancode = ProductJancode.objects.get(id=tmpChoice['id'])
-                #             productJancode.jan_code = tmpChoice['janCode']
-                #             is_hidden = 0
-                #             if tmpChoice['delete']:
-                #                 is_hidden = 1
-                #             productJancode.jan_code = tmpChoice['janCode']
-                #             productJancode.is_hidden = is_hidden
-                #             productJancode.stock = tmpChoice['stock']
-                #             productJancode.save()   
+                for choice1 in firstItem['choices']:
+                    for choice2 in secondItem['choices']:
+                        tmpChoice = mappingValues[choice1['choiceItem']][choice2['choiceItem']]
+                        if 'id' in tmpChoice:
+                            productJancode = ProductJancode.objects.get(id=tmpChoice['id'])
+                            productJancode.jan_code = tmpChoice['janCode']
+                            is_hidden = 0
+                            if tmpChoice['delete']:
+                                is_hidden = 1
+                            productJancode.jan_code = tmpChoice['janCode']
+                            productJancode.is_hidden = is_hidden
+                            productJancode.stock = tmpChoice['stock']
+                            productJancode.save()   
                 #         else:
                 #             hiddenValue = 0
                 #             if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
