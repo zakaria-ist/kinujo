@@ -306,8 +306,10 @@ class UserLogin(APIView):
                     return Response({"success" : False, "error" : "入力された情報が正しくありません"}, status=status.HTTP_200_OK)
                     return Response({"success" : False, "error" : "Incorrect Password"}, status=status.HTTP_200_OK)
             else:
+                    return Response({"success" : False, "error" : "入力された情報が正しくありません"}, status=status.HTTP_200_OK)
                 return Response({"success" : False, "error" : "Account Not Exists"}, status=status.HTTP_200_OK)
         else:
+                    return Response({"success" : False, "error" : "入力された情報が正しくありません"}, status=status.HTTP_200_OK)
             return Response({"success" : False, "error" : "Account Not Exists"}, status=status.HTTP_200_OK)
 
 class PasswordReset(APIView):
