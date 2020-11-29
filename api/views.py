@@ -1137,11 +1137,11 @@ class EditProduct(APIView):
                                 return Response({"success" : False, "errors": productJancodeSerializer.errors}, status=status.HTTP_200_OK) 
                         else:
                             return Response({"success" : False, "errors": productVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
-                elif request.data['productVariation'] == 'two':
-                    twoVariationItems = request.data['twoVariationItems']
-                    mappingValues = twoVariationItems['mappingValue']
-                    firstItem = twoVariationItems['items'][0]
-                    secondItem = twoVariationItems['items'][1]
+            elif request.data['productVariation'] == 'two':
+                twoVariationItems = request.data['twoVariationItems']
+                mappingValues = twoVariationItems['mappingValue']
+                firstItem = twoVariationItems['items'][0]
+                secondItem = twoVariationItems['items'][1]
             #         firstUrls = {}
             #         secondUrls = {}
             #         firstItem = twoVariationItems['items'][0]
