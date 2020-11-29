@@ -1084,7 +1084,7 @@ class EditProduct(APIView):
 
             productImages = request.data['productImages']
             for productImage in productImages:
-                if 'id' not in productImage:
+                if 'is_old' not in productImage:
                     productImageSerializer = InsertProductImageSerializer(data={
                         'image': productImage['url'],
                         'product' : productSerializer.data['url']
