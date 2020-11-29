@@ -1205,7 +1205,7 @@ class EditProduct(APIView):
                             productJancode = ProductJancode.objects.get(id=tmpChoice['id'])
                             productJancode.jan_code = tmpChoice['janCode']
                             is_hidden = 0
-                            if tmpChoice['delete']:
+                            if 'delete' in tmpChoice and tmpChoice['delete']:
                                 is_hidden = 1
                             productJancode.jan_code = tmpChoice['janCode']
                             productJancode.is_hidden = is_hidden
@@ -1213,8 +1213,9 @@ class EditProduct(APIView):
                             productJancode.save()   
                         else:
                             hiddenValue = 0
-                            if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
-                                hiddenValue = 1
+                            if 'delete' in mappingValues[choice1['choiceItem']][choice2['choiceItem']]:
+                                if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
+                                    hiddenValue = 1
                             insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
                                 "jan_code" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'],
                                 "stock" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'],
