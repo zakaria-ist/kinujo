@@ -111,7 +111,7 @@ class ProductVarietySerializer(serializers.HyperlinkedModelSerializer):
     product = ProductSerializer()
     class Meta:
         model = ProductVariety
-        fields = ['name','product','vertical_and_horizontal','is_hidden','created','modified']
+        fields = ['url', 'name','product','vertical_and_horizontal','is_hidden','created','modified']
 class ProductVarietySelectionSerializer(serializers.HyperlinkedModelSerializer):
     product_variety = ProductVarietySerializer()
     class Meta:
