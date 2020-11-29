@@ -1078,10 +1078,7 @@ class EditProduct(APIView):
                 product.target = 2
             product.save()
 
-            # productSerializer = InsertProductSerializer(data=productData, context=getContext())
-            # if productSerializer.is_valid():
-            #     productSerializer.save()
-
+            productSerializer = InsertProductSerializer(product, context=getContext())
             productImages = request.data['productImages']
             for productImage in productImages:
                 if 'is_old' not in productImage:
