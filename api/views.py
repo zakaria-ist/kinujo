@@ -1055,11 +1055,11 @@ class EditProduct(APIView):
             product.shipping_fee = request.data["shipping"]
             product.description = request.data["productDescription"]
 
-            productCategories = request.data['productCategory'].split("/")
-            productCategoryId = productCategories[len(productCategories)-2]
-            productCategory = ProductCategory.objects.get(id=productCategoryId)
+            # productCategories = request.data['productCategory'].split("/")
+            # productCategoryId = productCategories[len(productCategories)-2]
+            # productCategory = ProductCategory.objects.get(id=productCategoryId)
 
-            product.category = productCategory
+            # product.category = productCategory
             if request.data['publishState'] == 'published':
                 product.is_opened = 1
             else:
