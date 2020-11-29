@@ -1112,7 +1112,7 @@ class EditProduct(APIView):
                             productJancode.save()
 
                             productVarietySelection = ProductVarietySelection.objects.get(id=productJancode.horizontal.id)
-                            productVarietySelection.selection = item['name']
+                            productVarietySelection.selection = item['choice']
                             productVarietySelection.save()
                         else:
                             productVarietySerializer = ProductVarietySerializer(productVariety, context=getContext())
