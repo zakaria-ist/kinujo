@@ -339,6 +339,56 @@ class PasswordReset(APIView):
                 return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
         else:
             return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+            
+class ChangeEmail(APIView):
+    def post(self, request, format='json'):
+        profile = None
+        try:
+            profile = Profile.objects.get(tel=request.data['tel'])
+        except Exception as e:
+            print(e)
+        if profile:
+            user = None
+            try:
+                user = User.objects.get(id = profile.user_id)
+            except Exception as e:
+                print(e)
+            if user:
+                    user.email = request.data['email']
+                    user.save()
+
+                    profile.email = request.data['email']
+                    profile.save()
+                    return Response({"success" : True}, status=status.HTTP_200_OK)
+            else:
+                return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+
+class ChangePhone(APIView):
+    def post(self, request, format='json'):
+        profile = None
+        try:
+            profile = Profile.objects.get(tel=request.data['tel'])
+        except Exception as e:
+            print(e)
+        if profile:
+            user = None
+            try:
+                user = User.objects.get(id = profile.user_id)
+            except Exception as e:
+                print(e)
+            if user:
+                    user.username = request.data['phone']
+                    user.save()
+
+                    profile.tel = request.data['phone']
+                    profile.save()
+                    return Response({"success" : True}, status=status.HTTP_200_OK)
+            else:
+                return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
 
 class AppConfig(APIView):
     def post(self, request, format='json'):
