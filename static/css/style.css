@@ -6440,3 +6440,7 @@ div.dataTables_wrapper div.dataTables_filter label {
     font-size: 25px;
     color: #000;
 }
+
+.table tr td, .table tr th{
+    vertical-align: middle;
+}
