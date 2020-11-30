@@ -250,10 +250,10 @@ class UserRegister(APIView):
                     except Exception as e:
                         print(e)
                     if introducerProfile:
-                        introducerProfileSerializer = ProfileSerializer(introducerProfile, context=getContext())
+                        introducerProfileSerializer = InsertProfileSerializer(introducerProfile, context=getContext())
                         profileItem['introducer'] = introducerProfileSerializer.data['url']
 
-                profileSerializer = ProfileSerializer(data=profileItem, context=getContext())
+                profileSerializer = InsertProfileSerializer(data=profileItem, context=getContext())
                 if profileSerializer.is_valid():
                     profile = profileSerializer.save()
                     if user:
@@ -306,8 +306,10 @@ class UserLogin(APIView):
                     return Response({"success" : False, "error" : "入力された情報が正しくありません"}, status=status.HTTP_200_OK)
                     return Response({"success" : False, "error" : "Incorrect Password"}, status=status.HTTP_200_OK)
             else:
+                return Response({"success" : False, "error" : "入力された情報が正しくありません"}, status=status.HTTP_200_OK)
                 return Response({"success" : False, "error" : "Account Not Exists"}, status=status.HTTP_200_OK)
         else:
+            return Response({"success" : False, "error" : "入力された情報が正しくありません"}, status=status.HTTP_200_OK)
             return Response({"success" : False, "error" : "Account Not Exists"}, status=status.HTTP_200_OK)
 
 class PasswordReset(APIView):
@@ -333,6 +335,56 @@ class PasswordReset(APIView):
                     return Response({"success" : True}, status=status.HTTP_200_OK)
                 else:
                     return Response({"success" : False, "error" : "password_mismatch"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+            
+class ChangeEmail(APIView):
+    def post(self, request, format='json'):
+        profile = None
+        try:
+            profile = Profile.objects.get(tel=request.data['tel'])
+        except Exception as e:
+            print(e)
+        if profile:
+            user = None
+            try:
+                user = User.objects.get(id = profile.user_id)
+            except Exception as e:
+                print(e)
+            if user:
+                    user.email = request.data['email']
+                    user.save()
+
+                    profile.email = request.data['email']
+                    profile.save()
+                    return Response({"success" : True}, status=status.HTTP_200_OK)
+            else:
+                return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+
+class ChangePhone(APIView):
+    def post(self, request, format='json'):
+        profile = None
+        try:
+            profile = Profile.objects.get(tel=request.data['tel'])
+        except Exception as e:
+            print(e)
+        if profile:
+            user = None
+            try:
+                user = User.objects.get(id = profile.user_id)
+            except Exception as e:
+                print(e)
+            if user:
+                    user.username = request.data['phone']
+                    user.save()
+
+                    profile.tel = request.data['phone']
+                    profile.save()
+                    return Response({"success" : True}, status=status.HTTP_200_OK)
             else:
                 return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
         else:
@@ -416,7 +468,7 @@ class AddressList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        addresses = Address.objects.filter(user=userId);
+        addresses = Address.objects.filter(user=userId)
         addressSerializer = AddressSerializer(addresses, many=True, context=getContext())
         updatedAddress = []
         for address in addressSerializer.data:
@@ -781,6 +833,7 @@ class CreateProduct(APIView):
                 variety = 1
             if request.data['productVariation'] == 'two':
                 twoVariationItems = request.data['twoVariationItems']
+                mappingValues = twoVariationItems['mappingValue']
                 firstItem = twoVariationItems['items'][0]
                 secondItem = twoVariationItems['items'][1]
                 for choice1 in firstItem['choices']:
@@ -793,8 +846,6 @@ class CreateProduct(APIView):
 
             profile = Profile.objects.get(id=userId)
             profileSerializer = ProfileSerializer(profile, context=getContext())
-            productCategory = ProductCategory.objects.get(id=1)
-            productCategorySerializer = ProductCategorySerializer(productCategory, context=getContext())
 
             productData = {
                 "name" : request.data['productName'],
@@ -807,7 +858,7 @@ class CreateProduct(APIView):
                 "store_price" : request.data['storePrice'],
                 "shipping_fee": request.data['shipping'],
                 "description" : request.data['productDescription'],
-                "category" : productCategorySerializer.data['url'],
+                "category" : request.data['productCategory'],
                 "user" : profileSerializer.data['url']
             }
             if request.data['publishState'] == 'published':
@@ -979,6 +1030,260 @@ class CreateProduct(APIView):
             return Response({"success" : True}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
+
+class EditProduct(APIView):
+    def post(self, request, userId, format='json'):
+        try:
+            if request.data['id'] == "":
+                return Response({"success" : True, "errors" : ["Invalid update."]}, status=status.HTTP_200_OK)
+            if request.data['productName'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in product name."]}, status=status.HTTP_200_OK)
+            if request.data['brandName'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in brand name."]}, status=status.HTTP_200_OK)
+            if request.data['pr'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in PR statement."]}, status=status.HTTP_200_OK)
+            if request.data['productId'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in product ID."]}, status=status.HTTP_200_OK)
+            if request.data['productCategory'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in product category."]}, status=status.HTTP_200_OK)
+            if request.data['productVariation'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in product variation."]}, status=status.HTTP_200_OK)
+            if request.data['publishState'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in publish state."]}, status=status.HTTP_200_OK)
+            if request.data['publishDate'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in publish date."]}, status=status.HTTP_200_OK)
+            if request.data['price'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in price."]}, status=status.HTTP_200_OK)
+            if request.data['storePrice'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in store price."]}, status=status.HTTP_200_OK)
+            if request.data['shipping'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in shipping."]}, status=status.HTTP_200_OK)
+            if request.data['productPageDisplayMethod'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in product page display method."]}, status=status.HTTP_200_OK)
+            if request.data['productDescription'] == "":
+                return Response({"success" : True, "errors" : ["Please fill in product description."]}, status=status.HTTP_200_OK)
+
+            variety = 0
+
+            if request.data['productVariation'] == 'none':
+                noneVariationItems = request.data['noneVariationItems']
+                if noneVariationItems['janCode'] == "":
+                    return Response({"success" : True, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                if noneVariationItems['stock'] == "":
+                    return Response({"success" : True, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
+                variety = 0
+            if request.data['productVariation'] == 'one':
+                oneVariationItems = request.data['oneVariationItems']
+                for item in oneVariationItems['items']:
+                    if item['janCode'] == "":
+                        return Response({"success" : True, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                    if item['stock'] == "":
+                        return Response({"success" : True, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
+                variety = 1
+            if request.data['productVariation'] == 'two':
+                twoVariationItems = request.data['twoVariationItems']
+                mappingValues = twoVariationItems['mappingValue']
+                firstItem = twoVariationItems['items'][0]
+                secondItem = twoVariationItems['items'][1]
+                for choice1 in firstItem['choices']:
+                    for choice2 in secondItem['choices']:
+                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'] == "":
+                            return Response({"success" : True, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'] == "":
+                            return Response({"success" : True, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
+                variety = 2
+
+            profile = Profile.objects.get(id=userId)
+            profileSerializer = ProfileSerializer(profile, context=getContext())
+
+
+            product = Product.objects.get(id=request.data['id'])
+            product.name = request.data['productName']
+            product.brand_name = request.data["brandName"]
+            product.pr = request.data["pr"]
+            product.url_str = request.data["productId"]
+            product.variety = variety
+            product.opened_date = request.data["publishDate"]
+            product.price = request.data["price"]
+            product.store_price = request.data["storePrice"]
+            product.shipping_fee = request.data["shipping"]
+            product.description = request.data["productDescription"]
+
+            productCategories = request.data['productCategory'].split("/")
+            productCategoryId = productCategories[len(productCategories)-2]
+            productCategory = ProductCategory.objects.get(id=productCategoryId)
+
+            product.category = productCategory
+            if request.data['publishState'] == 'published':
+                product.is_opened = 1
+            else:
+                product.is_opened = 0
+
+            if request.data['productStatus'] == 'new':
+                product.is_used = 0
+            else:
+                product.is_used = 1
+
+            if request.data['draft']:
+                product.is_draft = 1
+            else:
+                product.is_draft = 0
+
+            if request.data['targetUser'] == 'allUser':
+                product.target = 0
+            elif request.data['targetUser'] == 'generalUser':
+                product.target = 1
+            elif request.data['targetUser'] == 'storeUser':
+                product.target = 2
+            product.save()
+
+            productSerializer = InsertProductSerializer(product, context=getContext())
+            productImages = request.data['productImages']
+            for productImage in productImages:
+                if 'is_old' not in productImage:
+                    productImageSerializer = InsertProductImageSerializer(data={
+                        'image': productImage['url'],
+                        'product' : productSerializer.data['url']
+                    }, context=getContext())
+                    if productImageSerializer.is_valid():
+                        productImageSerializer.save()
+                    else:
+                        return Response({"success" : False, "errors": productImageSerializer.errors}, status=status.HTTP_200_OK) 
+
+            if request.data['productVariation'] == 'none':
+                noneVariationItems = request.data['noneVariationItems']
+                if "id" in noneVariationItems:
+                    productJancode = ProductJancode.objects.get(id=noneVariationItems["id"])
+                    productJancode.jan_code = noneVariationItems['janCode']
+                    productJancode.stock = noneVariationItems['stock']
+                    productJancode.save()
+            elif request.data['productVariation'] == 'one':
+                oneVariationItems = request.data['oneVariationItems']
+                productVariety = ProductVariety.objects.get(id=oneVariationItems['id'])
+                productVarietySerializer = ProductVarietySerializer(productVariety, context=getContext())
+                productVariety.name = oneVariationItems['name']
+                productVariety.save()
+
+                for item in oneVariationItems['items']:
+                    if "id" in item:
+                        productJancode = ProductJancode.objects.get(id=item["id"])
+                        productJancode.jan_code = item['janCode']
+                        productJancode.stock = item['stock']
+                        productJancode.save()
+
+                        productVarietySelection = ProductVarietySelection.objects.get(id=productJancode.horizontal.id)
+                        productVarietySelection.selection = item['choice']
+                        productVarietySelection.save()
+                    else:
+                        productVarietySelectionSerializer = InsertProductVarietySelectionSerializer(data={
+                            "selection" : item['choice'],
+                            "product_variety" : productVarietySerializer.data['url']
+                        }, context=getContext())
+                        if productVarietySelectionSerializer.is_valid():
+                            productVarietySelectionSerializer.save()
+                            
+                            productJancodeSerializer = InsertProductJancodeSerializer(data={
+                                "jan_code" : item['janCode'],
+                                "stock" : item['stock'],
+                                "is_hidden" : 0,
+                                "horizontal" : productVarietySelectionSerializer.data['url']
+                            }, context=getContext())
+                            if productJancodeSerializer.is_valid():
+                                productJancodeSerializer.save()
+                            else:
+                                return Response({"success" : False, "errors": productJancodeSerializer.errors}, status=status.HTTP_200_OK) 
+                        else:
+                            return Response({"success" : False, "errors": productVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
+            elif request.data['productVariation'] == 'two':
+                twoVariationItems = request.data['twoVariationItems']
+                mappingValues = twoVariationItems['mappingValue']
+                firstItem = twoVariationItems['items'][0]
+                secondItem = twoVariationItems['items'][1]
+                
+                firstProductVariety = ProductVariety.objects.get(id=firstItem['id'])
+                firstProductVariety.name = firstItem['horizontalItem']
+                firstProductVariety.save()
+                secondProductVariety = ProductVariety.objects.get(id=secondItem['id'])
+                secondProductVariety.name = firstItem['horizontalItem']
+                secondProductVariety.save()
+
+                firstInsertProductVarietySerializer = InsertProductVarietySerializer(firstProductVariety, context=getContext())
+                secondInsertProductVarietySerializer = InsertProductVarietySerializer(secondProductVariety, context=getContext())
+
+                firstUrls = {}
+                secondUrls = {}
+                for choice in firstItem['choices']:
+                    if 'id' in choice:
+                        productVarietySelection = ProductVarietySelection.objects.get(id=choice['id'])
+                        productVarietySelection.selection = choice['choiceItem']
+                        productVarietySelection.save()
+
+                        firstInsertProductVarietySelectionSerializer = InsertProductVarietySelectionSerializer(productVarietySelection, context=getContext())
+                        firstUrls[choice['choiceItem']] = firstInsertProductVarietySelectionSerializer.data['url']
+                    else:
+                        firstInsertProductVarietySelectionSerializer = InsertProductVarietySelectionSerializer(data={
+                            "selection" : choice['choiceItem'],
+                            "product_variety" : firstInsertProductVarietySerializer.data['url']
+                        }, context=getContext())
+                        if firstInsertProductVarietySelectionSerializer.is_valid():
+                            firstInsertProductVarietySelectionSerializer.save()
+                            firstUrls[choice['choiceItem']] = firstInsertProductVarietySelectionSerializer.data['url']
+                        else:
+                            return Response({"success" : False, "errors": firstInsertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
+
+                for choice in secondItem['choices']:
+                    if 'id' in choice:
+                        productVarietySelection = ProductVarietySelection.objects.get(id=choice['id'])
+                        productVarietySelection.selection = choice['choiceItem']
+                        productVarietySelection.save()
+
+                        secondInsertProductVarietySelectionSerializer = InsertProductVarietySelectionSerializer(productVarietySelection, context=getContext())
+                        secondUrls[choice['choiceItem']] = secondInsertProductVarietySelectionSerializer.data['url']
+                    else:
+                        secondInsertProductVarietySelectionSerializer = InsertProductVarietySelectionSerializer(data={
+                            "selection" : choice['choiceItem'],
+                            "product_variety" : firstInsertProductVarietySerializer.data['url']
+                        }, context=getContext())
+                        if secondInsertProductVarietySelectionSerializer.is_valid():
+                            secondInsertProductVarietySelectionSerializer.save()
+                            secondUrls[choice['choiceItem']] = secondInsertProductVarietySelectionSerializer.data['url']
+                        else:
+                            return Response({"success" : False, "errors": secondInsertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
+
+                for choice1 in firstItem['choices']:
+                    for choice2 in secondItem['choices']:
+                        tmpChoice = mappingValues[choice1['choiceItem']][choice2['choiceItem']]
+                        if 'id' in tmpChoice:
+                            productJancode = ProductJancode.objects.get(id=tmpChoice['id'])
+                            productJancode.jan_code = tmpChoice['janCode']
+                            is_hidden = 0
+                            if 'delete' in tmpChoice and tmpChoice['delete']:
+                                is_hidden = 1
+                            productJancode.jan_code = tmpChoice['janCode']
+                            productJancode.is_hidden = is_hidden
+                            productJancode.stock = tmpChoice['stock']
+                            productJancode.save()   
+                        else:
+                            hiddenValue = 0
+                            if 'delete' in mappingValues[choice1['choiceItem']][choice2['choiceItem']]:
+                                if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
+                                    hiddenValue = 1
+                            insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
+                                "jan_code" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'],
+                                "stock" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'],
+                                "is_hidden" : hiddenValue,
+                                "horizontal" : firstUrls[choice1['choiceItem']],
+                                "vertical" : secondUrls[choice2['choiceItem']]
+                            }, context=getContext())
+                            if insertProductJancodeSerializer.is_valid():
+                                insertProductJancodeSerializer.save()
+                            else:
+                                return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK)
+
+            return Response({"success" : True}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
+
 
 class UserUpdateBackground(APIView):
     parser_classes = [MultiPartParser]

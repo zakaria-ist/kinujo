@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^add_update_product/$', views.add_update_product, name='add_update_product'),
     url(r'^get_product_info/$', views.get_product_info, name='get_product_info'),
     url(r'^delete_product/$', views.delete_product, name='delete_product'),
+    url(r'^update_product_from_list/$', views.update_product_from_list, name='update_product_from_list'),
     url(r'^check_for_duplicate/(?P<type>.*)/(?P<value>.*)/$', views.check_for_duplicate, name='product_check_for_duplicate'),
     url(r'^update_varieties/$', views.update_varieties, name='update_varieties'),
     url(r'^export_product_list_as_csv/$', views.export_product_list_as_csv, name='export_product_list_as_csv'),
