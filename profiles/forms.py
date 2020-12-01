@@ -25,8 +25,8 @@ class ProfileForm(forms.ModelForm):
     tel = forms.CharField(required=True,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':"off", 
                                     'placeholder': '', 'maxlength': '15'}))
-    password = forms.CharField(required=False,
-                            widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete':'new-password'}))
+    # password = forms.CharField(required=False,
+    #                         widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete':'new-password'}))
     nickname = forms.CharField(required=True,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     real_name = forms.CharField(required=True,
@@ -60,7 +60,7 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ('tel', 'password', 'nickname', 'real_name', 'corporate_name', 'address1', 'address2', 'word', 'authority',
+        fields = ('tel', 'nickname', 'real_name', 'corporate_name', 'address1', 'address2', 'word', 'authority',
                     'representative_name', 'corporate_tel', 'salon_category', 'zipcode', 'gender', 'shop_name')
 
     def __init__(self, *args, **kwargs):
