@@ -120,6 +120,32 @@
         </div>
     </div>
     {#End Comfirm delete#}
+    <div class="modal fade" id="edit-stock-modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content row">
+            <h6 class="m-3 p-3" style="font-weight:bold">{% trans 'Edit Stock' %}</h6>
+            <div class="form-group row m-3">
+                <label class="col-md-4" for="stock-one-modal">{% trans 'New Quantity:' %}</label>
+                <input type="text" value="" class="form-control numeric_qty text-right col-md-7" id="stock-one-modal" placeholder="Enter Stock">
+            </div>
+            <button type="button" class="btn btn-secondary" style="width: max-content; margin: 10px auto;" data-dismiss="modal" onclick="cancelEdit();">{% trans 'Go back' %}</button>
+            <button type="button" id="one-modal-save-btn" class="btn btn-primary mb-20" style="margin: 10px auto; padding: 5px 40px;" data-dismiss="modal" onclick="saveStockData();">{% trans 'Save' %}</button>
+          </div>
+        </div>
+    </div>
+    <div class="modal fade" id="edit-price-modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content row">
+            <h6 class="m-3 p-3" style="font-weight:bold">{% trans 'Edit Price' %}</h6>
+            <div class="form-group row m-3">
+                <label class="col-md-4" for="price-one-modal">{% trans 'New Price:' %}</label>
+                <input type="text" value="" class="form-control numeric_price text-right col-md-7" id="price-one-modal" placeholder="Enter Price">
+            </div>
+            <button type="button" class="btn btn-secondary" style="width: max-content; margin: 10px auto;" data-dismiss="modal" onclick="cancelEdit();">{% trans 'Go back' %}</button>
+            <button type="button" id="one-modal-save-btn" class="btn btn-primary mb-20" style="margin: 10px auto; padding: 5px 40px;" data-dismiss="modal" onclick="savePriceData();">{% trans 'Save' %}</button>
+          </div>
+        </div>
+    </div>
 {% endblock %}
 {% block js %}
     <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script>
@@ -190,12 +216,18 @@
                         return row.varieties.split(",").join("<br/>");
                     }
                 },
-                {"data": "stock", "sClass": "text-right", "orderable": false},
                 {
-                    "sClass": "text-right",
+                    "sClass": "text-right stock_edit",
                     "orderable": false,
                     "render": function(data, type, row){
-                        return (comma_format(row.price, 0) + JPCUR);
+                        return (comma_format(row.stock, 0) + '&nbsp;&nbsp;' + '<i class="fas fa-pencil-alt text-info"></i>');
+                    }
+                },
+                {
+                    "sClass": "text-right price_edit",
+                    "orderable": false,
+                    "render": function(data, type, row){
+                        return (comma_format(row.price, 0) + JPCUR + '&nbsp;&nbsp;' + '<i class="fas fa-pencil-alt text-info"></i>');
                     }
                 },
                 {"data": "opened_date", "orderable": false},
@@ -214,6 +246,115 @@
                 }
             ]
         });
+    }
+
+    var edited_product = null;
+    $(document).on('click', '.price_edit, .stock_edit', function(event) {
+        let date = $(this).val();
+        let target = $(event.target)[0];
+        let line = $(target).parent().children('td:first-child').text();
+        var dtTable = $('#product-table').DataTable();
+        var product = dtTable.rows(line-1).data()[0];
+        console.log(product);
+        edited_product = product;
+        if ($(target).hasClass('price_edit')) {
+            $('#edit-price-modal').modal('show');
+        } else {
+            $('#edit-stock-modal').modal('show');
+        }
+    });
+
+    function cancelEdit() {
+        edited_product = null;
+    }
+
+    function savePriceData() {
+        let newPrice = $('#price-one-modal').val();
+        if (edited_product && Number(newPrice)) {
+            $.ajax({
+                method: "POST",
+                url: '/products/update_product_from_list/',
+                dataType: 'JSON',
+                data: {
+                    'product': JSON.stringify(edited_product),
+                    'new_price': newPrice,
+                    'new_stock': '',
+                },
+            })
+            .done(function(json) {
+                if (json.message == 'Success') {
+                    $.confirm({
+                        title: get_translate('Success'),
+                        content: get_translate('Update Successful'),
+                        buttons: {
+                            Ok: {
+                                btnClass: 'btn-success',
+                                action: function(){}
+                                }
+                            }
+                    });
+                    //refresh the list again
+                    loadProductTable(JSON.stringify(filter_list));
+                }
+            })
+            .fail(function(e) {
+                console.log(e);
+                $.confirm({
+                    title: get_translate('Error'),
+                    content: e.message,
+                    buttons: {
+                        Ok: {
+                            btnClass: 'btn-success',
+                            action: function(){}
+                            }
+                        }
+                });
+            })
+        }
+    }
+    function saveStockData() {
+        let newStock = $('#stock-one-modal').val();
+        if (edited_product && Number(newStock)) {
+            $.ajax({
+                method: "POST",
+                url: '/products/update_product_from_list/',
+                dataType: 'JSON',
+                data: {
+                    'product': JSON.stringify(edited_product),
+                    'new_price': '',
+                    'new_stock': newStock,
+                },
+            })
+            .done(function(json) {
+                if (json.message == 'Success') {
+                    $.confirm({
+                        title: get_translate('Success'),
+                        content: get_translate('Update Successful'),
+                        buttons: {
+                            Ok: {
+                                btnClass: 'btn-success',
+                                action: function(){}
+                                }
+                            }
+                    });
+                    //refresh the list again
+                    loadProductTable(JSON.stringify(filter_list));
+                }
+            })
+            .fail(function(e) {
+                console.log(e);
+                $.confirm({
+                    title: get_translate('Error'),
+                    content: e.message,
+                    buttons: {
+                        Ok: {
+                            btnClass: 'btn-success',
+                            action: function(){}
+                            }
+                        }
+                });
+            })
+        }
     }
 
     $(document).click(function (event) {

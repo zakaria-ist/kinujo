@@ -49,7 +49,7 @@ class InsertAuthoritySerializer(serializers.HyperlinkedModelSerializer):
 class InsertProfileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Profile
-        fields = ['background_img', 'id', 'profit', 'url', 'user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
+        fields = ['background_img', 'id', 'url', 'user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
 
 class InsertGroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -136,7 +136,7 @@ class InsertMonthlyPaymentSerializer(serializers.HyperlinkedModelSerializer):
 class InsertAddressSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Address
-        fields = ['url', 'address_name','user','name','zip1','prefecture','address1','address2','tel','is_default','is_hidden','created','modified']
+        fields = ['id', 'url', 'address_name','user','name','zip1','prefecture','address1','address2','tel','is_default','is_hidden','created','modified']
 class InsertTaxRateSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TaxRate

@@ -323,6 +323,7 @@ var translation_dict = {
     "Order quantity cannot be greater than stock quantity": "注文数量は在庫数量を超えることはできません",
     "Choices field": "選択肢フィールド",
     "can't be empty": "空にすることはできません",
+    "Success": "成功",
     "Update Successful": "更新に成功しました",
     "Delete Successful": "削除に成功",
     "Account information is updated.": "アカウント情報が更新されます。",

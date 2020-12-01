@@ -118,13 +118,16 @@
                     </div>
                     <label for="password" class="col-lg-2 control-label">{% trans 'Password' %}</label>
                     <div class="col-lg-4">
-                        {{ form.password|default_if_none:"" }}
+                        <input class="form-control trs-field" type="password"
+                            name="password"
+                            id="id_password"
+                            autocomplete="new-password">
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-lg-6">
                     </div>
-                    <label for="password" class="col-lg-2 control-label">{% trans 'Confirm Password' %}</label>
+                    <label for="conf_pass" class="col-lg-2 control-label">{% trans 'Confirm Password' %}</label>
                     <div class="col-lg-4">
                         <input class="form-control trs-field" type="password"
                             name="conf_pass"
@@ -170,8 +173,7 @@
                 <div id="corporate_block">
                     <p><strong>{% trans 'Corporate Information' %}</strong></p>
                     <div class="form-group row">
-                        <label for="corporate_name" class="col-lg-2 control-label">{% trans 'Corporate Name' %}<span
-                                class="span-required">(*)</span></label>
+                        <label for="corporate_name" class="col-lg-2 control-label">{% trans 'Corporate Name' %}</label>
                         <div class="col-lg-4">
                             {{ form.corporate_name|default_if_none:"" }}
                         </div>
@@ -181,8 +183,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="address1" class="col-lg-2 control-label">{% trans 'Address One' %}<span
-                                class="span-required">(*)</span></label>
+                        <label for="address1" class="col-lg-2 control-label">{% trans 'Address One' %}</label>
                         <div class="col-lg-4">
                             {{ form.address1|default_if_none:"" }}
                         </div>
