@@ -57,8 +57,21 @@ def export_order_list_as_csv(request):
         product_jan = ProductJancode.objects.get(pk=product.product_jan_code_id)
         j_product = get_jan_products(product_jan)
         
-        status = ('IN PROCESSING' if field.status == 1 else 'SHIPMENT COMPLETE') if request.LANGUAGE_CODE == 'en' \
-                        else ('準備中' if field.status == 1 else '発送完了')
+        status = ''
+        if request.LANGUAGE_CODE == 'en':
+            if field.status == 0:
+                status = 'NEW'
+            elif field.status == 1:
+                status = 'IN PROCESSING'
+            elif field.status == 2:
+                status = 'SHIPMENT COMPLETE'
+        else:
+            if field.status == 0:
+                status = '新着'
+            elif field.status == 1:
+                status = '準備中'
+            elif field.status == 2:
+                status = '発送完了'
         writer.writerow([str(field.id), j_product.name, field.name, 
                         field.address1 + '  Zip: ' + field.zip1, 
                         intcomma("%.0f" % field.total_amount), status,
@@ -122,15 +135,29 @@ def OrderList__asJson(request):
                 .order_by('image_no').exclude(image_no__isnull=True).first()
             if productImage:
                 image_path = productImage.image.image.url
+        status = ''
+        if request.LANGUAGE_CODE == 'en':
+            if field.status == 0:
+                status = 'NEW'
+            elif field.status == 1:
+                status = 'IN PROCESSING'
+            elif field.status == 2:
+                status = 'SHIPMENT COMPLETE'
+        else:
+            if field.status == 0:
+                status = '新着'
+            elif field.status == 1:
+                status = '準備中'
+            elif field.status == 2:
+                status = '発送完了'
         data = {
             "id": str(field.id),
             "image_path": image_path,
             "product_name": j_product.name,
             "name": field.name,
             "address": field.address1 + '  Zip: ' + field.zip1,
-            "amount": intcomma("%.0f" % field.total_amount),
-            "status": ('IN PROCESSING' if field.status == 1 else 'SHIPMENT COMPLETE') if request.LANGUAGE_CODE == 'en' \
-                        else ('準備中' if field.status == 1 else '発送完了'),
+            "amount": field.total_amount,
+            "status": status,
             "shipped_date": field.shipped_date.strftime("%Y-%m-%d") if field.shipped_date else '',
             "inquiry_number": field.inquiry_number
         }
@@ -542,7 +569,7 @@ def order_add(request):
                                                             args=(affected_user_list, order.order_date,  ), daemon=True)
                 update_users_monthly_commission_t.start()
 
-                return render(request, 'order_list.html')
+                return redirect('/orders/order_list/')
             except Exception as e:
                 print(e)
 
@@ -752,7 +779,7 @@ def order_edit(request, order_id):
                                                                 args=(affected_user_list, order.order_date,  ), daemon=True)
                     update_users_monthly_commission_te.start()
 
-                return render(request, 'order_list.html')
+                return redirect('/orders/order_list/')
 
             except Exception as e:
                 print(e)
@@ -828,7 +855,7 @@ def order_delete(request, order_id):
                 old_product.save()
 
                 # delete old orderproduct commission
-                orderProductCommissions = OrderProductCommission.object.filter(order_product_id=old_product.id)
+                orderProductCommissions = OrderProductCommission.objects.filter(order_product_id=old_product.id)
                 for orderProductCommission in orderProductCommissions:
                     orderProductCommission.is_hidden = True
                     orderProductCommission.save()
@@ -844,7 +871,7 @@ def order_delete(request, order_id):
 
         except Exception as e:
             print(e)
-        return render(request, 'order_list.html')
+        return redirect('/orders/order_list/')
 
     else:
         return render(request, '404.html')

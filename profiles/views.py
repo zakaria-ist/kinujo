@@ -326,7 +326,7 @@ def profile_add(request):
             if form.is_valid:
                 try:
                     user = User.objects.create_user(request.POST.get('tel'), 'test@test.com', request.POST.get('password'))
-                    user.first_name = request.POST.get('user_code')
+                    user.first_name = request.POST.get('real_name')
                     user.save()
                     profile = form.save(commit=False)
                     profile.user = user
@@ -368,7 +368,7 @@ def profile_add(request):
                         profile.image = new_image
                         profile.save()
 
-                    return render(request, 'profile_list.html')
+                    return redirect('/profiles/profile_list/')
                 except Exception as e:
                     print(e)
                     messages.add_message(request, messages.ERROR, e, extra_tags='profile_add')
@@ -466,7 +466,7 @@ def profile_edit(request, profile_id):
                     
                     profile.save()
 
-                    return render(request, 'profile_list.html')
+                    return redirect('/profiles/profile_list/')
                 except Exception as e:
                     print(e)
                     messages.add_message(request, messages.ERROR, e, extra_tags='profile_edit')
@@ -512,7 +512,7 @@ def profile_delete(request, profile_id):
                 image.save()
         except Exception as e:
             print(e)
-        return render(request, 'profile_list.html')
+        return redirect('/profiles/profile_list/')
     else:
         return render(request, '404.html')
 
