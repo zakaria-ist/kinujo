@@ -423,6 +423,8 @@ def profile_edit(request, profile_id):
                     if profile.authority_id == AUTHORITY_TYPE['AMBASSADOR']:
                         if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
                             profile.introducer_id = int(request.POST.get('general_store'))
+                        else:
+                            profile.introducer_id = None
                     
                     elif profile.authority_id in (AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']):
                         if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
