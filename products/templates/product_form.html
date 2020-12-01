@@ -2080,7 +2080,7 @@
     }
 
     var product_id = "{{product.id}}";
-    var category_list = []
+    var category_list = [];
     {% for item in category_list %}
         category_list.push(["{{ item.0 }}", "{{ item.1 }}"]);
     {% endfor %}
@@ -2120,7 +2120,7 @@
         }
     });
 
-    var seller_auth_id = "{{seller_auth_id}}"
+    var seller_auth_id = "{{seller_auth_id}}";
     $('#price').on('change', function() {
       var general_price = parseInt($(this).val());
       $('#price').val(comma_format(general_price, 0) + JPCUR);

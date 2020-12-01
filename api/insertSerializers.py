@@ -136,7 +136,7 @@ class InsertMonthlyPaymentSerializer(serializers.HyperlinkedModelSerializer):
 class InsertAddressSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Address
-        fields = ['url', 'address_name','user','name','zip1','prefecture','address1','address2','tel','is_default','is_hidden','created','modified']
+        fields = ['id', 'url', 'address_name','user','name','zip1','prefecture','address1','address2','tel','is_default','is_hidden','created','modified']
 class InsertTaxRateSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TaxRate
