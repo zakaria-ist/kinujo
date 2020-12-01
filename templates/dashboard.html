@@ -179,6 +179,8 @@
     <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script>
     <script src="{% static "js/select2/select2.js" %}"></script>
     <script type="text/javascript">
+        var ten_thousand = 10000;
+        var one_million = 1000000;
         $(document).ready(function () {
             $('#ranking_filter').select2({});
             changeLang();
@@ -209,19 +211,50 @@
                     $('#orders').html(comma_format(data.orders, 0) + JPCASE);
                     $('#kinujo_orders').html(comma_format(data.kinujo_orders, 0) + JPCASE);
                     $('#non_kinujo_orders').html(comma_format(data.non_kinujo_orders, 0) + JPCASE);
+                    
+                    if (Number(data.orders_amount) / one_million >= 1) {
+                        $('#orders_amount').html('約' + comma_format(Number(data.orders_amount) / one_million, 2) + '百万' + JPCUR);
+                    } else if (Number(data.orders_amount) / ten_thousand >= 1) {
+                        $('#orders_amount').html('約' + comma_format(Number(data.orders_amount) / ten_thousand, 2) + '万' + JPCUR);
+                    } else {
+                        $('#orders_amount').html('約' + comma_format(data.orders_amount, 0) + JPCUR);
+                    }
+                    if (Number(data.kinujo_orders_amount) / one_million >= 1) {
+                        $('#kinujo_orders_amount').html('約' + comma_format(Number(data.kinujo_orders_amount) / one_million, 2) + '百万' + JPCUR);
+                    } else if (Number(data.kinujo_orders_amount) / ten_thousand >= 1) {
+                        $('#kinujo_orders_amount').html('約' + comma_format(Number(data.kinujo_orders_amount) / ten_thousand, 2) + '万' + JPCUR);
+                    } else {
+                        $('#kinujo_orders_amount').html('約' + comma_format(data.kinujo_orders_amount, 0) + JPCUR);
+                    }
+                    if (Number(data.non_kinujo_orders_amount) / one_million >= 1) {
+                        $('#non_kinujo_orders_amount').html('約' + comma_format(Number(data.non_kinujo_orders_amount) / one_million, 2) + '百万' + JPCUR);
+                    } else if (Number(data.non_kinujo_orders_amount) / ten_thousand >= 1) {
+                        $('#non_kinujo_orders_amount').html('約' + comma_format(Number(data.non_kinujo_orders_amount) / ten_thousand, 2) + '万' + JPCUR);
+                    } else {
+                        $('#non_kinujo_orders_amount').html('約' + comma_format(data.non_kinujo_orders_amount, 0) + JPCUR);
+                    }
 
-                    $('#orders_amount').html(comma_format(data.orders_amount, 0) + JPCUR);
-                    //$('#kinujo_orders_amount').html('約' + comma_format(data.kinujo_orders_amount, 0) + '万' + JPCUR);
-                    //$('#non_kinujo_orders_amount').html('約' + comma_format(data.non_kinujo_orders_amount, 0) + '万' + JPCUR);
-                    $('#kinujo_orders_amount').html(comma_format(data.kinujo_orders_amount, 0) + JPCUR);
-                    $('#non_kinujo_orders_amount').html(comma_format(data.non_kinujo_orders_amount, 0) + JPCUR);
-
-                    $('#store_info').html(comma_format(data.stores_amount, 0) + JPCUR + '/' + comma_format(data.stores, 0) + JPCASE)
-                    $('#ambassador_info').html(comma_format(data.ambassadors_amount, 0) + JPCUR + '/' + comma_format(data.ambassadors, 0) + JPCASE)
-                    $('#special_info').html(comma_format(data.specials_amount, 0) + JPCUR + '/' + comma_format(data.specials, 0) + JPCASE)
-                    //$('#store_info').html(comma_format(data.stores_amount, 0) + '百万' + JPCUR + '/' + comma_format(data.stores, 0) + JPCASE)
-                    //$('#ambassador_info').html(comma_format(data.ambassadors_amount, 0) + '百万' + JPCUR + '/' + comma_format(data.ambassadors, 0) + JPCASE)
-                    //$('#special_info').html(comma_format(data.specials_amount, 0) + '百万' + JPCUR + '/' + comma_format(data.specials, 0) + JPCASE)
+                    if (Number(data.stores_amount) / one_million >= 1) {
+                        $('#store_info').html(comma_format(Number(data.stores_amount) / one_million, 2) + '百万' + JPCUR + '/' + comma_format(data.stores, 0) + JPCASE);
+                    } else if (Number(data.stores_amount) / ten_thousand >= 1) {
+                        $('#store_info').html(comma_format(Number(data.stores_amount) / ten_thousand, 2) + '万' + JPCUR + '/' + comma_format(data.stores, 0) + JPCASE);
+                    } else {
+                        $('#store_info').html(comma_format(data.stores_amount, 0) + JPCUR + '/' + comma_format(data.stores, 0) + JPCASE);
+                    }
+                    if (Number(data.ambassadors_amount) / one_million >= 1) {
+                        $('#ambassador_info').html(comma_format(Number(data.ambassadors_amount) / one_million, 2) + '百万' + JPCUR + '/' + comma_format(data.ambassadors, 0) + JPCASE);
+                    } else if (Number(data.ambassadors_amount) / ten_thousand >= 1) {
+                        $('#ambassador_info').html(comma_format(Number(data.ambassadors_amount) / ten_thousand, 2) + '万' + JPCUR + '/' + comma_format(data.ambassadors, 0) + JPCASE);
+                    } else {
+                        $('#ambassador_info').html(comma_format(data.ambassadors_amount, 0) + JPCUR + '/' + comma_format(data.ambassadors, 0) + JPCASE);
+                    }
+                    if (Number(data.specials_amount) / one_million >= 1) {
+                        $('#special_info').html(comma_format(Number(data.specials_amount) / one_million, 2) + '百万' + JPCUR + '/' + comma_format(data.specials, 0) + JPCASE);
+                    } else if (Number(data.specials_amount) / ten_thousand >= 1) {
+                        $('#special_info').html(comma_format(Number(data.specials_amount) / ten_thousand, 2) + '万' + JPCUR + '/' + comma_format(data.specials, 0) + JPCASE);
+                    } else {
+                        $('#special_info').html(comma_format(data.specials_amount, 0) + JPCUR + '/' + comma_format(data.specials, 0) + JPCASE);
+                    }
 
                 },
                 error: function (e) {
@@ -257,9 +290,26 @@
                     }
                 },
                 "columns": [
-                    {"data": "product_name", "orderable": false},
-                    {"data": "gross_amount", "orderable": false},
-                    {"data": "total_quantity", "orderable": false},
+                    {
+                        "sClass": "text-left",
+                        "orderable": false,
+                        "data": null,
+                        "render": function (data, type, row, meta) {
+                            if (row.product_name.length > 15) {
+                                return row.product_name.substring(0, 11) + '...';
+                            } else {
+                                return row.product_name;
+                            }
+                        }
+                    },
+                    {
+                        "sClass": "text-right",
+                        "orderable": false,
+                        "render": function(data, type, row){
+                            return (comma_format(row.gross_amount, 0) + JPCUR);
+                        }
+                    },
+                    {"data": "total_quantity", "orderable": false, "sClass": "text-right"},
                 ]
             });
         }

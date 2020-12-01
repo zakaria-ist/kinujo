@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Product, ProductImage, ProductCategory, ProductJancode, ProductVariety, ProductVarietySelection
 from images.models import Image
 from profiles.models import Profile
+from utilities.constants import AUTHORITY_TYPE
 
 
 @login_required
@@ -1165,6 +1166,45 @@ def delete_product(request):
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
+@csrf_exempt
+def update_product_from_list(request):
+    """
+    ajax Method to update a product's price & stock from list table.
+    """
+
+    message = 'Error'
+    if request.method == 'POST':
+        product = eval(request.POST.get('product'))
+        new_price = request.POST.get('new_price')
+        new_stock = request.POST.get('new_stock')
+        if new_price != '':
+            try:
+                print(product, new_price)
+                s_product = Product.objects.get(id=product['id'])
+                s_product.price = int(new_price)
+                if s_product.user.authority_id == AUTHORITY_TYPE['MASTER']:
+                    s_product.store_price = s_product.price - int(0.3 * float(s_product.price))
+                else:
+                    s_product.store_price = s_product.price - int(0.2 * float(s_product.price))
+                s_product.modified = datetime.datetime.now()
+                s_product.save()
+
+                message = 'Success'
+            except Exception as e:
+                print(e)
+        if new_stock != '' and int(new_stock) > 0:
+            try:
+                j_product = ProductJancode.objects.get(id=product['jan_id'])
+                j_product.stock = int(new_stock)
+                j_product.modified = datetime.datetime.now()
+                j_product.save()
+
+                message = 'Success'
+            except Exception as e:
+                print(e)
+
+    context = {'message': message}
+    return HttpResponse(json.dumps(context), content_type="application/json")
 
 
 @login_required
