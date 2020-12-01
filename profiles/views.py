@@ -331,6 +331,8 @@ def profile_add(request):
                     profile = form.save(commit=False)
                     profile.user = user
                     profile.user_code = request.POST.get('user_code')
+                    if request.POST.get('password') != '' and request.POST.get('password') != None:
+                        profile.password = request.POST.get('password')
                     if request.POST.get('birthday'):
                         profile.birthday = request.POST.get('birthday')
                     
@@ -441,6 +443,9 @@ def profile_edit(request, profile_id):
                         profile.is_approved = True
                     else:
                         profile.is_approved = False
+                    
+                    if request.POST.get('password') != '' and request.POST.get('password') != None:
+                        profile.password = request.POST.get('password')
 
                     profile.modified = datetime.datetime.now()
                     profile.save()
