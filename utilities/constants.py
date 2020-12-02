@@ -54,6 +54,7 @@ ORDER_STATUS = (
 )
 
 ORDER_STATUS_JA = (
+    (0, '新着'),
     (1, '準備中'),
     (2, '発送完了')
 )

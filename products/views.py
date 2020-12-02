@@ -346,7 +346,7 @@ def product_add(request):
                 varieties = json.loads(request.POST.get('varieties'))
                 saveNewVareities(product, varieties)
 
-                return render(request, 'product_list.html')
+                return redirect('/products/product_list/')
             except Exception as e:
                 print(e)
                 messages.add_message(request, messages.ERROR,
@@ -423,7 +423,7 @@ def product_edit(request, product_id):
                         old_varieties = []
                     updateProductVarieties(product, product.variety, varieties, old_varieties)
                 
-                    return render(request, 'product_list.html')
+                    return redirect('/products/product_list/')
             except Exception as e:
                 print(e)
                 messages.add_message(request, messages.ERROR,
@@ -563,7 +563,7 @@ def product_delete(request, product_id):
     if request.session['login_type'] == 'SELLER':
         result = hide_product(product_id)
 
-        return render(request, 'product_list.html')
+        return redirect('/products/product_list/')
     else:
         return render(request, '404.html')
 
