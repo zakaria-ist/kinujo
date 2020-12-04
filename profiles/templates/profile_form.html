@@ -5,6 +5,7 @@
     {% load i18n %}
     <link href="{% static "css/select2/select2.css" %}" rel="stylesheet">
     <link href="{% static "css/bank_auto.css" %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/datatables/Editor-1.9.6/css/editor.dataTables.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.css' %}"/>
     <script src="https://zipaddr.github.io/bankauto0.js" charset="UTF-8"> </script>
 {% endblock %}
@@ -162,6 +163,7 @@
 {% block js %}
     <!-- Datatables -->
     <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script> 
+    <script type="text/javascript" src="{% static 'assets/datatables/Editor-1.9.6/js/dataTables.editor.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'assets/bootstrap-fileupload/bootstrap-fileupload.js' %}"></script>
     <script src="{% static "js/jpostal.js" %}"></script>
     <script src="{% static "js/select2/select2.js" %}"></script>
@@ -246,6 +248,81 @@
             });
             $('#id_salon_category').select2({});
             $('#id_gender').select2({});
+
+            var editor = new $.fn.dataTable.Editor( {
+                "ajax": {
+                    "url": "/products/product_list_json/",
+                    "data": {
+                        "profile_id": profile_id,
+                        "filter_str": '[]'
+                    }
+                },
+                table: "#item-table",
+                idSrc:  'id',
+                fields: [ 
+                    {
+                        label: "#",
+                        name: "no"
+                    }, 
+                    {
+                        label: "Name",
+                        name: "name"
+                    }, 
+                    {
+                        label: "Jan Code",
+                        name: "jan_ode"
+                    }, 
+                    {
+                        label: "Varieties",
+                        name: "varieties"
+                    },
+                    {
+                        label: "Stock",
+                        name: "stock"
+                    },
+                    {
+                        label: "Price",
+                        name: "price"
+                    },
+                    {
+                        label: "Published Date",
+                        name: "opened_date"
+                    },
+                ]
+            });
+
+            // disable auto submit
+            editor.on( 'preSubmit', function ( e, data, action ) {
+                return false;
+            });
+
+            editor.field('stock').input().on('keyup', function (event, d) {
+                if ( d && d.editorSet ) return;
+                var key_code = event.keyCode || event.which;
+                if(key_code == 13) { //Enter keycode
+                    let new_value = $(this).val();
+                    let target = $(event.target)[0];
+                    let parent = $(target).closest('td').parent();
+                    let line = $(parent).children('td:first-child').text();
+                    var dtTable = $('#item-table').DataTable();
+                    var product = dtTable.rows(line-1).data()[0];
+                    showUpdateConfirmDialog('stock', product, new_value);
+                }
+            });
+
+            editor.field('price').input().on('keyup', function (event, d) {
+                if ( d && d.editorSet ) return;
+                var key_code = event.keyCode || event.which;
+                if(key_code == 13) { //Enter keycode
+                    let new_value = $(this).val();
+                    let target = $(event.target)[0];
+                    let parent = $(target).closest('td').parent();
+                    let line = $(parent).children('td:first-child').text();
+                    var dtTable = $('#item-table').DataTable();
+                    var product = dtTable.rows(line-1).data()[0];
+                    showUpdateConfirmDialog('price', product, new_value);
+                }
+            });
 
         });
 

@@ -32,13 +32,21 @@ function loadItemTableData() {
                     return row.varieties.split(",").join("<br/>");
                 }
             },
-            {"data": "stock", "sClass": "text-right", "orderable": false},
             {
-                "sClass": "text-right",
+                "sClass": "text-right stock_edit",
+                "orderable": false,
+                "render": function(data, type, row){
+                    return (comma_format(row.stock, 0));
+                },
+                editField: "stock"
+            },
+            {
+                "sClass": "text-right price_edit",
                 "orderable": false,
                 "render": function(data, type, row){
                     return (comma_format(row.price, 0) + JPCUR);
-                }
+                },
+                editField: "price"
             },
             {"data": "opened_date", "orderable": false},
             {
@@ -56,6 +64,124 @@ function loadItemTableData() {
             }
         ]
     });
+
+    // set editable columns using editor
+    var pTable = $('#item-table').DataTable();
+    $('#item-table').on( 'click', '.price_edit, .stock_edit', function () {
+        pTable.cell( this ).edit();
+    });
+}
+
+function showUpdateConfirmDialog(ctype, product, new_value) {
+    var text = '';
+    if (ctype == 'stock') {
+        text = get_translate('Do you want to update the stock?');
+    } else {
+        text = get_translate('Do you want to update the price?');
+    }
+    $.confirm({
+        title: get_translate('Confirmation Dialog'),
+        content: text,
+        buttons: {
+            Ok: function () {
+                if (ctype == 'stock') {
+                    saveStockData(product, new_value);
+                } else {
+                    savePriceData(product, new_value);
+                }
+            },
+            Cancel: function () {
+            }
+        }
+    });
+}
+
+function savePriceData(edited_product, newPrice) {
+    if (edited_product && Number(newPrice)) {
+        $.ajax({
+            method: "POST",
+            url: '/products/update_product_from_list/',
+            dataType: 'JSON',
+            data: {
+                'product': JSON.stringify(edited_product),
+                'new_price': newPrice,
+                'new_stock': '',
+            },
+        })
+        .done(function(json) {
+            if (json.message == 'Success') {
+                $.confirm({
+                    title: get_translate('Success'),
+                    content: get_translate('Update Successful'),
+                    buttons: {
+                        Ok: {
+                            btnClass: 'btn-success',
+                            action: function(){}
+                            }
+                        }
+                });
+                //refresh the list again
+                $('#item-table').DataTable().ajax.reload();
+            }
+        })
+        .fail(function(e) {
+            console.log(e);
+            $.confirm({
+                title: get_translate('Error'),
+                content: e.message,
+                buttons: {
+                    Ok: {
+                        btnClass: 'btn-success',
+                        action: function(){}
+                        }
+                    }
+            });
+        })
+    }
+}
+
+function saveStockData(edited_product, newStock) {
+    if (edited_product && Number(newStock)) {
+        $.ajax({
+            method: "POST",
+            url: '/products/update_product_from_list/',
+            dataType: 'JSON',
+            data: {
+                'product': JSON.stringify(edited_product),
+                'new_price': '',
+                'new_stock': newStock,
+            },
+        })
+        .done(function(json) {
+            if (json.message == 'Success') {
+                $.confirm({
+                    title: get_translate('Success'),
+                    content: get_translate('Update Successful'),
+                    buttons: {
+                        Ok: {
+                            btnClass: 'btn-success',
+                            action: function(){}
+                            }
+                        }
+                });
+                //refresh the list again
+                $('#item-table').DataTable().ajax.reload();
+            }
+        })
+        .fail(function(e) {
+            console.log(e);
+            $.confirm({
+                title: get_translate('Error'),
+                content: e.message,
+                buttons: {
+                    Ok: {
+                        btnClass: 'btn-success',
+                        action: function(){}
+                        }
+                    }
+            });
+        })
+    }
 }
 
 function deleteProduct(id) {
