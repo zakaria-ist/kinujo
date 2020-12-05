@@ -186,6 +186,11 @@
             prefecture_list.push([{{ item.0 }}, "{{ item.1 }}"])
         {% endfor %}
 
+        var tel_code_list = [];
+        {% for item in tel_code_list %}
+            tel_code_list.push(["{{ item.id }}", "{{ item.name }}", "{{ item.tel_code }}"])
+        {% endfor %}
+
         var profile_list = [];
         {% for item in profile_list %}
             profile_list.push([{{ item.0 }}, "{{ item.1 }}", {{ item.2 }}])
@@ -248,6 +253,10 @@
             });
             $('#id_salon_category').select2({});
             $('#id_gender').select2({});
+            $('#tel_code').select2({});
+            $('#tel_code').on("select2:open", function( event ){
+                prefill_select2(event);
+            });
 
             var editor = new $.fn.dataTable.Editor( {
                 "ajax": {
@@ -377,9 +386,21 @@
             }
         })
 
+        $('#tel_code').on('change', function() {
+            var code = $(this).find('option:selected').data('code_data');
+            var tel = $('#id_tel').val();
+            if (code != '' && tel != '') {
+                var value = code + tel;
+                check_for_duplicate('tel', value);
+            }
+        })
         $('#id_tel').on('change', function() {
-            var value = $(this).val();
-            check_for_duplicate('tel', value);
+            var tel = $(this).val();
+            var code = $('#tel_code').find('option:selected').data('code_data');
+            if (code && code != '' && tel != '') {
+                var value = code + tel;
+                check_for_duplicate('tel', value);
+            }
         })
         $('#id_user_code').on('change', function() {
             var value = $(this).val();
@@ -400,7 +421,7 @@
                                 buttons: {
                                     Ok: {
                                         btnClass: 'btn-success',
-                                        action: function(){}
+                                        action: function(){ setTimeout(() => { $('#id_user_code').focus();}, 500); }
                                         }
                                     }
                             });
@@ -413,7 +434,7 @@
                                 buttons: {
                                     Ok: {
                                         btnClass: 'btn-success',
-                                        action: function(){}
+                                        action: function(){ setTimeout(() => { $('#id_tel').focus();}, 500); }
                                         }
                                     }
                             });

@@ -24,6 +24,21 @@
 
     <title>Kinujo login</title>
     <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+    <link href="{% static "css/select2/select2.css" %}" rel="stylesheet">
+    <style>
+      .select2{
+        font-size: 16px;
+      }
+      .select2-selection__rendered {
+          line-height: 47px !important;
+      }
+      .select2-container .select2-selection--single {
+          height: 47px !important;
+      }
+      .select2-selection__arrow {
+          height: 47px !important;
+      }
+    </style>
 </head>
 
 <body class="login-body">
@@ -35,8 +50,22 @@
         <div class="text-center"><p>{% trans "Listing Management Site" %}</p></viv>
         <p class="login-wrap">
             <label class="messages text-center">{{ state }}</label>
-            <input type="tel" class="form-control" placeholder="+12345678" name="username" id="username" autofocus required autocomplete="off"> 
-            <input type="password" class="form-control" placeholder="パスワード" name="password" required autocomplete="off">
+            <input type="hidden" class="form-control" name="username" id="username" style="display: none"> 
+            <div class="row col-lg-12" style="padding-right: 0px !important;">
+              <div class="col-lg-5" style="padding-right: 0px !important;">
+                  <select name="tel_code" id="tel_code" class="form-control">
+                      {% for code in tel_code_list %}
+                          <option data-code_data="{{code.tel_code}}" value="{{code.id}}">{{code.name}}-({{code.tel_code}})</option>
+                      {% endfor %}
+                  </select>
+              </div>
+              <div class="col-lg-7" style="padding-left: 5px !important; padding-right: 0px !important;">
+                <input type="tel" class="form-control" placeholder="" name="tel" id="tel" autofocus required autocomplete="off"> 
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <input type="password" class="form-control" placeholder="パスワード" name="password" required autocomplete="off">
+            </div>
 
             <div class="forget_pass text-center">
                 <label class="checkbox">
@@ -55,6 +84,7 @@
 
 <script src="{% static 'js/jquery.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static "js/select2/select2.js" %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script type="text/javascript" src="{% static 'assets/jquery-ui/jquery-ui.min.js' %}"></script>
 
@@ -79,7 +109,20 @@ $(document).ready(function() {
         return false;
     }
   });
+
+  $('#tel_code').select2({});
+  $('#tel_code').on('select2:close', function() {
+    $('#tel').focus();
+    $('#tel').select();
+  });
 });
+
+$('#login_form').on('submit', function(e) {
+  var code = $('#tel_code').find('option:selected').data('code_data');
+  var tel = $('#tel').val();
+  var username = code + tel;
+  $('#username').val(username);
+})
 
 
 $(document).on('click', 'input[type="text"]', function(){
