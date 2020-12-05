@@ -617,8 +617,8 @@ class Pay(APIView):
             varieties = {}
 
             for product in request.data['products']:
-                quantities['item_' + str(product['id'])] = product['quantity']
-                varieties['item_' + str(product['id'])] = product['varietyId']
+                quantities['item_' + str(product['product_id'])] = product['quantity']
+                varieties['item_' + str(product['product_id'])] = product['varietyId']
                 ids.append(product['product_id'])
 
             products = Product.objects.filter(id__in=ids)
