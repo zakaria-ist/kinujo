@@ -1,6 +1,6 @@
 from django.db import models
 from images.models import Image
-from prefectures.models import Prefecture
+from prefectures.models import Prefecture, CountryCode
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
 from utilities.constants import GENDER_TYPE, SALON_TYPE, PAYMENT_STATUS
@@ -23,6 +23,7 @@ class Profile(models.Model):
     is_seller = models.BooleanField(default=False)
     shop_name = models.CharField(max_length=255, default='')
     tel = models.CharField(max_length=15)
+    tel_code = models.ForeignKey(CountryCode, on_delete=models.CASCADE, null=True)
     password = models.CharField(max_length=20)
     nickname = models.CharField(max_length=255)
     user_code = models.CharField(max_length=191, unique=True)
@@ -38,7 +39,7 @@ class Profile(models.Model):
     prefecture = models.ForeignKey(Prefecture, on_delete=models.CASCADE, null=True)
     city = models.CharField(max_length=100, default='')
     address1 = models.CharField(max_length=255, default='')
-    address2 = models.CharField(max_length=255, default='')
+    address2 = models.CharField(max_length=255, default='', null=True, blank=True)
     corporate_name = models.CharField(max_length=255, default='')
     corporate_tel = models.CharField(max_length=255, default='')
     representative_name = models.CharField(max_length=255, default='')
@@ -124,6 +125,7 @@ class Address(models.Model):
     address1 = models.CharField(max_length=1024)
     address2 = models.CharField(max_length=1024, default='')
     tel = models.CharField(max_length=32)
+    tel_code = models.ForeignKey(CountryCode, on_delete=models.CASCADE, null=True)
     is_default = models.BooleanField(default=False)
 
     is_hidden = models.BooleanField(default=False)
