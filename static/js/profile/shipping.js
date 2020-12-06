@@ -101,7 +101,7 @@ function showShippingForm(shipping_id='') {
         });
         options = '';
         $.each(tel_code_list, function(i, v) {
-            options += "<option data-code_data='"+v[2]+"' value='"+v[0]+"'>"+v[1]+"-("+v[2]+")</option>";
+            options += "<option data-code_data='"+v[2]+"' value='"+v[0]+"'>"+v[1]+"("+v[2]+")</option>";
         });
         $('#add_tel_code').html(options);
         if (!$('#add_tel_code').data('select2')) {

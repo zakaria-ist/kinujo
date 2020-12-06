@@ -253,7 +253,9 @@
             });
             $('#id_salon_category').select2({});
             $('#id_gender').select2({});
-            $('#tel_code').select2({});
+            $('#tel_code').select2({
+                placeholder: "Select Code"
+            });
             $('#tel_code').on("select2:open", function( event ){
                 prefill_select2(event);
             });

@@ -62,7 +62,9 @@ def pass_reset(request):
     """
     Method to redirect to password reset page.
     """
-    return render(request, 'password-reset.html')
+
+    tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
+    return render(request, 'password-reset.html', {'tel_code_list': tel_code_list})
 
 def reset_password(request):
     """
@@ -823,14 +825,14 @@ def ShippingList__asJson(request):
     return HttpResponse(json_content, content_type='application/json')
 
 
-def validate_user_phone(request, profile_id):
+def validate_user_phone(request, username):
     """
-    Method to verify duplcate user.
+    Method to verify a user.
     """
 
     message = 'Error'
     try:
-        user = User.objects.filter(username=profile_id).first()
+        user = User.objects.filter(username=username).first()
         if user:
             message = 'Success'
     except Exception as e:
