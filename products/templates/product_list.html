@@ -3,6 +3,7 @@
 {% block extrahead %}
     {% load static %}
     {% load i18n %}
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/datatables/Editor-1.9.6/css/editor.dataTables.min.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Product Management' %}{% endblock %}
@@ -120,48 +121,137 @@
         </div>
     </div>
     {#End Comfirm delete#}
-    <div class="modal fade" id="edit-stock-modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content row">
-            <h6 class="m-3 p-3" style="font-weight:bold">{% trans 'Edit Stock' %}</h6>
-            <div class="form-group row m-3">
-                <label class="col-md-4" for="stock-one-modal">{% trans 'New Quantity:' %}</label>
-                <input type="text" value="" class="form-control numeric_qty text-right col-md-7" id="stock-one-modal" placeholder="Enter Stock">
-            </div>
-            <button type="button" class="btn btn-secondary" style="width: max-content; margin: 10px auto;" data-dismiss="modal" onclick="cancelEdit();">{% trans 'Go back' %}</button>
-            <button type="button" id="one-modal-save-btn" class="btn btn-primary mb-20" style="margin: 10px auto; padding: 5px 40px;" data-dismiss="modal" onclick="saveStockData();">{% trans 'Save' %}</button>
-          </div>
-        </div>
-    </div>
-    <div class="modal fade" id="edit-price-modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content row">
-            <h6 class="m-3 p-3" style="font-weight:bold">{% trans 'Edit Price' %}</h6>
-            <div class="form-group row m-3">
-                <label class="col-md-4" for="price-one-modal">{% trans 'New Price:' %}</label>
-                <input type="text" value="" class="form-control numeric_price text-right col-md-7" id="price-one-modal" placeholder="Enter Price">
-            </div>
-            <button type="button" class="btn btn-secondary" style="width: max-content; margin: 10px auto;" data-dismiss="modal" onclick="cancelEdit();">{% trans 'Go back' %}</button>
-            <button type="button" id="one-modal-save-btn" class="btn btn-primary mb-20" style="margin: 10px auto; padding: 5px 40px;" data-dismiss="modal" onclick="savePriceData();">{% trans 'Save' %}</button>
-          </div>
-        </div>
-    </div>
 {% endblock %}
 {% block js %}
     <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/datatables/Editor-1.9.6/js/dataTables.editor.min.js' %}"></script>
     <script type="text/javascript">
 
     var profile_id = "{{profile_id}}";
+    var pEditor;
+    var filter_list = [];
+    var filter_str = JSON.stringify([1, 2, 3]);
     function deleteProduct(id) {
         var url = '/products/product_delete/' + id + '/'
         $("#comfirmDeleteProductModal").modal("show");
         $("#comfirm-yes").attr("href", url);
     }
     $(document).ready(function () {
+        // datatable editor initialize
+        if (filter_list.length == 0) {
+            filter_list = [1, 2, 3];
+        }
+        filter_str = JSON.stringify(filter_list);
+        pEditor = new $.fn.dataTable.Editor( {
+            ajax: {
+                "url": "{% url 'ProductList__asJson' %}",
+                "data": {
+                    "profile_id": profile_id,
+                    "filter_str": filter_str
+                }
+            },
+            table: "#product-table",
+            idSrc:  'id',
+            fields: [ 
+                {
+                    label: "#",
+                    name: "no"
+                }, 
+                {
+                    label: "Name",
+                    name: "name"
+                }, 
+                {
+                    label: "Jan Code",
+                    name: "jan_ode"
+                }, 
+                {
+                    label: "Varieties",
+                    name: "varieties"
+                },
+                {
+                    label: "Stock",
+                    name: "stock"
+                },
+                {
+                    label: "Price",
+                    name: "price"
+                },
+                {
+                    label: "Published Date",
+                    name: "opened_date"
+                },
+            ]
+        });
+
+        pEditor.field('stock').input().on('keyup', function (event, d) {
+            if ( d && d.editorSet ) return;
+            
+            var key_code = event.keyCode || event.which;
+            if(key_code == 13) { //Enter keycode
+                let new_value = $(this).val();
+                let target = $(event.target)[0];
+                let parent = $(target).closest('td').parent();
+                let line = $(parent).children('td:first-child').text();
+                var dtTable = $('#product-table').DataTable();
+                var product = dtTable.rows(line-1).data()[0];
+                showUpdateConfirmDialog('stock', product, new_value);
+            }
+        });
+
+        pEditor.field('price').input().on('keyup', function (event, d) {
+            if ( d && d.editorSet ) return;
+
+            var key_code = event.keyCode || event.which;
+            if(key_code == 13) { //Enter keycode
+                let new_value = $(this).val();
+                let target = $(event.target)[0];
+                let parent = $(target).closest('td').parent();
+                let line = $(parent).children('td:first-child').text();
+                var dtTable = $('#product-table').DataTable();
+                var product = dtTable.rows(line-1).data()[0];
+                showUpdateConfirmDialog('price', product, new_value);
+            }
+        });
+
+        {% comment %} pEditor.field('stock').input().on('change', function (event, d) {
+            if ( d && d.editorSet ) return;
+
+            var key_code = event.keyCode || event.which;
+            if(key_code != 13) { //Enter keycode
+                let new_value = $(this).val();
+                let target = $(event.target)[0];
+                let parent = $(target).closest('td').parent();
+                let line = $(parent).children('td:first-child').text();
+                var dtTable = $('#product-table').DataTable();
+                var product = dtTable.rows(line-1).data()[0];
+                showUpdateConfirmDialog('stock', product, new_value);
+            }
+        });
+
+        pEditor.field('price').input().on('change', function (event, d) {
+            if ( d && d.editorSet ) return;
+
+            var key_code = event.keyCode || event.which;
+            if(key_code != 13) { //Enter keycode
+                let new_value = $(this).val();
+                let target = $(event.target)[0];
+                let parent = $(target).closest('td').parent();
+                let line = $(parent).children('td:first-child').text();
+                var dtTable = $('#product-table').DataTable();
+                var product = dtTable.rows(line-1).data()[0];
+                showUpdateConfirmDialog('price', product, new_value);
+            }
+        }); {% endcomment %}
+
+        // disable auto submit
+        pEditor.on( 'preSubmit', function ( e, data, action ) {
+            return false;
+        });
+
         loadProductTable();
     });
 
-    var filter_list = [];
     $('input[type="checkbox"]').click(function(){
         filter_list.length = 0;
         if($('#published_check').prop("checked") == true){
@@ -179,10 +269,10 @@
         }
         filter_str = JSON.stringify(filter_list);
 
-        loadProductTable(filter_str);
+        loadProductTable();
     });
 
-    function loadProductTable(filter_str='[]') {
+    function loadProductTable() {
         $('#product-table').DataTable().destroy();
         $('#product-table').DataTable({
             "order": [[2, "asc"]],
@@ -220,15 +310,17 @@
                     "sClass": "text-right stock_edit",
                     "orderable": false,
                     "render": function(data, type, row){
-                        return (comma_format(row.stock, 0) + '&nbsp;&nbsp;' + '<i class="fas fa-pencil-alt text-info"></i>');
-                    }
+                        return (comma_format(row.stock, 0));
+                    },
+                    editField: "stock"
                 },
                 {
                     "sClass": "text-right price_edit",
                     "orderable": false,
                     "render": function(data, type, row){
-                        return (comma_format(row.price, 0) + JPCUR + '&nbsp;&nbsp;' + '<i class="fas fa-pencil-alt text-info"></i>');
-                    }
+                        return (comma_format(row.price, 0) + JPCUR);
+                    },
+                    editField: "price"
                 },
                 {"data": "opened_date", "orderable": false},
                 {
@@ -246,30 +338,39 @@
                 }
             ]
         });
+
+        // set editable columns using editor
+        var pTable = $('#product-table').DataTable();
+        $('#product-table').on( 'click', '.price_edit, .stock_edit', function () {
+            pTable.cell( this ).edit();
+        });
     }
 
-    var edited_product = null;
-    $(document).on('click', '.price_edit, .stock_edit', function(event) {
-        let date = $(this).val();
-        let target = $(event.target)[0];
-        let line = $(target).parent().children('td:first-child').text();
-        var dtTable = $('#product-table').DataTable();
-        var product = dtTable.rows(line-1).data()[0];
-        console.log(product);
-        edited_product = product;
-        if ($(target).hasClass('price_edit')) {
-            $('#edit-price-modal').modal('show');
+    function showUpdateConfirmDialog(ctype, product, new_value) {
+        var text = '';
+        if (ctype == 'stock') {
+            text = get_translate('Do you want to update the stock?');
         } else {
-            $('#edit-stock-modal').modal('show');
+            text = get_translate('Do you want to update the price?');
         }
-    });
-
-    function cancelEdit() {
-        edited_product = null;
+        $.confirm({
+            title: get_translate('Confirmation Dialog'),
+            content: text,
+            buttons: {
+                Ok: function () {
+                    if (ctype == 'stock') {
+                        saveStockData(product, new_value);
+                    } else {
+                        savePriceData(product, new_value);
+                    }
+                },
+                Cancel: function () {
+                }
+            }
+        });
     }
 
-    function savePriceData() {
-        let newPrice = $('#price-one-modal').val();
+    function savePriceData(edited_product, newPrice) {
         if (edited_product && Number(newPrice)) {
             $.ajax({
                 method: "POST",
@@ -294,7 +395,7 @@
                             }
                     });
                     //refresh the list again
-                    loadProductTable(JSON.stringify(filter_list));
+                    $('#product-table').DataTable().ajax.reload();
                 }
             })
             .fail(function(e) {
@@ -312,8 +413,8 @@
             })
         }
     }
-    function saveStockData() {
-        let newStock = $('#stock-one-modal').val();
+
+    function saveStockData(edited_product, newStock) {
         if (edited_product && Number(newStock)) {
             $.ajax({
                 method: "POST",
@@ -338,7 +439,7 @@
                             }
                     });
                     //refresh the list again
-                    loadProductTable(JSON.stringify(filter_list));
+                    $('#product-table').DataTable().ajax.reload();
                 }
             })
             .fail(function(e) {

@@ -36,6 +36,7 @@ def product_list(request):
 
 
 # @login_required
+@csrf_exempt
 def ProductList__asJson(request):
     """
     Method to get product list as JSON.
