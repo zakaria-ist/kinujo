@@ -14,7 +14,7 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from .models import Order, OrderProduct, OrderProductCommission, TotalCommission, TotalSale
 from products.models import ProductJancode, ProductImage
 from products.views import get_jan_products
-from prefectures.models import Prefecture
+from prefectures.models import Prefecture, CountryCode
 from profiles.models import Profile, Authority, UserSale, UserCommision, MonthlyPayment
 from taxes.models import TaxRate
 from utilities.constants import AUTHORITY_TYPE, ORDER_STATUS, ORDER_STATUS_JA
@@ -424,6 +424,7 @@ def order_add(request):
                 order.address1 = request.POST.get('address1')
                 order.address2 = request.POST.get('address2')
                 order.tel = request.POST.get('tel')
+                order.tel_code_id = int(request.POST.get('tel_code'))
                 order.status = request.POST.get('order_status')
                 order.inquiry_number = request.POST.get('inquiry_number')
                 order.order_date = datetime.datetime.strptime(request.POST.get('order_date'), '%Y-%m-%d')
@@ -578,6 +579,7 @@ def order_add(request):
             .exclude(id=seller_id)\
             .values_list('id', 'real_name', 'authority_id'))
         prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
+        tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
         if request.LANGUAGE_CODE == 'en':
             status_list = ORDER_STATUS
         else:
@@ -587,7 +589,8 @@ def order_add(request):
                                                     'order_product_list': [],
                                                     'status_list': status_list,
                                                     'tax_rate': tax_rate,
-                                                    'seller_id': seller_id})
+                                                    'seller_id': seller_id,
+                                                    'tel_code_list': tel_code_list})
     else:
         return render(request, '404.html')
 
@@ -624,6 +627,7 @@ def order_edit(request, order_id):
                     order.address1 = request.POST.get('address1')
                     order.address2 = request.POST.get('address2')
                     order.tel = request.POST.get('tel')
+                    order.tel_code_id = int(request.POST.get('tel_code'))
                     order.status = request.POST.get('order_status')
                     order.inquiry_number = request.POST.get('inquiry_number')
                     order.order_date = datetime.datetime.strptime(request.POST.get('order_date'), '%Y-%m-%d')
@@ -810,6 +814,7 @@ def order_edit(request, order_id):
                 .exclude(id=seller_id)\
                 .values_list('id', 'real_name', 'authority_id'))
             prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
+            tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
             if request.LANGUAGE_CODE == 'en':
                 status_list = ORDER_STATUS
             else:
@@ -820,7 +825,8 @@ def order_edit(request, order_id):
                                                         'order_product_list': order_product_list,
                                                         'status_list': status_list,
                                                         'tax_rate': tax_rate,
-                                                        'seller_id': seller_id})
+                                                        'seller_id': seller_id,
+                                                        'tel_code_list': tel_code_list})
         else:
             return render(request, '404.html')
     else:
