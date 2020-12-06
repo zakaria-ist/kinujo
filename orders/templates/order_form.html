@@ -208,7 +208,18 @@
                     </div>
                     <label for="tel" class="col-lg-2 control-label">{% trans 'Phone Number' %}<span
                             class="span-required">(*)</span></label>
-                    <div class="col-lg-4">
+                    <div class="col-lg-2" style="padding-right: 0px !important;">
+                        <select name="tel_code" id="tel_code" class="form-control trs-field sended">
+                            {% for code in tel_code_list %}
+                                {% if order.tel_code_id == code.id %}
+                                    <option data-code_data="{{code.tel_code}}" value="{{code.id}}" selected>{{code.name}}({{code.tel_code}})</option>
+                                {% else %}
+                                    <option data-code_data="{{code.tel_code}}" value="{{code.id}}">{{code.name}}({{code.tel_code}})</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-lg-2" style="padding-left: 5px !important;">
                         <input class="form-control trs-field" type="text"
                             name="tel"
                             id="tel"
@@ -358,6 +369,10 @@
         });
         $('#orderer').select2({});
         $('#orderer').on("select2:open", function( event ){
+            prefill_select2(event);
+        });
+        $('#tel_code').select2({});
+        $('#tel_code').on("select2:open", function( event ){
             prefill_select2(event);
         });
 
