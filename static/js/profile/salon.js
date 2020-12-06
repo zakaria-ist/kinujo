@@ -99,27 +99,28 @@ function showSalonForm(salon_id='') {
         $('#salon_prefecture').on("select2:open", function( event ){
             prefill_select2(event);
         });
+    
+        if (salon_id != '') {
+            g_salon_id = salon_id;
+            $.ajax({
+                method: "POST",
+                url: '/salons/get_salon_info/',
+                dataType: 'JSON',
+                data: {
+                    'salon_id': salon_id,
+                },
+                success: function (json) {
+                    $('#salon_name').val(json.name);
+                    $('#pic_name').val(json.pic_name);
+                    $('#salon_zip_code').val(json.zip1);
+                    $('#salon_prefecture').val(json.prefecture).trigger('change');
+                    $('#salon_address1').val(json.address1);
+                    $('#salon_address2').val(json.address2);
+                    $('#pic_tel').val(json.pic_tel);
+                }
+            });
+        }
     });
-    if (salon_id != '') {
-        g_salon_id = salon_id;
-        $.ajax({
-            method: "POST",
-            url: '/salons/get_salon_info/',
-            dataType: 'JSON',
-            data: {
-                'salon_id': salon_id,
-            },
-            success: function (json) {
-                $('#salon_name').val(json.name);
-                $('#pic_name').val(json.pic_name);
-                $('#salon_zip_code').val(json.zip1);
-                $('#salon_prefecture').val(json.prefecture).trigger('change');
-                $('#salon_address1').val(json.address1);
-                $('#salon_address2').val(json.address2);
-                $('#pic_tel').val(json.pic_tel);
-            }
-        });
-    }
 }
 
 

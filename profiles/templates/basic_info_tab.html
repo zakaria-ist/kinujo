@@ -113,7 +113,19 @@
                 <div class="form-group row">
                     <label for="tel" class="col-lg-2 control-label">{% trans 'Phone Number' %}<span
                             class="span-required">(*)</span></label>
-                    <div class="col-lg-4">
+                    <div class="col-lg-2" style="padding-right: 0px !important;">
+                        <select name="tel_code" id="tel_code" class="form-control" required>
+                            <option value="">Select Code</option>
+                            {% for code in tel_code_list %}
+                                {% if profile.tel_code_id == code.id %}
+                                    <option data-code_data="{{code.tel_code}}" value="{{code.id}}" selected>{{code.name}}({{code.tel_code}})</option>
+                                {% else %}
+                                    <option data-code_data="{{code.tel_code}}" value="{{code.id}}">{{code.name}}({{code.tel_code}})</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-lg-2" style="padding-left: 5px !important;">
                         {{ form.tel|default_if_none:"" }}
                     </div>
                     <label for="password" class="col-lg-2 control-label">{% trans 'Password' %}</label>

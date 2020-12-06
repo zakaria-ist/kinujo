@@ -20,10 +20,10 @@ from .models import Address, Profile, FinancialAccount, UserSale, \
     UserCommision, MonthlyPayment
 from products.models import ProductCategory, ProductJancode
 from orders.models import Order, OrderProduct, OrderProductCommission
-from utilities.constants import AUTHORITY_TYPE
-from prefectures.models import Prefecture
+from prefectures.models import Prefecture, CountryCode
 from images.models import Image
 from products.views import get_jan_products
+from utilities.constants import AUTHORITY_TYPE
 
 
 @login_required    
@@ -62,7 +62,9 @@ def pass_reset(request):
     """
     Method to redirect to password reset page.
     """
-    return render(request, 'password-reset.html')
+
+    tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
+    return render(request, 'password-reset.html', {'tel_code_list': tel_code_list})
 
 def reset_password(request):
     """
@@ -100,6 +102,7 @@ def login_master(request):
     """
 
     state = ""
+    tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
     if request.method == 'POST':
         try:
             username = request.POST.get('username')
@@ -115,16 +118,16 @@ def login_master(request):
                     return HttpResponsePermanentRedirect(reverse('home_load'))
                 else:
                     state = "User is not a Master Account"
-                    return render(request, 'master_login.html', {'state': state})
+                    return render(request, 'master_login.html', {'state': state, 'tel_code_list': tel_code_list})
             else:
                 state = "Check username & password"
-                return render(request, 'master_login.html', {'state': state})
+                return render(request, 'master_login.html', {'state': state, 'tel_code_list': tel_code_list})
         except Exception as e:
             state = "Check username & password"
             print(e)
-            return render(request, 'master_login.html', {'state': state})
+            return render(request, 'master_login.html', {'state': state, 'tel_code_list': tel_code_list})
 
-    return render(request, 'master_login.html', {'state': state})
+    return render(request, 'master_login.html', {'state': state, 'tel_code_list': tel_code_list})
 
 
 def login_sales(request):
@@ -133,6 +136,7 @@ def login_sales(request):
     """
     
     state = ""
+    tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
     if request.method == 'POST':
         try:
             username = request.POST.get('username')
@@ -148,30 +152,31 @@ def login_sales(request):
                     return redirect('listing_home_load')
                 else:
                     state = "User is not Seller Account"
-                    return render(request, 'sales_login.html', {'state': state})
+                    return render(request, 'sales_login.html', {'state': state, 'tel_code_list': tel_code_list})
             else:
                 state = "Check username & password"
-                return render(request, 'sales_login.html', {'state': state})
+                return render(request, 'sales_login.html', {'state': state, 'tel_code_list': tel_code_list})
         except Exception as e:
             print(e)
             state = "Check username & password"
-            return render(request, 'sales_login.html', {'state': state})
+            return render(request, 'sales_login.html', {'state': state, 'tel_code_list': tel_code_list})
 
-    return render(request, 'sales_login.html', {'state': state})
+    return render(request, 'sales_login.html', {'state': state, 'tel_code_list': tel_code_list})
 
 def logout_user(request):
     """
     Method to logout.
     """
 
+    tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
     login_type_was = request.session['login_type']
     logout(request)
     if login_type_was == 'MASTER':
         request.session['login_type'] = 'MASTER'
-        return render(request, 'master_login.html')
+        return render(request, 'master_login.html', {'tel_code_list': tel_code_list})
     else:
         request.session['login_type'] = 'SELLER'
-        return render(request, 'sales_login.html')
+        return render(request, 'sales_login.html', {'tel_code_list': tel_code_list})
 
 @login_required
 def profile_list(request):
@@ -325,7 +330,9 @@ def profile_add(request):
             form = ProfileForm(request.POST)
             if form.is_valid:
                 try:
-                    user = User.objects.create_user(request.POST.get('tel'), 'test@test.com', request.POST.get('password'))
+                    tel_code = CountryCode.objects.get(pk=request.POST.get('tel_code')).tel_code
+                    user_name =  tel_code + request.POST.get('tel')
+                    user = User.objects.create_user(user_name, 'test@kinujo.com', request.POST.get('password'))
                     user.first_name = request.POST.get('real_name')
                     user.save()
                     profile = form.save(commit=False)
@@ -336,6 +343,7 @@ def profile_add(request):
                     if request.POST.get('birthday'):
                         profile.birthday = request.POST.get('birthday')
                     
+                    profile.tel_code_id = int(request.POST.get('tel_code'))
                     if request.POST.get('is_seller') == '1':
                         profile.is_seller = True
                     else:
@@ -379,10 +387,12 @@ def profile_add(request):
         
         store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['SPECIAL']).values('id', 'real_name')
         profile_list = list(Profile.objects.filter(is_hidden=False).values_list('id', 'real_name', 'authority_id'))
+        tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
         return render(request, 'profile_form.html', {'form': form, 
                                                     'media_url': s.MEDIA_URL, 
                                                     'store_list': store_list,
-                                                    'profile_list': profile_list})
+                                                    'profile_list': profile_list,
+                                                    'tel_code_list': tel_code_list})
     else:
         return render(request, '404.html')
 
@@ -399,10 +409,13 @@ def profile_edit(request, profile_id):
             form = ProfileForm(request.POST, instance=profile)
             if form.is_valid:
                 try:
+                    tel_code = CountryCode.objects.get(pk=request.POST.get('tel_code')).tel_code
+                    user_name =  tel_code + request.POST.get('tel')
+
                     user = User.objects.filter(pk=profile.user_id).first()
                     if user:
-                        if user.username != request.POST.get('tel'):
-                            user.username = request.POST.get('tel')
+                        if user.username != user_name:
+                            user.username = user_name
                             user.save()
                         if user.first_name != request.POST.get('real_name'):
                             user.first_name = request.POST.get('real_name')
@@ -412,11 +425,12 @@ def profile_edit(request, profile_id):
                             user.save()
                     else:
                         if request.POST.get('password') != '' and request.POST.get('password') != None:
-                            user = User.objects.create_user(request.POST.get('tel'), 'test@test.com', request.POST.get('password'))
+                            user = User.objects.create_user(user_name, 'test@kinujo.com', request.POST.get('password'))
                             user.first_name = request.POST.get('real_name')
                             user.save()
                     
                     profile = form.save(commit=False)
+                    profile.tel_code_id = int(request.POST.get('tel_code'))
                     if user:
                         profile.user_id = user.id
                     else:
@@ -485,13 +499,15 @@ def profile_edit(request, profile_id):
         profile_list = list(Profile.objects.filter(is_hidden=False).exclude(id=profile_id).values_list('id', 'real_name', 'authority_id'))
         prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
         category_list = list(ProductCategory.objects.filter(is_hidden=False).order_by('id').values_list('id', 'name'))
+        tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
         return render(request, 'profile_form.html', {'form': form, 
                                                     'media_url': s.MEDIA_URL, 
                                                     'store_list': store_list,
                                                     'profile_list': profile_list,
                                                     'profile': profile,
                                                     'category_list': category_list,
-                                                    'prefecture_list': prefecture_list})
+                                                    'prefecture_list': prefecture_list,
+                                                    'tel_code_list': tel_code_list})
     else:
         return render(request, '404.html')
 
@@ -515,6 +531,12 @@ def profile_delete(request, profile_id):
                 image.is_hidden = True
                 image.modified = datetime.datetime.now()
                 image.save()
+
+            user = User.objects.filter(pk=profile.user_id).first()
+            if user:
+                user.is_active = False
+                user.save()
+                user.delete()
         except Exception as e:
             print(e)
         return redirect('/profiles/profile_list/')
@@ -624,6 +646,7 @@ def get_shipping_info(request):
         'address1': '',
         'address2': '',
         'add_tel': '',
+        'add_tel_code': '',
         'prefecture': '',
         'is_default': '0'
     }
@@ -640,6 +663,7 @@ def get_shipping_info(request):
                     'address1': str(address_info.address1),
                     'address2': str(address_info.address2),
                     'add_tel': str(address_info.tel),
+                    'add_tel_code': str(address_info.tel_code_id),
                     'prefecture': str(address_info.prefecture_id),
                     'is_default': '1' if address_info.is_default else '0'
                 }
@@ -667,6 +691,7 @@ def update_shipping_info(request):
             address1 = request.POST.get('address1')
             address2 = request.POST.get('address2')
             tel = request.POST.get('add_tel')
+            tel_code = int(request.POST.get('add_tel_code'))
             prefecture = int(request.POST.get('prefecture'))
             is_default = int(request.POST.get('is_default'))
 
@@ -681,6 +706,7 @@ def update_shipping_info(request):
                     shipping_info.address2 = address2
                     shipping_info.zip1 = zip1
                     shipping_info.tel = tel
+                    shipping_info.tel_code_id = tel_code
                     shipping_info.prefecture_id = prefecture
                     shipping_info.is_default = is_default
 
@@ -695,6 +721,7 @@ def update_shipping_info(request):
                 shipping_info.address2 = address2
                 shipping_info.zip1 = zip1
                 shipping_info.tel = tel
+                shipping_info.tel_code_id = tel_code
                 shipping_info.prefecture_id = prefecture
                 shipping_info.is_default = is_default
 
@@ -798,14 +825,14 @@ def ShippingList__asJson(request):
     return HttpResponse(json_content, content_type='application/json')
 
 
-def validate_user_phone(request, profile_id):
+def validate_user_phone(request, username):
     """
-    Method to verify duplcate user.
+    Method to verify a user.
     """
 
     message = 'Error'
     try:
-        user = User.objects.filter(username=profile_id).first()
+        user = User.objects.filter(username=username).first()
         if user:
             message = 'Success'
     except Exception as e:
@@ -824,7 +851,7 @@ def check_for_duplicate(request, type, value):
     try:
         user = None
         if type == 'tel':
-            user = Profile.objects.filter(tel=value).first()
+            user = User.objects.filter(username=value).first()
         elif type == 'id':
             user = Profile.objects.filter(user_code=value).first()
 
