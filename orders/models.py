@@ -2,7 +2,7 @@ from datetime import date, datetime
 from django.db import models
 from products.models import ProductJancode
 from profiles.models import Profile, Authority
-from prefectures.models import Prefecture
+from prefectures.models import Prefecture, CountryCode
 from django.core.validators import MaxValueValidator
 from utilities.constants import ORDER_STATUS
 
@@ -20,6 +20,7 @@ class Order(models.Model):
     address1 = models.CharField(max_length=1024)
     address2 = models.CharField(max_length=1024, default='')
     tel = models.CharField(max_length=32)
+    tel_code = models.ForeignKey(CountryCode, on_delete=models.CASCADE, null=True)
     status = models.SmallIntegerField(null=True, choices=ORDER_STATUS)
     inquiry_number = models.CharField(max_length=128, default='')
     order_date = models.DateTimeField(auto_now_add=True, null=True)

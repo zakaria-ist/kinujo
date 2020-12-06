@@ -40,9 +40,6 @@
                     class="span-required">(*)</span></label>
             <div class="col-lg-6">
                 <select name="prefecture" id="prefecture" class="form-control trs-field">
-                    {% for pr in prefecture_list %}
-                        <option value="{{pr.0}}">{{pr.1}}</option>
-                    {% endfor %}
                 </select>
             </div>
         </div>
@@ -68,7 +65,11 @@
         <div class="form-group row">
             <label for="add_tel" class="col-lg-2 control-label">{% trans 'Phone Number' %}<span
                     class="span-required">(*)</span></label>
-            <div class="col-lg-6">
+            <div class="col-lg-2" style="padding-right: 0px !important;">
+                <select name="add_tel_code" id="add_tel_code" class="form-control trs-field sended">
+                </select>
+            </div>
+            <div class="col-lg-4" style="padding-left: 5px !important;">
                 <input class="form-control trs-field" type="text"
                     name="add_tel"
                     id="add_tel"

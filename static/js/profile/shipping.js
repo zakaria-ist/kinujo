@@ -99,32 +99,45 @@ function showShippingForm(shipping_id='') {
         $('#prefecture').on("select2:open", function( event ){
             prefill_select2(event);
         });
-    });
-    if (shipping_id != '') {
-        g_shipping_id = shipping_id;
-        $.ajax({
-            method: "POST",
-            url: '/profiles/get_shipping_info/',
-            dataType: 'JSON',
-            data: {
-                'shipping_id': shipping_id,
-            },
-            success: function (json) {
-                $('#destination_name').val(json.destination_name);
-                $('#full_name').val(json.full_name);
-                $('#zip_code').val(json.zip_code);
-                $('#prefecture').val(json.prefecture).trigger('change');
-                $('#address1').val(json.address1);
-                $('#address2').val(json.address2);
-                $('#add_tel').val(json.add_tel);
-                if(json.is_default == '1') {
-                    $('#default_checkbox').prop('checked', true);
-                } else {
-                    $('#default_checkbox').prop('checked', false);
-                }
-            }
+        options = '';
+        $.each(tel_code_list, function(i, v) {
+            options += "<option data-code_data='"+v[2]+"' value='"+v[0]+"'>"+v[1]+"("+v[2]+")</option>";
         });
-    }
+        $('#add_tel_code').html(options);
+        if (!$('#add_tel_code').data('select2')) {
+            $('#add_tel_code').select2({});
+        }
+        $('#add_tel_code').on("select2:open", function( event ){
+            prefill_select2(event);
+        });
+    
+        if (shipping_id != '') {
+            g_shipping_id = shipping_id;
+            $.ajax({
+                method: "POST",
+                url: '/profiles/get_shipping_info/',
+                dataType: 'JSON',
+                data: {
+                    'shipping_id': shipping_id,
+                },
+                success: function (json) {
+                    $('#destination_name').val(json.destination_name);
+                    $('#full_name').val(json.full_name);
+                    $('#zip_code').val(json.zip_code);
+                    $('#prefecture').val(json.prefecture).trigger('change');
+                    $('#address1').val(json.address1);
+                    $('#address2').val(json.address2);
+                    $('#add_tel').val(json.add_tel);
+                    $('#add_tel_code').val(json.add_tel_code).trigger('change');
+                    if(json.is_default == '1') {
+                        $('#default_checkbox').prop('checked', true);
+                    } else {
+                        $('#default_checkbox').prop('checked', false);
+                    }
+                }
+            });
+        }
+    });
 }
 
 function saveShippingInfo() {
@@ -147,6 +160,7 @@ function saveShippingInfo() {
                 'address1': $('#address1').val(),
                 'address2': $('#address2').val(),
                 'add_tel': $('#add_tel').val(),
+                'add_tel_code': $('#add_tel_code').val(),
                 'prefecture': $('#prefecture').val(),
                 'is_default': is_default
             },
