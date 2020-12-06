@@ -38,7 +38,7 @@ class Profile(models.Model):
     prefecture = models.ForeignKey(Prefecture, on_delete=models.CASCADE, null=True)
     city = models.CharField(max_length=100, default='')
     address1 = models.CharField(max_length=255, default='')
-    address2 = models.CharField(max_length=255, default='')
+    address2 = models.CharField(max_length=255, default='', null=True, blank=True)
     corporate_name = models.CharField(max_length=255, default='')
     corporate_tel = models.CharField(max_length=255, default='')
     representative_name = models.CharField(max_length=255, default='')
