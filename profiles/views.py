@@ -816,7 +816,8 @@ def ShippingList__asJson(request):
                 "zip1": field.zip1,
                 "prefecture": field.prefecture.name,
                 "prefecture_id": field.prefecture.id,
-                "tel": field.tel
+                "tel": field.tel,
+                "tel_code": field.tel_code_id if field.tel_code_id else ''
                 }
         array.append(data)
 
