@@ -259,6 +259,12 @@
             $('#tel_code').on("select2:open", function( event ){
                 prefill_select2(event);
             });
+            $('#corporate_tel_code').select2({
+                placeholder: "Select Code"
+            });
+            $('#corporate_tel_code').on("select2:open", function( event ){
+                prefill_select2(event);
+            });
 
             var editor = new $.fn.dataTable.Editor( {
                 "ajax": {

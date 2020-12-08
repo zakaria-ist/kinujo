@@ -338,12 +338,16 @@ def profile_add(request):
                     profile = form.save(commit=False)
                     profile.user = user
                     profile.user_code = request.POST.get('user_code')
-                    if request.POST.get('password') != '' and request.POST.get('password') != None:
-                        profile.password = request.POST.get('password')
+                    # if request.POST.get('password') != '' and request.POST.get('password') != None:
+                    #     profile.password = request.POST.get('password')
                     if request.POST.get('birthday'):
                         profile.birthday = request.POST.get('birthday')
                     
                     profile.tel_code_id = int(request.POST.get('tel_code'))
+
+                    if request.POST.get('corporate_tel_code') and request.POST.get('corporate_tel_code') != '' and request.POST.get('corporate_tel_code') != None:
+                        profile.corporate_tel_code_id = int(request.POST.get('corporate_tel_code'))
+
                     if request.POST.get('is_seller') == '1':
                         profile.is_seller = True
                     else:
@@ -431,6 +435,10 @@ def profile_edit(request, profile_id):
                     
                     profile = form.save(commit=False)
                     profile.tel_code_id = int(request.POST.get('tel_code'))
+
+                    if request.POST.get('corporate_tel_code') and request.POST.get('corporate_tel_code') != '' and request.POST.get('corporate_tel_code') != None:
+                        profile.corporate_tel_code_id = int(request.POST.get('corporate_tel_code'))
+
                     if user:
                         profile.user_id = user.id
                     else:
@@ -458,8 +466,8 @@ def profile_edit(request, profile_id):
                     else:
                         profile.is_approved = False
                     
-                    if request.POST.get('password') != '' and request.POST.get('password') != None:
-                        profile.password = request.POST.get('password')
+                    # if request.POST.get('password') != '' and request.POST.get('password') != None:
+                    #     profile.password = request.POST.get('password')
 
                     profile.modified = datetime.datetime.now()
                     profile.save()
@@ -816,7 +824,8 @@ def ShippingList__asJson(request):
                 "zip1": field.zip1,
                 "prefecture": field.prefecture.name,
                 "prefecture_id": field.prefecture.id,
-                "tel": field.tel
+                "tel": field.tel,
+                "tel_code": field.tel_code_id if field.tel_code_id else ''
                 }
         array.append(data)
 
