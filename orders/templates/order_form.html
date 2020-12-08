@@ -458,6 +458,7 @@
             sel_address['name'] = dtRow[0].address_name;
             sel_address['full_name'] = dtRow[0].name;
             sel_address['tel'] = dtRow[0].tel;
+            sel_address['tel_code'] = dtRow[0].tel_code;
             sel_address['prefecture'] = dtRow[0].prefecture;
             sel_address['prefecture_id'] = dtRow[0].prefecture_id;
             sel_address['address1'] = dtRow[0].address1;
@@ -466,6 +467,7 @@
             console.log(sel_address);
             $('#zip1').val(sel_address.zip1).trigger('change');
             $('#tel').val(sel_address.tel);
+            $('#tel_code').val(sel_address.tel_code).trigger('change');
             $('#name').val(sel_address.name);
             $('#AddressListModal').modal('hide');
         };
