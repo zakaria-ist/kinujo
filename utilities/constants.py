@@ -4,9 +4,20 @@ GENDER_TYPE = (
     (2, 'FEMALE')
 )
 
+GENDER_TYPE_JA = (
+    (0, 'なし'),
+    (1, '男性'),
+    (2, '女性')
+)
+
 YES_NO = (
     (0, 'NO'),
     (1, 'YES')
+)
+
+YES_NO_JA = (
+    (0, '不可'),
+    (1, '可')
 )
 
 ACCOUNT_TYPE = (
@@ -23,6 +34,11 @@ SALON_TYPE = (
 SALON_CATEGORY = (
     (1, 'SALONS'),
     (2, 'STYLISTS')
+)
+
+SALON_CATEGORY_JA = (
+    (1, 'サロン'),
+    (2, '理美容師')
 )
 
 PRODUCT_VARIETY = (

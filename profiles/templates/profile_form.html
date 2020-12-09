@@ -228,6 +228,14 @@
         } 
 
         $(document).ready(function () {
+            var cur_language = $("#language").val();
+            var old_language = permanentStorage.getItem("language", null);
+            if (old_language && cur_language != old_language) {
+                var target_tab = permanentStorage.getItem("target_tab", null);
+                if (target_tab) {
+                    $('.nav-tabs a[href="' + target_tab + '"]').tab('show');
+                }
+            }
             changeLang();
             if (profile_id == '' || profile_id == undefined || profile_id == null) {
                 profile_id = '';
@@ -257,6 +265,12 @@
                 placeholder: "Select Code"
             });
             $('#tel_code').on("select2:open", function( event ){
+                prefill_select2(event);
+            });
+            $('#corporate_tel_code').select2({
+                placeholder: "Select Code"
+            });
+            $('#corporate_tel_code').on("select2:open", function( event ){
                 prefill_select2(event);
             });
 
@@ -334,12 +348,12 @@
                     showUpdateConfirmDialog('price', product, new_value);
                 }
             });
-
         });
 
         // Detect tab change event
         $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
             var target = $(e.target).attr("href");
+            permanentStorage.setItem("target_tab", target);
             if ((target == '#item_tab')) {
                 loadItemTableData();
             } else if ((target == '#client_tab')) {
