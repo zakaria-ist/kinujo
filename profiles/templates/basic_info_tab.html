@@ -113,7 +113,7 @@
                 <div class="form-group row">
                     <label for="tel" class="col-lg-2 control-label">{% trans 'Phone Number' %}<span
                             class="span-required">(*)</span></label>
-                    <div class="col-lg-2" style="padding-right: 0px !important;">
+                    <div class="col-lg-3" style="padding-right: 0px !important;">
                         <select name="tel_code" id="tel_code" class="form-control" required>
                             <option value="">Select Code</option>
                             {% for code in tel_code_list %}
@@ -125,8 +125,8 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-lg-2" style="padding-left: 5px !important;">
-                        {{ form.tel|default_if_none:"" }}
+                    <div class="col-lg-1" style="padding-left: 5px !important;">
+                        {% comment %} {{ form.tel|default_if_none:"" }} {% endcomment %}
                     </div>
                     <label for="password" class="col-lg-2 control-label">{% trans 'Password' %}</label>
                     <div class="col-lg-4">
@@ -137,7 +137,10 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-4">
+                        {{ form.tel|default_if_none:"" }}
                     </div>
                     <label for="conf_pass" class="col-lg-2 control-label">{% trans 'Confirm Password' %}</label>
                     <div class="col-lg-4">
