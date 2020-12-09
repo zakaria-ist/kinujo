@@ -1,9 +1,10 @@
 from .models import Profile, Authority
 import datetime
+from django.utils import translation
 from django import forms
 from django.forms import ModelChoiceField
 from images.models import Image
-from utilities.constants import SALON_CATEGORY, GENDER_TYPE, YES_NO
+from utilities.constants import SALON_CATEGORY, GENDER_TYPE, YES_NO, SALON_CATEGORY_JA, GENDER_TYPE_JA, YES_NO_JA
 
 class CodeNameChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
@@ -67,6 +68,12 @@ class ProfileForm(forms.ModelForm):
         super(ProfileForm, self).__init__(*args, **kwargs)
         self.empty_permitted = False
         self.fields['authority'].queryset = Authority.objects.filter(is_hidden=False, is_enable=True)
+        language = translation.get_language()
+        if language == 'ja':
+            self.fields['salon_category'].choices = SALON_CATEGORY_JA
+            self.fields['is_seller'].choices = YES_NO_JA
+            self.fields['is_approved'].choices = YES_NO_JA
+            self.fields['gender'].choices = GENDER_TYPE_JA
 
 
 class ImageUploadForm(forms.Form):
