@@ -683,7 +683,8 @@ class Pay(APIView):
                         'is_hidden': 0,
                         'prefecture': addressSerializer.data['prefecture']['url'],
                         'seller': product['user']['url'],
-                        'purchaser' : profileSerializer.data['url']
+                        'purchaser' : profileSerializer.data['url'],
+                        'status' : 1
                     }
                     orderSerializer = InsertOrderSerializer(data=order, context=getContext())
                     if orderSerializer.is_valid():
