@@ -19,11 +19,3 @@ if [ -d $local_repo/.git ]; then pushd $local_repo; git pull; popd; else git clo
 #Copy source code to project folder
 sudo rsync -avz --exclude '.git' /home/ec2-user/git/kinujo_production/ /var/www/kinujo_production
 sudo mkdir /var/www/kinujo_production/logs
-
-#Run migrate
-/var/www/.env/bin/pip install -r /var/www/kinujo_production/requirements.txt
-/var/www/.env/bin/python /var/www/kinujo_production/manage.py migrate --settings kinujo.settings_production
-
-#permission for logs
-sudo chmod -R 0777 /var/log/httpd/kinujo_production/
-sudo chmod -R 0777 /var/www/kinujo_production/logs/
