@@ -16,8 +16,8 @@ YES_NO = (
 )
 
 YES_NO_JA = (
-    (0, '否'),
-    (1, 'ああ')
+    (0, '不可'),
+    (1, '可')
 )
 
 ACCOUNT_TYPE = (
@@ -38,7 +38,7 @@ SALON_CATEGORY = (
 
 SALON_CATEGORY_JA = (
     (1, 'サロン'),
-    (2, 'スタイル')
+    (2, '理美容師')
 )
 
 PRODUCT_VARIETY = (
@@ -64,7 +64,6 @@ PAYMENT_STATUS = (
 )
 
 ORDER_STATUS = (
-    (0, 'NEW'),
     (1, 'IN PROCESSING'),
     (2, 'SHIPMENT COMPLETE')
 )
