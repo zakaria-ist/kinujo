@@ -237,7 +237,6 @@ class UserRegister(APIView):
                 profileItem = {
                     'user' : userSerializer.data['url'],
                     'tel' : request.data['username'],
-                    'password' : request.data['password'],
                     'nickname' : request.data['nickname'],
                     'user_code' : user.id,
                     'authority' : authoritySerializer.data['url'],
@@ -330,8 +329,6 @@ class PasswordReset(APIView):
                     user.set_password(request.data['password'])
                     user.save()
 
-                    profile.password = request.data['password']
-                    profile.save()
                     return Response({"success" : True}, status=status.HTTP_200_OK)
                 else:
                     return Response({"success" : False, "error" : "password_mismatch"}, status=status.HTTP_200_OK)

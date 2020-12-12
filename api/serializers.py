@@ -57,7 +57,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['is_master', 'background_img', 'id', 'profit', 'url', 'user','authority','is_seller','shop_name','tel','password','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
+        fields = ['is_master', 'background_img', 'id', 'profit', 'url', 'user','authority','is_seller','shop_name','tel','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
     def get_profit(self, instance):
         orders = Order.objects.filter(seller=instance.id).values_list('id', flat=True)
         orderProducts = OrderProduct.objects.all().filter(order__in=orders)
