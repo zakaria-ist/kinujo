@@ -48,7 +48,6 @@ class AuthoritySerializer(serializers.HyperlinkedModelSerializer):
         fields = ['id', 'url', 'name','commission_rate','official_commission_rate','is_hidden','created','modified']
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
-    password = serializers.CharField(write_only=True)
     profit = serializers.SerializerMethodField()
     image = ImageSerializer(required=False)
     background_img = ImageSerializer(required=False)
