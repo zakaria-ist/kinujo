@@ -9,9 +9,9 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-from .shared_settings import *
+# from .shared_settings import *
 import os
-
+from django.utils.translation import ugettext_lazy as _
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ro6hl1+%(r+oek3sz3j8x!dfyy+_3e+*so0q-zec9f-ycp5fox'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['kinujo.c2sg.asia', 'kinujo-rds.c6vjpibetgki.ap-northeast-1.rds.amazonaws.com']
+ALLOWED_HOSTS = ['app.kinujo.jp', 'kinujo-rds.c6vjpibetgki.ap-northeast-1.rds.amazonaws.com']
 
 DATABASES = {
     'default': {
@@ -158,9 +158,9 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 
 # s3 settings
-AWS_ACCESS_KEY_ID = 'AKIA4YVCJSZFRIFD44QQ'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'kinujo_production'
+AWS_ACCESS_KEY_ID = 'AKIARZPDVQAN2CBCEWRS'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'kinujoprod'
 S3_URL = 'https://%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
 DEFAULT_FILE_STORAGE = 'utilities.s3utils.MediaS3BotoStorage'
