@@ -816,17 +816,17 @@ class CreateProduct(APIView):
 
             if request.data['productVariation'] == 'none':
                 noneVariationItems = request.data['noneVariationItems']
-                if noneVariationItems['janCode'] == "":
+                if noneVariationItems['janCode'] == "" and not noneVariationItems['delete']:
                     return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
-                if noneVariationItems['stock'] == "":
+                if noneVariationItems['stock'] == "" and not noneVariationItems['delete']:
                     return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 0
             if request.data['productVariation'] == 'one':
                 oneVariationItems = request.data['oneVariationItems']
                 for item in oneVariationItems['items']:
-                    if item['janCode'] == "":
+                    if item['janCode'] == "" and not item['delete']:
                         return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
-                    if item['stock'] == "":
+                    if item['stock'] == "" and not item['delete']:
                         return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 1
             if request.data['productVariation'] == 'two':
@@ -836,9 +836,9 @@ class CreateProduct(APIView):
                 secondItem = twoVariationItems['items'][1]
                 for choice1 in firstItem['choices']:
                     for choice2 in secondItem['choices']:
-                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'] == "":
+                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'] == "" and not mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
                             return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
-                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'] == "":
+                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'] == "" and not mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
                             return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 2
 
