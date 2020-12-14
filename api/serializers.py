@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from orders.models import Order, OrderProduct, OrderProductCommission, OrderReceipt, TotalSale, TotalCommission
 from policies.models import Policy
-from prefectures.models import Prefecture
+from prefectures.models import Prefecture, CountryCode
 from products.models import ProductCategory, Product, ProductImage, ProductVariety, ProductVarietySelection, ProductJancode
 from profiles.models import FinancialAccount, Authority, Profile, UserSale, UserCommision, MonthlyPayment, Address
 from taxes.models import TaxRate
@@ -19,6 +19,11 @@ def getContext():
         'request': Request(APIRequestFactory().get('/')),
     }
     return context
+
+class CountryCodeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = CountryCode
+        fields = ['name', 'code', 'tel_code', 'is_hidden', 'created', 'modified']
 
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
