@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #Run migrate
 /var/www/.env/bin/pip install -r /var/www/kinujo_production/requirements.txt
 /var/www/.env/bin/python /var/www/kinujo_production/manage.py migrate --settings kinujo.settings_production
