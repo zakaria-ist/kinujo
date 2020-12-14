@@ -5,10 +5,10 @@ files:
    destination: /home/ec2-user/var/www/kinujo_production
 hooks:
  BeforeInstall:
-   - location: deploy/before_install.sh
+   - location: deploy/prod/before_install.sh
      timeout: 300
      runas: ec2-user
  AfterInstall:
-   - location: deploy/after_install.sh
+   - location: deploy/prod/after_install.sh
      timeout: 300
      runas: ec2-user
