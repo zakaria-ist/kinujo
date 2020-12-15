@@ -5,6 +5,7 @@
 sudo rm -rf /var/www/kinujo_production
 sudo rm -rf /home/ec2-user/git/kinujo_production
 sudo mkdir /home/ec2-user/git/kinujo_production
+sudo chmod 777 -R /home/ec2-user/git/kinujo_production
 
 cd /home/ec2-user/git/kinujo_production
 eval `ssh-agent`
