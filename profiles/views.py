@@ -330,7 +330,7 @@ def profile_add(request):
             form = ProfileForm(request.POST)
             if form.is_valid:
                 try:
-                    tel_code = CountryCode.objects.get(pk=request.POST.get('tel_code')).tel_code
+                    tel_code = request.POST.get('tel_code')
                     user_name =  tel_code + request.POST.get('tel')
                     user = User.objects.create_user(user_name, 'test@kinujo.com', request.POST.get('password'))
                     user.first_name = request.POST.get('real_name')
@@ -343,10 +343,10 @@ def profile_add(request):
                     if request.POST.get('birthday'):
                         profile.birthday = request.POST.get('birthday')
                     
-                    profile.tel_code_id = int(request.POST.get('tel_code'))
+                    profile.tel_code = request.POST.get('tel_code')
 
                     if request.POST.get('corporate_tel_code') and request.POST.get('corporate_tel_code') != '' and request.POST.get('corporate_tel_code') != None:
-                        profile.corporate_tel_code_id = int(request.POST.get('corporate_tel_code'))
+                        profile.corporate_tel_code = request.POST.get('corporate_tel_code')
 
                     if request.POST.get('is_seller') == '1':
                         profile.is_seller = True
@@ -413,7 +413,7 @@ def profile_edit(request, profile_id):
             form = ProfileForm(request.POST, instance=profile)
             if form.is_valid:
                 try:
-                    tel_code = CountryCode.objects.get(pk=request.POST.get('tel_code')).tel_code
+                    tel_code = request.POST.get('tel_code')
                     user_name =  tel_code + request.POST.get('tel')
 
                     user = User.objects.filter(pk=profile.user_id).first()
@@ -434,10 +434,10 @@ def profile_edit(request, profile_id):
                             user.save()
                     
                     profile = form.save(commit=False)
-                    profile.tel_code_id = int(request.POST.get('tel_code'))
+                    profile.tel_code = request.POST.get('tel_code')
 
                     if request.POST.get('corporate_tel_code') and request.POST.get('corporate_tel_code') != '' and request.POST.get('corporate_tel_code') != None:
-                        profile.corporate_tel_code_id = int(request.POST.get('corporate_tel_code'))
+                        profile.corporate_tel_code = request.POST.get('corporate_tel_code')
 
                     if user:
                         profile.user_id = user.id
@@ -671,7 +671,7 @@ def get_shipping_info(request):
                     'address1': str(address_info.address1),
                     'address2': str(address_info.address2),
                     'add_tel': str(address_info.tel),
-                    'add_tel_code': str(address_info.tel_code_id),
+                    'add_tel_code': str(address_info.tel_code),
                     'prefecture': str(address_info.prefecture_id),
                     'is_default': '1' if address_info.is_default else '0'
                 }
@@ -699,7 +699,7 @@ def update_shipping_info(request):
             address1 = request.POST.get('address1')
             address2 = request.POST.get('address2')
             tel = request.POST.get('add_tel')
-            tel_code = int(request.POST.get('add_tel_code'))
+            tel_code = request.POST.get('add_tel_code')
             prefecture = int(request.POST.get('prefecture'))
             is_default = int(request.POST.get('is_default'))
 
@@ -714,7 +714,7 @@ def update_shipping_info(request):
                     shipping_info.address2 = address2
                     shipping_info.zip1 = zip1
                     shipping_info.tel = tel
-                    shipping_info.tel_code_id = tel_code
+                    shipping_info.tel_code = tel_code
                     shipping_info.prefecture_id = prefecture
                     shipping_info.is_default = is_default
 
@@ -729,7 +729,7 @@ def update_shipping_info(request):
                 shipping_info.address2 = address2
                 shipping_info.zip1 = zip1
                 shipping_info.tel = tel
-                shipping_info.tel_code_id = tel_code
+                shipping_info.tel_code = tel_code
                 shipping_info.prefecture_id = prefecture
                 shipping_info.is_default = is_default
 
@@ -825,7 +825,7 @@ def ShippingList__asJson(request):
                 "prefecture": field.prefecture.name,
                 "prefecture_id": field.prefecture.id,
                 "tel": field.tel,
-                "tel_code": field.tel_code_id if field.tel_code_id else ''
+                "tel_code": field.tel_code if field.tel_code else ''
                 }
         array.append(data)
 

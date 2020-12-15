@@ -202,6 +202,10 @@
         {% endfor %}
         
         var profile_id = "{{profile.id}}";
+        var profile_image = '';
+        if (profile_id) {
+            profile_image = "{{profile.image.image.url}}";
+        }
         var authority_id = "{{profile.authority_id}}";
         var profile_introducer = "{{profile.introducer_id}}"
         var is_seller = "{{profile.is_seller}}";
@@ -246,6 +250,12 @@
                 $('#id_authority').trigger('change');
                 $('#id_authority').prop('disabled', true);
                 $('#id_user_code').prop('disabled', true);
+            }
+            if (profile_image && profile_image != '') {
+                var element = $('#img_profile_image').parent().parent();
+                var preview = $(element).find('.fileupload-preview');
+                $(preview).html('<img src="' + profile_image + '"' + 'style="max-height:300px"' + '/>');
+                $(element).addClass('fileupload-exists').removeClass('fileupload-new');
             }
             $('#id_is_seller').select2({});
             $('#id_is_approved').select2({});
