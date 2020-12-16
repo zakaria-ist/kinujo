@@ -26,4 +26,4 @@ sudo mkdir /var/www/kinujo_production/logs
 
 #permission for logs
 sudo chmod -R 0777 /var/log/httpd/kinujo_production/
-sudo chmod -R 0777 /var/www/kinujo_production/logs/                                        
+sudo chmod -R 0777 /var/www/kinujo_production/logs/
