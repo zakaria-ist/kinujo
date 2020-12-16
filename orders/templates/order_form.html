@@ -211,10 +211,10 @@
                     <div class="col-lg-2" style="padding-right: 0px !important;">
                         <select name="tel_code" id="tel_code" class="form-control trs-field sended">
                             {% for code in tel_code_list %}
-                                {% if order.tel_code_id == code.id %}
-                                    <option data-code_data="{{code.tel_code}}" value="{{code.id}}" selected>{{code.name}}({{code.tel_code}})</option>
+                                {% if order.tel_code == code.tel_code %}
+                                    <option data-code_data="{{code.tel_code}}" value="{{code.tel_code}}" selected>{{code.name}}({{code.tel_code}})</option>
                                 {% else %}
-                                    <option data-code_data="{{code.tel_code}}" value="{{code.id}}">{{code.name}}({{code.tel_code}})</option>
+                                    <option data-code_data="{{code.tel_code}}" value="{{code.tel_code}}">{{code.name}}({{code.tel_code}})</option>
                                 {% endif %}
                             {% endfor %}
                         </select>

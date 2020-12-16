@@ -23,11 +23,7 @@
                     <div class="col-md-8">
                         <div class="fileupload fileupload-new" data-provides="fileupload">
                             <div class="fileupload-new thumbnail" style="width: 300px; height: 300px;">
-                                {% if profile.image_id %}
-                                    <img src="{{ profile.image.image.url }}" alt="" name="profile_image"/>
-                                {% else %}
-                                    <img src="{% static 'img/blank_male.png' %}" alt="" name="profile_image"/>
-                                {% endif %}
+                                <img id="img_profile_image" src="{% static 'img/blank_male.png' %}" alt="" name="profile_image"/>
                             </div>
                             <div class="fileupload-preview fileupload-exists thumbnail"
                                 style="max-width: 300px; max-height: 300px; line-height: 20px;"></div>
@@ -117,10 +113,10 @@
                         <select name="tel_code" id="tel_code" class="form-control" required>
                             <option value="">Select Code</option>
                             {% for code in tel_code_list %}
-                                {% if profile.tel_code_id == code.id %}
-                                    <option data-code_data="{{code.tel_code}}" value="{{code.id}}" selected>{{code.name}}({{code.tel_code}})</option>
+                                {% if profile.tel_code == code.tel_code %}
+                                    <option data-code_data="{{code.tel_code}}" value="{{code.tel_code}}" selected>{{code.name}}({{code.tel_code}})</option>
                                 {% else %}
-                                    <option data-code_data="{{code.tel_code}}" value="{{code.id}}">{{code.name}}({{code.tel_code}})</option>
+                                    <option data-code_data="{{code.tel_code}}" value="{{code.tel_code}}">{{code.name}}({{code.tel_code}})</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
@@ -216,10 +212,10 @@
                         <div class="col-lg-2" style="padding-right: 0px !important;">
                             <select name="corporate_tel_code" id="corporate_tel_code" class="form-control">
                                 {% for code in tel_code_list %}
-                                    {% if profile.corporate_tel_code_id == code.id %}
-                                        <option data-code_data="{{code.tel_code}}" value="{{code.id}}" selected>{{code.name}}({{code.tel_code}})</option>
+                                    {% if profile.corporate_tel_code == code.tel_code %}
+                                        <option data-code_data="{{code.tel_code}}" value="{{code.tel_code}}" selected>{{code.name}}({{code.tel_code}})</option>
                                     {% else %}
-                                        <option data-code_data="{{code.tel_code}}" value="{{code.id}}">{{code.name}}({{code.tel_code}})</option>
+                                        <option data-code_data="{{code.tel_code}}" value="{{code.tel_code}}">{{code.name}}({{code.tel_code}})</option>
                                     {% endif %}
                                 {% endfor %}
                             </select>
