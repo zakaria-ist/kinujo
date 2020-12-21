@@ -808,6 +808,7 @@ class Pay(APIView):
                             totalSale.tax = totalSale.tax + groupTax
                             totalSale.amount_tax_included = totalSale.amount_tax_included + groupTax + groupTotal
                             totalSale.shipping_fee = totalSale.shipping_fee + groupShippingFee
+                            userSale.total_amount = userSale.total_amount + groupTax + groupTotal + groupShippingFee
                             totalSale.order_count = totalSale.order_count + 1
                             totalSale.save()
                         except Exception as e:
@@ -821,14 +822,11 @@ class Pay(APIView):
                                 "total_amount": int(float(groupTax) + float(groupTotal) + float(groupShippingFee)),
                                 "order_count" : 1
                             }
-                            try:
-                                totalSaleSerializer = TotalSaleSerializer(data=totalSaleObject, context=getContext())
-                                if totalSaleSerializer.is_valid():
-                                    totalSaleSerializer.save()
-                                else:
-                                    return Response({"success" : False, "errors" : totalSaleSerializer.errors}, status=status.HTTP_200_OK)
-                            except Exception as e:
-                                    return Response({"success" : False, "errors" : str(e)}, status=status.HTTP_200_OK)
+                            totalSaleSerializer = TotalSaleSerializer(data=totalSaleObject, context=getContext())
+                            if totalSaleSerializer.is_valid():
+                                totalSaleSerializer.save()
+                            else:
+                                return Response({"success" : False, "errors" : totalSaleSerializer.errors}, status=status.HTTP_200_OK)
 
                         # # User Sale
                         try:
@@ -838,6 +836,7 @@ class Pay(APIView):
                             userSale.tax = userSale.tax + groupTax
                             userSale.amount_tax_included = userSale.amount_tax_included + groupTax + groupTotal
                             userSale.shipping_fee = userSale.shipping_fee + groupShippingFee
+                            userSale.total_amount = userSale.total_amount + groupTax + groupTotal + groupShippingFee
                             userSale.save()
                         except Exception as e:
                             userSaleObject = {
@@ -848,6 +847,7 @@ class Pay(APIView):
                                 "tax" : groupTax,
                                 "amount_tax_included" : groupTax + groupTotal,
                                 "shipping_fee" : groupShippingFee,
+                                "total_amount": int(float(groupTax) + float(groupTotal) + float(groupShippingFee)),
                                 "user" : product['user']['url']
                             }
                             userSaleSerializer = UserSaleSerializer(data=userSaleObject, context=getContext())
