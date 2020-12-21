@@ -872,7 +872,7 @@ class Pay(APIView):
                             if monthlyPaymentSerializer.is_valid():
                                 monthlyPaymentSerializer.save()
                             else:
-                                return monthlyPaymentSerializer.errors
+                                return Response({"success" : False, "errors" : monthlyPaymentSerializer.errors}, status=status.HTTP_200_OK)
 
                         # if productJancode:
                         #     productJancode.stock = int(productJancode.stock) - int(quantity)
