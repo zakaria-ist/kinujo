@@ -857,22 +857,22 @@ class Pay(APIView):
                                 return Response({"success" : False, "errors" : userSaleSerializer.errors}, status=status.HTTP_200_OK)
 
                         # # Monthly Payment
-                        # try:
-                        #     monthlyPayment = MonthlyPayment.objects.get(year=year, month=month, user_id=profileSerializer.data['id'])
-                        #     monthlyPayment.amount = monthlyPayment.amount + groupTotal
-                        #     monthlyPayment.save()
-                        # except Exception as e:
-                        #     monthlyPaymentObject = {
-                        #         "year" : year,
-                        #         "month" : month,
-                        #         "amount" : groupTotal,
-                        #         "user" : profileSerializer.data['url']
-                        #     }
-                        #     monthlyPaymentSerializer = MonthlyPaymentSerializer(data=monthlyPaymentObject, context=getContext())
-                        #     if monthlyPaymentSerializer.is_valid():
-                        #         monthlyPaymentSerializer.save()
-                        #     else:
-                        #         return monthlyPaymentSerializer.errors
+                        try:
+                            monthlyPayment = MonthlyPayment.objects.get(year=year, month=month, user_id=profileSerializer.data['id'])
+                            monthlyPayment.amount = monthlyPayment.amount + groupTotal
+                            monthlyPayment.save()
+                        except Exception as e:
+                            monthlyPaymentObject = {
+                                "year" : year,
+                                "month" : month,
+                                "amount" : groupTotal,
+                                "user" : profileSerializer.data['url']
+                            }
+                            monthlyPaymentSerializer = MonthlyPaymentSerializer(data=monthlyPaymentObject, context=getContext())
+                            if monthlyPaymentSerializer.is_valid():
+                                monthlyPaymentSerializer.save()
+                            else:
+                                return monthlyPaymentSerializer.errors
 
                         # if productJancode:
                         #     productJancode.stock = int(productJancode.stock) - int(quantity)
