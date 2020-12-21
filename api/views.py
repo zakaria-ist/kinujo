@@ -586,7 +586,7 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
                             "month" : month,
                             "order_count": 1,
                             "amount" : int(float(price) * float(commission)),
-                            "authority" : introducerSerializer['authority']['url']
+                            "authority" : introducerSerializer.data['authority']['url']
                         }
                         totalCommissionSerializer = TotalCommissionSerializer(data=orderTotalComm, context=getContext())
                         if totalCommissionSerializer.is_valid():
