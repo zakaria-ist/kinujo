@@ -817,7 +817,8 @@ class Pay(APIView):
                                 "sales_amount" : int(float(groupTotal)),
                                 "tax" : int(float(groupTax)),
                                 "amount_tax_included" : int(float(groupTax) + float(groupTotal)),
-                                "shipping_fee" : int(float(groupShippingFee)),
+                                "shipping_fee" : int(),
+                                "total_amount": int(float(groupTax) + float(groupTotal) + float(groupShippingFee))
                                 "order_count" : 1
                             }
                             totalSaleSerializer = TotalSaleSerializer(data=totalSaleObject, context=getContext())
