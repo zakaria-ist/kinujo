@@ -804,12 +804,12 @@ class Pay(APIView):
                         # Total Sales
                         try:
                             totalSale = TotalSale.objects.get(year=year, month=month)
-                            totalSale.sales_amount = totalSale.sales_amount + groupTotal
-                            totalSale.tax = totalSale.tax + groupTax
-                            totalSale.amount_tax_included = totalSale.amount_tax_included + groupTax + groupTotal
-                            totalSale.shipping_fee = totalSale.shipping_fee + groupShippingFee
-                            totalSale.order_count = totalSale.order_count + 1
-                            totalSale.save()
+                            # totalSale.sales_amount = totalSale.sales_amount + groupTotal
+                            # totalSale.tax = totalSale.tax + groupTax
+                            # totalSale.amount_tax_included = totalSale.amount_tax_included + groupTax + groupTotal
+                            # totalSale.shipping_fee = totalSale.shipping_fee + groupShippingFee
+                            # totalSale.order_count = totalSale.order_count + 1
+                            # totalSale.save()
                         except Exception as e:
                             totalSaleObject = {
                                 "year" : year,
