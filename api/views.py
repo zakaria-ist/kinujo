@@ -831,30 +831,30 @@ class Pay(APIView):
                                     return Response({"success" : False, "errors" : str(e)}, status=status.HTTP_200_OK)
 
                         # # User Sale
-                        # try:
-                        #     userSale = UserSale.objects.get(year=year, month=month, user_id=product['user']['id'])
-                        #     userSale.order_count = userSale.order_count + 1
-                        #     userSale.sales_amount = userSale.sales_amount + groupTotal
-                        #     userSale.tax = userSale.tax + groupTax
-                        #     userSale.amount_tax_included = userSale.amount_tax_included + groupTax + groupTotal
-                        #     userSale.shipping_fee = userSale.shipping_fee + groupShippingFee
-                        #     userSale.save()
-                        # except Exception as e:
-                        #     userSaleObject = {
-                        #         "year" : year,
-                        #         "month" : month,
-                        #         "order_count" : 1,
-                        #         "sales_amount" : groupTotal,
-                        #         "tax" : groupTax,
-                        #         "amount_tax_included" : groupTax + groupTotal,
-                        #         "shipping_fee" : groupShippingFee,
-                        #         "user" : product['user']['url']
-                        #     }
-                        #     userSaleSerializer = UserSaleSerializer(data=userSaleObject, context=getContext())
-                        #     if userSaleSerializer.is_valid():
-                        #         userSaleSerializer.save()
-                        #     else:
-                        #         return Response({"success" : False, "errors" : userSaleSerializer.errors}, status=status.HTTP_200_OK)
+                        try:
+                            userSale = UserSale.objects.get(year=year, month=month, user_id=product['user']['id'])
+                            userSale.order_count = userSale.order_count + 1
+                            userSale.sales_amount = userSale.sales_amount + groupTotal
+                            userSale.tax = userSale.tax + groupTax
+                            userSale.amount_tax_included = userSale.amount_tax_included + groupTax + groupTotal
+                            userSale.shipping_fee = userSale.shipping_fee + groupShippingFee
+                            userSale.save()
+                        except Exception as e:
+                            userSaleObject = {
+                                "year" : year,
+                                "month" : month,
+                                "order_count" : 1,
+                                "sales_amount" : groupTotal,
+                                "tax" : groupTax,
+                                "amount_tax_included" : groupTax + groupTotal,
+                                "shipping_fee" : groupShippingFee,
+                                "user" : product['user']['url']
+                            }
+                            userSaleSerializer = UserSaleSerializer(data=userSaleObject, context=getContext())
+                            if userSaleSerializer.is_valid():
+                                userSaleSerializer.save()
+                            else:
+                                return Response({"success" : False, "errors" : userSaleSerializer.errors}, status=status.HTTP_200_OK)
 
                         # # Monthly Payment
                         # try:
