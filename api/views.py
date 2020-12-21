@@ -822,7 +822,7 @@ class Pay(APIView):
                             }
                             try:
                                 totalSaleSerializer = TotalSaleSerializer(data=totalSaleObject, context=getContext())
-                            catch Exception as e:
+                            except Exception as e:
                                 return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
                             # if totalSaleSerializer.is_valid():
                             #     totalSaleSerializer.save()
