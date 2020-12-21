@@ -818,7 +818,7 @@ class Pay(APIView):
                                 "tax" : int(float(groupTax)),
                                 "amount_tax_included" : int(float(groupTax) + float(groupTotal)),
                                 "shipping_fee" : int(float(groupShippingFee)),
-                                "total_amount": int(float(groupTax) + float(groupTotal) + float(groupShippingFee))
+                                "total_amount": int(float(groupTax) + float(groupTotal) + float(groupShippingFee)),
                                 "order_count" : 1
                             }
                             try:
