@@ -820,14 +820,12 @@ class Pay(APIView):
                                 "shipping_fee" : int(float(groupShippingFee)),
                                 "order_count" : 1
                             }
-                            try:
-                                totalSaleSerializer = TotalSaleSerializer(data=totalSaleObject, context=getContext())
-                            except Exception as e:
-                                return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
-                            # if totalSaleSerializer.is_valid():
-                            #     totalSaleSerializer.save()
-                            # else:
-                            #     return totalSaleSerializer.errors
+                            totalSaleSerializer = TotalSaleSerializer(data=totalSaleObject, context=getContext())
+                            if totalSaleSerializer.is_valid():
+                                totalSaleSerializer.save()
+                            else:
+                                return Response({"success" : False, "errors" : totalSaleSerializer.errors}, status=status.HTTP_200_OK)
+                            
 
                         # # User Sale
                         # try:
