@@ -595,26 +595,26 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
                             return totalCommissionSerializer.errors
 
                     userCommission = None
-                    # try:
-                    #     userCommission = UserCommision.objects.get(year=year, month=month, user_id=userId)
-                    #     userCommission.order_count = userCommission.order_count + 1
-                    #     userCommission.amount = userCommission.amount + int(float(price) * float(commission))
-                    #     userCommission.tax = userCommission.tax + int(float(price) * float(commission))
-                    #     userCommission.save()
-                    # except Exception as e:
-                    #     userCommissionObj = {
-                    #         "year": year,
-                    #         "month" : month,
-                    #         "order_count" : 1,
-                    #         "amount" : int(float(price) * float(commission)),
-                    #         "tax" : int(float(price) * float(commission)),
-                    #         "user" : profileSerializer.data['url']
-                    #     }
-                    #     userCommissionSerializer = UserCommisionSerializer(data=userCommissionObj, context=getContext())
-                    #     if userCommissionSerializer.is_valid():
-                    #         userCommissionSerializer.save()
-                    #     else:
-                    #         return userCommissionSerializer.errors
+                    try:
+                        userCommission = UserCommision.objects.get(year=year, month=month, user_id=userId)
+                        userCommission.order_count = userCommission.order_count + 1
+                        userCommission.amount = userCommission.amount + int(float(price) * float(commission))
+                        userCommission.tax = userCommission.tax + int(float(price) * float(commission))
+                        userCommission.save()
+                    except Exception as e:
+                        userCommissionObj = {
+                            "year": year,
+                            "month" : month,
+                            "order_count" : 1,
+                            "amount" : int(float(price) * float(commission)),
+                            "tax" : int(float(price) * float(commission)),
+                            "user" : introducerSerializer.data['url']
+                        }
+                        userCommissionSerializer = UserCommisionSerializer(data=userCommissionObj, context=getContext())
+                        if userCommissionSerializer.is_valid():
+                            userCommissionSerializer.save()
+                        else:
+                            return userCommissionSerializer.errors
                 return calculateCommission(price, orderProduct, introducerSerializer.data['id'], shipping_fee)
     return
 
