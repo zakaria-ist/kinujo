@@ -817,7 +817,7 @@ class Pay(APIView):
                                 "sales_amount" : int(float(groupTotal)),
                                 "tax" : int(float(groupTax)),
                                 "amount_tax_included" : int(float(groupTax) + float(groupTotal)),
-                                "shipping_fee" : int(),
+                                "shipping_fee" : int(float(groupShippingFee)),
                                 "total_amount": int(float(groupTax) + float(groupTotal) + float(groupShippingFee))
                                 "order_count" : 1
                             }
@@ -852,7 +852,7 @@ class Pay(APIView):
                         #     if userSaleSerializer.is_valid():
                         #         userSaleSerializer.save()
                         #     else:
-                        #         return userSaleSerializer.errors
+                        #         return Response({"success" : False, "errors" : userSaleSerializer.errors}, status=status.HTTP_200_OK)
 
                         # # Monthly Payment
                         # try:
