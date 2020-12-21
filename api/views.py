@@ -820,7 +820,7 @@ class Pay(APIView):
                                 "shipping_fee" : int(float(groupShippingFee)),
                                 "order_count" : 1
                             }
-                            # totalSaleSerializer = TotalSaleSerializer(data=totalSaleObject, context=getContext())
+                            totalSaleSerializer = TotalSaleSerializer(data=totalSaleObject, context=getContext())
                             # if totalSaleSerializer.is_valid():
                             #     totalSaleSerializer.save()
                             # else:
