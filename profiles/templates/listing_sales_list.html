@@ -18,7 +18,7 @@
 {% block content %}
     <br/>
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-lg-12">
             <section class="panel">
                 <div class="row">
                     <div class="col-lg-12">
@@ -27,16 +27,16 @@
                                     {% trans 'Sales List' %}
                             </header>
                             <div class="row">
-                                <div class="col-lg-4 row">
-                                    <a style="border-color: transparent;" class="btn btn-white col-lg-2 pt-5" onclick="changeDate('Prev')"><i class="fas fa-chevron-circle-left fa-2x"></i></a>
+                                <div class="col-lg-4 col-sm-12 row">
+                                    <a style="border-color: transparent;" class="btn btn-white col-lg-2 col-sm-4 pt-5" onclick="changeDate('Prev')"><i class="fas fa-chevron-circle-left fa-2x"></i></a>
                                     <p id="sale_changable_date" class="changable_date pt-5"></p>
-                                    <a style="border-color: transparent;" class="btn btn-white col-lg-2 pt-5" onclick="changeDate('Next')"><i class="fas fa-chevron-circle-right fa-2x"></i></a>
+                                    <a style="border-color: transparent;" class="btn btn-white col-lg-2 col-sm-4 pt-5" onclick="changeDate('Next')"><i class="fas fa-chevron-circle-right fa-2x"></i></a>
                                 </div>
-                                <div class="col-lg-8 row" id="sales_summary">
-                                    <div class="col-lg-6">
+                                <div class="col-lg-8 col-sm-12 row" id="sales_summary">
+                                    <div class="col-lg-6 col-sm-12">
                                         <p>{% trans 'Total sales:' %} <span id="total-span"></span></p>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-6 col-sm-12">
                                         <p>{% trans 'Commission:' %} <span id="commission-span"></p>
                                         <p>{% trans 'Selling sales:' %} <span id="sales-span"></p>
                                     </div>
