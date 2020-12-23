@@ -147,7 +147,7 @@ $(document).ready(function() {
 $('#login_form').on('submit', function(e) {
   var code = $('#tel_code').find('option:selected').data('code_data');
   var tel = $('#tel').val();
-  var username = code + tel;
+  var username = code.replace('+', '') + tel;
   $('#username').val(username);
 })
 
