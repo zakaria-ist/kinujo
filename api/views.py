@@ -229,7 +229,10 @@ class TaxRateViewSet(viewsets.ModelViewSet):
 class UserRegister(APIView):
     def post(self, request, format='json'):
         try:
-            userSerializer = UserSerializer(data=request.data, context=getContext())
+            userItem = request.data
+            userItem['username'] = "+" + userItem['username']
+
+            userSerializer = UserSerializer(data=userItem, context=getContext())
             if userSerializer.is_valid():
                 user = userSerializer.save()
 
@@ -243,11 +246,12 @@ class UserRegister(APIView):
                 
                 profileItem = {
                     'user' : userSerializer.data['url'],
-                    'tel' : request.data['username'],
+                    'tel' : request.data['username'].replace(request.data['callingCode'], ""),
                     'nickname' : request.data['nickname'],
                     'user_code' : user.id,
                     'authority' : authoritySerializer.data['url'],
-                    'is_seller' : is_seller
+                    'is_seller' : is_seller,
+                    'tel_code': request.data['callingCode']
                 }
                 if request.data['introducer']:
                     introducerProfile = None
