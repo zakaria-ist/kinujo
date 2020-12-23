@@ -246,7 +246,7 @@ class UserRegister(APIView):
                 
                 profileItem = {
                     'user' : userSerializer.data['url'],
-                    'tel' : request.data['username'].replace(request.data['callingCode'], ""),
+                    'tel' : request.data['username'].replace("+" + request.data['callingCode'], ""),
                     'nickname' : request.data['nickname'],
                     'user_code' : user.id,
                     'authority' : authoritySerializer.data['url'],
