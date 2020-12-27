@@ -292,25 +292,26 @@ class CheckRegister(APIView):
 
 class UserLogin(APIView):
     def post(self, request, format='json'):
-        profile = None
+        user = None
         try:
-            profile = Profile.objects.get(tel=request.data['tel'])
+            user = User.objects.get(username = request.data['tel'])
         except Exception as e:
             print(e)
         
-        if profile is None:
+        if user is None:
             try:
-                profile = Profile.objects.get(tel="+" + request.data['tel'])
+                user = User.objects.get(username = "+" + request.data['tel'])
             except Exception as e:
                 print(e)
             
-        if profile:
-            user = None
+        if user:
+            profile = None
             try:
-                user = User.objects.get(id = profile.user_id)
+                profile = Profile.objects.get(user_id=user.id)
             except Exception as e:
                 print(e)
-            if user:
+
+            if profile:
                 if user.check_password(request.data['password']):
                     profileSerializer = ProfileSerializer(profile, context=getContext())
                     data = profileSerializer.data
