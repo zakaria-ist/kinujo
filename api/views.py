@@ -733,6 +733,10 @@ class Pay(APIView):
                         groupTotal = (float(product['price']) * float(quantity))
                     groupTax = int(float(groupTotal) * float(tax.tax_rate))
                     
+                    address2 = addressSerializer.data['address2']
+                    if address2 is None:
+                        address2 = "no_address_2"
+
                     order = {
                         'amount' : int(float(groupTotal)),
                         'tax': groupTax,
@@ -741,7 +745,7 @@ class Pay(APIView):
                         'name': addressSerializer.data['name'],
                         'zip1': addressSerializer.data['zip1'],
                         'address1': addressSerializer.data['address1'],
-                        'address2': addressSerializer.data['address2'],
+                        'address2': address2,
                         'tel': addressSerializer.data['tel'],
                         'is_hidden': 0,
                         'prefecture': addressSerializer.data['prefecture']['url'],
