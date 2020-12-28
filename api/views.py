@@ -229,7 +229,10 @@ class TaxRateViewSet(viewsets.ModelViewSet):
 class UserRegister(APIView):
     def post(self, request, format='json'):
         try:
-            userSerializer = UserSerializer(data=request.data, context=getContext())
+            userItem = request.data
+            userItem['username'] = "+" + userItem['username']
+
+            userSerializer = UserSerializer(data=userItem, context=getContext())
             if userSerializer.is_valid():
                 user = userSerializer.save()
 
@@ -243,11 +246,12 @@ class UserRegister(APIView):
                 
                 profileItem = {
                     'user' : userSerializer.data['url'],
-                    'tel' : request.data['username'],
+                    'tel' : request.data['username'].replace("+" + request.data['callingCode'], ""),
                     'nickname' : request.data['nickname'],
                     'user_code' : user.id,
                     'authority' : authoritySerializer.data['url'],
-                    'is_seller' : is_seller
+                    'is_seller' : is_seller,
+                    'tel_code': request.data['callingCode']
                 }
                 if request.data['introducer']:
                     introducerProfile = None
@@ -288,25 +292,26 @@ class CheckRegister(APIView):
 
 class UserLogin(APIView):
     def post(self, request, format='json'):
-        profile = None
+        user = None
         try:
-            profile = Profile.objects.get(tel=request.data['tel'])
+            user = User.objects.get(username = request.data['tel'])
         except Exception as e:
             print(e)
         
-        if profile is None:
+        if user is None:
             try:
-                profile = Profile.objects.get(tel="+" + request.data['tel'])
+                user = User.objects.get(username = "+" + request.data['tel'])
             except Exception as e:
                 print(e)
             
-        if profile:
-            user = None
+        if user:
+            profile = None
             try:
-                user = User.objects.get(id = profile.user_id)
+                profile = Profile.objects.get(user_id=user.id)
             except Exception as e:
                 print(e)
-            if user:
+
+            if profile:
                 if user.check_password(request.data['password']):
                     profileSerializer = ProfileSerializer(profile, context=getContext())
                     data = profileSerializer.data
