@@ -170,6 +170,9 @@ class MonthlyPaymentSerializer(serializers.HyperlinkedModelSerializer):
         model = MonthlyPayment
         fields = ['year','month','user','amount','paid_date','status','is_hidden','created','modified']
 class AddressSerializer(serializers.HyperlinkedModelSerializer):
+    address2 = serializers.CharField(
+        allow_blank=True
+    )
     prefecture = PrefectureSerializer()
     class Meta:
         model = Address

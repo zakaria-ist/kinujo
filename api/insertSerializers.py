@@ -10,6 +10,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework.test import APIRequestFactory
 from rest_framework.request import Request
+from django.db import models
 
 def getContext():
     factory = APIRequestFactory()
@@ -139,6 +140,9 @@ class InsertMonthlyPaymentSerializer(serializers.HyperlinkedModelSerializer):
         model = MonthlyPayment
         fields = ['year','month','user','amount','paid_date','status','is_hidden','created','modified']
 class InsertAddressSerializer(serializers.HyperlinkedModelSerializer):
+    address2 = serializers.CharField(
+        allow_blank=True
+    )
     class Meta:
         model = Address
         fields = ['id', 'url', 'address_name','user','name','zip1','prefecture','address1','address2','tel','is_default','is_hidden','created','modified', 'tel_code']
