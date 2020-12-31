@@ -173,6 +173,7 @@ class AddressSerializer(serializers.HyperlinkedModelSerializer):
     address2 = serializers.CharField(
         allow_blank=True
     )
+    tel_code = serializers.CharField(allow_null=False, allow_blank=False)
     prefecture = PrefectureSerializer()
     class Meta:
         model = Address

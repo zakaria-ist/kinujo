@@ -143,6 +143,7 @@ class InsertAddressSerializer(serializers.HyperlinkedModelSerializer):
     address2 = serializers.CharField(
         allow_blank=True
     )
+    tel_code = serializers.CharField(allow_null=False, allow_blank=False)
     class Meta:
         model = Address
         fields = ['id', 'url', 'address_name','user','name','zip1','prefecture','address1','address2','tel','is_default','is_hidden','created','modified', 'tel_code']
