@@ -124,7 +124,7 @@ class Address(models.Model):
     zip1 = models.CharField(max_length=8)
     prefecture = models.ForeignKey(Prefecture, on_delete=models.CASCADE)
     address1 = models.CharField(max_length=1024)
-    address2 = models.CharField(max_length=1024, default='')
+    address2 = models.CharField(max_length=1024, default='', blank=True)
     tel = models.CharField(max_length=32)
     tel_code = models.CharField(max_length=15, default='', null=True)
     is_default = models.BooleanField(default=False)
