@@ -292,25 +292,26 @@ class CheckRegister(APIView):
 
 class UserLogin(APIView):
     def post(self, request, format='json'):
-        profile = None
+        user = None
         try:
-            profile = Profile.objects.get(tel=request.data['tel'])
+            user = User.objects.get(username = request.data['tel'])
         except Exception as e:
             print(e)
         
-        if profile is None:
+        if user is None:
             try:
-                profile = Profile.objects.get(tel="+" + request.data['tel'])
+                user = User.objects.get(username = "+" + request.data['tel'])
             except Exception as e:
                 print(e)
             
-        if profile:
-            user = None
+        if user:
+            profile = None
             try:
-                user = User.objects.get(id = profile.user_id)
+                profile = Profile.objects.get(user_id=user.id)
             except Exception as e:
                 print(e)
-            if user:
+
+            if profile:
                 if user.check_password(request.data['password']):
                     profileSerializer = ProfileSerializer(profile, context=getContext())
                     data = profileSerializer.data
@@ -732,6 +733,10 @@ class Pay(APIView):
                         groupTotal = (float(product['price']) * float(quantity))
                     groupTax = int(float(groupTotal) * float(tax.tax_rate))
                     
+                    address2 = addressSerializer.data['address2']
+                    if address2 is None:
+                        address2 = "no_address_2"
+
                     order = {
                         'amount' : int(float(groupTotal)),
                         'tax': groupTax,
@@ -740,7 +745,7 @@ class Pay(APIView):
                         'name': addressSerializer.data['name'],
                         'zip1': addressSerializer.data['zip1'],
                         'address1': addressSerializer.data['address1'],
-                        'address2': addressSerializer.data['address2'],
+                        'address2': address2,
                         'tel': addressSerializer.data['tel'],
                         'is_hidden': 0,
                         'prefecture': addressSerializer.data['prefecture']['url'],
