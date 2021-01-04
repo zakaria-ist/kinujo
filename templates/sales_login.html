@@ -120,7 +120,7 @@ $(document).ready(function() {
 $('#login_form').on('submit', function(e) {
   var code = $('#tel_code').find('option:selected').data('code_data');
   var tel = $('#tel').val();
-  var username = code.replace('+', '') + tel;
+  var username = code + tel;
   $('#username').val(username);
 })
 
