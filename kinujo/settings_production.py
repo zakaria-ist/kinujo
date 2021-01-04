@@ -157,10 +157,15 @@ STATIC_ROOT = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 
+# # s3 settings production
+# AWS_ACCESS_KEY_ID = 'AKIARZPDVQAN2CBCEWRS'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'kinujoprod'
+# S3_URL = 'https://%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 # s3 settings
-AWS_ACCESS_KEY_ID = 'AKIARZPDVQAN2CBCEWRS'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'kinujoprod'
+AWS_ACCESS_KEY_ID = 'AKIA4YVCJSZFRIFD44QQ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'c2sg-kinujo'
 S3_URL = 'https://%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
 DEFAULT_FILE_STORAGE = 'utilities.s3utils.MediaS3BotoStorage'
