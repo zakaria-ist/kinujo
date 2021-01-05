@@ -531,6 +531,10 @@ class UserByIds(APIView):
                 if 'userId' in request.GET and request.GET['userId']:
                     profile = Profile.objects.get(id=request.GET['userId'])
                     sProfileSerializer = ProfileSerializer(profile, context=getContext())
+                    
+                    masters = Profile.objects.filter(is_master=1)
+                    ids.extend(masters.values_list('id', flat=True))
+
                     if sProfileSerializer.data['authority']['id'] == 1:
                         profiles = Profile.objects.all()
                         ids.extend(Profile.objects.all().values_list('id', flat=True))
@@ -540,8 +544,6 @@ class UserByIds(APIView):
                         ids.append(introducer)
                         ids.extend(Profile.objects.filter(introducer_id=sProfileSerializer.data['id']).values_list('id', flat=True))
             
-            masters = Profile.objects.filter(is_master=1)
-            ids.extend(masters.values_list('id', flat=True))
 
             profiles = Profile.objects.filter(id__in=ids)
             if len(profiles) == 0:
