@@ -30,7 +30,7 @@ class ProfileForm(forms.ModelForm):
     #                         widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete':'new-password'}))
     nickname = forms.CharField(required=True,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
-    real_name = forms.CharField(required=True,
+    real_name = forms.CharField(required=False,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     representative_name = forms.CharField(required=False,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))

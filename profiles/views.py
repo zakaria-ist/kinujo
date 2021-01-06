@@ -213,7 +213,7 @@ def ProfileList__asJson(request):
     records_total = profile_list.count()
 
     if search:  # Filter data base on search
-        profile_list = profile_list.filter(Q(real_name__icontains=search)).order_by('-real_name')
+        profile_list = profile_list.filter(Q(real_name__icontains=search) | Q(nickname__icontains=search)).order_by('-real_name')
 
     # All data
     records_filtered = profile_list.count()
@@ -240,7 +240,8 @@ def ProfileList__asJson(request):
         data = {"no": str(i),
                 "id": str(field.id),
                 "type": field.authority.name,
-                "real_name": field.real_name,
+                # "real_name": field.real_name,
+                "real_name": field.real_name + '(' + field.nickname + ')',
                 "store_total": str(store_total),
                 "user_total": str(user_total)
                 }
