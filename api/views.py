@@ -286,7 +286,12 @@ class CheckRegister(APIView):
     def post(self, request, format='json'):
         userSerializer = UserSerializer(data=request.data, context=getContext())
         if userSerializer.is_valid():
-            return Response({"success" : True}, status=status.HTTP_200_OK)
+            data2 = request.data
+            data2['username'] = "+" + data2['username']
+            userSerializer2 = UserSerializer(data=data2, context=getContext())
+            if userSerializer2.is_valid():
+                return Response({"success" : True}, status=status.HTTP_200_OK)
+            return Response({"success" : False, "errors" : userSerializer2.errors}, status=status.HTTP_200_OK)
         else:
             return Response({"success" : False, "errors" : userSerializer.errors}, status=status.HTTP_200_OK)
 
