@@ -262,7 +262,16 @@ class UserRegister(APIView):
                     if introducerProfile:
                         introducerProfileSerializer = InsertProfileSerializer(introducerProfile, context=getContext())
                         profileItem['introducer'] = introducerProfileSerializer.data['url']
-
+                else:
+                    introducerProfile = None
+                    try:
+                        introducerProfile = Profile.objects.get(is_master=1)
+                    except Exception as e:
+                        print(e)
+                    if introducerProfile:
+                        introducerProfileSerializer = InsertProfileSerializer(introducerProfile, context=getContext())
+                        profileItem['introducer'] = introducerProfileSerializer.data['url']
+                    
                 profileSerializer = InsertProfileSerializer(data=profileItem, context=getContext())
                 if profileSerializer.is_valid():
                     profile = profileSerializer.save()
