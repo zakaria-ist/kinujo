@@ -27,7 +27,7 @@ class Profile(models.Model):
     # password = models.CharField(max_length=20)
     nickname = models.CharField(max_length=255)
     user_code = models.CharField(max_length=191, unique=True)
-    email = models.CharField(max_length=255, default='')
+    email = models.CharField(max_length=255, default='', null=True)
     introducer = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     is_approved = models.BooleanField(default=False)
     image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True)
