@@ -438,7 +438,7 @@
                 type: "GET",
                 url: "/profiles/check_for_duplicate/" + type + "/" + value + "/",
                 success: function (data) {
-                    if (data.message == 'Success') {
+                    if (data.message == 'Success' && profile_id != data.profile_id) {
                         if (type == 'id') {
                             $('#id_user_code').val('');
                             $.confirm({

@@ -858,19 +858,24 @@ def check_for_duplicate(request, type, value):
     """
 
     message = 'Error'
+    user = None
+    profile_id = ''
     try:
-        user = None
         if type == 'tel':
             user = User.objects.filter(username=value).first()
+            if user:
+                profile_id = Profile.objects.filter(user_id=user.id).first().id
         elif type == 'id':
             user = Profile.objects.filter(user_code=value).first()
+            if user:
+                profile_id = user.id
 
         if user:
             message = 'Success'
     except Exception as e:
         print(e)
 
-    context = { 'message': message }
+    context = { 'message': message, 'profile_id': profile_id }
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
