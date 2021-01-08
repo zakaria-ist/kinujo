@@ -262,7 +262,16 @@ class UserRegister(APIView):
                     if introducerProfile:
                         introducerProfileSerializer = InsertProfileSerializer(introducerProfile, context=getContext())
                         profileItem['introducer'] = introducerProfileSerializer.data['url']
-
+                else:
+                    introducerProfile = None
+                    try:
+                        introducerProfile = Profile.objects.get(is_master=1)
+                    except Exception as e:
+                        print(e)
+                    if introducerProfile:
+                        introducerProfileSerializer = InsertProfileSerializer(introducerProfile, context=getContext())
+                        profileItem['introducer'] = introducerProfileSerializer.data['url']
+                    
                 profileSerializer = InsertProfileSerializer(data=profileItem, context=getContext())
                 if profileSerializer.is_valid():
                     profile = profileSerializer.save()
@@ -286,7 +295,12 @@ class CheckRegister(APIView):
     def post(self, request, format='json'):
         userSerializer = UserSerializer(data=request.data, context=getContext())
         if userSerializer.is_valid():
-            return Response({"success" : True}, status=status.HTTP_200_OK)
+            data2 = request.data
+            data2['username'] = "+" + data2['username']
+            userSerializer2 = UserSerializer(data=data2, context=getContext())
+            if userSerializer2.is_valid():
+                return Response({"success" : True}, status=status.HTTP_200_OK)
+            return Response({"success" : False, "errors" : userSerializer2.errors}, status=status.HTTP_200_OK)
         else:
             return Response({"success" : False, "errors" : userSerializer.errors}, status=status.HTTP_200_OK)
 
@@ -975,17 +989,17 @@ class CreateProduct(APIView):
 
             if request.data['productVariation'] == 'none':
                 noneVariationItems = request.data['noneVariationItems']
-                if noneVariationItems['janCode'] == "" and not noneVariationItems['delete']:
+                if noneVariationItems['janCode'] == "" and 'delete' in noneVariationItems and not noneVariationItems['delete']:
                     return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
-                if noneVariationItems['stock'] == "" and not noneVariationItems['delete']:
+                if noneVariationItems['stock'] == "" and 'delete' in noneVariationItems and not noneVariationItems['delete']:
                     return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 0
             if request.data['productVariation'] == 'one':
                 oneVariationItems = request.data['oneVariationItems']
                 for item in oneVariationItems['items']:
-                    if item['janCode'] == "" and not item['delete']:
+                    if item['janCode'] == "" and 'delete' in item and not item['delete']:
                         return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
-                    if item['stock'] == "" and not item['delete']:
+                    if item['stock'] == "" and 'delete' in item and not item['delete']:
                         return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 1
             if request.data['productVariation'] == 'two':
@@ -995,9 +1009,9 @@ class CreateProduct(APIView):
                 secondItem = twoVariationItems['items'][1]
                 for choice1 in firstItem['choices']:
                     for choice2 in secondItem['choices']:
-                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'] == "" and not mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
+                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'] == "" and 'delete' in mappingValues[choice1['choiceItem']][choice2['choiceItem']] and not mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
                             return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
-                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'] == "" and not mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
+                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'] == "" and 'delete' in mappingValues[choice1['choiceItem']][choice2['choiceItem']] and not mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
                             return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 2
 
