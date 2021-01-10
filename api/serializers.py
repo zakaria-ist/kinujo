@@ -58,7 +58,8 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     background_img = ImageSerializer(required=False)
     authority = AuthoritySerializer()
     email = serializers.CharField(
-        allow_blank=True
+        allow_blank=True,
+        allow_null=True
     )
     # introducer = ProfileSerializer(required=False)
 
