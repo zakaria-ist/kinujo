@@ -54,7 +54,8 @@ class InsertAuthoritySerializer(serializers.HyperlinkedModelSerializer):
 
 class InsertProfileSerializer(serializers.HyperlinkedModelSerializer):
     email = serializers.CharField(
-        allow_blank=True
+        allow_blank=True,
+        allow_null=True
     )
     class Meta:
         model = Profile
