@@ -422,7 +422,7 @@ class ChangePhone(APIView):
                 profile = Profile.objects.get(tel = "+" + request.data['tel'])
             except Exception as e:
                 print(e)
-                
+
         if profile:
             user = None
             try:
@@ -434,6 +434,7 @@ class ChangePhone(APIView):
                     user.save()
 
                     profile.tel = request.data['phone']
+                    profile.tel_code = request.data['code']
                     profile.save()
                     return Response({"success" : True}, status=status.HTTP_200_OK)
             else:
