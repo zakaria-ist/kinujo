@@ -229,7 +229,15 @@ class TaxRateViewSet(viewsets.ModelViewSet):
 
 class UserImages(APIView):
     def post(self, request, format='json'):
-        return Response({"success" : False, "errors": request.data['users']}, status=status.HTTP_200_OK)
+        profiles = Profile.objects.filter(id__in=request.data['users'])
+        profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
+        images = []
+        for profile in profileSerializer.data:
+            if profile.image and profile.image.image:
+                images.append(profile.image.image)
+            else:
+                images.append("")
+        return Response({"success" : False, "images": images}, status=status.HTTP_200_OK)
 
 class UserRegister(APIView):
     def post(self, request, format='json'):
