@@ -233,10 +233,10 @@ class UserImages(APIView):
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
         images = []
         for profile in profileSerializer.data:
-            if profile.image and profile.image.image:
-                images.append(profile.image.image)
-            else:
-                images.append("")
+            # if profile.image and profile.image.image:
+            #     images.append(profile.image.image)
+            # else:
+            images.append("")
         return Response({"success" : False, "images": images}, status=status.HTTP_200_OK)
 
 class UserRegister(APIView):
