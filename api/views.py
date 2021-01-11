@@ -227,6 +227,10 @@ class TaxRateViewSet(viewsets.ModelViewSet):
     queryset = TaxRate.objects.all()
     serializer_class = TaxRateSerializer
 
+class UserImages(APIView):
+    def post(self, request, format='json'):
+        return Response({"success" : False, "errors": request.data['users']}, status=status.HTTP_200_OK)
+
 class UserRegister(APIView):
     def post(self, request, format='json'):
         try:
