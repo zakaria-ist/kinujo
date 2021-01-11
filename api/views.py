@@ -351,6 +351,13 @@ class PasswordReset(APIView):
             profile = Profile.objects.get(tel=request.data['tel'])
         except Exception as e:
             print(e)
+        
+        if profile is None:
+            try:
+                profile = Profile.objects.get(tel = "+" + request.data['tel'])
+            except Exception as e:
+                print(e)
+
         if profile:
             user = None
             try:
@@ -377,6 +384,13 @@ class ChangeEmail(APIView):
             profile = Profile.objects.get(tel=request.data['tel'])
         except Exception as e:
             print(e)
+        
+        if profile is None:
+            try:
+                profile = Profile.objects.get(tel = "+" + request.data['tel'])
+            except Exception as e:
+                print(e)
+
         if profile:
             user = None
             try:
@@ -402,6 +416,13 @@ class ChangePhone(APIView):
             profile = Profile.objects.get(tel=request.data['tel'])
         except Exception as e:
             print(e)
+        
+        if profile is None:
+            try:
+                profile = Profile.objects.get(tel = "+" + request.data['tel'])
+            except Exception as e:
+                print(e)
+                
         if profile:
             user = None
             try:
