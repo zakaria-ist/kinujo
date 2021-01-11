@@ -25,6 +25,7 @@ import stripe
 import ast
 from django.conf import settings
 from datetime import date
+import uuid
 
 def getContext():
     factory = APIRequestFactory()
@@ -231,6 +232,7 @@ class UserRegister(APIView):
         try:
             userItem = request.data
             userItem['username'] = "+" + userItem['username']
+            userItem['email'] = "+" + userItem['username'] + "-" + uuid.uuid4() + "@tmp-kinujo.com"
 
             userSerializer = UserSerializer(data=userItem, context=getContext())
             if userSerializer.is_valid():
