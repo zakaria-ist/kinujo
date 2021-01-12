@@ -362,13 +362,19 @@ class PasswordReset(APIView):
     def post(self, request, format='json'):
         profile = None
         try:
-            profile = Profile.objects.get(tel=request.data['tel'])
+            profile = Profile.objects.get(tel=request.data['tel_code'] + request.data['tel'])
         except Exception as e:
             print(e)
         
         if profile is None:
             try:
-                profile = Profile.objects.get(tel = "+" + request.data['tel'])
+                profile = Profile.objects.get(tel = "+" + request.data['tel_code'] + request.data['tel'])
+            except Exception as e:
+                print(e)
+        
+        if profile is None:
+            try:
+                profile = Profile.objects.get(tel = request.data['tel'])
             except Exception as e:
                 print(e)
 
