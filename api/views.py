@@ -286,6 +286,7 @@ class UserRegister(APIView):
                         introducerProfileSerializer = InsertProfileSerializer(introducerProfile, context=getContext())
                         profileItem['introducer'] = introducerProfileSerializer.data['url']
                     
+                profileItem["email"] = ""
                 profileSerializer = InsertProfileSerializer(data=profileItem, context=getContext())
                 if profileSerializer.is_valid():
                     profile = profileSerializer.save()
