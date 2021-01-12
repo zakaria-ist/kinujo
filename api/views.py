@@ -25,6 +25,7 @@ import stripe
 import ast
 from django.conf import settings
 from datetime import date
+import uuid
 
 def getContext():
     factory = APIRequestFactory()
@@ -226,11 +227,24 @@ class TaxRateViewSet(viewsets.ModelViewSet):
     queryset = TaxRate.objects.all()
     serializer_class = TaxRateSerializer
 
+class UserImages(APIView):
+    def post(self, request, format='json'):
+        profiles = Profile.objects.filter(id__in=request.data['users'])
+        profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
+        images = []
+        for profile in profileSerializer.data:
+            if profile['image'] and profile['image']['image']:
+                images.append(profile['image']['image'])
+            else:
+                images.append("")
+        return Response({"success" : False, "images": images}, status=status.HTTP_200_OK)
+
 class UserRegister(APIView):
     def post(self, request, format='json'):
         try:
             userItem = request.data
-            userItem['username'] = "+" + userItem['username']
+            userItem['username'] = str("+") + str(userItem['username'])
+            userItem['email'] = str("+") + str(userItem['username']) + str("-") + str(uuid.uuid4()) + "@tmp-kinujo.com"
 
             userSerializer = UserSerializer(data=userItem, context=getContext())
             if userSerializer.is_valid():
@@ -272,6 +286,7 @@ class UserRegister(APIView):
                         introducerProfileSerializer = InsertProfileSerializer(introducerProfile, context=getContext())
                         profileItem['introducer'] = introducerProfileSerializer.data['url']
                     
+                profileItem["email"] = ""
                 profileSerializer = InsertProfileSerializer(data=profileItem, context=getContext())
                 if profileSerializer.is_valid():
                     profile = profileSerializer.save()
@@ -348,9 +363,22 @@ class PasswordReset(APIView):
     def post(self, request, format='json'):
         profile = None
         try:
-            profile = Profile.objects.get(tel=request.data['tel'])
+            profile = Profile.objects.get(tel=request.data['tel_code'] + request.data['tel'])
         except Exception as e:
             print(e)
+        
+        if profile is None:
+            try:
+                profile = Profile.objects.get(tel = "+" + request.data['tel_code'] + request.data['tel'])
+            except Exception as e:
+                print(e)
+        
+        if profile is None:
+            try:
+                profile = Profile.objects.get(tel = request.data['tel'])
+            except Exception as e:
+                print(e)
+
         if profile:
             user = None
             try:
@@ -377,6 +405,13 @@ class ChangeEmail(APIView):
             profile = Profile.objects.get(tel=request.data['tel'])
         except Exception as e:
             print(e)
+        
+        if profile is None:
+            try:
+                profile = Profile.objects.get(tel = "+" + request.data['tel'])
+            except Exception as e:
+                print(e)
+
         if profile:
             user = None
             try:
@@ -402,6 +437,13 @@ class ChangePhone(APIView):
             profile = Profile.objects.get(tel=request.data['tel'])
         except Exception as e:
             print(e)
+        
+        if profile is None:
+            try:
+                profile = Profile.objects.get(tel = "+" + request.data['tel'])
+            except Exception as e:
+                print(e)
+
         if profile:
             user = None
             try:
@@ -413,6 +455,7 @@ class ChangePhone(APIView):
                     user.save()
 
                     profile.tel = request.data['phone']
+                    profile.tel_code = request.data['code']
                     profile.save()
                     return Response({"success" : True}, status=status.HTTP_200_OK)
             else:
