@@ -243,8 +243,8 @@ class UserRegister(APIView):
     def post(self, request, format='json'):
         try:
             userItem = request.data
-            userItem['username'] = "+" + userItem['username']
-            userItem['email'] = "+" + userItem['username'] + "-" + uuid.uuid4() + "@tmp-kinujo.com"
+            userItem['username'] = "+" + str(userItem['username'])
+            userItem['email'] = "+" + str(userItem['username']) + "-" + uuid.uuid4() + "@tmp-kinujo.com"
 
             userSerializer = UserSerializer(data=userItem, context=getContext())
             if userSerializer.is_valid():
