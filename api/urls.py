@@ -35,6 +35,7 @@ urlpatterns = [
     url('^user/background/(?P<userId>.+)/$', views.UserUpdateBackground.as_view()),
     url(r'user/register/check', views.CheckRegister.as_view(), name='check-register'),
     url(r'user/register', views.UserRegister.as_view(), name='user-register'),
+    url(r'user/images', views.UserImages.as_view(), name='user-images'),
     url(r'user/change-email', views.ChangeEmail.as_view(), name='user-change-email'),
     url(r'user/change-phone', views.ChangePhone.as_view(), name='user-cahnge-phone'),
     url(r'password/reset', views.PasswordReset.as_view(), name='password-reset'),
