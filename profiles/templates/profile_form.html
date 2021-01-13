@@ -207,7 +207,9 @@
             profile_image = "{{profile.image.image.url}}";
         }
         var authority_id = "{{profile.authority_id}}";
-        var profile_introducer = "{{profile.introducer_id}}"
+        var profile_introducer = "{{profile.introducer_id}}";
+        var profile_tel_code = "{{profile.tel_code}}";
+        var corporate_tel_code = "{{profile.corporate_tel_code}}";
         var is_seller = "{{profile.is_seller}}";
         var is_approved = "{{profile.is_approved}}";
         var is_master = "{{profile.is_master}}";
@@ -283,6 +285,19 @@
             $('#corporate_tel_code').on("select2:open", function( event ){
                 prefill_select2(event);
             });
+
+            if(profile_tel_code && profile_tel_code != ''){
+                if (profile_tel_code.charAt(0) != '+'){
+                    profile_tel_code = '+' + profile_tel_code;
+                }
+                $('#tel_code').val(profile_tel_code).trigger('change');
+            }
+            if(corporate_tel_code && corporate_tel_code != ''){
+                if (corporate_tel_code.charAt(0) != '+'){
+                    corporate_tel_code = '+' + corporate_tel_code;
+                }
+                $('#corporate_tel_code').val(corporate_tel_code).trigger('change');
+            }
 
             var editor = new $.fn.dataTable.Editor( {
                 "ajax": {
