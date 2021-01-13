@@ -142,7 +142,7 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
     orderReceipts = OrderReceiptSerializer(many=True, required=False)
     class Meta:
         model = Order
-        fields = ['orderReceipts', 'seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','created','modified']
+        fields = ['orderReceipts', 'seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','created','modified', 'tel_code']
 class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
     order = OrderSerializer()
     product_jan_code = ProductJancodeSerializer()
