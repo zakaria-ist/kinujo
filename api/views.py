@@ -265,7 +265,7 @@ class UserRegister(APIView):
                     'user_code' : user.id,
                     'authority' : authoritySerializer.data['url'],
                     'is_seller' : is_seller,
-                    'tel_code': request.data['callingCode']
+                    'tel_code': "+" + request.data['callingCode']
                 }
                 if request.data['introducer']:
                     introducerProfile = None
@@ -806,6 +806,7 @@ class Pay(APIView):
                         'total_amount': int(float(groupTotal) + float(groupTax) + float(groupShippingFee)),
                         'name': addressSerializer.data['name'],
                         'zip1': addressSerializer.data['zip1'],
+                        'tel_code': addressSerializer.data['tel_code'],
                         'address1': addressSerializer.data['address1'],
                         'address2': address2,
                         'tel': addressSerializer.data['tel'],
