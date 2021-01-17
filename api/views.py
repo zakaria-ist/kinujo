@@ -451,7 +451,7 @@ class ChangePhone(APIView):
             except Exception as e:
                 print(e)
             if user:
-                    user.username = request.data['phone']
+                    user.username = request.data['code'] + request.data['phone']
                     user.save()
 
                     profile.tel = request.data['phone']
