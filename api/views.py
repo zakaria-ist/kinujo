@@ -19,6 +19,7 @@ from .serializers import CountryCodeSerializer, ImageSerializer, FinancialAccoun
 from .insertSerializers import InsertImageSerializer, InsertFinancialAccountSerialier, InsertUserSerializer, InsertGroupSerializer, InsertOrderSerializer, InsertOrderProductSerializer, InsertOrderProductCommissionSerializer, InsertOrderReceiptSerializer, InsertTotalSaleSerializer, InsertTotalCommissionSerializer, InsertPolicySerializer, InsertPrefectureSerializer, InsertProductCategorySerializer, InsertProductSerializer, InsertProductImageSerializer, InsertProductVarietySerializer, InsertProductVarietySelectionSerializer, InsertProductJancodeSerializer, InsertAuthoritySerializer, InsertProfileSerializer, InsertUserSaleSerializer, InsertUserCommisionSerializer, InsertMonthlyPaymentSerializer, InsertAddressSerializer, InsertTaxRateSerializer
 from rest_framework.test import APIRequestFactory
 from rest_framework.parsers import MultiPartParser
+from django.core.mail import send_mail
 import requests 
 import json
 import stripe
@@ -731,7 +732,7 @@ class Pay(APIView):
                     "cvc": request.data['card']['cvc'],
                 },
             )
-
+            sellers = []
             profile = Profile.objects.get(id=userId)
             tax = TaxRate.objects.get(id=request.data['tax'])
             token_id = token.id
@@ -958,9 +959,30 @@ class Pay(APIView):
                                 return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
                         else:
                             return Response({"success" : False, "errors" : orderProductSerializer.errors}, status=status.HTTP_200_OK)
+                        
+                        if product['user']['email']:
+                            send_mail(
+                                '[KINUJOからのお知らせ」出品中の商品が購入されました',
+                                'いつもKINUJOをご利用いただきありがとうございます。' + "<br><br>" +
+                                '出品中の下記の商品が購入されまUた。' +  "<br>" +
+                                '商品の発送をお願いいたします。' + "<br><br>" +
+                                '商品情報' + "<br>" +
+                                'オーダーID:' + orderSerializer.data['id'] + "<br>" +
+                                '商品名:' + product['name'] + "<br>" +
+                                '商品価格:' + int(float(groupTotal)) + "<br>" +
+                                '購入者様:' + addressSerializer.data['name'] + "<br>" + "<br>" +
+                                '発送を終えたら' + "<br>" +
+                                '管理サイトから注文の状態を発送完了に変更し、発送日とお問い合わせ番号を入力Uて更新Uてください。' + "<br>" +
+                                '発送した日、配送方法やお問い合わせ番号をチャットでお伝えいただくと、購入者様も喜ばれます。' + "<br><br>" +
+                                "お問い合わせは、アプリ内のチャットをご利用＜ださい。",
+                                'support@kinujo.app',
+                                [product['user']['email']],
+                                fail_silently=False,
+                            )
+
+                        sellers.append(product['user']['id'])
                     else:
                         return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
-
 
             else:
                 return Response({"success" : False, "errors": ["Invalid data."]}, status=status.HTTP_200_OK)
@@ -984,7 +1006,7 @@ class Pay(APIView):
             #         profile.payload = json.dumps(payload)
             #         profile.save()
             
-            return Response({"success" : True})
+            return Response({"success" : True, "sellers" : sellers})
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
