@@ -967,9 +967,9 @@ class Pay(APIView):
                                 '出品中の下記の商品が購入されまUた。' +  "<br>" +
                                 '商品の発送をお願いいたします。' + "<br><br>" +
                                 '商品情報' + "<br>" +
-                                'オーダーID:' + orderSerializer.data['id'] + "<br>" +
+                                'オーダーID:' + str(orderSerializer.data['id']) + "<br>" +
                                 '商品名:' + product['name'] + "<br>" +
-                                '商品価格:' + int(float(groupTotal)) + "<br>" +
+                                '商品価格:' + str(float(groupTotal)) + "<br>" +
                                 '購入者様:' + addressSerializer.data['name'] + "<br>" + "<br>" +
                                 '発送を終えたら' + "<br>" +
                                 '管理サイトから注文の状態を発送完了に変更し、発送日とお問い合わせ番号を入力Uて更新Uてください。' + "<br>" +
