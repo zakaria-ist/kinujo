@@ -1180,7 +1180,7 @@ class CreateProduct(APIView):
                             if insertProductVarietySelectionSerializer.is_valid():
                                 insertProductVarietySelectionSerializer.save()
                                 hiddenValue = 0
-                                if item['delete']:
+                                if 'delete' in item and item['delete']:
                                     hiddenValue = 1
 
                                 insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
@@ -1248,7 +1248,7 @@ class CreateProduct(APIView):
                     for choice1 in firstItem['choices']:
                         for choice2 in secondItem['choices']:
                             hiddenValue = 0
-                            if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
+                            if 'delete' in mappingValues[choice1['choiceItem']][choice2['choiceItem']] and mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
                                 hiddenValue = 1
                             insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
                                 "jan_code" : mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'],
