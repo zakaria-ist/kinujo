@@ -114,6 +114,8 @@
                             {% for code in tel_code_list %}
                                 {% if profile.tel_code == code.tel_code %}
                                     <option data-code_data="{{code.tel_code}}" value="{{code.tel_code}}" selected>{{code.name}}({{code.tel_code}})</option>
+                                {% elif default_code == code.tel_code %}
+                                    <option data-code_data="{{code.tel_code}}" value="{{code.tel_code}}" selected>{{code.name}}({{code.tel_code}})</option>
                                 {% else %}
                                     <option data-code_data="{{code.tel_code}}" value="{{code.tel_code}}">{{code.name}}({{code.tel_code}})</option>
                                 {% endif %}
@@ -212,6 +214,8 @@
                             <select name="corporate_tel_code" id="corporate_tel_code" class="form-control">
                                 {% for code in tel_code_list %}
                                     {% if profile.corporate_tel_code == code.tel_code %}
+                                        <option data-code_data="{{code.tel_code}}" value="{{code.tel_code}}" selected>{{code.name}}({{code.tel_code}})</option>
+                                    {% elif default_code == code.tel_code %}
                                         <option data-code_data="{{code.tel_code}}" value="{{code.tel_code}}" selected>{{code.name}}({{code.tel_code}})</option>
                                     {% else %}
                                         <option data-code_data="{{code.tel_code}}" value="{{code.tel_code}}">{{code.name}}({{code.tel_code}})</option>

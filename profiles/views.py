@@ -63,8 +63,9 @@ def pass_reset(request):
     Method to redirect to password reset page.
     """
 
+    default_code = CountryCode.objects.filter(is_hidden=False, tel_code='+81').first().id
     tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
-    return render(request, 'password-reset.html', {'tel_code_list': tel_code_list})
+    return render(request, 'password-reset.html', {'tel_code_list': tel_code_list, 'default_code': default_code})
 
 def reset_password(request):
     """
@@ -103,6 +104,7 @@ def login_master(request):
 
     state = ""
     tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
+    default_code = CountryCode.objects.filter(is_hidden=False, tel_code='+81').first().id
     if request.method == 'POST':
         try:
             username = request.POST.get('username')
@@ -118,16 +120,16 @@ def login_master(request):
                     return HttpResponsePermanentRedirect(reverse('home_load'))
                 else:
                     state = "User is not a Master Account"
-                    return render(request, 'master_login.html', {'state': state, 'tel_code_list': tel_code_list})
+                    return render(request, 'master_login.html', {'state': state, 'tel_code_list': tel_code_list, 'default_code': default_code})
             else:
                 state = "Check username & password"
-                return render(request, 'master_login.html', {'state': state, 'tel_code_list': tel_code_list})
+                return render(request, 'master_login.html', {'state': state, 'tel_code_list': tel_code_list, 'default_code': default_code})
         except Exception as e:
             state = "Check username & password"
             print(e)
-            return render(request, 'master_login.html', {'state': state, 'tel_code_list': tel_code_list})
+            return render(request, 'master_login.html', {'state': state, 'tel_code_list': tel_code_list, 'default_code': default_code})
 
-    return render(request, 'master_login.html', {'state': state, 'tel_code_list': tel_code_list})
+    return render(request, 'master_login.html', {'state': state, 'tel_code_list': tel_code_list, 'default_code': default_code})
 
 
 def login_sales(request):
@@ -137,6 +139,7 @@ def login_sales(request):
     
     state = ""
     tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
+    default_code = CountryCode.objects.filter(is_hidden=False, tel_code='+81').first().id
     if request.method == 'POST':
         try:
             username = request.POST.get('username')
@@ -152,31 +155,32 @@ def login_sales(request):
                     return redirect('listing_home_load')
                 else:
                     state = "User is not Seller Account"
-                    return render(request, 'sales_login.html', {'state': state, 'tel_code_list': tel_code_list})
+                    return render(request, 'sales_login.html', {'state': state, 'tel_code_list': tel_code_list, 'default_code': default_code})
             else:
                 state = "Check username & password"
-                return render(request, 'sales_login.html', {'state': state, 'tel_code_list': tel_code_list})
+                return render(request, 'sales_login.html', {'state': state, 'tel_code_list': tel_code_list, 'default_code': default_code})
         except Exception as e:
             print(e)
             state = "Check username & password"
-            return render(request, 'sales_login.html', {'state': state, 'tel_code_list': tel_code_list})
+            return render(request, 'sales_login.html', {'state': state, 'tel_code_list': tel_code_list, 'default_code': default_code})
 
-    return render(request, 'sales_login.html', {'state': state, 'tel_code_list': tel_code_list})
+    return render(request, 'sales_login.html', {'state': state, 'tel_code_list': tel_code_list, 'default_code': default_code})
 
 def logout_user(request):
     """
     Method to logout.
     """
 
+    default_code = CountryCode.objects.filter(is_hidden=False, tel_code='+81').first().id
     tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
     login_type_was = request.session['login_type']
     logout(request)
     if login_type_was == 'MASTER':
         request.session['login_type'] = 'MASTER'
-        return render(request, 'master_login.html', {'tel_code_list': tel_code_list})
+        return render(request, 'master_login.html', {'tel_code_list': tel_code_list, 'default_code': default_code})
     else:
         request.session['login_type'] = 'SELLER'
-        return render(request, 'sales_login.html', {'tel_code_list': tel_code_list})
+        return render(request, 'sales_login.html', {'tel_code_list': tel_code_list, 'default_code': default_code})
 
 @login_required
 def profile_list(request):
@@ -393,11 +397,13 @@ def profile_add(request):
         store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['SPECIAL']).values('id', 'real_name')
         profile_list = list(Profile.objects.filter(is_hidden=False).values_list('id', 'real_name', 'authority_id'))
         tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
+        default_code = '+81'
         return render(request, 'profile_form.html', {'form': form, 
                                                     'media_url': s.MEDIA_URL, 
                                                     'store_list': store_list,
                                                     'profile_list': profile_list,
-                                                    'tel_code_list': tel_code_list})
+                                                    'tel_code_list': tel_code_list, 
+                                                    'default_code': default_code})
     else:
         return render(request, '404.html')
 
@@ -509,6 +515,7 @@ def profile_edit(request, profile_id):
         prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
         category_list = list(ProductCategory.objects.filter(is_hidden=False).order_by('id').values_list('id', 'name'))
         tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
+        default_code = '+81'
         return render(request, 'profile_form.html', {'form': form, 
                                                     'media_url': s.MEDIA_URL, 
                                                     'store_list': store_list,
@@ -516,7 +523,8 @@ def profile_edit(request, profile_id):
                                                     'profile': profile,
                                                     'category_list': category_list,
                                                     'prefecture_list': prefecture_list,
-                                                    'tel_code_list': tel_code_list})
+                                                    'tel_code_list': tel_code_list, 
+                                                    'default_code': default_code})
     else:
         return render(request, '404.html')
 
