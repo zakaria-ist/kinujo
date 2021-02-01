@@ -185,7 +185,7 @@ msgstr "オプション"
 #: orders/templates/order_list.html:8 orders/templates/order_list.html:31
 #: templates/base.html:173 templates/listing_base.html:126
 msgid "Order List"
-msgstr "オーダーリスト"
+msgstr "注文一覧"
 
 #: orders/templates/order_list.html:35
 msgid "Shipped"

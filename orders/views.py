@@ -916,8 +916,8 @@ def UserSalesList__asJson(request):
     length = request.GET['length']
     # search = request.GET['search[value]']
 
-    year = int(request.GET.get('year'))
-    month = int(request.GET.get('month'))
+    year = request.GET.get('year')
+    month = request.GET.get('month')
     profile_id = request.session['login_profile_id']
     auth_type = request.session['login_authority_id']
 
@@ -970,8 +970,8 @@ def UserCommissionList__asJson(request):
     length = request.GET['length']
     # search = request.GET['search[value]']
 
-    year = int(request.GET.get('year'))
-    month = int(request.GET.get('month'))
+    year = request.GET.get('year')
+    month = request.GET.get('month')
     profile_id = request.session['login_profile_id']
     auth_type = request.session['login_authority_id']
 

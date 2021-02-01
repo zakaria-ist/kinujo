@@ -1021,8 +1021,8 @@ def PaymentList__asJson(request):
 
     auth_type = eval(request.GET.get('auth_str'))
     status_type = eval(request.GET.get('status_str'))
-    month = eval(request.GET.get('month'))
-    year = eval(request.GET.get('year'))
+    month = request.GET.get('month')
+    year = request.GET.get('year')
 
     payment_list = MonthlyPayment.objects.filter(is_hidden=False, year=year, month=month).order_by('user__real_name')
     if len(auth_type):
