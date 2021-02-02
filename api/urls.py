@@ -45,6 +45,7 @@ urlpatterns = [
     url(r'user/byIds', views.UserByIds.as_view(), name='user-by-ids'),
     url(r'app/config', views.AppConfig.as_view(), name='app-config'),
     url(r'removeReferral', views.RemoveReferral.as_view(), name='app-config'),
+    url(r'getProductByVariety', views.GetProductByVariety.as_view(), name='app-config'),
     url('^createProduct/(?P<userId>.+)/$', views.CreateProduct.as_view()),
     url('^editProduct/(?P<userId>.+)/$', views.EditProduct.as_view()),
     url('^latestOrderReceipt/(?P<orderId>.+)/$', views.OrderReceipt.as_view()),
