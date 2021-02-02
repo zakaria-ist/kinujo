@@ -115,6 +115,7 @@
         $('#payment-table').DataTable().destroy();
         $('#payment-table').DataTable({
             //"order": [[1, "asc"]],
+            "pageLength": 100,
             "serverSide": true,
             "scrollX": true,
             stateSave: true,

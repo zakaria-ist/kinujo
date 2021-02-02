@@ -12,9 +12,9 @@
     {% csrf_token %}
     <input type="text" name="user_id" class="form-control" value="{{ profile.user_id }}" hidden>
     <section class="panel">
-        <header class="panel-heading" style="font-size: 25px">
+        {% comment %} <header class="panel-heading" style="font-size: 25px">
             <strong>{% trans 'Profile' %}</strong>
-        </header>
+        </header> {% endcomment %}
         <div class="row">
             <div class="col-lg-4" style="margin-top: 4%">
                 <div class="form-group">
