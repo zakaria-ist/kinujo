@@ -3,7 +3,7 @@ function loadItemTableData() {
     $('#item-table').DataTable().destroy();
     $('#item-table').DataTable({
         "order": [[2, "asc"]],
-        "pageLength": 25,
+        "pageLength": 100,
         "serverSide": true,
         "scrollX": true,
         //stateSave: true,

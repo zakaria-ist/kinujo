@@ -92,9 +92,9 @@
                         <select name="orderer" id="orderer" class="form-control trs-field">
                             {% for pr in orderer_list %}
                                 {% if pr.0 == order.purchaser_id %}
-                                <option value="{{pr.0}}" selected>{{pr.1}}</option>
+                                <option value="{{pr.0}}" selected>{{pr.1}}({{pr.3}})</option>
                                 {% else %}
-                                <option value="{{pr.0}}">{{pr.1}}</option>
+                                <option value="{{pr.0}}">{{pr.1}}({{pr.3}})</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
@@ -357,6 +357,9 @@
             }
 
             $('#orderer').trigger('change');
+            if (order_id) {
+                $('#orderer').attr('disabled', true);
+            }
         })
 
         $('#order_status').select2({});
@@ -415,6 +418,7 @@
                 $('#address-table').DataTable().destroy();
                 $('#address-table').DataTable({
                     "order": [[2, "asc"]],
+                    "pageLength": 100,
                     "serverSide": true,
                     "scrollX": true,
                     stateSave: true,
@@ -820,6 +824,7 @@
             }
             
             if (is_valid) {
+                $('#orderer').removeAttr('disabled');
                 let selected_product_list = [];
                 for (let i=0; i<$("[id*='product_line']").length; i++) {
                     let data = {

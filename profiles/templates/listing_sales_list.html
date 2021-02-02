@@ -122,6 +122,7 @@
         $('#sales-table').DataTable().destroy();
         $('#sales-table').DataTable({
             "order": [[2, "asc"]],
+            "pageLength": 100,
             "serverSide": true,
             "scrollX": true,
             stateSave: true,
@@ -177,6 +178,7 @@
         $('#commssion-table').DataTable().destroy();
         $('#commssion-table').DataTable({
             "order": [[2, "asc"]],
+            "pageLength": 100,
             "serverSide": true,
             "scrollX": true,
             stateSave: true,

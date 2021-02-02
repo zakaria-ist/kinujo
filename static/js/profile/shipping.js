@@ -3,6 +3,7 @@ function loadShippingTableData() {
     $('#shipping-table').DataTable().destroy();
     $('#shipping-table').DataTable({
         "order": [[2, "asc"]],
+        "pageLength": 100,
         "serverSide": true,
         "scrollX": true,
         stateSave: true,
