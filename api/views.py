@@ -1276,6 +1276,33 @@ class CreateProduct(APIView):
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
+class GetProductByVariety(APIView):
+    def get(self, request, format='json'):
+        product = Product.objects.get(id=request.GET['productId'])
+        productSerializer = ProductSerializer(product, context=getContext())
+        janCodes = []
+        for productVariety in productSerializer.data['productVarieties']:
+            for productVarietySelection in productVariety['productVarietySelections']:
+                for horizontal in productVarietySelection['jancode_horizontal']:
+                    janCodes.append(horizontal['jan_code'])
+                for vertical in productVarietySelection['jancode_vertical']:
+                    janCodes.append(vertical['jan_code'])
+        productJancodes = ProductJancode.objects.filter(jan_code__in=janCodes)
+        productJancodesSerializer = ProductJancodeSerializer(productJancodes, many=True, context=getContext())
+
+
+        horizontals = ProductJancode.objects.filter(jan_code__in=janCodes).values_list('horizontal_id', flat=True)
+        verticals = ProductJancode.objects.filter(jan_code__in=janCodes).values_list('vertical_id', flat=True)
+        janCodeIds = []
+        janCodeIds.extend(horizontals)
+        janCodeIds.extend(verticals)
+        productVarietyIDs = ProductVarietySelection.objects.filter(id__in=janCodeIds).values_list("product_variety_id", flat=True)
+        productIDs = ProductVariety.objects.filter(id__in=productVarietyIDs).values_list("product_id", flat=True)
+        products = Product.objects.filter(id__in=productIDs)
+        productSerializer = SimpleProductSerializer(products, many=True, context=getContext())
+        return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK) 
+
+
 class EditProduct(APIView):
     def post(self, request, userId, format='json'):
         try:
