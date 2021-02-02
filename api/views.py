@@ -634,7 +634,7 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
                 if float(commission) > 0:
                     orderProductComm = {
                         'amount' : int(float(price) * float(commission)),
-                        'is_sales' : 1,
+                        'is_sales' : 0,
                         'shipping_fee' : shipping_fee,
                         'order_product' : orderProduct,
                         'user' : introducerSerializer.data['url']
@@ -823,7 +823,8 @@ class Pay(APIView):
                         'prefecture': addressSerializer.data['prefecture']['url'],
                         'seller': product['user']['url'],
                         'purchaser' : profileSerializer.data['url'],
-                        'status' : 1
+                        'status' : 1,
+                        'shipped_date' : ''
                     }
                     orderSerializer = InsertOrderSerializer(data=order, context=getContext())
                     if orderSerializer.is_valid():
@@ -959,7 +960,22 @@ class Pay(APIView):
                         if productJancode:
                             productJancode.stock = int(productJancode.stock) - int(quantity)
                             productJancode.save()
+                            
                         orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
+
+                        orderProductComm = {
+                            'amount' : groupTotal,
+                            'is_sales' : 1,
+                            'shipping_fee' : groupShippingFee,
+                            'order_product' : orderProductSerializer.data['url'],
+                            'user' : product['user']['url']
+                        }
+                        orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+                        if orderProductCommissionSerializer.is_valid():
+                            orderProductCommissionSerializer.save()
+                        else:
+                            return Response({"success" : False, "errors" : orderProductCommissionSerializer.errors}, status=status.HTTP_200_OK)
+
                         if orderProductSerializer.is_valid():
                             orderProductSerializer.save()
                             errors = calculateCommission(price, orderProductSerializer.data['url'], profileSerializer.data['id'], product['shipping_fee'])
