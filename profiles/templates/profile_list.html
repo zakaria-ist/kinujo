@@ -108,6 +108,7 @@
         $(document).ready(function () {
             var campreto = $('#dynamic-table').DataTable({
                 "order": [[2, "asc"]],
+                "pageLength": 100,
                 "serverSide": true,
                 "scrollX": true,
                 stateSave: true,
@@ -175,6 +176,7 @@
         $('#dynamic-table').DataTable().destroy();
         $('#dynamic-table').DataTable({
             "order": [[2, "asc"]],
+            "pageLength": 100,
             "serverSide": true,
             "scrollX": true,
             stateSave: true,

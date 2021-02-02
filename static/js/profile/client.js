@@ -2,6 +2,7 @@ function loadClientTableData(filter_str='[]') {
     $('#client-table').DataTable().destroy();
     $('#client-table').DataTable({
         "order": [[2, "asc"]],
+        "pageLength": 100,
         "serverSide": true,
         "scrollX": true,
         stateSave: true,
