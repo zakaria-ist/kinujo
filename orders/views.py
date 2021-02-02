@@ -50,7 +50,7 @@ def export_order_list_as_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="OrderList.csv"'
     writer = csv.writer(response)
-    writer.writerow(['order_number', 'product_name', 'orderer', 'address', 'amount', 'status', 'shipped_date', 'tracking_number'])
+    writer.writerow(['order_number', 'order_date', 'product_name', 'orderer', 'address', 'amount', 'status', 'shipped_date', 'tracking_number'])
 
     for field in order_list:
         product = OrderProduct.objects.filter(order_id=field.id).first()
@@ -72,7 +72,8 @@ def export_order_list_as_csv(request):
                 status = '準備中'
             elif field.status == 2:
                 status = '発送完了'
-        writer.writerow([str(field.id), j_product.name, field.name, 
+        writer.writerow([str(field.id), field.order_date.strftime("%Y-%m-%d") if field.order_date else '', 
+                        j_product.name, field.name, 
                         field.address1 + '  Zip: ' + field.zip1, 
                         intcomma("%.0f" % field.total_amount), status,
                         field.shipped_date.strftime("%Y-%m-%d") if field.shipped_date else '', 
@@ -159,6 +160,7 @@ def OrderList__asJson(request):
             "amount": field.total_amount,
             "status": status,
             "shipped_date": field.shipped_date.strftime("%Y-%m-%d") if field.shipped_date else '',
+            "order_date": field.order_date.strftime("%Y-%m-%d") if field.order_date else '',
             "inquiry_number": field.inquiry_number
         }
         array.append(data)
@@ -577,7 +579,7 @@ def order_add(request):
         orderer_list = list(Profile.objects.filter(is_hidden=False, 
                     authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']])\
             .exclude(id=seller_id)\
-            .values_list('id', 'real_name', 'authority_id'))
+            .values_list('id', 'real_name', 'authority_id', 'nickname'))
         prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
         tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
         if request.LANGUAGE_CODE == 'en':
@@ -812,7 +814,7 @@ def order_edit(request, order_id):
             orderer_list = list(Profile.objects.filter(is_hidden=False, 
                         authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']])\
                 .exclude(id=seller_id)\
-                .values_list('id', 'real_name', 'authority_id'))
+                .values_list('id', 'real_name', 'authority_id', 'nickname'))
             prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
             tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
             if request.LANGUAGE_CODE == 'en':

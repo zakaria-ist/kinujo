@@ -634,7 +634,7 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
                 if float(commission) > 0:
                     orderProductComm = {
                         'amount' : int(float(price) * float(commission)),
-                        'is_sales' : 1,
+                        'is_sales' : 0,
                         'shipping_fee' : shipping_fee,
                         'order_product' : orderProduct,
                         'user' : introducerSerializer.data['url']
@@ -823,7 +823,8 @@ class Pay(APIView):
                         'prefecture': addressSerializer.data['prefecture']['url'],
                         'seller': product['user']['url'],
                         'purchaser' : profileSerializer.data['url'],
-                        'status' : 1
+                        'status' : 1,
+                        'shipped_date' : ''
                     }
                     orderSerializer = InsertOrderSerializer(data=order, context=getContext())
                     if orderSerializer.is_valid():
@@ -959,7 +960,22 @@ class Pay(APIView):
                         if productJancode:
                             productJancode.stock = int(productJancode.stock) - int(quantity)
                             productJancode.save()
+                            
                         orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
+
+                        orderProductComm = {
+                            'amount' : groupTotal,
+                            'is_sales' : 1,
+                            'shipping_fee' : groupShippingFee,
+                            'order_product' : orderProductSerializer.data['url'],
+                            'user' : product['user']['url']
+                        }
+                        orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+                        if orderProductCommissionSerializer.is_valid():
+                            orderProductCommissionSerializer.save()
+                        else:
+                            return Response({"success" : False, "errors" : orderProductCommissionSerializer.errors}, status=status.HTTP_200_OK)
+
                         if orderProductSerializer.is_valid():
                             orderProductSerializer.save()
                             errors = calculateCommission(price, orderProductSerializer.data['url'], profileSerializer.data['id'], product['shipping_fee'])
@@ -1275,6 +1291,33 @@ class CreateProduct(APIView):
             return Response({"success" : True}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
+
+class GetProductByVariety(APIView):
+    def get(self, request, format='json'):
+        product = Product.objects.get(id=request.GET['productId'])
+        productSerializer = ProductSerializer(product, context=getContext())
+        janCodes = []
+        for productVariety in productSerializer.data['productVarieties']:
+            for productVarietySelection in productVariety['productVarietySelections']:
+                for horizontal in productVarietySelection['jancode_horizontal']:
+                    janCodes.append(horizontal['jan_code'])
+                for vertical in productVarietySelection['jancode_vertical']:
+                    janCodes.append(vertical['jan_code'])
+        productJancodes = ProductJancode.objects.filter(jan_code__in=janCodes)
+        productJancodesSerializer = ProductJancodeSerializer(productJancodes, many=True, context=getContext())
+
+
+        horizontals = ProductJancode.objects.filter(jan_code__in=janCodes).values_list('horizontal_id', flat=True)
+        verticals = ProductJancode.objects.filter(jan_code__in=janCodes).values_list('vertical_id', flat=True)
+        janCodeIds = []
+        janCodeIds.extend(horizontals)
+        janCodeIds.extend(verticals)
+        productVarietyIDs = ProductVarietySelection.objects.filter(id__in=janCodeIds).values_list("product_variety_id", flat=True)
+        productIDs = ProductVariety.objects.filter(id__in=productVarietyIDs).values_list("product_id", flat=True)
+        products = Product.objects.filter(id__in=productIDs)
+        productSerializer = SimpleProductSerializer(products, many=True, context=getContext())
+        return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK) 
+
 
 class EditProduct(APIView):
     def post(self, request, userId, format='json'):
