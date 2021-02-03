@@ -119,7 +119,7 @@ class InsertOrderSerializer(serializers.HyperlinkedModelSerializer):
 class InsertOrderProductSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = OrderProduct
-        fields = ['id', 'url', 'product_jan_code', 'order', 'quantity','unit_price','total_price','tax','total_amount','is_hidden','created','modified']
+        fields = ['id', 'url', 'product_jan_code', 'order', 'quantity','unit_price','total_price','tax','total_amount','is_hidden','created','modified', 'shipped_date']
 class InsertOrderProductCommissionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = OrderProductCommission

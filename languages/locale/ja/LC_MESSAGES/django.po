@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-02 10:28+0000\n"
+"POT-Creation-Date: 2021-02-03 06:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,8 +34,7 @@ msgstr "日本語"
 msgid "Order Add/Edit"
 msgstr "注文追加/編集"
 
-#: orders/templates/order_form.html:42 templates/base.html:176
-#: templates/listing_base.html:129
+#: orders/templates/order_form.html:42 templates/listing_base.html:129
 msgid "Order Registration"
 msgstr "注文登録"
 
@@ -216,31 +215,31 @@ msgid "Destination"
 msgstr "送付先"
 
 #: orders/templates/order_list.html:97 products/templates/product_list.html:104
-#: profiles/templates/profile_form.html:117
-#: profiles/templates/profile_form.html:143
+#: profiles/templates/profile_form.html:127
+#: profiles/templates/profile_form.html:153
 #: profiles/templates/profile_list.html:82
 msgid "Delete Confirm Dialog"
 msgstr "削除の確認"
 
 #: orders/templates/order_list.html:104
 #: products/templates/product_list.html:111
-#: profiles/templates/profile_form.html:124
+#: profiles/templates/profile_form.html:134
 #: profiles/templates/profile_list.html:89
 msgid "Are you sure want to delete?"
 msgstr "削除してもよろしいですか？"
 
 #: orders/templates/order_list.html:109
 #: products/templates/product_list.html:116
-#: profiles/templates/profile_form.html:129
-#: profiles/templates/profile_form.html:155
+#: profiles/templates/profile_form.html:139
+#: profiles/templates/profile_form.html:165
 #: profiles/templates/profile_list.html:94
 msgid "No"
 msgstr "いいえ"
 
 #: orders/templates/order_list.html:111
 #: products/templates/product_list.html:118
-#: profiles/templates/profile_form.html:130
-#: profiles/templates/profile_form.html:156
+#: profiles/templates/profile_form.html:140
+#: profiles/templates/profile_form.html:166
 #: profiles/templates/profile_list.html:96
 msgid "Yes"
 msgstr "はい"
@@ -553,7 +552,7 @@ msgid "Price"
 msgstr "価格"
 
 #: profiles/templates/account_info_tab.html:6
-#: profiles/templates/profile_form.html:53
+#: profiles/templates/profile_form.html:63
 msgid "Account Information"
 msgstr "口座情報"
 
@@ -808,43 +807,45 @@ msgstr "支店"
 msgid "Payment Date"
 msgstr "支払日"
 
-#: profiles/templates/profile_form.html:13
-msgid "Profile Add/Edit"
-msgstr "プロフィールの追加/編集"
-
-#: profiles/templates/profile_form.html:30
-msgid "Profile Details"
+#: profiles/templates/profile_form.html:15
+#: profiles/templates/profile_form.html:37
+msgid "Profile Edit"
 msgstr "アカウント詳細"
 
-#: profiles/templates/profile_form.html:36 templates/sales_login.html:50
+#: profiles/templates/profile_form.html:17
+#: profiles/templates/profile_form.html:39
+msgid "Profile Add"
+msgstr "アカウント登録"
+
+#: profiles/templates/profile_form.html:46 templates/sales_login.html:50
 msgid "Listing Management Site"
 msgstr "出品管理サイトへ"
 
-#: profiles/templates/profile_form.html:44
+#: profiles/templates/profile_form.html:54
 msgid "Basic Information"
 msgstr "基本情報"
 
-#: profiles/templates/profile_form.html:47 templates/base.html:159
+#: profiles/templates/profile_form.html:57 templates/base.html:159
 #: templates/listing_base.html:112
 msgid "Item List"
 msgstr "出品一覧"
 
-#: profiles/templates/profile_form.html:50
+#: profiles/templates/profile_form.html:60
 msgid "Client"
 msgstr "顧客"
 
-#: profiles/templates/profile_form.html:56 profiles/templates/salon_form.html:6
+#: profiles/templates/profile_form.html:66 profiles/templates/salon_form.html:6
 #: profiles/templates/salon_info_tab.html:5
 msgid "Salon Information"
 msgstr "サロン情報"
 
-#: profiles/templates/profile_form.html:59
+#: profiles/templates/profile_form.html:69
 #: profiles/templates/shipping_form.html:6
 #: profiles/templates/shipping_info_tab.html:5
 msgid "Shipping Information"
 msgstr "送付先情報"
 
-#: profiles/templates/profile_form.html:150
+#: profiles/templates/profile_form.html:160
 msgid ""
 "This will remove all the variations of this product. Do you still want to "
 "continue?"
@@ -917,7 +918,7 @@ msgstr "アカウント一覧"
 msgid "Account Registration"
 msgstr "アカウント登録"
 
-#: templates/base.html:135 templates/base.html:183
+#: templates/base.html:135 templates/base.html:184
 #: templates/listing_base.html:136
 msgid "Sales Management"
 msgstr "売上管理"
@@ -932,7 +933,7 @@ msgstr "支払一覧"
 
 #: templates/base.html:155 templates/listing_base.html:108
 msgid "Item Management"
-msgstr "アイテム管理"
+msgstr "出品管理"
 
 #: templates/base.html:162 templates/listing_base.html:115
 msgid "Item Registration"
@@ -1041,6 +1042,9 @@ msgstr "新しいパスワード(再入力)"
 #: templates/password-reset.html:89
 msgid "Change the password"
 msgstr "パスワードを変更する"
+
+#~ msgid "Profile Details"
+#~ msgstr "アカウント詳細"
 
 #~ msgid "Profile"
 #~ msgstr "プロフィール"
