@@ -3,6 +3,7 @@ function loadSalonTableData() {
     $('#salon-table').DataTable().destroy();
     $('#salon-table').DataTable({
         "order": [[2, "asc"]],
+        "pageLength": 100,
         "serverSide": true,
         "scrollX": true,
         stateSave: true,

@@ -43,11 +43,11 @@
                                             <span><i class="fas fa-file-export"></i> {% trans 'CSV Export' %}</span>
                                         </a>
                                     </span>
-                                    <span class="">
+                                    {% comment %} <span class="">
                                         <a class="btn btn-primary blue-btn" href="{% url 'order_add' %}"> 
                                             <span>{% trans 'Add' %}</span>
                                         </a>
-                                    </span>
+                                    </span> {% endcomment %}
                                 </div>
                                 <div class="adv-table table-responsive">
                                     <table class="display table table-bordered table-striped table-condensed"
@@ -56,6 +56,7 @@
                                         <tr>
                                             <th style="width: 50px !important">{% trans 'Order Number' %}</th>
                                             <th></th>
+                                            <th>{% trans 'Order Date' %}</th>
                                             <th>{% trans 'Product Name' %}</th>
                                             <th>{% trans 'Orderer' %}</th>
                                             <th>{% trans 'Destination' %}</th>
@@ -151,6 +152,7 @@
         $('#order-table').DataTable().destroy();
         $('#order-table').DataTable({
             "order": [[0, "asc"]],
+            "pageLength": 100,
             "serverSide": true,
             "scrollX": true,
             stateSave: true,
@@ -172,6 +174,7 @@
                         return img;
                     }
                 },
+                {"data": "order_date", "orderable": false},
                 {
                     "sClass": "text-left",
                     "orderable": false,
