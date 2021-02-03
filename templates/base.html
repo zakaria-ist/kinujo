@@ -172,9 +172,9 @@
                         <li class="{% block order_list_active %}{% endblock %}">
                             <a href="{% url 'order_list' %}" >{% trans 'Order List' %}</a>
                         </li>
-                        <li class="{% block order_add_active %}{% endblock %}">
+                        {% comment %} <li class="{% block order_add_active %}{% endblock %}">
                             <a href="{% url 'order_add' %}">{% trans 'Order Registration' %}</a>
-                        </li>
+                        </li> {% endcomment %}
                     </ul>
                 </li>
                 <li class="sub-menu">

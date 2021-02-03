@@ -10,7 +10,13 @@
     <script src="https://zipaddr.github.io/bankauto0.js" charset="UTF-8"> </script>
 {% endblock %}
 
-{% block title %}{% trans 'Profile Add/Edit'%}{% endblock %}
+{% block title %}
+    {% if profile.id %}
+        {% trans 'Profile Edit' %}
+    {% else %}
+        {% trans 'Profile Add' %}
+    {% endif %}
+{% endblock %}
 
 {% block account_a_active %}
     active
@@ -27,7 +33,11 @@
 {% block content %}
     <div id="content">
         <header class="panel-heading" style="font-size: 25px; margin-bottom: 20px;" >
-                {% trans 'Profile Details' %}  {{profile.real_name}}
+                {% if profile.id %}
+                    {% trans 'Profile Edit' %}   {{profile.real_name}}
+                {% else %}
+                    {% trans 'Profile Add' %}
+                {% endif %}
         </header>
         {% if profile.authority_id == 1 %} {#MASTER#}
             <div class="text-right" style="margin-top: -40px;">
