@@ -115,11 +115,11 @@ class InsertOrderSerializer(serializers.HyperlinkedModelSerializer):
     shipped_date = serializers.CharField(allow_blank=True)
     class Meta:
         model = Order
-        fields = ['id', 'url', 'seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','created','modified', 'status', 'tel_code']
+        fields = ['id', 'url', 'seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','created','modified', 'status', 'tel_code', 'shipped_date']
 class InsertOrderProductSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = OrderProduct
-        fields = ['id', 'url', 'product_jan_code', 'order', 'quantity','unit_price','total_price','tax','total_amount','is_hidden','created','modified', 'shipped_date']
+        fields = ['id', 'url', 'product_jan_code', 'order', 'quantity','unit_price','total_price','tax','total_amount','is_hidden','created','modified']
 class InsertOrderProductCommissionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = OrderProductCommission
