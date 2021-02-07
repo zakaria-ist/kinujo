@@ -823,8 +823,7 @@ class Pay(APIView):
                         'prefecture': addressSerializer.data['prefecture']['url'],
                         'seller': product['user']['url'],
                         'purchaser' : profileSerializer.data['url'],
-                        'status' : 1,
-                        'shipped_date' : ''
+                        'status' : 1
                     }
                     orderSerializer = InsertOrderSerializer(data=order, context=getContext())
                     if orderSerializer.is_valid():
