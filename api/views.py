@@ -21,7 +21,7 @@ from .simpleProductSerializers import SimpleProductSerializer
 from rest_framework.test import APIRequestFactory
 from rest_framework.parsers import MultiPartParser
 from django.core.mail import send_mail
-import requests 
+import requests
 import json
 import stripe
 import ast
@@ -135,7 +135,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    
+
 class SimpleProductViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
@@ -264,9 +264,9 @@ class UserRegister(APIView):
                 if request.data['authority'] == 'store':
                     authority = Authority.objects.get(id=4)
                     is_seller = 1
-                    
+
                 authoritySerializer = AuthoritySerializer(authority, context=getContext())
-                
+
                 profileItem = {
                     'user' : userSerializer.data['url'],
                     'tel' : request.data['username'].replace("+" + request.data['callingCode'], ""),
@@ -294,7 +294,7 @@ class UserRegister(APIView):
                     if introducerProfile:
                         introducerProfileSerializer = InsertProfileSerializer(introducerProfile, context=getContext())
                         profileItem['introducer'] = introducerProfileSerializer.data['url']
-                    
+
                 profileItem["email"] = ""
                 profileSerializer = InsertProfileSerializer(data=profileItem, context=getContext())
                 if profileSerializer.is_valid():
@@ -314,7 +314,7 @@ class UserRegister(APIView):
                 return Response({"success" : False, "errors": userSerializer.errors}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
-     
+
 class CheckRegister(APIView):
     def post(self, request, format='json'):
         userSerializer = UserSerializer(data=request.data, context=getContext())
@@ -335,13 +335,13 @@ class UserLogin(APIView):
             user = User.objects.get(username = request.data['tel'])
         except Exception as e:
             print(e)
-        
+
         if user is None:
             try:
                 user = User.objects.get(username = "+" + request.data['tel'])
             except Exception as e:
                 print(e)
-            
+
         if user:
             profile = None
             try:
@@ -375,13 +375,13 @@ class PasswordReset(APIView):
             profile = Profile.objects.get(tel=request.data['tel_code'] + request.data['tel'])
         except Exception as e:
             print(e)
-        
+
         if profile is None:
             try:
                 profile = Profile.objects.get(tel = "+" + request.data['tel_code'] + request.data['tel'])
             except Exception as e:
                 print(e)
-        
+
         if profile is None:
             try:
                 profile = Profile.objects.get(tel = request.data['tel'])
@@ -406,7 +406,7 @@ class PasswordReset(APIView):
                 return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
         else:
             return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
-            
+
 class ChangeEmail(APIView):
     def post(self, request, format='json'):
         profile = None
@@ -414,7 +414,7 @@ class ChangeEmail(APIView):
             profile = Profile.objects.get(tel=request.data['tel'])
         except Exception as e:
             print(e)
-        
+
         if profile is None:
             try:
                 profile = Profile.objects.get(tel = "+" + request.data['tel'])
@@ -446,7 +446,7 @@ class ChangePhone(APIView):
             profile = Profile.objects.get(tel=request.data['tel'])
         except Exception as e:
             print(e)
-        
+
         if profile is None:
             try:
                 profile = Profile.objects.get(tel = "+" + request.data['tel'])
@@ -597,7 +597,7 @@ class UserByIds(APIView):
                 if 'userId' in request.GET and request.GET['userId']:
                     profile = Profile.objects.get(id=request.GET['userId'])
                     sProfileSerializer = ProfileSerializer(profile, context=getContext())
-                    
+
                     masters = Profile.objects.filter(is_master=1)
                     ids.extend(masters.values_list('id', flat=True))
 
@@ -609,7 +609,7 @@ class UserByIds(APIView):
                         introducer = introducers[len(introducers)-2]
                         ids.append(introducer)
                         ids.extend(Profile.objects.filter(introducer_id=sProfileSerializer.data['id']).values_list('id', flat=True))
-            
+
 
             profiles = Profile.objects.filter(id__in=ids)
             if len(profiles) == 0:
@@ -640,7 +640,7 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
                         'user' : introducerSerializer.data['url']
                     }
                     orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
-                    
+
                     if orderProductCommissionSerializer.is_valid():
                         orderProductCommissionSerializer.save()
                     else:
@@ -649,7 +649,7 @@ def calculateCommission(price, orderProduct, userId, shipping_fee):
                     today_date = date.today()
                     year = today_date.year
                     month = today_date.month
-                    
+
                     totalComm = None
                     try:
                         totalComm = TotalCommission.objects.get(year=year, month=month, authority=profile.authority.id)
@@ -731,7 +731,7 @@ class Pay(APIView):
         try:
             if(len(request.data['products']) == 0):
                 return Response({"success" : False, "errors": {"no_products" : "No products"}}, status=status.HTTP_200_OK)
-            
+
             token = stripe.Token.create(
                 card={
                     "number": request.data['card']['number'].replace(" ", ""),
@@ -765,7 +765,7 @@ class Pay(APIView):
                 profileSerializer = ProfileSerializer(profile, context=getContext())
                 productSerializer = ProductSerializer(products, many=True, context=getContext())
                 addressSerializer = AddressSerializer(address, context=getContext())
-                
+
                 total_amount = 0
 
                 for product in productSerializer.data:
@@ -803,7 +803,7 @@ class Pay(APIView):
                         price= float(product['price'])
                         groupTotal = (float(product['price']) * float(quantity))
                     groupTax = int(float(groupTotal) * float(tax.tax_rate))
-                    
+
                     address2 = addressSerializer.data['address2']
                     if address2 is None:
                         address2 = "no_address_2"
@@ -812,6 +812,7 @@ class Pay(APIView):
                         'amount' : int(float(groupTotal)),
                         'tax': groupTax,
                         'shipping_fee': groupShippingFee,
+                        'shipped_date': '',
                         'total_amount': int(float(groupTotal) + float(groupTax) + float(groupShippingFee)),
                         'name': addressSerializer.data['name'],
                         'zip1': addressSerializer.data['zip1'],
@@ -862,7 +863,7 @@ class Pay(APIView):
                             orderReceiptSerializer.save()
                         else:
                             return Response({"success" : False, "errors" : orderReceiptSerializer.errors}, status=status.HTTP_200_OK)
-                            
+
                         orderProduct = {
                             'quantity':  quantity,
                             'unit_price' : int(float(price)),
@@ -873,7 +874,7 @@ class Pay(APIView):
                             'product_jan_code': variety
                         }
                         productJancode = ProductJancode.objects.get(id=varietyId)
-                        
+
 
                         today_date = date.today()
                         year = today_date.year
@@ -959,7 +960,7 @@ class Pay(APIView):
                         if productJancode:
                             productJancode.stock = int(productJancode.stock) - int(quantity)
                             productJancode.save()
-                            
+
                         orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
 
                         orderProductComm = {
@@ -978,11 +979,11 @@ class Pay(APIView):
                         if orderProductSerializer.is_valid():
                             orderProductSerializer.save()
                             errors = calculateCommission(price, orderProductSerializer.data['url'], profileSerializer.data['id'], product['shipping_fee'])
-                            if errors: 
+                            if errors:
                                 return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
                         else:
                             return Response({"success" : False, "errors" : orderProductSerializer.errors}, status=status.HTTP_200_OK)
-                        
+
                         if product['user']['email']:
                             send_mail(
                                 '[KINUJOからのお知らせ」出品中の商品が購入されました',
@@ -1028,7 +1029,7 @@ class Pay(APIView):
             #         payload["customerId"] = customer_id
             #         profile.payload = json.dumps(payload)
             #         profile.save()
-            
+
             return Response({"success" : True, "sellers" : sellers})
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
@@ -1125,7 +1126,7 @@ class CreateProduct(APIView):
                 productData['is_opened'] = 1
             else:
                 productData['is_opened'] = 0
-                
+
             if request.data['publishState'] == 'published':
                 productData['is_opened'] = 1
             else:
@@ -1155,7 +1156,7 @@ class CreateProduct(APIView):
                     if productImageSerializer.is_valid():
                         productImageSerializer.save()
                     else:
-                        return Response({"success" : False, "errors": productImageSerializer.errors}, status=status.HTTP_200_OK) 
+                        return Response({"success" : False, "errors": productImageSerializer.errors}, status=status.HTTP_200_OK)
 
                 if request.data['productVariation'] == 'none':
                     noneVariationItems = request.data['noneVariationItems']
@@ -1180,11 +1181,11 @@ class CreateProduct(APIView):
                             if insertProductJancodeSerializer.is_valid():
                                 insertProductJancodeSerializer.save()
                             else:
-                                return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK) 
+                                return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK)
                         else:
-                            return Response({"success" : False, "errors": insertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
+                            return Response({"success" : False, "errors": insertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK)
                     else:
-                        return Response({"success" : False, "errors": insertProductVarietySerializer.errors}, status=status.HTTP_200_OK) 
+                        return Response({"success" : False, "errors": insertProductVarietySerializer.errors}, status=status.HTTP_200_OK)
                 elif request.data['productVariation'] == 'one':
                     oneVariationItems = request.data['oneVariationItems']
                     insertProductVarietySerializer = InsertProductVarietySerializer(data={
@@ -1215,9 +1216,9 @@ class CreateProduct(APIView):
                                 if insertProductJancodeSerializer.is_valid():
                                     insertProductJancodeSerializer.save()
                                 else:
-                                    return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK) 
+                                    return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK)
                             else:
-                                return Response({"success" : False, "errors": insertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
+                                return Response({"success" : False, "errors": insertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK)
                     else:
                         return Response({"success" : False, "errors": insertProductVarietySerializer.errors}, status=status.HTTP_200_OK)
                 elif request.data['productVariation'] == 'two':
@@ -1243,9 +1244,9 @@ class CreateProduct(APIView):
                                 firstInsertProductVarietySelectionSerializer.save()
                                 firstUrls[choice['choiceItem']] = firstInsertProductVarietySelectionSerializer.data['url']
                             else:
-                                return Response({"success" : False, "errors": firstInsertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
+                                return Response({"success" : False, "errors": firstInsertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK)
                     else:
-                        return Response({"success" : False, "errors": firstInsertProductVarietySerializer.errors}, status=status.HTTP_200_OK) 
+                        return Response({"success" : False, "errors": firstInsertProductVarietySerializer.errors}, status=status.HTTP_200_OK)
 
                     secondInsertProductVarietySerializer = InsertProductVarietySerializer(data={
                         "name" : secondItem['horizontalItem'],
@@ -1263,9 +1264,9 @@ class CreateProduct(APIView):
                                 secondInsertProductVarietySelectionSerializer.save()
                                 secondUrls[choice['choiceItem']] = secondInsertProductVarietySelectionSerializer.data['url']
                             else:
-                                return Response({"success" : False, "errors": secondInsertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
+                                return Response({"success" : False, "errors": secondInsertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK)
                     else:
-                        return Response({"success" : False, "errors": secondInsertProductVarietySerializer.errors}, status=status.HTTP_200_OK) 
+                        return Response({"success" : False, "errors": secondInsertProductVarietySerializer.errors}, status=status.HTTP_200_OK)
 
                     mappingValues = twoVariationItems['mappingValue']
                     for choice1 in firstItem['choices']:
@@ -1283,10 +1284,10 @@ class CreateProduct(APIView):
                             if insertProductJancodeSerializer.is_valid():
                                 insertProductJancodeSerializer.save()
                             else:
-                                return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK) 
+                                return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK)
 
             else:
-                return Response({"success" : False, "errors": productSerializer.errors}, status=status.HTTP_200_OK)    
+                return Response({"success" : False, "errors": productSerializer.errors}, status=status.HTTP_200_OK)
             return Response({"success" : True}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
@@ -1315,7 +1316,7 @@ class GetProductByVariety(APIView):
         productIDs = ProductVariety.objects.filter(id__in=productVarietyIDs).values_list("product_id", flat=True)
         products = Product.objects.filter(id__in=productIDs)
         productSerializer = SimpleProductSerializer(products, many=True, context=getContext())
-        return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK) 
+        return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
 
 
 class EditProduct(APIView):
@@ -1435,7 +1436,7 @@ class EditProduct(APIView):
                     if productImageSerializer.is_valid():
                         productImageSerializer.save()
                     else:
-                        return Response({"success" : False, "errors": productImageSerializer.errors}, status=status.HTTP_200_OK) 
+                        return Response({"success" : False, "errors": productImageSerializer.errors}, status=status.HTTP_200_OK)
 
             if request.data['productVariation'] == 'none':
                 noneVariationItems = request.data['noneVariationItems']
@@ -1468,7 +1469,7 @@ class EditProduct(APIView):
                         }, context=getContext())
                         if productVarietySelectionSerializer.is_valid():
                             productVarietySelectionSerializer.save()
-                            
+
                             productJancodeSerializer = InsertProductJancodeSerializer(data={
                                 "jan_code" : item['janCode'],
                                 "stock" : item['stock'],
@@ -1478,15 +1479,15 @@ class EditProduct(APIView):
                             if productJancodeSerializer.is_valid():
                                 productJancodeSerializer.save()
                             else:
-                                return Response({"success" : False, "errors": productJancodeSerializer.errors}, status=status.HTTP_200_OK) 
+                                return Response({"success" : False, "errors": productJancodeSerializer.errors}, status=status.HTTP_200_OK)
                         else:
-                            return Response({"success" : False, "errors": productVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
+                            return Response({"success" : False, "errors": productVarietySelectionSerializer.errors}, status=status.HTTP_200_OK)
             elif request.data['productVariation'] == 'two':
                 twoVariationItems = request.data['twoVariationItems']
                 mappingValues = twoVariationItems['mappingValue']
                 firstItem = twoVariationItems['items'][0]
                 secondItem = twoVariationItems['items'][1]
-                
+
                 firstProductVariety = ProductVariety.objects.get(id=firstItem['id'])
                 firstProductVariety.name = firstItem['horizontalItem']
                 firstProductVariety.save()
@@ -1516,7 +1517,7 @@ class EditProduct(APIView):
                             firstInsertProductVarietySelectionSerializer.save()
                             firstUrls[choice['choiceItem']] = firstInsertProductVarietySelectionSerializer.data['url']
                         else:
-                            return Response({"success" : False, "errors": firstInsertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
+                            return Response({"success" : False, "errors": firstInsertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK)
 
                 for choice in secondItem['choices']:
                     if 'id' in choice:
@@ -1535,7 +1536,7 @@ class EditProduct(APIView):
                             secondInsertProductVarietySelectionSerializer.save()
                             secondUrls[choice['choiceItem']] = secondInsertProductVarietySelectionSerializer.data['url']
                         else:
-                            return Response({"success" : False, "errors": secondInsertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK) 
+                            return Response({"success" : False, "errors": secondInsertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK)
 
                 for choice1 in firstItem['choices']:
                     for choice2 in secondItem['choices']:
@@ -1549,7 +1550,7 @@ class EditProduct(APIView):
                             productJancode.jan_code = tmpChoice['janCode']
                             productJancode.is_hidden = is_hidden
                             productJancode.stock = tmpChoice['stock']
-                            productJancode.save()   
+                            productJancode.save()
                         else:
                             hiddenValue = 0
                             if 'delete' in mappingValues[choice1['choiceItem']][choice2['choiceItem']]:
@@ -1576,7 +1577,7 @@ class UserUpdateBackground(APIView):
     parser_classes = [MultiPartParser]
     def post(self, request, userId, format='json'):
         return Response({"success" : True})
-        
+
 @csrf_exempt
 def change_language(request):
     """
