@@ -29,7 +29,7 @@ class InsertImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Image
         fields = ['url', 'image', 'is_hidden', 'created', 'modified']
-        
+
 class InsertUserSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(
             validators=[UniqueValidator(queryset=User.objects.all())]
@@ -46,7 +46,7 @@ class InsertUserSerializer(serializers.HyperlinkedModelSerializer):
         user = User.objects.create_user(validated_data['username'], validated_data['email'],
                 validated_data['password'])
         return user
-    
+
 class InsertAuthoritySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Authority
@@ -127,7 +127,7 @@ class InsertOrderReceiptSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = OrderReceipt
         fields = ['is_copy','to_name','amount','output_date','order_date','product_name','shop_name','address','payment','is_hidden','created','modified']
-        
+
 class InsertFinancialAccountSerialier(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = FinancialAccount
@@ -158,5 +158,3 @@ class InsertTaxRateSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TaxRate
         fields = ['start_date','end_date','tax_rate','reduced_tax_rate','is_hidden','created','modified']
-
-
