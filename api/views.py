@@ -812,7 +812,7 @@ class Pay(APIView):
                         'amount' : int(float(groupTotal)),
                         'tax': groupTax,
                         'shipping_fee': groupShippingFee,
-                        'shipped_date': '',
+                        'shipped_date': None,
                         'total_amount': int(float(groupTotal) + float(groupTax) + float(groupShippingFee)),
                         'name': addressSerializer.data['name'],
                         'zip1': addressSerializer.data['zip1'],
