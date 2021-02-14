@@ -143,8 +143,7 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
     address2 = serializers.CharField(
         allow_blank=True
     )
-    print(serializers.HyperlinkedModelSerializer)
-    shipped_date = serializers.CharField(allow_blank=True, allow_null=True)
+    shipped_date = serializers.DateField(allow_blank=True, allow_null=True)
     class Meta:
         model = Order
         fields = ['orderReceipts', 'seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','created','modified', 'tel_code', 'shipped_date']
