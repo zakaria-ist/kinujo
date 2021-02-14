@@ -812,7 +812,6 @@ class Pay(APIView):
                         'amount' : int(float(groupTotal)),
                         'tax': groupTax,
                         'shipping_fee': groupShippingFee,
-                        'shipped_date': None,
                         'total_amount': int(float(groupTotal) + float(groupTax) + float(groupShippingFee)),
                         'name': addressSerializer.data['name'],
                         'zip1': addressSerializer.data['zip1'],
@@ -826,9 +825,7 @@ class Pay(APIView):
                         'purchaser' : profileSerializer.data['url'],
                         'status' : 1
                     }
-                    print(order)
                     orderSerializer = InsertOrderSerializer(data=order, context=getContext())
-                    print(orderSerializer)
                     if orderSerializer.is_valid():
                         newOrder = orderSerializer.save()
                         varietyId = varieties['item_' + str(product['id'])]
