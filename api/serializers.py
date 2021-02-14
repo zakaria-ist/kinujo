@@ -143,6 +143,7 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
     address2 = serializers.CharField(
         allow_blank=True
     )
+    print(serializers.HyperlinkedModelSerializer)
     shipped_date = serializers.CharField(allow_blank=True, allow_null=True)
     class Meta:
         model = Order
