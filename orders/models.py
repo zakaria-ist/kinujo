@@ -24,7 +24,7 @@ class Order(models.Model):
     status = models.SmallIntegerField(null=True, choices=ORDER_STATUS)
     inquiry_number = models.CharField(max_length=128, default='')
     order_date = models.DateTimeField(auto_now_add=True, null=True)
-    shipped_date = models.DateField(null=True, blank=True)
+    shipped_date = models.DateField(default=None, null=True)
     payment = models.CharField(max_length=255, default='')
     customer_remark = models.TextField(default='')
     remark = models.TextField(default='')
