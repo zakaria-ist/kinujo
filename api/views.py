@@ -1501,6 +1501,11 @@ class EditProduct(APIView):
                 firstUrls = {}
                 secondUrls = {}
                 for choice in firstItem['choices']:
+                    if 'delete' in choice and choice['delete']:
+                        productVarietySelection = ProductVarietySelection.objects.get(id=choice['id'])
+                        productVarietySelection.is_hidden = 1
+                        productVarietySelection.save()
+
                     if 'id' in choice:
                         productVarietySelection = ProductVarietySelection.objects.get(id=choice['id'])
                         productVarietySelection.selection = choice['choiceItem']
@@ -1520,6 +1525,11 @@ class EditProduct(APIView):
                             return Response({"success" : False, "errors": firstInsertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK)
 
                 for choice in secondItem['choices']:
+                    if 'delete' in choice and choice['delete']:
+                        productVarietySelection = ProductVarietySelection.objects.get(id=choice['id'])
+                        productVarietySelection.is_hidden = 1
+                        productVarietySelection.save()
+                        
                     if 'id' in choice:
                         productVarietySelection = ProductVarietySelection.objects.get(id=choice['id'])
                         productVarietySelection.selection = choice['choiceItem']
