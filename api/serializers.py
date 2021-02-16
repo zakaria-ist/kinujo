@@ -29,7 +29,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Image
         fields = ['id', 'url', 'image', 'is_hidden', 'created', 'modified']
-        
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(
             validators=[UniqueValidator(queryset=User.objects.all())]
@@ -46,7 +46,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         user = User.objects.create_user(validated_data['username'], validated_data['email'],
                 validated_data['password'])
         return user
-    
+
 class AuthoritySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Authority
@@ -143,9 +143,10 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
     address2 = serializers.CharField(
         allow_blank=True
     )
+    shipped_date = serializers.DateField(allow_null=True)
     class Meta:
         model = Order
-        fields = ['orderReceipts', 'seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','created','modified', 'tel_code']
+        fields = ['orderReceipts', 'seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment','customer_remark','remark','is_hidden','created','modified', 'tel_code', 'shipped_date']
 class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
     order = OrderSerializer()
     product_jan_code = ProductJancodeSerializer()
@@ -157,7 +158,7 @@ class OrderProductCommissionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = OrderProductCommission
         fields = ['order_product','user','amount','is_sales','is_food','shipping_fee','is_hidden','created','modified']
-        
+
 class FinancialAccountSerialier(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = FinancialAccount
@@ -189,5 +190,3 @@ class TaxRateSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TaxRate
         fields = ['url', 'id', 'start_date','end_date','tax_rate','reduced_tax_rate','is_hidden','created','modified']
-
-
