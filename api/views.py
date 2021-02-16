@@ -795,7 +795,7 @@ def updateUserCommission(introducer, amount, tax):
     # # Monthly Payment
     try:
         monthlyPayment = MonthlyPayment.objects.get(year=year, month=month, user_id=introducer.id)
-        monthlyPayment.amount = int(monthlyPayment.amount) + amount
+        monthlyPayment.amount = int(monthlyPayment.amount) + int(amount + tax)
         monthlyPayment.save()
     except Exception as e:
         monthlyPaymentObject = {
@@ -876,7 +876,7 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
     # # Monthly Payment
     try:
         monthlyPayment = MonthlyPayment.objects.get(year=year, month=month, user_id=seller.id)
-        monthlyPayment.amount = int(monthlyPayment.amount) + seller_amount
+        monthlyPayment.amount = int(monthlyPayment.amount) + int(tax + seller_amount + shipping_fee)
         monthlyPayment.save()
     except Exception as e:
         monthlyPaymentObject = {
