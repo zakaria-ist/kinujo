@@ -645,7 +645,7 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
                     if float(commission) > 0:
                         amount = int(float(price) * float(commission))
                         orderProductComm = {
-                            'amount' : amount,
+                            'amount' : int(amount),
                             'is_sales' : 0,
                             'is_food' : 0,
                             'shipping_fee' : 0,
@@ -676,10 +676,10 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
                             remaining_amount = int(remaining_amount) - int(seller_amount)
                             sellerSerializer = ProfileSerializer(seller, context=getContext())
                             orderProductComm = {
-                                'amount' : seller_amount,
+                                'amount' : int(seller_amount),
                                 'is_sales' : 1,
                                 'is_food' : 0,
-                                'shipping_fee' : shipping_fee,
+                                'shipping_fee' : int(shipping_fee),
                                 'order_product' : orderProduct,
                                 'user' : sellerSerializer.data['url']
                             }
@@ -699,7 +699,7 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
                                 if master_user:
                                     sellerSerializer = ProfileSerializer(master_user, context=getContext())
                                     orderProductComm = {
-                                        'amount' : remaining_amount,
+                                        'amount' : int(remaining_amount),
                                         'is_sales' : 0,
                                         'is_food' : 0,
                                         'shipping_fee' : 0,
@@ -718,7 +718,7 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
                         else:
                             sellerSerializer = ProfileSerializer(seller, context=getContext())
                             orderProductComm = {
-                                'amount' : remaining_amount,
+                                'amount' : int(remaining_amount),
                                 'is_sales' : 1,
                                 'is_food' : 0,
                                 'shipping_fee' : shipping_fee,
@@ -749,8 +749,8 @@ def updateUserCommission(introducer, introducerSerializer, amount, tax):
         totalComm = TotalCommission.objects.get(year=year, month=month, authority=introducer.authority_id)
     except:
         totalComm = TotalCommission()
-    totalComm.order_count = totalComm.order_count + 1 if totalComm.order_count else 1
-    totalComm.amount = int(totalComm.amount) + amount if totalComm.amount else amount
+    totalComm.order_count = int(totalComm.order_count) + 1 if totalComm.order_count else 1
+    totalComm.amount = int(totalComm.amount) + int(amount) if totalComm.amount else int(amount)
     totalComm.year = year
     totalComm.month = month
     totalComm.authority_id = introducer.authority_id
@@ -761,10 +761,10 @@ def updateUserCommission(introducer, introducerSerializer, amount, tax):
         userCommission = UserCommision.objects.get(year=year, month=month, user_id=introducer.id)
     except:
         userCommission = UserCommision()
-    userCommission.order_count = userCommission.order_count + 1 if userCommission.order_count else 1
-    userCommission.amount = int(userCommission.amount) + amount if userCommission.amount else amount
-    userCommission.tax = int(userCommission.tax) + tax if userCommission.tax else tax
-    userCommission.total_amount = int(userCommission.total_amount) + int(tax + amount) if userCommission.total_amount else int(tax + amount)
+    userCommission.order_count = int(userCommission.order_count) + 1 if userCommission.order_count else 1
+    userCommission.amount = int(userCommission.amount) + int(amount) if userCommission.amount else int(amount)
+    userCommission.tax = int(userCommission.tax) + int(tax) if userCommission.tax else int(tax)
+    userCommission.total_amount = int(userCommission.total_amount) + int(tax) + int(amount) if userCommission.total_amount else int(tax) + int(amount)
     userCommission.year = year
     userCommission.month = month
     userCommission.user_id = introducer.id
@@ -775,7 +775,7 @@ def updateUserCommission(introducer, introducerSerializer, amount, tax):
         monthlyPayment = MonthlyPayment.objects.get(year=year, month=month, user_id=introducer.id)
     except:
         monthlyPayment = MonthlyPayment()
-    monthlyPayment.amount = int(monthlyPayment.amount) + int(amount + tax) if monthlyPayment.amount else int(amount + tax)
+    monthlyPayment.amount = int(monthlyPayment.amount) + int(amount) + int(tax) if monthlyPayment.amount else int(amount) + int(tax)
     monthlyPayment.year = year
     monthlyPayment.month = month
     monthlyPayment.paid_date = None
@@ -796,12 +796,12 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
         totalSale = TotalSale.objects.get(year=year, month=month)
     except:
         totalSale = TotalSale()
-    totalSale.sales_amount = int(totalSale.sales_amount) + seller_amount if totalSale.sales_amount else seller_amount
-    totalSale.tax = int(totalSale.tax) + tax if totalSale.tax else tax
-    totalSale.amount_tax_included = int(totalSale.amount_tax_included) + int(tax + seller_amount) if totalSale.amount_tax_included else int(tax + seller_amount)
-    totalSale.shipping_fee = int(totalSale.shipping_fee) + shipping_fee if totalSale.shipping_fee else shipping_fee
-    totalSale.total_amount = int(totalSale.total_amount) + int(tax + seller_amount + shipping_fee) if totalSale.total_amount else int(tax + seller_amount + shipping_fee)
-    totalSale.order_count = totalSale.order_count + 1 if totalSale.order_count else 1
+    totalSale.sales_amount = int(totalSale.sales_amount) + int(seller_amount) if totalSale.sales_amount else int(seller_amount)
+    totalSale.tax = int(totalSale.tax) + int(tax) if totalSale.tax else int(tax)
+    totalSale.amount_tax_included = int(totalSale.amount_tax_included) + int(tax) + int(seller_amount) if totalSale.amount_tax_included else int(tax) + int(seller_amount)
+    totalSale.shipping_fee = int(totalSale.shipping_fee) + int(shipping_fee) if totalSale.shipping_fee else int(shipping_fee)
+    totalSale.total_amount = int(totalSale.total_amount) + int(tax) + int(seller_amount) + int(shipping_fee) if totalSale.total_amount else int(tax) + int(seller_amount) + int(shipping_fee)
+    totalSale.order_count = int(totalSale.order_count) + 1 if totalSale.order_count else 1
     totalSale.year = year
     totalSale.month = month
     totalSale.modified = today_date
@@ -811,12 +811,12 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
         userSale = UserSale.objects.get(year=year, month=month, user_id=seller.id)
     except:
         userSale = UserSale()
-    userSale.order_count = userSale.order_count + 1 if userSale.order_count else 1
-    userSale.sales_amount = int(userSale.sales_amount) + seller_amount if userSale.sales_amount else seller_amount
+    userSale.order_count = int(userSale.order_count)+ 1 if userSale.order_count else 1
+    userSale.sales_amount = int(userSale.sales_amount) + int(seller_amount) if userSale.sales_amount else int(seller_amount)
     userSale.tax = int(userSale.tax) + tax if userSale.tax else tax
-    userSale.amount_tax_included = int(userSale.amount_tax_included) + int(tax + seller_amount) if userSale.amount_tax_included else int(tax + seller_amount)
-    userSale.shipping_fee = int(userSale.shipping_fee) + shipping_fee if userSale.shipping_fee else shipping_fee
-    userSale.total_amount = int(userSale.total_amount) + int(tax + seller_amount + shipping_fee) if userSale.total_amount else int(tax + seller_amount + shipping_fee)
+    userSale.amount_tax_included = int(userSale.amount_tax_included) + int(tax) + int(seller_amount) if userSale.amount_tax_included else int(tax) + int(seller_amount)
+    userSale.shipping_fee = int(userSale.shipping_fee) + int(shipping_fee) if userSale.shipping_fee else int(shipping_fee)
+    userSale.total_amount = int(userSale.total_amount) + int(tax) + int(seller_amount) + int(shipping_fee) if userSale.total_amount else int(tax) + int(seller_amount) + int(shipping_fee)
     userSale.user_id = seller.id
     userSale.year = year
     userSale.month = month
@@ -827,7 +827,7 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
         monthlyPayment = MonthlyPayment.objects.get(year=year, month=month, user_id=seller.id)
     except:
         monthlyPayment = MonthlyPayment()
-    monthlyPayment.amount = int(monthlyPayment.amount) + int(tax + seller_amount + shipping_fee) if monthlyPayment.amount else int(tax + seller_amount + shipping_fee)
+    monthlyPayment.amount = int(monthlyPayment.amount) + int(tax) + int(seller_amount) + int(shipping_fee) if monthlyPayment.amount else int(tax) + int(seller_amount) + int(shipping_fee)
     monthlyPayment.user_id = seller.id
     monthlyPayment.year = year
     monthlyPayment.month = month
@@ -921,10 +921,10 @@ class Pay(APIView):
                     product_name = product['name']
                     quantity = quantities['item_' + str(product['id'])]
                     if profileSerializer.data['is_seller']:
-                        amount = int(amount + (float(product['store_price']) * float(quantity)))
+                        amount = int(float(amount) + (float(product['store_price']) * float(quantity)))
                     else:
-                        amount = int(amount + (float(product['price']) * float(quantity)))
-                    total_tax = total_tax + int(float(amount) * float(tax.tax_rate))
+                        amount = int(float(amount) + (float(product['price']) * float(quantity)))
+                    total_tax = int(total_tax) + int(float(amount) * float(tax.tax_rate))
                     total_shipping_fee = int(float(total_shipping_fee) + float(product['shipping_fee']))
 
                     # if product['user']['url'] in groupProducts:
@@ -934,7 +934,7 @@ class Pay(APIView):
                     # else:
                     #     groupProducts[product['user']['url']] = [product]
                 
-                total_amount = amount + total_shipping_fee
+                total_amount = int(amount) + int(total_shipping_fee)
                 charge = stripe.Charge.create(
                     amount=int(float(total_amount)),
                     currency="jpy",
