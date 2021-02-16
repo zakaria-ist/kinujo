@@ -623,7 +623,7 @@ class UserByIds(APIView):
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
 
-def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fee, remaining_amount, seller, user):
+def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fee, remaining_amount, seller):
     try:
         tax_rate = TaxRate.objects.filter(is_hidden=False, is_enable=True, end_date__isnull=True).last().tax_rate
     except:
@@ -971,7 +971,7 @@ class Pay(APIView):
                 product_name = ''
 
                 for product in productSerializer.data:
-                    seller = product['user']['url']
+                    seller = Profile.objects.get(pk=product['user']['id'])
                     product_name = product['name']
                     quantity = quantities['item_' + str(product['id'])]
                     if profileSerializer.data['is_seller']:
@@ -1022,12 +1022,12 @@ class Pay(APIView):
                 if orderSerializer.is_valid():
                     newOrder = orderSerializer.save()
                     shop_name = ""
-                    if seller.nickname:
-                        shop_name = seller.nickname
-                    if seller.real_name:
-                        shop_name = seller.real_name
                     if seller.shop_name:
                         shop_name = seller.shop_name
+                    elif seller.real_name:
+                        shop_name = seller.real_name
+                    elif seller.nickname:
+                        shop_name = seller.nickname
 
                     orderReceipt = {
                         'is_copy' : 0,
@@ -1047,7 +1047,7 @@ class Pay(APIView):
                     else:
                         return Response({"success" : False, "errors" : orderReceiptSerializer.errors}, status=status.HTTP_200_OK)
 
-                    kinujo_product = if_kinujo_product(newOrder.seller_id)
+                    kinujo_product = if_kinujo_product(seller.id)
                     for product in productSerializer.data:
                         quantity = quantities['item_' + str(product['id'])]
                         price = 0
