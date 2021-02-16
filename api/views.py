@@ -721,7 +721,7 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
                                 'amount' : int(remaining_amount),
                                 'is_sales' : 1,
                                 'is_food' : 0,
-                                'shipping_fee' : shipping_fee,
+                                'shipping_fee' : int(shipping_fee),
                                 'order_product' : orderProduct,
                                 'user' : sellerSerializer.data['url']
                             }
@@ -1035,7 +1035,8 @@ class Pay(APIView):
                                 productJancode.stock = int(productJancode.stock) - int(quantity)
                                 productJancode.save()
 
-                            errors = calculateCommission(kinujo_product, groupTotal, orderProductSerializer.data['url'], profileSerializer.data['id'], product['shipping_fee'], groupTotal, seller)
+                            errors = calculateCommission(kinujo_product, groupTotal, orderProductSerializer.data['url'], 
+                                        profileSerializer.data['id'], int(float(product['shipping_fee'])), groupTotal, seller)
                             if errors:
                                 return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
                         else:
