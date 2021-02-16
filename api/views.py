@@ -679,7 +679,7 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
                                 'amount' : int(seller_amount),
                                 'is_sales' : 1,
                                 'is_food' : 0,
-                                'shipping_fee' : int(shipping_fee),
+                                'shipping_fee' : int(float(shipping_fee)),
                                 'order_product' : orderProduct,
                                 'user' : sellerSerializer.data['url']
                             }
@@ -691,7 +691,7 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
                                 return orderProductCommissionSerializer.errors
                             # # seller Sale
                             tax = int(float(seller_amount) * float(tax_rate))
-                            result = updateUserSales(seller, seller_amount, tax, shipping_fee)
+                            result = updateUserSales(seller, seller_amount, tax, float(shipping_fee))
 
                             if remaining_amount > 0:
                                 master_user = Profile.objects.filter(is_hidden=False, is_master=True, 
@@ -721,7 +721,7 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
                                 'amount' : int(remaining_amount),
                                 'is_sales' : 1,
                                 'is_food' : 0,
-                                'shipping_fee' : int(shipping_fee),
+                                'shipping_fee' : int(float(shipping_fee)),
                                 'order_product' : orderProduct,
                                 'user' : sellerSerializer.data['url']
                             }
@@ -733,7 +733,7 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
                                 return orderProductCommissionSerializer.errors
                             # # Master Sale
                             tax = int(float(remaining_amount) * float(tax_rate))
-                            result = updateUserSales(seller, remaining_amount, tax, shipping_fee)
+                            result = updateUserSales(seller, remaining_amount, tax, float(shipping_fee))
 
     except Exception as e:
         print('calculateCommission', e)
@@ -799,8 +799,8 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
     totalSale.sales_amount = int(totalSale.sales_amount) + int(seller_amount) if totalSale.sales_amount else int(seller_amount)
     totalSale.tax = int(totalSale.tax) + int(tax) if totalSale.tax else int(tax)
     totalSale.amount_tax_included = int(totalSale.amount_tax_included) + int(tax) + int(seller_amount) if totalSale.amount_tax_included else int(tax) + int(seller_amount)
-    totalSale.shipping_fee = int(totalSale.shipping_fee) + int(shipping_fee) if totalSale.shipping_fee else int(shipping_fee)
-    totalSale.total_amount = int(totalSale.total_amount) + int(tax) + int(seller_amount) + int(shipping_fee) if totalSale.total_amount else int(tax) + int(seller_amount) + int(shipping_fee)
+    totalSale.shipping_fee = int(totalSale.shipping_fee) + int(float(shipping_fee)) if totalSale.shipping_fee else int(float(shipping_fee))
+    totalSale.total_amount = int(totalSale.total_amount) + int(tax) + int(seller_amount) + int(float(shipping_fee)) if totalSale.total_amount else int(tax) + int(seller_amount) + int(float(shipping_fee))
     totalSale.order_count = int(totalSale.order_count) + 1 if totalSale.order_count else 1
     totalSale.year = year
     totalSale.month = month
@@ -815,8 +815,8 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
     userSale.sales_amount = int(userSale.sales_amount) + int(seller_amount) if userSale.sales_amount else int(seller_amount)
     userSale.tax = int(userSale.tax) + tax if userSale.tax else tax
     userSale.amount_tax_included = int(userSale.amount_tax_included) + int(tax) + int(seller_amount) if userSale.amount_tax_included else int(tax) + int(seller_amount)
-    userSale.shipping_fee = int(userSale.shipping_fee) + int(shipping_fee) if userSale.shipping_fee else int(shipping_fee)
-    userSale.total_amount = int(userSale.total_amount) + int(tax) + int(seller_amount) + int(shipping_fee) if userSale.total_amount else int(tax) + int(seller_amount) + int(shipping_fee)
+    userSale.shipping_fee = int(userSale.shipping_fee) + int(float(shipping_fee)) if userSale.shipping_fee else int(float(shipping_fee))
+    userSale.total_amount = int(userSale.total_amount) + int(tax) + int(seller_amount) + int(float(shipping_fee)) if userSale.total_amount else int(tax) + int(seller_amount) + int(float(shipping_fee))
     userSale.user_id = seller.id
     userSale.year = year
     userSale.month = month
@@ -827,7 +827,7 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
         monthlyPayment = MonthlyPayment.objects.get(year=year, month=month, user_id=seller.id)
     except:
         monthlyPayment = MonthlyPayment()
-    monthlyPayment.amount = int(monthlyPayment.amount) + int(tax) + int(seller_amount) + int(shipping_fee) if monthlyPayment.amount else int(tax) + int(seller_amount) + int(shipping_fee)
+    monthlyPayment.amount = int(monthlyPayment.amount) + int(tax) + int(seller_amount) + int(float(shipping_fee)) if monthlyPayment.amount else int(tax) + int(seller_amount) + int(float(shipping_fee))
     monthlyPayment.user_id = seller.id
     monthlyPayment.year = year
     monthlyPayment.month = month
@@ -1036,7 +1036,7 @@ class Pay(APIView):
                                 productJancode.save()
 
                             errors = calculateCommission(kinujo_product, groupTotal, orderProductSerializer.data['url'], 
-                                        profileSerializer.data['id'], int(float(product['shipping_fee'])), groupTotal, seller)
+                                        profileSerializer.data['id'], groupShippingFee, groupTotal, seller)
                             if errors:
                                 return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
                         else:
