@@ -834,7 +834,8 @@ class Pay(APIView):
                         variety = None
                         variety = ProductJancode.objects.get(id=varietyId)
                         varietySerializer = ProductJancodeSerializer(variety, context=getContext())
-                        variety = varietySerializer.data['url']
+                        if varietySerializer.is_valid():
+                            variety = varietySerializer.data['url']
 
                         orderIds.append(orderSerializer.data['id'])
 
@@ -962,22 +963,22 @@ class Pay(APIView):
                             productJancode.save()
 
                         orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
-
-                        orderProductComm = {
-                            'amount' : groupTotal,
-                            'is_sales' : 1,
-                            'shipping_fee' : groupShippingFee,
-                            'order_product' : orderProductSerializer.data['url'],
-                            'user' : product['user']['url']
-                        }
-                        orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
-                        if orderProductCommissionSerializer.is_valid():
-                            orderProductCommissionSerializer.save()
-                        else:
-                            return Response({"success" : False, "errors" : orderProductCommissionSerializer.errors}, status=status.HTTP_200_OK)
-
                         if orderProductSerializer.is_valid():
                             orderProductSerializer.save()
+
+                            orderProductComm = {
+                                'amount' : groupTotal,
+                                'is_sales' : 1,
+                                'shipping_fee' : groupShippingFee,
+                                'order_product' : orderProductSerializer.data['url'],
+                                'user' : product['user']['url']
+                            }
+                            orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+                            if orderProductCommissionSerializer.is_valid():
+                                orderProductCommissionSerializer.save()
+                            else:
+                                return Response({"success" : False, "errors" : orderProductCommissionSerializer.errors}, status=status.HTTP_200_OK)
+
                             errors = calculateCommission(price, orderProductSerializer.data['url'], profileSerializer.data['id'], product['shipping_fee'])
                             if errors:
                                 return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
