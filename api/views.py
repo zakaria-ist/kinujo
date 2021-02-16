@@ -660,12 +660,10 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
                         return orderProductCommissionSerializer.errors
                     tax = int(float(amount) * float(tax_rate))
                     result = updateUserCommission(introducer, amount, tax)
-                    if result[0]:
-                        # new remaining_amount   
-                        remaining_amount = int(remaining_amount) - int(float(price) * float(commission))
-                        return calculateCommission(kinujo_product, price, orderProduct, introducerSerializer.data['id'], shipping_fee, remaining_amount, seller)
-                    else:
-                        return result[1]
+                    # new remaining_amount   
+                    remaining_amount = int(remaining_amount) - int(float(price) * float(commission))
+                    return calculateCommission(kinujo_product, price, orderProduct, introducerSerializer.data['id'], shipping_fee, remaining_amount, seller)
+                    
                     
                 return calculateCommission(kinujo_product, price, orderProduct, introducerSerializer.data['id'], shipping_fee, remaining_amount, seller)
             else:
