@@ -28,7 +28,7 @@ from prefectures.models import Prefecture, CountryCode
 from products.models import ProductCategory, Product, ProductImage, ProductVariety, ProductVarietySelection, ProductJancode
 from profiles.models import FinancialAccount, Authority, Profile, UserSale, UserCommision, MonthlyPayment, Address
 from taxes.models import TaxRate
-from orders.view import if_kinujo_product
+from orders.views import if_kinujo_product
 from utilities.constants import AUTHORITY_TYPE
 
 def getContext():
