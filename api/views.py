@@ -628,113 +628,113 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
         tax_rate = TaxRate.objects.filter(is_hidden=False, is_enable=True, end_date__isnull=True).last().tax_rate
     except:
         tax_rate = 0
-    # try:
-    profile = Profile.objects.get(id=userId)
-    if profile:
-        profileSerializer = ProfileSerializer(profile, context=getContext())
-        if profileSerializer.data['introducer']:
-            introducers = profileSerializer.data['introducer'].split("/")
-            introducer = introducers[len(introducers)-2]
-            introducer = Profile.objects.get(id=introducer)
-            if introducer and introducer.authority_id != AUTHORITY_TYPE['MASTER']:
-                introducerSerializer = ProfileSerializer(introducer, context=getContext())
-                if kinujo_product:
-                    commission = introducerSerializer.data['authority']['official_commission_rate']
-                else:
-                    commission = introducerSerializer.data['authority']['commission_rate']
-                if float(commission) > 0:
-                    amount = int(float(price) * float(commission))
-                    orderProductComm = {
-                        'amount' : int(amount),
-                        'is_sales' : 0,
-                        'is_food' : 0,
-                        'shipping_fee' : 0,
-                        'order_product' : orderProduct,
-                        'user' : introducerSerializer.data['url']
-                    }
-                    orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
-
-                    if orderProductCommissionSerializer.is_valid():
-                        orderProductCommissionSerializer.save()
+    try:
+        profile = Profile.objects.get(id=userId)
+        if profile:
+            profileSerializer = ProfileSerializer(profile, context=getContext())
+            if profileSerializer.data['introducer']:
+                introducers = profileSerializer.data['introducer'].split("/")
+                introducer = introducers[len(introducers)-2]
+                introducer = Profile.objects.get(id=introducer)
+                if introducer and introducer.authority_id != AUTHORITY_TYPE['MASTER']:
+                    introducerSerializer = ProfileSerializer(introducer, context=getContext())
+                    if kinujo_product:
+                        commission = introducerSerializer.data['authority']['official_commission_rate']
                     else:
-                        return orderProductCommissionSerializer.errors
-                    tax = int(float(amount) * float(tax_rate))
-                    result = updateUserCommission(introducer, amount, tax)
-                    # new remaining_amount   
-                    remaining_amount = int(remaining_amount) - int(float(price) * float(commission))
+                        commission = introducerSerializer.data['authority']['commission_rate']
+                    if float(commission) > 0:
+                        amount = int(float(price) * float(commission))
+                        orderProductComm = {
+                            'amount' : int(amount),
+                            'is_sales' : 0,
+                            'is_food' : 0,
+                            'shipping_fee' : 0,
+                            'order_product' : orderProduct,
+                            'user' : introducerSerializer.data['url']
+                        }
+                        orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+
+                        if orderProductCommissionSerializer.is_valid():
+                            orderProductCommissionSerializer.save()
+                        else:
+                            return orderProductCommissionSerializer.errors
+                        tax = int(float(amount) * float(tax_rate))
+                        result = updateUserCommission(introducer, amount, tax)
+                        # new remaining_amount   
+                        remaining_amount = int(remaining_amount) - int(float(price) * float(commission))
+                        return calculateCommission(kinujo_product, price, orderProduct, introducerSerializer.data['id'], shipping_fee, remaining_amount, seller)
+                        
+                        
                     return calculateCommission(kinujo_product, price, orderProduct, introducerSerializer.data['id'], shipping_fee, remaining_amount, seller)
-                    
-                    
-                return calculateCommission(kinujo_product, price, orderProduct, introducerSerializer.data['id'], shipping_fee, remaining_amount, seller)
-            else:
-                if remaining_amount > 0:
-                    if not kinujo_product:
-                        seller_commission = 0.65
-                        seller_amount = int(float(price) * float(seller_commission))
-                        remaining_amount = int(remaining_amount) - int(seller_amount)
-                        sellerSerializer = ProfileSerializer(seller, context=getContext())
-                        orderProductComm = {
-                            'amount' : int(seller_amount),
-                            'is_sales' : 1,
-                            'is_food' : 0,
-                            'shipping_fee' : int(float(shipping_fee)),
-                            'order_product' : orderProduct,
-                            'user' : sellerSerializer.data['url']
-                        }
-                        orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+                else:
+                    if remaining_amount > 0:
+                        if not kinujo_product:
+                            seller_commission = 0.65
+                            seller_amount = int(float(price) * float(seller_commission))
+                            remaining_amount = int(remaining_amount) - int(seller_amount)
+                            sellerSerializer = ProfileSerializer(seller, context=getContext())
+                            orderProductComm = {
+                                'amount' : int(seller_amount),
+                                'is_sales' : 1,
+                                'is_food' : 0,
+                                'shipping_fee' : int(float(shipping_fee)),
+                                'order_product' : orderProduct,
+                                'user' : sellerSerializer.data['url']
+                            }
+                            orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
 
-                        if orderProductCommissionSerializer.is_valid():
-                            orderProductCommissionSerializer.save()
+                            if orderProductCommissionSerializer.is_valid():
+                                orderProductCommissionSerializer.save()
+                            else:
+                                return orderProductCommissionSerializer.errors
+                            # # seller Sale
+                            tax = int(float(seller_amount) * float(tax_rate))
+                            result = updateUserSales(seller, seller_amount, tax, float(shipping_fee))
+
+                            if remaining_amount > 0:
+                                master_user = Profile.objects.filter(is_hidden=False, is_master=True, 
+                                        authority_id=AUTHORITY_TYPE['MASTER']).first()
+                                if master_user:
+                                    sellerSerializer = ProfileSerializer(master_user, context=getContext())
+                                    orderProductComm = {
+                                        'amount' : int(remaining_amount),
+                                        'is_sales' : 0,
+                                        'is_food' : 0,
+                                        'shipping_fee' : 0,
+                                        'order_product' : orderProduct,
+                                        'user' : sellerSerializer.data['url']
+                                    }
+                                    orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+
+                                    if orderProductCommissionSerializer.is_valid():
+                                        orderProductCommissionSerializer.save()
+                                        # master commission
+                                        tax = int(float(remaining_amount) * float(tax_rate))
+                                        result = updateUserCommission(master_user, remaining_amount, tax)
+                                    else:
+                                        return orderProductCommissionSerializer.errors
                         else:
-                            return orderProductCommissionSerializer.errors
-                        # # seller Sale
-                        tax = int(float(seller_amount) * float(tax_rate))
-                        result = updateUserSales(seller, seller_amount, tax, float(shipping_fee))
+                            sellerSerializer = ProfileSerializer(seller, context=getContext())
+                            orderProductComm = {
+                                'amount' : int(remaining_amount),
+                                'is_sales' : 1,
+                                'is_food' : 0,
+                                'shipping_fee' : int(float(shipping_fee)),
+                                'order_product' : orderProduct,
+                                'user' : sellerSerializer.data['url']
+                            }
+                            orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
 
-                        if remaining_amount > 0:
-                            master_user = Profile.objects.filter(is_hidden=False, is_master=True, 
-                                    authority_id=AUTHORITY_TYPE['MASTER']).first()
-                            if master_user:
-                                sellerSerializer = ProfileSerializer(master_user, context=getContext())
-                                orderProductComm = {
-                                    'amount' : int(remaining_amount),
-                                    'is_sales' : 0,
-                                    'is_food' : 0,
-                                    'shipping_fee' : 0,
-                                    'order_product' : orderProduct,
-                                    'user' : sellerSerializer.data['url']
-                                }
-                                orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+                            if orderProductCommissionSerializer.is_valid():
+                                orderProductCommissionSerializer.save()
+                            else:
+                                return orderProductCommissionSerializer.errors
+                            # # Master Sale
+                            tax = int(float(remaining_amount) * float(tax_rate))
+                            result = updateUserSales(seller, remaining_amount, tax, float(shipping_fee))
 
-                                if orderProductCommissionSerializer.is_valid():
-                                    orderProductCommissionSerializer.save()
-                                    # master commission
-                                    tax = int(float(remaining_amount) * float(tax_rate))
-                                    result = updateUserCommission(master_user, remaining_amount, tax)
-                                else:
-                                    return orderProductCommissionSerializer.errors
-                    else:
-                        sellerSerializer = ProfileSerializer(seller, context=getContext())
-                        orderProductComm = {
-                            'amount' : int(remaining_amount),
-                            'is_sales' : 1,
-                            'is_food' : 0,
-                            'shipping_fee' : int(float(shipping_fee)),
-                            'order_product' : orderProduct,
-                            'user' : sellerSerializer.data['url']
-                        }
-                        orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
-
-                        if orderProductCommissionSerializer.is_valid():
-                            orderProductCommissionSerializer.save()
-                        else:
-                            return orderProductCommissionSerializer.errors
-                        # # Master Sale
-                        tax = int(float(remaining_amount) * float(tax_rate))
-                        result = updateUserSales(seller, remaining_amount, tax, float(shipping_fee))
-
-    # except Exception as e:
-    #     print('calculateCommission', e)
+    except Exception as e:
+        print('calculateCommission', e)
 
     return ''
 
@@ -743,9 +743,10 @@ def updateUserCommission(introducer, introducerSerializer, amount, tax):
     year = today_date.year
     month = today_date.month
 
-    try:
-        totalComm = TotalCommission.objects.get(year=year, month=month, authority=introducer.authority_id)
-    except:
+    totalComm = TotalCommission.objects.filter(is_hidden=False, year=year, month=month, authority=introducer.authority_id)
+    if totalComm.exists():
+        totalComm = totalComm.last()
+    else:
         totalComm = TotalCommission()
     totalComm.order_count = int(totalComm.order_count) + 1 if totalComm.order_count else 1
     totalComm.amount = int(totalComm.amount) + int(amount) if totalComm.amount else int(amount)
@@ -755,25 +756,31 @@ def updateUserCommission(introducer, introducerSerializer, amount, tax):
     totalComm.modified = today_date
     totalComm.save()
 
-    try:
-        userCommission = UserCommision.objects.get(year=year, month=month, user_id=introducer.id)
-    except:
+
+    userCommission = UserCommision.objects.filter(is_hidden=False, year=year, month=month, user_id=introducer.id)
+    if userCommission.exists():
+        userCommission = userCommission.last()
+    else:
         userCommission = UserCommision()
     userCommission.order_count = int(userCommission.order_count) + 1 if userCommission.order_count else 1
     userCommission.amount = int(userCommission.amount) + int(amount) if userCommission.amount else int(amount)
     userCommission.tax = int(userCommission.tax) + int(tax) if userCommission.tax else int(tax)
-    userCommission.total_amount = int(userCommission.total_amount) + int(tax) + int(amount) if userCommission.total_amount else int(tax) + int(amount)
+    userCommission.total_amount = int(userCommission.total_amount) + int(tax) + int(amount) \
+        if userCommission.total_amount else int(tax) + int(amount)
     userCommission.year = year
     userCommission.month = month
     userCommission.user_id = introducer.id
     userCommission.modified = today_date
     userCommission.save()
     
-    try:
-        monthlyPayment = MonthlyPayment.objects.get(year=year, month=month, user_id=introducer.id)
-    except:
+    
+    monthlyPayment = MonthlyPayment.objects.filter(is_hidden=False, year=year, month=month, user_id=introducer.id)
+    if monthlyPayment.exists():
+        monthlyPayment = monthlyPayment.last()
+    else:
         monthlyPayment = MonthlyPayment()
-    monthlyPayment.amount = int(monthlyPayment.amount) + int(amount) + int(tax) if monthlyPayment.amount else int(amount) + int(tax)
+    monthlyPayment.amount = int(monthlyPayment.amount) + int(amount) + int(tax) \
+        if monthlyPayment.amount else int(amount) + int(tax)
     monthlyPayment.year = year
     monthlyPayment.month = month
     monthlyPayment.paid_date = None
@@ -790,42 +797,56 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
     year = today_date.year
     month = today_date.month
 
-    try:
-        totalSale = TotalSale.objects.get(year=year, month=month)
-    except:
+    totalSale = TotalSale.objects.filter(is_hidden=False, year=year, month=month)
+    if totalSale.exists():
+        totalSale = totalSale.last()
+    else:
         totalSale = TotalSale()
-    totalSale.sales_amount = int(totalSale.sales_amount) + int(seller_amount) if totalSale.sales_amount else int(seller_amount)
+    totalSale.sales_amount = int(totalSale.sales_amount) + int(seller_amount) \
+        if totalSale.sales_amount else int(seller_amount)
     totalSale.tax = int(totalSale.tax) + int(tax) if totalSale.tax else int(tax)
-    totalSale.amount_tax_included = int(totalSale.amount_tax_included) + int(tax) + int(seller_amount) if totalSale.amount_tax_included else int(tax) + int(seller_amount)
-    totalSale.shipping_fee = int(totalSale.shipping_fee) + int(float(shipping_fee)) if totalSale.shipping_fee else int(float(shipping_fee))
-    totalSale.total_amount = int(totalSale.total_amount) + int(tax) + int(seller_amount) + int(float(shipping_fee)) if totalSale.total_amount else int(tax) + int(seller_amount) + int(float(shipping_fee))
+    totalSale.amount_tax_included = int(totalSale.amount_tax_included) + int(tax) + int(seller_amount) \
+        if totalSale.amount_tax_included else int(tax) + int(seller_amount)
+    totalSale.shipping_fee = int(totalSale.shipping_fee) + int(float(shipping_fee)) \
+        if totalSale.shipping_fee else int(float(shipping_fee))
+    totalSale.total_amount = int(totalSale.total_amount) + int(tax) + int(seller_amount) + int(float(shipping_fee)) \
+        if totalSale.total_amount else int(tax) + int(seller_amount) + int(float(shipping_fee))
     totalSale.order_count = int(totalSale.order_count) + 1 if totalSale.order_count else 1
     totalSale.year = year
     totalSale.month = month
     totalSale.modified = today_date
     totalSale.save()
 
-    try:
-        userSale = UserSale.objects.get(year=year, month=month, user_id=seller.id)
-    except:
+    
+    userSale = UserSale.objects.filter(is_hidden=False, year=year, month=month, user_id=seller.id)
+    if userSale.exists():
+        userSale = userSale.last()
+    else:
         userSale = UserSale()
     userSale.order_count = int(userSale.order_count)+ 1 if userSale.order_count else 1
-    userSale.sales_amount = int(userSale.sales_amount) + int(seller_amount) if userSale.sales_amount else int(seller_amount)
+    userSale.sales_amount = int(userSale.sales_amount) + int(seller_amount) \
+        if userSale.sales_amount else int(seller_amount)
     userSale.tax = int(userSale.tax) + tax if userSale.tax else tax
-    userSale.amount_tax_included = int(userSale.amount_tax_included) + int(tax) + int(seller_amount) if userSale.amount_tax_included else int(tax) + int(seller_amount)
-    userSale.shipping_fee = int(userSale.shipping_fee) + int(float(shipping_fee)) if userSale.shipping_fee else int(float(shipping_fee))
-    userSale.total_amount = int(userSale.total_amount) + int(tax) + int(seller_amount) + int(float(shipping_fee)) if userSale.total_amount else int(tax) + int(seller_amount) + int(float(shipping_fee))
+    userSale.amount_tax_included = int(userSale.amount_tax_included) + int(tax) + int(seller_amount) \
+        if userSale.amount_tax_included else int(tax) + int(seller_amount)
+    userSale.shipping_fee = int(userSale.shipping_fee) + int(float(shipping_fee)) \
+        if userSale.shipping_fee else int(float(shipping_fee))
+    userSale.total_amount = int(userSale.total_amount) + int(tax) + int(seller_amount) + int(float(shipping_fee)) \
+        if userSale.total_amount else int(tax) + int(seller_amount) + int(float(shipping_fee))
     userSale.user_id = seller.id
     userSale.year = year
     userSale.month = month
     userSale.modified = today_date
     userSale.save()
 
-    try:
-        monthlyPayment = MonthlyPayment.objects.get(year=year, month=month, user_id=seller.id)
-    except:
+    
+    monthlyPayment = MonthlyPayment.objects.filter(is_hidden=False, year=year, month=month, user_id=seller.id)
+    if monthlyPayment.exists():
+        monthlyPayment = monthlyPayment.last()
+    else:
         monthlyPayment = MonthlyPayment()
-    monthlyPayment.amount = int(monthlyPayment.amount) + int(tax) + int(seller_amount) + int(float(shipping_fee)) if monthlyPayment.amount else int(tax) + int(seller_amount) + int(float(shipping_fee))
+    monthlyPayment.amount = int(monthlyPayment.amount) + int(tax) + int(seller_amount) + int(float(shipping_fee)) \
+        if monthlyPayment.amount else int(tax) + int(seller_amount) + int(float(shipping_fee))
     monthlyPayment.user_id = seller.id
     monthlyPayment.year = year
     monthlyPayment.month = month
