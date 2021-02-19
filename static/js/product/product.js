@@ -116,7 +116,7 @@ function prepareVarientTwoTable(json){
                         stocks2 = v_stocks2[indx];
 
                         let addInfoCol = document.createElement('div');
-                        addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value-r${i}c${j}" style="display: none;">${firstOfTwoVariantChoicesOriginal[j]} / ${lastOfTwoVariantChoicesOriginal[i]}</p><p class="text-center table-p" id="jan-id-r${i}c${j}">${janCode2}</p><p class="text-center table-p" id="stock-id-r${i}c${j}">Stock:${stocks2}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+                        addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value-r${i}c${j}" style="display: none;">${firstOfTwoVariantChoicesOriginal[j]} / ${lastOfTwoVariantChoicesOriginal[i]}</p><p class="text-center table-p" id="jan-id-r${i}c${j}">${janCode2}</p><p class="text-center table-p" id="stock-id-r${i}c${j}">${get_translate("Stock:")}${stocks2}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
                     
                         let id = `two-variant-cont-row-${i}`;
                         if(addInfoCol.firstChild){
@@ -169,7 +169,7 @@ function prepareVarientTwoTable(json){
                             stocks2 = v_stocks2[indx];
                             
                             let addInfoCol = document.createElement('div');
-                            addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value-r${i}c${j}" style="display: none;">${firstOfTwoVariantChoicesOriginal[j]} / ${lastOfTwoVariantChoicesOriginal[i]}</p><p class="text-center table-p" id="jan-id-r${i}c${j}">${janCode2}</p><p class="text-center table-p" id="stock-id-r${i}c${j}">Stock:${stocks2}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+                            addInfoCol.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="table-p" id="cell-name-value-r${i}c${j}" style="display: none;">${firstOfTwoVariantChoicesOriginal[j]} / ${lastOfTwoVariantChoicesOriginal[i]}</p><p class="text-center table-p" id="jan-id-r${i}c${j}">${janCode2}</p><p class="text-center table-p" id="stock-id-r${i}c${j}">${get_translate("Stock:")}${stocks2}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-r${i}c${j}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
     
                             let id = `two-variant-cont-row-${i}`;
                             if(addInfoCol.firstChild){
@@ -251,7 +251,7 @@ function prepareVarientOneTable(json){
         "ver_name": v_name,
       });
       newTableChoices.innerHTML = `<div class="variant-title variant-col" id="cell-name-value-${i}">${choicesValue}</div>`;
-      newTableContent.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">Stock:${stockValue}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
+      newTableContent.innerHTML = `<div class="variant-info variant-col" style="display: grid;"><p class="text-center table-p" id="jan-id-${i}">${janValue}</p><p class="text-center table-p" id="stock-id-${i}">${get_translate("Stock:")}${stockValue}</p><p class="table-p" style="align-content: baseline;"><i class="far edit-btn" id="edit-id-${i}" onclick="editBtn(this);">&#xf044;</i></p></div>`;
       
       
       if(newTableChoices.firstChild){

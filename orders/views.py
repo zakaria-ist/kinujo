@@ -19,7 +19,7 @@ from profiles.models import Profile, Authority, UserSale, UserCommision, Monthly
 from taxes.models import TaxRate
 from utilities.constants import AUTHORITY_TYPE, ORDER_STATUS, ORDER_STATUS_JA
 from utilities.common import round_number
-
+from django.utils.translation import ugettext as _
 
 
 @login_required
@@ -39,49 +39,48 @@ def export_order_list_as_csv(request):
     """
     Method to get order list as CSV.
     """
+    try:
+        filter_str = eval(request.POST.get('param0'))
+        seller_id = request.session['login_profile_id']
 
-    filter_str = eval(request.POST.get('param0'))
-    seller_id = request.session['login_profile_id']
+        order_list = Order.objects.filter(is_hidden=False, seller_id=seller_id)
+        if len(filter_str):
+            order_list = order_list.filter(status__in=filter_str)
+        response = HttpResponse(content_type='text/csv; charset=Shift-JIS')
+        response['Content-Disposition'] = 'attachment; filename="OrderList.csv"'
 
-    order_list = Order.objects.filter(is_hidden=False, seller_id=seller_id)
-    if len(filter_str):
-        order_list = order_list.filter(status__in=filter_str)
+        writer = csv.writer(response)
+        writer.writerow([_('Order Number'), _('Order Date'), _('Product Name'), _('Orderer'), _('Address'), _('AmountIncludeTax'), _('Status'), _('Shipment Date'), _('Tracking Number')])
 
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="OrderList.csv"'
-    writer = csv.writer(response)
-    writer.writerow(['order_number', 'order_date', 'product_name', 'orderer', 'address', 'amount', 'status', 'shipped_date', 'tracking_number'])
+        for field in order_list:
+            product = OrderProduct.objects.filter(order_id=field.id).first()
+            product_jan = ProductJancode.objects.get(pk=product.product_jan_code_id)
+            j_product = get_jan_products(product_jan)
+            status = ''
+            if request.LANGUAGE_CODE == 'en':
+                if field.status == 0:
+                    status = 'NEW'
+                elif field.status == 1:
+                    status = 'IN PROCESSING'
+                elif field.status == 2:
+                    status = 'SHIPMENT COMPLETE'
+            else:
+                if field.status == 0:
+                    status = '新着'
+                elif field.status == 1:
+                    status = '準備中'
+                elif field.status == 2:
+                    status = '発送完了'
+            writer.writerow([str(field.id), field.order_date.strftime("%Y-%m-%d") if field.order_date else '',
+                            j_product.name, field.name,
+                            _("Zip:") + ' ' + field.zip1 + '  ' + field.address1,
+                            intcomma("%.0f" % field.total_amount), status,
+                            field.shipped_date.strftime("%Y-%m-%d") if field.shipped_date else '',
+                            field.inquiry_number if field.inquiry_number else ''])
 
-    for field in order_list:
-        product = OrderProduct.objects.filter(order_id=field.id).first()
-        product_jan = ProductJancode.objects.get(pk=product.product_jan_code_id)
-        j_product = get_jan_products(product_jan)
-        
-        status = ''
-        if request.LANGUAGE_CODE == 'en':
-            if field.status == 0:
-                status = 'NEW'
-            elif field.status == 1:
-                status = 'IN PROCESSING'
-            elif field.status == 2:
-                status = 'SHIPMENT COMPLETE'
-        else:
-            if field.status == 0:
-                status = '新着'
-            elif field.status == 1:
-                status = '準備中'
-            elif field.status == 2:
-                status = '発送完了'
-        writer.writerow([str(field.id), field.order_date.strftime("%Y-%m-%d") if field.order_date else '', 
-                        j_product.name, field.name, 
-                        field.address1 + '  Zip: ' + field.zip1, 
-                        intcomma("%.0f" % field.total_amount), status,
-                        field.shipped_date.strftime("%Y-%m-%d") if field.shipped_date else '', 
-                        field.inquiry_number if field.inquiry_number else ''])
-        
-
+    except Exception as e:
+        print(e)
     return response
-
 
 @login_required
 def OrderList__asJson(request):
@@ -156,7 +155,7 @@ def OrderList__asJson(request):
             "image_path": image_path,
             "product_name": j_product.name,
             "name": field.name,
-            "address": field.address1 + '  Zip: ' + field.zip1,
+            "address": _("Zip:") + ' ' + field.zip1 + '  ' + field.address1,
             "amount": field.total_amount,
             "status": status,
             "shipped_date": field.shipped_date.strftime("%Y-%m-%d") if field.shipped_date else '',
