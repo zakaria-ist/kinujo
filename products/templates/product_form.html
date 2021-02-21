@@ -798,7 +798,7 @@
           btnItem.style.float = 'right';
           btnItem.style.fontSize = '0.8rem';
           btnItem.style.padding = '0px';
-          btnItem.innerHTML = `add / edit / delete items`;
+          btnItem.innerHTML = get_translate("add / edit / delete items");
         } catch (e) {
 
         }
@@ -1154,14 +1154,20 @@
           title: get_translate('Warning'),
           content: get_translate('Are you sure?'),
           buttons: {
-              Yes: function () {
+            Yes:{
+                text: get_translate("Confirm"),
+                function () {
                   trget.parentNode.parentNode.removeChild(trget.parentNode);
                   let optionArray = document.getElementsByClassName('one-variant-counter');
                   for(let i = 0; i < optionArray.length; i++){
                     optionArray[i].innerHTML = i + 1;
                   }
+                }
               },
-              Cancel: function () {}
+              Cancel: {
+                text: get_translate("Cancel"),
+                function () {}
+              }
           }
       });
     }
@@ -1434,12 +1440,12 @@
             <p class="col-md-12 text-danger" id="janErrorEdit"></p>
             <div class="row">
               <div class="form-group col-md-5 m-2 pl-5">
-                <label for="jan-code-one-modal">Jan Code</label>
-                <input type="text" value="${janDiv.innerHTML}" class="form-control jan-input" id="jan-code-one-modal" placeholder="Enter Jancode"> 
+                <label for="jan-code-one-modal">${get_translate("Jan Code")}</label>
+                <input type="text" value="${janDiv.innerHTML}" class="form-control jan-input" id="jan-code-one-modal" placeholder="${get_translate("Enter Jancode")}"> 
               </div>
               <div class="form-group col-md-5 m-2 pl-4">
-                <label for="stock-one-modal">Stock Quantity: ${oldStock}</label>
-                <input type="text" value="" class="form-control text-right" id="stock-one-modal" placeholder="Enter Stock"> 
+                <label for="stock-one-modal">${get_translate("Stock Quantity")} : ${oldStock}</label>
+                <input type="text" value="" class="form-control text-right" id="stock-one-modal" placeholder="${get_translate("Enter Stock")}">
               </div>
             </div>
 

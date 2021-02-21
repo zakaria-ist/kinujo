@@ -311,18 +311,18 @@ function get_translate(e){
 }
 
 var translation_dict = {
-    "Yes": "可",
+    "Yes": "OK",
     "Save": "保存する",
     "Cancel": "キャンセル",
-    "Warning": "警告",
+    "Warning": " ",
     "Error": "エラー",
     "Are you sure?": "削除しますか？",
     "Wrong Quantity!": "数量が間違っています！",
-    "Order quantity must be greater than Zero": "注文数量はゼロより大きくなければなりません",
+    "Order quantity must be greater than Zero": "注文数量は0より大きくなければなりません",
     "Please fill in the required fields": "必須フィールドを入力してください",
     "Order quantity cannot be greater than stock quantity": "注文数量は在庫数量を超えることはできません",
     "Choices field": "選択肢フィールド",
-    "can't be empty": "空にすることはできません",
+    "can't be empty": "を入力してください",
     "Do you want to update the stock?": "在庫を更新しますか？",
     "Do you want to update the price?": "価格を更新しますか？",
     "Success": "成功",
@@ -338,9 +338,19 @@ var translation_dict = {
     "Shipping information is deleted.": "配送情報が削除されます。",
     "URL String is duplicate": "URL文字列が重複しています",
     "JAN code / inventory editing": "JANコード/在庫編集",
-    "JAN code can't be empty": "JANコードを空にすることはできません",
+    "JAN code can't be empty": "JANコードを入力してください",
     "Stock should contain only number": "在庫には数字のみを含める必要があります",
     "Tracking number is duplicate": "追跡番号が重複しています",
     " is in use. Try a new one. It must be unique": "は既に使われているため、使用できません。",
     'The number of stocks will change during editing. When changing, increase or decrease the absolute value such as "+1" or "-1" Please enter (If you want to change the entire stock quantity, enter "100" etc. as a numerical value) If the stock quantity field is blank, the stock quantity will not be changed.': "在庫数は編集中に変更されます。変更する場合は、「+ 1」や「-1」などの絶対値を増減してください（在庫量全体を変更する場合は、数値として「100」などを入力してください）。空白の場合、在庫数は変更されません。",
+    "add / edit / delete items": "項目の追加・編集・削除",
+    "Enter Jancode": "JANコードを入力",
+    "Enter Stock": "在庫を入力",
+    "Jan Code": "JANコード",
+    "Stock Quantity": "在庫数",
+    "Stock:": "在庫:",
+    "Confirm": "はい",
+    "Cancel": "キャンセル",
+
+
 };
