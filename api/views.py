@@ -629,97 +629,85 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
     except:
         tax_rate = 0
     try:
-        profile = Profile.objects.get(id=userId)
-        if profile:
-            profileSerializer = ProfileSerializer(profile, context=getContext())
-            if profileSerializer.data['introducer']:
-                introducers = profileSerializer.data['introducer'].split("/")
-                introducer = introducers[len(introducers)-2]
-                introducer = Profile.objects.get(id=introducer)
-                if introducer and introducer.authority_id != AUTHORITY_TYPE['MASTER']:
-                    introducerSerializer = ProfileSerializer(introducer, context=getContext())
-                    if kinujo_product:
-                        commission = introducerSerializer.data['authority']['official_commission_rate']
-                    else:
-                        commission = introducerSerializer.data['authority']['commission_rate']
-                    if float(commission) > 0:
-                        amount = int(float(price) * float(commission))
-                        orderProductComm = {
-                            'amount' : int(amount),
-                            'is_sales' : 0,
-                            'is_food' : 0,
-                            'shipping_fee' : 0,
-                            'order_product' : orderProduct,
-                            'user' : introducerSerializer.data['url']
-                        }
-                        orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+        introducer = None
+        profile = Profile.objects.filter(is_hidden=False, id=userId)
+        if profile.exists():
+            profile = profile.last()
+            introducer = profile.introducer_id
+        # profileSerializer = ProfileSerializer(profile, context=getContext())
+        # if profileSerializer.data['introducer']:
+        #     introducers = profileSerializer.data['introducer'].split("/")
+        #     introducer = introducers[len(introducers)-2]
+        
+        if introducer:
+            introducer = Profile.objects.filter(is_hidden=False, id=introducer)
+            if introducer.exists():
+                introducer = introducer.last()
+        if introducer and introducer.authority_id != AUTHORITY_TYPE['MASTER']:
+            introducerSerializer = ProfileSerializer(introducer, context=getContext())
+            if kinujo_product:
+                commission = introducer.authority.official_commission_rate
+            else:
+                commission = introducer.authority.commission_rate
+            if float(commission) > 0:
+                amount = int(float(price) * float(commission))
+                orderProductComm = {
+                    'amount' : int(amount),
+                    'is_sales' : 0,
+                    'is_food' : 0,
+                    'shipping_fee' : 0,
+                    'order_product' : orderProduct,
+                    'user' : introducerSerializer.data['url']
+                }
+                orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
 
-                        if orderProductCommissionSerializer.is_valid():
-                            orderProductCommissionSerializer.save()
-                        else:
-                            return orderProductCommissionSerializer.errors
-                        tax = int(float(amount) * float(tax_rate))
-                        result = updateUserCommission(introducer, amount, tax)
-                        # new remaining_amount   
-                        remaining_amount = int(remaining_amount) - int(float(price) * float(commission))
-                        return calculateCommission(kinujo_product, price, orderProduct, introducerSerializer.data['id'], shipping_fee, remaining_amount, seller)
-                        
-                        
-                    return calculateCommission(kinujo_product, price, orderProduct, introducerSerializer.data['id'], shipping_fee, remaining_amount, seller)
+                if orderProductCommissionSerializer.is_valid():
+                    orderProductCommissionSerializer.save()
                 else:
+                    return orderProductCommissionSerializer.errors
+                tax = int(float(amount) * float(tax_rate))
+                result = updateUserCommission(introducer, amount, tax)
+                # new remaining_amount   
+                remaining_amount = int(remaining_amount) - int(float(price) * float(commission))
+                return calculateCommission(kinujo_product, price, orderProduct, introducer.id, shipping_fee, remaining_amount, seller)
+                
+                
+            return calculateCommission(kinujo_product, price, orderProduct, introducer.id, shipping_fee, remaining_amount, seller)
+        else:
+            if remaining_amount > 0:
+                if not kinujo_product:
+                    seller_commission = 0.65
+                    seller_amount = int(float(price) * float(seller_commission))
+                    remaining_amount = int(remaining_amount) - int(seller_amount)
+                    sellerSerializer = ProfileSerializer(seller, context=getContext())
+                    orderProductComm = {
+                        'amount' : int(seller_amount),
+                        'is_sales' : 1,
+                        'is_food' : 0,
+                        'shipping_fee' : int(float(shipping_fee)),
+                        'order_product' : orderProduct,
+                        'user' : sellerSerializer.data['url']
+                    }
+                    orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+
+                    if orderProductCommissionSerializer.is_valid():
+                        orderProductCommissionSerializer.save()
+                    else:
+                        return orderProductCommissionSerializer.errors
+                    # # seller Sale
+                    tax = int(float(seller_amount) * float(tax_rate))
+                    result = updateUserSales(seller, seller_amount, tax, float(shipping_fee))
+
                     if remaining_amount > 0:
-                        if not kinujo_product:
-                            seller_commission = 0.65
-                            seller_amount = int(float(price) * float(seller_commission))
-                            remaining_amount = int(remaining_amount) - int(seller_amount)
-                            sellerSerializer = ProfileSerializer(seller, context=getContext())
-                            orderProductComm = {
-                                'amount' : int(seller_amount),
-                                'is_sales' : 1,
-                                'is_food' : 0,
-                                'shipping_fee' : int(float(shipping_fee)),
-                                'order_product' : orderProduct,
-                                'user' : sellerSerializer.data['url']
-                            }
-                            orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
-
-                            if orderProductCommissionSerializer.is_valid():
-                                orderProductCommissionSerializer.save()
-                            else:
-                                return orderProductCommissionSerializer.errors
-                            # # seller Sale
-                            tax = int(float(seller_amount) * float(tax_rate))
-                            result = updateUserSales(seller, seller_amount, tax, float(shipping_fee))
-
-                            if remaining_amount > 0:
-                                master_user = Profile.objects.filter(is_hidden=False, is_master=True, 
-                                        authority_id=AUTHORITY_TYPE['MASTER']).first()
-                                if master_user:
-                                    sellerSerializer = ProfileSerializer(master_user, context=getContext())
-                                    orderProductComm = {
-                                        'amount' : int(remaining_amount),
-                                        'is_sales' : 0,
-                                        'is_food' : 0,
-                                        'shipping_fee' : 0,
-                                        'order_product' : orderProduct,
-                                        'user' : sellerSerializer.data['url']
-                                    }
-                                    orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
-
-                                    if orderProductCommissionSerializer.is_valid():
-                                        orderProductCommissionSerializer.save()
-                                        # master commission
-                                        tax = int(float(remaining_amount) * float(tax_rate))
-                                        result = updateUserCommission(master_user, remaining_amount, tax)
-                                    else:
-                                        return orderProductCommissionSerializer.errors
-                        else:
-                            sellerSerializer = ProfileSerializer(seller, context=getContext())
+                        master_user = Profile.objects.filter(is_hidden=False, is_master=True, 
+                                authority_id=AUTHORITY_TYPE['MASTER']).first()
+                        if master_user:
+                            sellerSerializer = ProfileSerializer(master_user, context=getContext())
                             orderProductComm = {
                                 'amount' : int(remaining_amount),
-                                'is_sales' : 1,
+                                'is_sales' : 0,
                                 'is_food' : 0,
-                                'shipping_fee' : int(float(shipping_fee)),
+                                'shipping_fee' : 0,
                                 'order_product' : orderProduct,
                                 'user' : sellerSerializer.data['url']
                             }
@@ -727,11 +715,30 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
 
                             if orderProductCommissionSerializer.is_valid():
                                 orderProductCommissionSerializer.save()
+                                # master commission
+                                tax = int(float(remaining_amount) * float(tax_rate))
+                                result = updateUserCommission(master_user, remaining_amount, tax)
                             else:
                                 return orderProductCommissionSerializer.errors
-                            # # Master Sale
-                            tax = int(float(remaining_amount) * float(tax_rate))
-                            result = updateUserSales(seller, remaining_amount, tax, float(shipping_fee))
+                else:
+                    sellerSerializer = ProfileSerializer(seller, context=getContext())
+                    orderProductComm = {
+                        'amount' : int(remaining_amount),
+                        'is_sales' : 1,
+                        'is_food' : 0,
+                        'shipping_fee' : int(float(shipping_fee)),
+                        'order_product' : orderProduct,
+                        'user' : sellerSerializer.data['url']
+                    }
+                    orderProductCommissionSerializer = InsertOrderProductCommissionSerializer(data=orderProductComm, context=getContext())
+
+                    if orderProductCommissionSerializer.is_valid():
+                        orderProductCommissionSerializer.save()
+                    else:
+                        return orderProductCommissionSerializer.errors
+                    # # Master Sale
+                    tax = int(float(remaining_amount) * float(tax_rate))
+                    result = updateUserSales(seller, remaining_amount, tax, float(shipping_fee))
 
     except Exception as e:
         print('calculateCommission', e)
@@ -1054,7 +1061,7 @@ class Pay(APIView):
                                 productJancode.stock = int(productJancode.stock) - int(quantity)
                                 productJancode.save()
 
-                            errors = calculateCommission(kinujo_product, groupTotal, orderProductSerializer.data['url'], 
+                            errors = calculateCommission(kinujo_product, float(product['price']), orderProductSerializer.data['url'], 
                                         profileSerializer.data['id'], groupShippingFee, groupTotal, seller)
                             if errors:
                                 return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
