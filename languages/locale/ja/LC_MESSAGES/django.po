@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-19 19:48+0900\n"
+"POT-Creation-Date: 2021-02-22 20:27+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,11 +36,11 @@ msgstr "注文追加/編集"
 
 #: .\orders\templates\order_form.html:42 .\templates\listing_base.html:129
 msgid "Order Registration"
-msgstr "注文登録"
+msgstr "注文詳細"
 
 #: .\orders\templates\order_form.html:48
 msgid "Products"
-msgstr "製品"
+msgstr "商品"
 
 #: .\orders\templates\order_form.html:70 .\orders\templates\order_list.html:58
 #: .\orders\views.py:53
@@ -75,7 +75,7 @@ msgstr "郵便番号"
 
 #: .\orders\templates\order_form.html:131
 msgid "Address Book"
-msgstr "住所録"
+msgstr "送付先リスト"
 
 #: .\orders\templates\order_form.html:137
 msgid "Gst"
@@ -118,7 +118,7 @@ msgid "Status"
 msgstr "状態"
 
 #: .\orders\templates\order_form.html:209
-#: .\orders\templates\order_form.html:284
+#: .\orders\templates\order_form.html:273
 #: .\profiles\templates\basic_info_tab.html:110
 #: .\profiles\templates\basic_info_tab.html:214
 #: .\profiles\templates\salon_form.html:70
@@ -128,60 +128,60 @@ msgstr "状態"
 msgid "Phone Number"
 msgstr "電話番号"
 
-#: .\orders\templates\order_form.html:231 .\orders\templates\order_list.html:66
+#: .\orders\templates\order_form.html:220 .\orders\templates\order_list.html:66
 #: .\orders\views.py:53
 msgid "Shipment Date"
 msgstr "発送完了日"
 
-#: .\orders\templates\order_form.html:239 .\orders\templates\order_list.html:67
+#: .\orders\templates\order_form.html:228 .\orders\templates\order_list.html:67
 #: .\orders\views.py:53
 msgid "Tracking Number"
 msgstr "問い合わせ番号"
 
-#: .\orders\templates\order_form.html:250
+#: .\orders\templates\order_form.html:239
 #: .\products\templates\product_form.html:514
 #: .\products\templates\product_form.html:616
 #: .\products\templates\product_form.html:713
-#: .\products\templates\product_form.html:1459
+#: .\products\templates\product_form.html:1462
 #: .\profiles\templates\account_info_tab.html:89
-#: .\profiles\templates\basic_info_tab.html:249
+#: .\profiles\templates\basic_info_tab.html:236
 #: .\profiles\templates\item_form.html:487
 #: .\profiles\templates\item_form.html:579
-#: .\profiles\templates\item_form.html:661
-#: .\profiles\templates\item_form.html:1400
+#: .\profiles\templates\item_form.html:663
+#: .\profiles\templates\item_form.html:1405
 #: .\profiles\templates\salon_form.html:81
 #: .\profiles\templates\shipping_form.html:85
 msgid "Save"
 msgstr "保存する"
 
-#: .\orders\templates\order_form.html:251
+#: .\orders\templates\order_form.html:240
 #: .\products\templates\product_form.html:515
 #: .\profiles\templates\account_info_tab.html:90
-#: .\profiles\templates\basic_info_tab.html:250
+#: .\profiles\templates\basic_info_tab.html:237
 #: .\profiles\templates\item_form.html:488
 #: .\profiles\templates\salon_form.html:82
 #: .\profiles\templates\shipping_form.html:86
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: .\orders\templates\order_form.html:281
+#: .\orders\templates\order_form.html:270
 #: .\profiles\templates\shipping_info_tab.html:21
 msgid "Address Name"
 msgstr "住所名"
 
-#: .\orders\templates\order_form.html:282
+#: .\orders\templates\order_form.html:271
 #: .\profiles\templates\shipping_form.html:19
 #: .\profiles\templates\shipping_info_tab.html:22
 msgid "Full Name"
 msgstr "氏名"
 
-#: .\orders\templates\order_form.html:283 .\orders\views.py:53
+#: .\orders\templates\order_form.html:272 .\orders\views.py:53
 #: .\profiles\templates\salon_info_tab.html:23
 #: .\profiles\templates\shipping_info_tab.html:23
 msgid "Address"
 msgstr "住所"
 
-#: .\orders\templates\order_form.html:285 .\orders\templates\order_list.html:68
+#: .\orders\templates\order_form.html:274 .\orders\templates\order_list.html:68
 #: .\products\templates\product_list.html:74
 #: .\profiles\templates\client_info_tab.html:26
 #: .\profiles\templates\item_info_tab.html:30
@@ -362,7 +362,7 @@ msgstr "中古品"
 #: .\products\templates\product_form.html:318
 #: .\profiles\templates\item_form.html:288
 msgid "For Sale"
-msgstr "販売のため"
+msgstr "販売対象"
 
 #: .\products\templates\product_form.html:321
 #: .\profiles\templates\item_form.html:291
@@ -407,7 +407,7 @@ msgstr "商品説明文"
 #: .\products\templates\product_form.html:488
 #: .\profiles\templates\item_form.html:458
 msgid "Error Max Images"
-msgstr "エラー最大画像"
+msgstr "エラー"
 
 #: .\products\templates\product_form.html:495
 #: .\profiles\templates\item_form.html:465
@@ -424,7 +424,7 @@ msgstr "最大5つの画像のみが許可されます。"
 #: .\products\templates\product_form.html:712
 #: .\profiles\templates\item_form.html:472
 #: .\profiles\templates\item_form.html:578
-#: .\profiles\templates\item_form.html:660
+#: .\profiles\templates\item_form.html:662
 msgid "Close"
 msgstr "閉じる"
 
@@ -438,11 +438,11 @@ msgstr ""
 #: .\products\templates\product_form.html:527
 #: .\products\templates\product_form.html:539
 #: .\products\templates\product_form.html:551
-#: .\products\templates\product_form.html:1458
+#: .\products\templates\product_form.html:1461
 #: .\profiles\templates\item_form.html:501
 #: .\profiles\templates\item_form.html:513
 #: .\profiles\templates\item_form.html:525
-#: .\profiles\templates\item_form.html:1399
+#: .\profiles\templates\item_form.html:1404
 msgid "Go back"
 msgstr "キャンセル"
 
@@ -477,6 +477,15 @@ msgstr "バリエーション項目登録"
 msgid "Title:"
 msgstr "項目名:"
 
+#: .\products\templates\product_form.html:572
+#: .\products\templates\product_form.html:643
+#: .\products\templates\product_form.html:676
+#: .\profiles\templates\item_form.html:546
+#: .\profiles\templates\item_form.html:606
+#: .\profiles\templates\item_form.html:633
+msgid "Color, Size, etc"
+msgstr "カラー・サイズ等"
+
 #: .\products\templates\product_form.html:578
 #: .\products\templates\product_form.html:650
 #: .\products\templates\product_form.html:683
@@ -489,7 +498,7 @@ msgstr "選択肢"
 #: .\products\templates\product_form.html:579
 #: .\profiles\templates\item_form.html:553
 msgid "JAN Code"
-msgstr "Janコード"
+msgstr "JANコード"
 
 #: .\products\templates\product_form.html:580
 #: .\products\templates\product_list.html:71
@@ -499,11 +508,11 @@ msgid "Stock"
 msgstr "在庫"
 
 #: .\products\templates\product_form.html:612
+#: .\products\templates\product_form.html:710
 #: .\profiles\templates\item_form.html:575
-msgid ""
-"* If you delete the option, the registered JAN code and inventory "
-"information will also be deleted"
-msgstr "※選択肢を削除すると登録済のJANコード・在庫情報も削除されます。"
+#: .\profiles\templates\item_form.html:659
+msgid "* After you have deleted or edited your choices, click the Save button."
+msgstr "※選択肢を削除・編集した後は、保存ボタンを押してください。"
 
 #: .\products\templates\product_form.html:628
 #: .\profiles\templates\item_form.html:591
@@ -518,7 +527,7 @@ msgstr "※横軸と縦軸にそれぞれ1つ以上の選択肢を登録して�
 #: .\products\templates\product_form.html:640
 #: .\profiles\templates\item_form.html:603
 msgid "Horizontal axis"
-msgstr ""
+msgstr "横軸"
 
 #: .\products\templates\product_form.html:642
 #: .\products\templates\product_form.html:675
@@ -532,12 +541,14 @@ msgstr "項目名"
 msgid "Vertical axis"
 msgstr "縦軸"
 
-#: .\products\templates\product_form.html:710
-#: .\profiles\templates\item_form.html:658
-msgid ""
-"*If you delete the option, the registered JAN code and inventory information "
-"will also be deleted"
-msgstr "※選択肢を削除すると登録済のJANコード・在庫情報も削除されます。"
+#: .\products\templates\product_form.html:1490
+#: .\products\templates\product_form.html:1663
+#: .\products\templates\product_form.html:1679
+#: .\profiles\templates\item_form.html:1434
+#: .\profiles\templates\item_form.html:1607
+#: .\profiles\templates\item_form.html:1623
+msgid "This field is required"
+msgstr "この項目は必須です"
 
 #: .\products\templates\product_list.html:38
 msgid "Non-Published"
@@ -567,7 +578,7 @@ msgstr "名前"
 #: .\products\templates\product_list.html:69
 #: .\profiles\templates\item_info_tab.html:25
 msgid "Jan Code"
-msgstr "Janコード"
+msgstr "JANコード"
 
 #: .\products\templates\product_list.html:70
 #: .\profiles\templates\item_info_tab.html:26
@@ -702,11 +713,11 @@ msgstr "法人名"
 msgid "Representative's Name"
 msgstr "代表者名"
 
-#: .\profiles\templates\basic_info_tab.html:235
+#: .\profiles\templates\basic_info_tab.html:222
 msgid "Active"
 msgstr "アクティブ"
 
-#: .\profiles\templates\basic_info_tab.html:241
+#: .\profiles\templates\basic_info_tab.html:228
 msgid "Representative Account"
 msgstr "代表アカウント"
 
@@ -917,7 +928,7 @@ msgstr "宛先名"
 
 #: .\profiles\templates\shipping_form.html:81
 msgid "Is Default"
-msgstr "デフォルトです"
+msgstr "デフォルトの送付先"
 
 #: .\templates\base.html:71 .\templates\listing_base.html:66
 msgid "ENGLISH"
@@ -1031,7 +1042,7 @@ msgstr "管理システム"
 
 #: .\templates\master_login.html:105 .\templates\sales_login.html:77
 msgid "I forgot the password"
-msgstr "パスワードを忘れた"
+msgstr "パスワードを忘れた方はこちら"
 
 #: .\templates\password-reset.html:54
 msgid "We will send you an authorization code."
@@ -1072,57 +1083,3 @@ msgstr "新しいパスワード(再入力)"
 #: .\templates\password-reset.html:89
 msgid "Change the password"
 msgstr "パスワードを変更する"
-
-#, fuzzy
-#~| msgid "Status"
-#~ msgid "status"
-#~ msgstr "状態"
-
-#, fuzzy
-#~| msgid "Shipped"
-#~ msgid "shipped_date"
-#~ msgstr "出荷済み"
-
-#, fuzzy
-#~| msgid "Tracking Number"
-#~ msgid "tracking_number"
-#~ msgstr "問い合わせ番号"
-
-#~ msgid "Profile Details"
-#~ msgstr "アカウント詳細"
-
-#~ msgid "Profile"
-#~ msgstr "プロフィール"
-
-#~ msgid "Edit Stock"
-#~ msgstr "株式の編集"
-
-#~ msgid "New Quantity:"
-#~ msgstr "新しい数量："
-
-#~ msgid "Edit Price"
-#~ msgstr "価格の編集"
-
-#~ msgid "New Price:"
-#~ msgstr "新価格："
-
-#~ msgid "JAN code / inventory editing"
-#~ msgstr "JANコード/在庫編集"
-
-#~ msgid "Shipping"
-#~ msgstr "運送"
-
-#~ msgid "Ready"
-#~ msgstr "準備完了"
-
-#~ msgid "Processing"
-#~ msgstr "処理"
-
-#~ msgid "Inquiry Number"
-#~ msgstr "お問い合わせ番号"
-
-#~ msgid "Delivery Address"
-#~ msgstr "配送先住所"
-
-#~ msgid "CSV Import"
-#~ msgstr "CSVインポート"
