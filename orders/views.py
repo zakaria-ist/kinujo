@@ -815,7 +815,6 @@ def order_edit(request, order_id):
                 .exclude(id=seller_id)\
                 .values_list('id', 'real_name', 'authority_id', 'nickname'))
             prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
-            tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
             if request.LANGUAGE_CODE == 'en':
                 status_list = ORDER_STATUS
             else:
@@ -826,8 +825,7 @@ def order_edit(request, order_id):
                                                         'order_product_list': order_product_list,
                                                         'status_list': status_list,
                                                         'tax_rate': tax_rate,
-                                                        'seller_id': seller_id,
-                                                        'tel_code_list': tel_code_list})
+                                                        'seller_id': seller_id,})
         else:
             return render(request, '404.html')
     else:
