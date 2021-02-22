@@ -317,11 +317,14 @@ var translation_dict = {
     "Warning": " ",
     "Error": "エラー",
     "Are you sure?": "削除しますか？",
+    "Are you sure want to delete?": "削除してもよろしいですか？",
+    "* If you delete the option, the registered JAN code and inventory information": "※選択肢を削除すると、登録済のJANコード・在庫情報も削除されます。",
+    "* After you have deleted or edited your choices, click the Save button.": "※選択肢を削除・編集した後は、保存ボタンを押してください。",
     "Wrong Quantity!": "数量が間違っています！",
     "Order quantity must be greater than Zero": "注文数量は0より大きくなければなりません",
     "Please fill in the required fields": "必須フィールドを入力してください",
     "Order quantity cannot be greater than stock quantity": "注文数量は在庫数量を超えることはできません",
-    "Choices field": "選択肢フィールド",
+    "Choices field": "選択肢",
     "can't be empty": "を入力してください",
     "Do you want to update the stock?": "在庫を更新しますか？",
     "Do you want to update the price?": "価格を更新しますか？",
@@ -351,6 +354,8 @@ var translation_dict = {
     "Stock:": "在庫:",
     "Confirm": "はい",
     "Cancel": "キャンセル",
+    "Item / Option": "項目・選択肢登録",
+    "Items / Option": "項目・選択肢登録",
 
 
 };

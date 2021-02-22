@@ -568,13 +568,13 @@
             <form class="form-inline">
               <div class="form-group">
                 <label for="one-item-title" class="col-form-label">{% trans 'Title:' %}</label>
-                <input value="" type="text" class="form-control" id="one-item-title" placeholder="Color, Size, etc">
+                <input value="" type="text" class="form-control" id="one-item-title" placeholder="{% trans 'Color, Size, etc' %}">
                 <p class="text-danger" id="title-error"></p>
               </div>
               <div class="form-group">
                 <p style="width: 20px;" class="m-2"> </p>
                 <p style="width: 20px;" class="m-2"> </p>
-                <label for="message-text" class="col-form-label" style="width: 160px;">{% trans 'Choices' %}</label>
+                <label for="message-text" class="col-form-label" style="width: 160px;">{% trans 'Choices' %}<br></label>
                 <label for="message-text" class="col-form-label label-hide" style="width: 140px;">{% trans 'JAN Code' %}</label>
                 <label for="message-text" class="col-form-label label-hide" style="width: 50px;">{% trans 'Stock' %}</label>
                 <p class="m-2" style="width: 50px;"> </p>
@@ -606,8 +606,8 @@
           </div>
           <div class="modal-footer" style="border-top: 0px;">
             <div>
-              <p>
-                {% trans '* If you delete the option, the registered JAN code and inventory information will also be deleted' %}
+              <p class="text-danger">
+                {% trans '* After you have deleted or edited your choices, click the Save button.' %}
               </p>
             </div>
             <button type="button" class="btn btn-secondary" data-dismiss="modal" style="display: none;">{% trans 'Close' %}</button>
@@ -638,7 +638,7 @@
                 <div class="font-weight-bold p-2 text-left">{% trans 'Horizontal axis' %}</div>
                 <div class="form-group">
                   <label for="first-of-two-items-title" class="col-form-label">{% trans 'Title' %}</label>
-                  <input type="text" class="form-control" id="first-of-two-items-title" placeholder="Color, Size, etc">
+                  <input type="text" class="form-control" id="first-of-two-items-title" placeholder="{% trans 'Color, Size, etc' %}">
                   <p class="text-danger" id="first-of-two-title-error"></p>
                 </div>
                 
@@ -670,7 +670,7 @@
                 <div class="font-weight-bold p-2 text-left">{% trans 'Vertical axis' %}</div>
                 <div class="form-group">
                   <label for="last-of-two-items-title" class="col-form-label">{% trans 'Title' %}</label>
-                  <input type="text" class="form-control" id="last-of-two-items-title" placeholder="Color, Size, etc">
+                  <input type="text" class="form-control" id="last-of-two-items-title" placeholder="{% trans 'Color, Size, etc' %}">
                   <p class="text-danger" id="last-of-two-title-error"></p>
                 </div>
                 
@@ -702,9 +702,9 @@
             </form>
           </div>
           <div class="modal-footer">
-            <div>
-              <p>{% trans '*If you delete the option, the registered JAN code and inventory information will also be deleted' %}</p>
-            </div>
+            <p class="text-danger">
+              {% trans '* After you have deleted or edited your choices, click the Save button.' %}
+            </p>
             <button type="button" class="btn btn-secondary" data-dismiss="modal" style="display: none;">{% trans 'Close' %}</button>
             <button type="button" id="two-items-save-btn" class="btn btn-primary" style="margin: 10px auto; padding: 5px 40px;" onclick="saveTwoItemsData();">{% trans 'Save' %}</button>
           </div>
@@ -804,9 +804,9 @@
         }
       }else{
         if(tableItem === document.getElementById('variety-table')){
-          document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ Item / Option</button></div>`;
+          document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ ${get_translate('Item / Option')}</button></div>`;
         }else{
-          document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="two-items-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant" onclick="changeModalTwo();">+ Items / Options</button></div>`;
+          document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="two-items-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant" onclick="changeModalTwo();">+ ${get_translate('Item / Option')}</button></div>`;
         }
       }
     }
@@ -1152,7 +1152,8 @@
     function deleteOptions(trget){
       $.confirm({
           title: get_translate('Warning'),
-          content: get_translate('Are you sure?'),
+          content: get_translate('Are you sure want to delete?') + "<br>"
+          + get_translate('* If you delete the option, the registered JAN code and inventory information'),
           buttons: {
             Yes:{
                 text: get_translate("Confirm"),
@@ -1210,7 +1211,8 @@
     function deleteOptionsFirstOfTwo(trget){
       $.confirm({
           title: get_translate('Warning'),
-          content: get_translate('Are you sure?'),
+          content: get_translate('Are you sure want to delete?') + "<br>"
+          + get_translate('* If you delete the option, the registered JAN code and inventory information'),
           buttons: {
               Yes: function () {
                   trget.parentNode.parentNode.removeChild(trget.parentNode);
@@ -1249,7 +1251,8 @@
     function deleteOptionsLastOfTwo(trget){
       $.confirm({
           title: get_translate('Warning'),
-          content: get_translate('Are you sure?'),
+          content: get_translate('Are you sure want to delete?') + "<br>"
+          + get_translate('* If you delete the option, the registered JAN code and inventory information'),
           buttons: {
               Yes: function () {
                   trget.parentNode.parentNode.removeChild(trget.parentNode);
@@ -1480,7 +1483,7 @@
       //see for empty field of title and show a error message
 
       if(oneItemVariantName === '' || oneItemVariantName === ' ' || oneItemVariantName === undefined) {
-        errorMsg.innerHTML = 'This field is required'; 
+        errorMsg.innerHTML = "{% trans 'This field is required' %}";
         oneItemVariantTitle.focus();
         return;
         
@@ -1653,7 +1656,7 @@
       
       //title empty error
       if(firstOfTwotemsVariantTitle.value === '' || firstOfTwotemsVariantTitle.value === ' ' || firstOfTwotemsVariantTitle.value === undefined){
-        errorFirstOfTwo.innerHTML = `Title field is required`;
+        errorFirstOfTwo.innerHTML = "{% trans 'This field is required' %}";
         firstOfTwotemsVariantTitle.focus();
         return;
       }else{
@@ -1669,7 +1672,7 @@
 
       //for last item empty check
       if(lastOfTwotemsVariantTitle.value === '' || lastOfTwotemsVariantTitle.value === ' ' || lastOfTwotemsVariantTitle === undefined){
-        errorLastOfTwo.innerHTML = `Title field is required`;
+        errorLastOfTwo.innerHTML = "{% trans 'This field is required' %}";
         lastOfTwotemsVariantTitle.focus();
         return;
       }else {
