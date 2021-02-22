@@ -1156,17 +1156,17 @@
           buttons: {
             Yes:{
                 text: get_translate("Confirm"),
-                function () {
-                  trget.parentNode.parentNode.removeChild(trget.parentNode);
-                  let optionArray = document.getElementsByClassName('one-variant-counter');
-                  for(let i = 0; i < optionArray.length; i++){
-                    optionArray[i].innerHTML = i + 1;
-                  }
-                }
+                action: function () {
+                          trget.parentNode.parentNode.removeChild(trget.parentNode);
+                          let optionArray = document.getElementsByClassName('one-variant-counter');
+                          for(let i = 0; i < optionArray.length; i++){
+                            optionArray[i].innerHTML = i + 1;
+                          }
+                        }
               },
               Cancel: {
                 text: get_translate("Cancel"),
-                function () {}
+                action: function () {}
               }
           }
       });
