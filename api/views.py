@@ -745,7 +745,7 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
 
     return ''
 
-def updateUserCommission(introducer, introducerSerializer, amount, tax):
+def updateUserCommission(introducer, amount, tax):
     today_date = date.today()
     year = today_date.year
     month = today_date.month
