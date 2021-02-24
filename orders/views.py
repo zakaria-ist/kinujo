@@ -50,7 +50,7 @@ def export_order_list_as_csv(request):
         response['Content-Disposition'] = 'attachment; filename="OrderList.csv"'
 
         writer = csv.writer(response)
-        writer.writerow([_('Order Number'), _('Order Date'), _('Product Name'), _('Orderer'), _('Address'), _('AmountIncludeTax'), _('Status'), _('Shipment Date'), _('Tracking Number')])
+        writer.writerow([_('Order Number'), _('Order Date'), _('Product Name'), _('Orderer'), _('Address'), _('Amount Include Tax'), _('Status'), _('Shipment Date'), _('Tracking Number')])
 
         for field in order_list:
             product = OrderProduct.objects.filter(order_id=field.id).first()
