@@ -339,6 +339,7 @@ def profile_add(request):
                     user_name =  tel_code + request.POST.get('tel')
                     user = User.objects.create_user(user_name, 'test@kinujo.com', request.POST.get('password'))
                     user.first_name = request.POST.get('real_name')
+                    user.last_name = request.POST.get('nickname')
                     user.save()
                     profile = form.save(commit=False)
                     profile.user = user
@@ -431,6 +432,9 @@ def profile_edit(request, profile_id):
                         if user.first_name != request.POST.get('real_name'):
                             user.first_name = request.POST.get('real_name')
                             user.save()
+                        if user.last_name != request.POST.get('nickname'):
+                            user.last_name = request.POST.get('nickname')
+                            user.save()
                         if request.POST.get('password') != '' and request.POST.get('password') != None:
                             user.set_password(request.POST.get('password'))
                             user.save()
@@ -438,6 +442,7 @@ def profile_edit(request, profile_id):
                         if request.POST.get('password') != '' and request.POST.get('password') != None:
                             user = User.objects.create_user(user_name, 'test@kinujo.com', request.POST.get('password'))
                             user.first_name = request.POST.get('real_name')
+                            user.last_name = request.POST.get('nickname')
                             user.save()
                     
                     profile = form.save(commit=False)
