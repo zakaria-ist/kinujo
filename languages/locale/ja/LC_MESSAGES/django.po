@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-24 14:43+0900\n"
+"POT-Creation-Date: 2021-02-25 19:34+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -745,7 +745,6 @@ msgid "Creation Date"
 msgstr "作成日"
 
 #: .\profiles\templates\commission_info_tab.html:5
-#: .\profiles\templates\operating_commission_info_tab.html:5
 msgid "Commission Information"
 msgstr "手数料"
 
@@ -772,7 +771,7 @@ msgid "Selling Price"
 msgstr "販売価格"
 
 #: .\profiles\templates\commission_info_tab.html:18
-#: .\profiles\templates\sales_list.html:55
+#: .\profiles\templates\sales_list.html:58
 msgid "Commission"
 msgstr "手数料"
 
@@ -793,26 +792,27 @@ msgstr "出品売上額"
 msgid "Sales List"
 msgstr "売上一覧"
 
-#: .\profiles\templates\listing_sales_list.html:37
-#: .\profiles\templates\sales_list.html:41
+#: .\profiles\templates\listing_sales_list.html:38
+#: .\profiles\templates\sales_list.html:42
 msgid "Total sales:"
-msgstr "総売上:"
-
-#: .\profiles\templates\listing_sales_list.html:40
-#: .\profiles\templates\sales_list.html:45
-msgid "Commission:"
-msgstr "営業報酬:"
+msgstr "総売上:　"
 
 #: .\profiles\templates\listing_sales_list.html:41
-#: .\profiles\templates\sales_list.html:44
+msgid "Operating Commission:"
+msgstr "営業報酬:"
+
+#: .\profiles\templates\listing_sales_list.html:42
+#: .\profiles\templates\sales_list.html:45
 msgid "Selling sales:"
 msgstr "出品売上:"
 
-#: .\profiles\templates\listing_sales_list.html:48
-msgid "Item Sale"
+#: .\profiles\templates\listing_sales_list.html:51
+#: .\profiles\templates\sales_list.html:55
+msgid "Product Sales"
 msgstr "出品売上"
 
-#: .\profiles\templates\listing_sales_list.html:51
+#: .\profiles\templates\listing_sales_list.html:54
+#: .\profiles\templates\operating_commission_info_tab.html:5
 #: .\profiles\templates\operating_commission_info_tab.html:16
 msgid "Operating Commission"
 msgstr "営業報酬"
@@ -913,9 +913,9 @@ msgstr "ストアアカウント数"
 msgid "Number of general users"
 msgstr "一般ユーザー数"
 
-#: .\profiles\templates\sales_list.html:52
-msgid "Product Sales"
-msgstr "出品売上"
+#: .\profiles\templates\sales_list.html:46
+msgid "Commission:"
+msgstr "手数料:"
 
 #: .\profiles\templates\salon_form.html:10
 #: .\profiles\templates\salon_info_tab.html:21

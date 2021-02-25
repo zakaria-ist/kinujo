@@ -2,7 +2,7 @@
     {% load i18n %}
 {% endblock %}
 <header class="panel-heading" style="font-size: 25px">
-    <strong>{% trans 'Commission Information' %}</strong>
+    <strong>{% trans 'Operating Commission' %}</strong>
 </header>
 <div class="table-section white-bg">
     <div class="adv-table table-responsive">
@@ -10,10 +10,10 @@
             id="commssion-table" style="width:100%">
             <thead>
             <tr>
-                <th>{% trans 'Date' %}</th>
+                <th style="min-width: 75px !important">{% trans 'Date' %}</th>
                 <th></th>
                 <th>{% trans 'Product' %}</th>
-                <th>{% trans 'Operating Commission' %}</th>
+                <th style="min-width: 75px !important">{% trans 'Operating Commission' %}</th>
             </tr>
             </thead>
         </table>
