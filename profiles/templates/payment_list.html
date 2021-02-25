@@ -31,10 +31,10 @@
                                     {% trans 'Payment Management' %}
                             </header>
                             <div class="row">
-                                <div class="col-lg-4 row">
-                                    <a style="border-color: transparent;" class="btn btn-white col-lg-2 pt-5" onclick="changeDate('Prev')"><i class="fas fa-chevron-circle-left fa-2x"></i></a>
+                                <div class="col-lg-4 col-sm-12 row">
+                                    <a style="border-color: transparent;" class="btn btn-white pt-5" onclick="changeDate('Prev')"><i class="fas fa-chevron-circle-left fa-2x"></i></a>
                                     <p id="payment_changable_date" class="changable_date pt-5"></p>
-                                    <a style="border-color: transparent;" class="btn btn-white col-lg-2 pt-5" onclick="changeDate('Next')"><i class="fas fa-chevron-circle-right fa-2x"></i></a>
+                                    <a style="border-color: transparent;" class="btn btn-white pt-5" onclick="changeDate('Next')"><i class="fas fa-chevron-circle-right fa-2x"></i></a>
                                 </div>
                             </div>
                             <div class="form-group form-check text-center">
@@ -54,13 +54,13 @@
                                         <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>{% trans 'Name' %}</th>
-                                            <th>{% trans 'Bank' %}</th>
-                                            <th>{% trans 'Branch' %}</th>
-                                            <th>{% trans 'Account Number' %}</th>
-                                            <th>{% trans 'Account Holder' %}</th>
-                                            <th>{% trans 'Amount Include Tax' %}</th>
-                                            <th>{% trans 'Payment Date' %}</th>
+                                            <th style="min-width: 75px !important">{% trans 'Name' %}</th>
+                                            <th style="min-width: 75px !important">{% trans 'Bank' %}</th>
+                                            <th style="min-width: 75px !important">{% trans 'Branch' %}</th>
+                                            <th style="min-width: 75px !important">{% trans 'Account Number' %}</th>
+                                            <th style="min-width: 75px !important">{% trans 'Account Holder' %}</th>
+                                            <th style="min-width: 75px !important">{% trans 'Amount Include Tax' %}</th>
+                                            <th style="min-width: 85px !important">{% trans 'Payment Date' %}</th>
                                         </tr>
                                         </thead>
                                     </table>
