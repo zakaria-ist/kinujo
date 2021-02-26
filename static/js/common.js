@@ -81,11 +81,12 @@ var Script = function () {
             }
             $('#sidebar > ul').hide();
             $("#container").addClass("sidebar-closed");
-            if (wSize > 768) {
-                window.sessionStorage.setItem('is_sidebar', '0');
-            } else {
-                window.sessionStorage.setItem('is_sidebar', '1');
-            }
+            window.sessionStorage.setItem('is_sidebar', '0');
+            // if (wSize > 768) {
+            //     window.sessionStorage.setItem('is_sidebar', '0');
+            // } else {
+            //     window.sessionStorage.setItem('is_sidebar', '1');
+            // }
         } else {
             $('#main-content').css({
                 'margin-left': '250px'
@@ -103,11 +104,12 @@ var Script = function () {
                 'display': 'block'
             });
             $("#container").removeClass("sidebar-closed");
-            if (wSize > 768) {
-                window.sessionStorage.setItem('is_sidebar', '1');
-            } else {
-                window.sessionStorage.setItem('is_sidebar', '0');
-            }
+            window.sessionStorage.setItem('is_sidebar', '1');
+            // if (wSize > 768) {
+            //     window.sessionStorage.setItem('is_sidebar', '1');
+            // } else {
+            //     window.sessionStorage.setItem('is_sidebar', '0');
+            // }
         }
     });
 
