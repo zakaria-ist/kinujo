@@ -227,9 +227,12 @@
         window.sessionStorage.setItem('is_sidebar', '1');
     }
     var is_sidebar = window.sessionStorage.getItem('is_sidebar');
-    var wSize = $(window).width();
-    if (wSize > 768) {
-        if (is_sidebar == '1') {
+    var mobile = false;
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+        mobile = true;
+    }
+    if (!mobile) {
+        {% comment %} if (is_sidebar == '1') {
             $('#main-content').css({
                 'margin-left': '250px'
             });
@@ -263,7 +266,7 @@
             }
             $('#sidebar > ul').hide();
             $("#container").addClass("sidebar-closed");
-        }
+        } {% endcomment %}
     }
 
     function changeLang(){
