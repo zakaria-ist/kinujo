@@ -227,25 +227,7 @@
         window.sessionStorage.setItem('is_sidebar', '1');
     }
     is_sidebar = window.sessionStorage.getItem('is_sidebar');
-    if (is_sidebar == '1') {
-        $('#main-content').css({
-            'margin-left': '250px'
-        });
-        try{
-            if ( $.fn.DataTable.isDataTable( '.table' ) ) {
-                $('.table').DataTable().columns.adjust();
-            }
-        }
-        catch(error){
-            console.log(error);
-        }
-        $('#sidebar > ul').show();
-        $('#sidebar').css({
-            // 'margin-left': '0'
-            'display': 'block'
-        });
-        $("#container").removeClass("sidebar-closed");
-    } else if (is_sidebar == '0') {
+    if (is_sidebar == '0') {
         $('#main-content').css({
             'margin-left': '0px'
         });

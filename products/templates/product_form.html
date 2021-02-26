@@ -88,7 +88,7 @@
         }
         
         #addToOneItemVariant, #addToFirstOfTwoItemVariant, #addToLastOfTwoItemVariant{
-          margin-top: -54px;
+          {% comment %} margin-top: -54px; {% endcomment %}
           border-radius: 50%;
           padding: 0px 7px;
           font-size: 1.5rem;
@@ -556,7 +556,7 @@
 
     <!-- starts --Modal for 1 item variant -->
     <div class="modal fade" id="oneItemVariant" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document" style="min-width: 550px !important;">
+      <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header" style="border-bottom: 0px;">
             <h6 class="modal-title font-weight-bold" id="exampleModalLabel">{% trans 'Variation item registration' %}</h6>
@@ -566,13 +566,13 @@
           </div>
           <div class="modal-body">
             <form class="form-inline">
-              <div class="form-group">
+              <div class="form-group row">
                 <label for="one-item-title" class="col-form-label">{% trans 'Title:' %}</label>
                 <input value="" type="text" class="form-control" id="one-item-title" placeholder="{% trans 'Color, Size, etc' %}">
                 <p class="text-danger" id="title-error"></p>
               </div>
-              <div class="form-group">
-                <p style="width: 20px;" class="m-2"> </p>
+              <div class="form-group row">
+                {% comment %} <p style="width: 20px;" class="m-2"> </p> {% endcomment %}
                 <p style="width: 20px;" class="m-2"> </p>
                 <label for="message-text" class="col-form-label" style="width: 160px;">{% trans 'Choices' %}<br></label>
                 <label for="message-text" class="col-form-label label-hide" style="width: 140px;">{% trans 'JAN Code' %}</label>
@@ -581,12 +581,12 @@
               </div>
               
               <div id="oneItemGroup">
-                <div class="form-group">
-                  <p style="width: 20px;" class="m-2"> </p>
+                <div class="form-group row">
+                  {% comment %} <p style="width: 20px;" class="m-2"> </p> {% endcomment %}
                   <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
-                  <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                  <input value="" type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
-                  <input value="" type="number" class="form-control one-item-stock  text-right" id="message-text" placeholder="" style="width: 70px;">
+                  <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="Choices" style="width: 160px;">
+                  <input value="" type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="JAN Code" style="width: 140px;">
+                  <input value="" type="number" class="form-control one-item-stock  text-right" id="message-text" placeholder="Stock" style="width: 70px;">
                   <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                 </div>
                 {% comment %} <div class="form-group">
@@ -649,8 +649,7 @@
                 </div>
                 
                 <div id="firstOfTwoItemGroup">
-                  <div class="form-group">
-                    <p style="width: 20px;" class="m-2"> </p>
+                  <div class="form-group row">
                     <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
                     <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; deleteOptionsFirstOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
@@ -681,8 +680,7 @@
                 </div>
                 
                 <div id="lastOfTwoItemGroup">
-                  <div class="form-group">
-                    <p style="width: 20px;" class="m-2"> </p>
+                  <div class="form-group row">
                     <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
                     <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-two')){if(document.getElementById('err-line-two').innerHTML === this.parentNode.getElementsByClassName('last-of-two-variant-counter')[0].innerHTML){document.getElementById('last-of-two-title-error').innerHTML = ''}}; deleteOptionsLastOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
@@ -884,12 +882,11 @@
             
 
             let newContent = document.createElement('div');
-            newContent.innerHTML = `<div class='form-group'>
-                          <p style="width: 20px;" class="m-2"> </p>
+            newContent.innerHTML = `<div class='form-group row'>
                           <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
-                          <input value="${varChoices}" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                          <input value="${varJanCode}" type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px; display: none;">
-                          <input value="${varStock}" type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px; display: none;">
+                          <input value="${varChoices}" type="text" class="form-control one-item-choices" id="message-text" placeholder="Choices" style="width: 160px;">
+                          <input value="${varJanCode}" type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="JAN Code" style="width: 140px; display: none;">
+                          <input value="${varStock}" type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="Stock" style="width: 70px; display: none;">
                           <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                           </div>`;
             
@@ -980,8 +977,7 @@
             let firstOfTwoOptCounter = firstOfTwooptionArray.length + 1;
 
             let firstOfTwoNewContent = document.createElement('div');
-            firstOfTwoNewContent.innerHTML = `<div class='form-group'>
-                          <p style="width: 20px;" class="m-2"> </p>
+            firstOfTwoNewContent.innerHTML = `<div class='form-group row'>
                           <p class="m-2 first-of-two-variant-counter" style="width: 20px;">${firstOfTwoOptCounter}</p>
                           <input value="${variantTitleTop[i].innerHTML}" type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                           
@@ -1001,8 +997,7 @@
             let lastOfTwoOptCounter = lastOfTwooptionArray.length + 1;
 
             let lastOfTwoNewContent = document.createElement('div');
-            lastOfTwoNewContent.innerHTML = `<div class='form-group'>
-                          <p style="width: 20px;" class="m-2"> </p>
+            lastOfTwoNewContent.innerHTML = `<div class='form-group row'>
                           <p class="m-2 last-of-two-variant-counter" style="width: 20px;">${lastOfTwoOptCounter}</p>
                           <input value="${variantTitleLeft[i].innerHTML}" type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                           
@@ -1179,21 +1174,19 @@
 
       let newContent = document.createElement('div');
       if($('.label-hide').is(":visible")) {
-        newContent.innerHTML = `<div class='form-group'>
-                      <p style="width: 20px;" class="m-2"> </p>
+        newContent.innerHTML = `<div class='form-group row'>
                       <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
-                      <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                      <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px;">
-                      <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px;">
+                      <input type="text" class="form-control one-item-choices" id="message-text" placeholder="Choices" style="width: 160px;">
+                      <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="JAN Code" style="width: 140px;">
+                      <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="Stock" style="width: 70px;">
                       <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                       </div>`;
       } else {
-        newContent.innerHTML = `<div class='form-group'>
-                      <p style="width: 20px;" class="m-2"> </p>
+        newContent.innerHTML = `<div class='form-group row'>
                       <p class="m-2 one-variant-counter" style="width: 20px;">${optCounter}</p>
-                      <input type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                      <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="" style="width: 140px; display: none;">
-                      <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="" style="width: 70px; display: none;">
+                      <input type="text" class="form-control one-item-choices" id="message-text" placeholder="Choices" style="width: 160px;">
+                      <input type="text" class="form-control one-item-jan-code jan-input" id="message-text" placeholder="JAN Code" style="width: 140px; display: none;">
+                      <input type="number" class="form-control one-item-stock text-right" id="message-text" placeholder="Stock" style="width: 70px; display: none;">
                       <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;" onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                       </div>`;
       }
@@ -1231,8 +1224,7 @@
       let firstOfTwoOptCounter = firstOfTwooptionArray.length + 1;
 
       let firstOfTwoNewContent = document.createElement('div');
-      firstOfTwoNewContent.innerHTML = `<div class='form-group'>
-                    <p style="width: 20px;" class="m-2"> </p>
+      firstOfTwoNewContent.innerHTML = `<div class='form-group row'>
                     <p class="m-2 first-of-two-variant-counter" style="width: 20px;">${firstOfTwoOptCounter}</p>
                     <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
@@ -1271,8 +1263,7 @@
       let lastOfTwoOptCounter = lastOfTwooptionArray.length + 1;
 
       let lastOfTwoNewContent = document.createElement('div');
-      lastOfTwoNewContent.innerHTML = `<div class='form-group'>
-                    <p style="width: 20px;" class="m-2"> </p>
+      lastOfTwoNewContent.innerHTML = `<div class='form-group row'>
                     <p class="m-2 last-of-two-variant-counter" style="width: 20px;">${lastOfTwoOptCounter}</p>
                     <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
@@ -1590,20 +1581,18 @@
 
       //reset modal form
       document.getElementById('oneItemGroup').innerHTML = `
-                  <div class="form-group">
-                    <p style="width: 20px;" class="m-2"> </p>
+                  <div class="form-group row">
                     <p class="m-2 one-variant-counter" style="width: 20px;">1</p>
-                    <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                    <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
-                    <input value="" type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                    <input value="" type="text" class="form-control one-item-choices" id="message-text" placeholder="Choices" style="width: 160px;">
+                    <input value="" type="text" class="form-control one-item-jan-code" id="message-text" placeholder="JAN Code" style="width: 140px;">
+                    <input value="" type="number" class="form-control one-item-stock" id="message-text" placeholder="Stock" style="width: 70px;">
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
-                  <div class="form-group">
-                    <p style="width: 20px;" class="m-2"> </p>
+                  <div class="form-group row">
                     <p class="m-2 one-variant-counter" style="width: 20px;">2</p>
-                    <input value=""  type="text" class="form-control one-item-choices" id="message-text" placeholder="" style="width: 160px;">
-                    <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="" style="width: 140px;">
-                    <input value=""  type="number" class="form-control one-item-stock" id="message-text" placeholder="" style="width: 70px;">
+                    <input value=""  type="text" class="form-control one-item-choices" id="message-text" placeholder="Choices" style="width: 160px;">
+                    <input value=""  type="text" class="form-control one-item-jan-code" id="message-text" placeholder="JAN Code" style="width: 140px;">
+                    <input value=""  type="number" class="form-control one-item-stock" id="message-text" placeholder="Stock" style="width: 70px;">
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('errLine')){if(document.getElementById('errLine').innerHTML === this.parentNode.getElementsByClassName('one-variant-counter')[0].innerHTML){document.getElementById('title-error').innerHTML = ''}}; this.parentNode.parentNode.removeChild(this.parentNode); deleteOptions(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
                 `;
@@ -2046,16 +2035,13 @@
       varietyTableTwo.style.height = '250px';
 
       document.getElementById('firstOfTwoItemGroup').innerHTML = `
-                  <div class="form-group">
-                    
-                    <p style="width: 20px;" class="m-2"> </p>
+                  <div class="form-group row">
                     <p class="m-2 first-of-two-variant-counter" style="width: 20px;">1</p>
                     <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
                     <p class="m-2" style="width: 10px; cursor: pointer; font-size: 1.3rem;"  onClick="if(document.getElementById('err-line-one')){if(document.getElementById('err-line-one').innerHTML === this.parentNode.getElementsByClassName('first-of-two-variant-counter')[0].innerHTML){document.getElementById('first-of-two-title-error').innerHTML = ''}}; deleteOptionsFirstOfTwo(this);"><i class="fas fa-trash-alt" style="color: #D08383;"></i> </p>
                   </div>
                   <div class="form-group">
-                    <p style="width: 20px;" class="m-2"> </p>
                     <p class="m-2 first-of-two-variant-counter" style="width: 20px;">2</p>
                     <input type="text" class="form-control first-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
@@ -2063,8 +2049,7 @@
                   </div>
                 `;
       document.getElementById('lastOfTwoItemGroup').innerHTML = `
-                  <div class="form-group">
-                      <p style="width: 20px;" class="m-2"> </p>
+                  <div class="form-group row">
                       <p class="m-2 last-of-two-variant-counter" style="width: 20px;">1</p>
                       <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                       
@@ -2072,7 +2057,6 @@
                     </div>
                     
                     <div class="form-group">
-                      <p style="width: 20px;" class="m-2"> </p>
                       <p class="m-2 last-of-two-variant-counter" style="width: 20px;">2</p>
                       <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                       
