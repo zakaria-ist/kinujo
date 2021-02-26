@@ -6,6 +6,7 @@ function loadClientTableData(filter_str='[]') {
         "serverSide": true,
         "scrollX": true,
         stateSave: true,
+        "dom": '<"top"f>rt<"bottom"lp><"clear">',
         "ajax": {
             "url": "/profiles/client_list_json/",
             "data": {
