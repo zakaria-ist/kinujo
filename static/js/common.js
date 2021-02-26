@@ -1,6 +1,5 @@
 var JPCUR = '\u5186';
 var JPCASE = '\u4EF6';
-var wSize = 1024;
 
 $(document).on('click', 'input[type="text"]', function(){
     $(this).select();
@@ -45,18 +44,10 @@ var Script = function () {
 
     $(function() {
         function responsiveView() {
-            // if (window.sessionStorage.getItem('is_sidebar') == null || window.sessionStorage.getItem('is_sidebar') == undefined) {
-            //     window.sessionStorage.setItem('is_sidebar', '1');
-            // }
-            // is_sidebar = window.sessionStorage.getItem('is_sidebar');
-            // if ($('#sidebar').is(":visible") === true) {
-                wSize = 1024;
-                if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
-                    wSize = 768;
-                }
-                // if (is_sidebar == '0') {
+                // if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
                 //     wSize = 768;
                 // }
+                var wSize = $(window).width();
                 if (wSize <= 768) {
                     $('#container').addClass('sidebar-close');
                     $('#sidebar > ul').hide();
@@ -66,14 +57,13 @@ var Script = function () {
                     $('#container').removeClass('sidebar-close');
                     $('#sidebar > ul').show();
                 }
-            // }
         }
         $(window).on('load', responsiveView);
         $(window).on('resize', responsiveView);
     });
 
     $('.fa-bars').click(function () {
-        //var wSize = $(window).width();
+        var wSize = $(window).width();
         if ($('#sidebar > ul').is(":visible") === true) {
             $('#main-content').css({
                 'margin-left': '0px'
