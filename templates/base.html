@@ -232,7 +232,7 @@
         mobile = true;
     }
     if (!mobile) {
-        {% comment %} if (is_sidebar == '1') {
+        if (is_sidebar == '1') {
             $('#main-content').css({
                 'margin-left': '250px'
             });
@@ -266,7 +266,7 @@
             }
             $('#sidebar > ul').hide();
             $("#container").addClass("sidebar-closed");
-        } {% endcomment %}
+        }
     }
 
     function changeLang(){
