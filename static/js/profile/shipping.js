@@ -7,6 +7,7 @@ function loadShippingTableData() {
         "serverSide": true,
         "scrollX": true,
         stateSave: true,
+        "dom": '<"top"f>rt<"bottom"lp><"clear">',
         "ajax": {
             "url": "/profiles/shipping_list_json/",
             "data": {

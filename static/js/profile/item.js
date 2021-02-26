@@ -6,6 +6,7 @@ function loadItemTableData() {
         "pageLength": 100,
         "serverSide": true,
         "scrollX": true,
+        "dom": '<"top"f>rt<"bottom"lp><"clear">',
         //stateSave: true,
         "ajax": {
             "url": "/products/product_list_json/",
