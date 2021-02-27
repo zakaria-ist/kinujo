@@ -50,7 +50,6 @@ var Script = function () {
                 var wSize = $(window).width();
                 if (wSize <= 768) {
                     $('#container').addClass('sidebar-close');
-                    $('#sidebar').removeAttr('style');
                     $('#sidebar > ul').hide();
                 }
 
