@@ -107,7 +107,7 @@
     .sidebar-close #sidebar {
         height: auto;
         /*overflow: hidden;*/
-        overflow-y: auto;
+        /* overflow-y: auto; */
         position: absolute;
         width: 100%;
         z-index: 10000;
@@ -601,7 +601,3 @@
         overflow: visible;
     }
 }
-
-
-
-
