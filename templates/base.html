@@ -281,6 +281,25 @@
         console.log('cur_language', cur_language);
 	}
 
+    $(document).ready(function () {
+        // for responsive menu
+        var wSize = $(window).width();
+        if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+            wSize = 760;
+            console.log('base mobile');
+        }
+        
+        if (wSize <= 768) {
+            $('#container').addClass('sidebar-close');
+            $('#sidebar > ul').hide();
+        }
+
+        if (wSize > 768) {
+            $('#container').removeClass('sidebar-close');
+            $('#sidebar > ul').show();
+        }
+    })
+
 </script>
 
 {% block extrafoot %}{% endblock %}

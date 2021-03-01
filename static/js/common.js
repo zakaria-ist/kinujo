@@ -66,11 +66,11 @@ var Script = function () {
 
     $('.fa-bars').click(function () {
         var wSize = $(window).width();
-        if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
-            console.log('click mobile');
-            wSize = 760;
-            $('#container').addClass('sidebar-close');
-        }
+        // if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+        //     console.log('click mobile');
+        //     wSize = 760;
+        //     $('#container').addClass('sidebar-close');
+        // }
         if ($('#sidebar > ul').is(":visible") === true) {
             $('#main-content').css({
                 'margin-left': '0px'
