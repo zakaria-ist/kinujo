@@ -48,6 +48,7 @@ function prepareVarientTwoTable(json){
     //if empty table
     if(varietyTableTwo1.innerHTML.trim() === ''){
         varietyTableTwo1.innerHTML = `
+            <tbody><tr><td>
             <div class="col-md-2" style="max-width: 140px; min-width: 140px;">
                 <div class="row" id="two-variant-title-left">
                 <div class="variant-title variant-col"><span id="cell-name">${v_names2[0]} / ${v_names2[1]}</span></div>
@@ -55,8 +56,8 @@ function prepareVarientTwoTable(json){
                 <div class="row" id="two-variant-info-left">
                 <!--place for second variable name choices -->
                 </div>
-            </div>
-            <div class="col-md-8">
+            </div></td>
+            <td><div class="col-md-8">
                 <div class="row" id="two-variant-title-row">
                 
                 </div>
@@ -69,7 +70,9 @@ function prepareVarientTwoTable(json){
 
                 </div>
 
-            </div>
+            </div></td>
+            </tr>
+            </tbody>
         `;
 
         
@@ -212,14 +215,15 @@ function prepareVarientOneTable(json){
     //create table wrapper for the one item variant
     if(varietyTable1.innerHTML.trim() === ''){
       varietyTable1.innerHTML = `
+      <tbody><tr><td>
       <div class="col-md-2" style="max-width: 140px; min-width: 140px"><div class="row" id="one-variant-title-left">
         <div class="variant-title variant-col"><sapn id="cell-name">${v_name}</sapn></div>
       </div>
       <div class="row" id="one-variant-info-left">
         <div class="variant-info variant-col"><h3>-</h3></div>
       </div>
-      </div>
-      <div class="col-md-8">
+      </div></td>
+      <td><div class="col-md-8">
         <div class="row" id="scrollable">
           <div class="col-md-12">
             <div class="row" id="one-variant-title-row">
@@ -232,7 +236,9 @@ function prepareVarientOneTable(json){
             </div>
           </div>
         </div>
-      </div>
+      </div></td>
+      </tr>
+      </tbody>
       `
     }
 

@@ -110,7 +110,7 @@
         overflow-y: auto;
         position: absolute;
         width: 100%;
-        z-index: 10000;
+        z-index: 1001;
         display: block;
     }
 

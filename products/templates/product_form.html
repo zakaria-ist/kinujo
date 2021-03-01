@@ -137,6 +137,10 @@
         overflow: scroll;
         width: 100%;
       }
+      #variety-table {
+        overflow: scroll;
+        width: 100%;
+      }
       .flex-wrap{
         flex-wrap: initial !important;
       }
@@ -262,12 +266,12 @@
               <div id="variety-content" class="form-group row">
 
               </div>
-              <div id="variety-table" class="form-group row">
+              <table id="variety-table" class="form-group row">
 
-              </div>
-              <div id="variety-table-two" class="form-group row">
+              </table>
+              <table id="variety-table-two" class="form-group row">
 
-              </div>
+              </table>
 
               <div id="none-div">
                 <div class="form-group row">
@@ -645,7 +649,7 @@
                 <div class="form-group">
                   <p style="width: 20px;" class="m-2"> </p>
                   <p style="width: 20px;" class="m-2"> </p>
-                  <label for="message-text" class="col-form-label" style="width: 160px;">{% trans 'Choices' %}</label>
+                  <label for="message-text" class="col-form-label" style="width: 280px;">{% trans 'Choices' %}</label>
                 </div>
                 
                 <div id="firstOfTwoItemGroup">
@@ -842,7 +846,7 @@
         let tableOne = document.getElementById('variety-table');
         if(tableOne.innerHTML.trim() !== ''){
           $('.label-hide').css('display', 'none');
-          $('#oneItemVariant .modal-body').css('margin-left', '5rem');
+          $('#oneItemVariant .modal-body').css('margin-left', '2rem');
 
           //empty modal form
           oneGroupItemWrapper.innerHTML = '';
@@ -1433,7 +1437,7 @@
             <p class="col-md-12" style="font-weight:bold"><span class="m-2">${leftCellName} ${leftCellNameValue}</span> <span class="m-2">${rightCellName} ${rightCellNameValue}</span></p>
             <p class="col-md-12 text-danger" id="janErrorEdit"></p>
             <div class="row">
-              <div class="form-group col-md-5 m-2 pl-5">
+              <div class="form-group col-md-5 m-2 pl-4">
                 <label for="jan-code-one-modal">${get_translate("Jan Code")}</label>
                 <input type="text" value="${janDiv.innerHTML}" class="form-control jan-input" id="jan-code-one-modal" placeholder="${get_translate("Enter Jancode")}"> 
               </div>
@@ -1523,14 +1527,17 @@
       //create table wrapper for the one item variant
       if(varietyTable.innerHTML.trim() === ''){
         varietyTable.innerHTML = `
-        <div class="col-md-2" style="max-width: 140px; min-width: 140px"><div class="row" id="one-variant-title-left">
-          <div class="variant-title variant-col"><span id="cell-name">${oneItemVariantName}</span></div>
-        </div>
-        <div class="row" id="one-variant-info-left">
-          <div class="variant-info variant-col"><h3>-</h3></div>
-        </div>
-        </div>
-        <div class="col-md-8">
+        <tbody><tr><td>
+        <div class="col-md-2" style="max-width: 140px; min-width: 140px;">
+          <div class="row" id="one-variant-title-left">
+            <div class="variant-title variant-col"><span id="cell-name">${oneItemVariantName}</span>
+            </div>
+          </div>
+          <div class="row" id="one-variant-info-left">
+            <div class="variant-info variant-col"><h3>-</h3></div>
+          </div>
+        </div></td>
+        <td><div class="col-md-8">
           <div class="row" id="scrollable">
             <div class="col-md-12">
               <div class="row" id="one-variant-title-row">
@@ -1543,7 +1550,9 @@
               </div>
             </div>
           </div>
-        </div>
+        </div></td>
+        </tr>
+        </tbody>
         `
       }
 
@@ -1675,6 +1684,7 @@
       //if empty table
       if(varietyTableTwo.innerHTML.trim() === ''){
         varietyTableTwo.innerHTML = `
+        <tbody><tr><td>
         <div class="col-md-2" style="max-width: 140px; min-width: 140px;">
           <div class="row" id="two-variant-title-left">
             <div class="variant-title variant-col"><span id="cell-name">${firstOfTwotemsVariantTitle.value} / ${lastOfTwotemsVariantTitle.value}</span></div>
@@ -1682,8 +1692,8 @@
           <div class="row" id="two-variant-info-left">
             <!--place for second variable name choices -->
           </div>
-        </div>
-        <div class="col-md-8">
+        </div></td>
+        <td><div class="col-md-8">
           <div class="row" id="two-variant-title-row">
             
           </div>
@@ -1696,7 +1706,9 @@
     
           </div>
 
-        </div>
+        </div></td>
+        </tr>
+        </tbody>
         `;
 
         // loop for save
@@ -2027,6 +2039,8 @@
                 if(preservedDatasAgain[idNum]) {
                   njancode.innerHTML = preservedDatasAgain[idNum].jancode;
                   nstock.innerHTML = 'Stock:' + preservedDatasAgain[idNum].stock;
+                } else {
+                  nstock.innerHTML = 'Stock:' + 0;
                 }
               }
         }
