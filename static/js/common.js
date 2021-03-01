@@ -44,20 +44,21 @@ var Script = function () {
 
     $(function() {
         function responsiveView() { 
-                var wSize = $(window).width();
-                if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
-                    wSize = 760;
-                }
-                
-                if (wSize <= 768) {
-                    $('#container').addClass('sidebar-close');
-                    $('#sidebar > ul').hide();
-                }
+            var wSize = $(window).width();
+            if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+                wSize = 760;
+                console.log('load mobile');
+            }
+            
+            if (wSize <= 768) {
+                $('#container').addClass('sidebar-close');
+                $('#sidebar > ul').hide();
+            }
 
-                if (wSize > 768) {
-                    $('#container').removeClass('sidebar-close');
-                    $('#sidebar > ul').show();
-                }
+            if (wSize > 768) {
+                $('#container').removeClass('sidebar-close');
+                $('#sidebar > ul').show();
+            }
         }
         $(window).on('load', responsiveView);
         $(window).on('resize', responsiveView);
@@ -66,9 +67,9 @@ var Script = function () {
     $('.fa-bars').click(function () {
         var wSize = $(window).width();
         if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+            console.log('click mobile');
             wSize = 760;
             $('#container').addClass('sidebar-close');
-            $('#sidebar > ul').show();
         }
         if ($('#sidebar > ul').is(":visible") === true) {
             $('#main-content').css({
