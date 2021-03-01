@@ -516,7 +516,7 @@
             } else if (auth_type == '4') { // store
                 options = '';
                 $.each(profile_list, function(i, v) {
-                    if (v[2] != 2 && v[2] != 5) { // not special & general
+                    if (v[2] != 2 && v[2] != 5 && v[2] != 4) { // not special & general & store
                         options += "<option value='"+v[0]+"'>"+v[1]+"</option>";
                     }
                 });
