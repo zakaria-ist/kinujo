@@ -44,13 +44,19 @@ var Script = function () {
 
     $(function() {
         function responsiveView() {
-                // if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
-                //     wSize = 768;
-                // }
-                var wSize = $(window).width();
+                if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+                    wSize = 760;
+                }
+                // var wSize = $(window).width();
                 if (wSize <= 768) {
                     $('#container').addClass('sidebar-close');
                     $('#sidebar > ul').hide();
+                    $('#main-content').css({
+                        'margin-left': '0px'
+                    });
+                    $('#sidebar').css({
+                        'display': 'none'
+                    });
                 }
 
                 if (wSize > 768) {
