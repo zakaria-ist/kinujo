@@ -68,6 +68,7 @@ var Script = function () {
         if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
             wSize = 760;
             $('#container').addClass('sidebar-close');
+            $('#sidebar > ul').show();
         }
         if ($('#sidebar > ul').is(":visible") === true) {
             $('#main-content').css({
