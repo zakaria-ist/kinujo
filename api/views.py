@@ -250,6 +250,19 @@ class UserImages(APIView):
                 images.append("")
         return Response({"success" : False, "images": images}, status=status.HTTP_200_OK)
 
+class AllUserImages(APIView):
+    def post(self, request, format='json'):
+        profiles = Profile.objects.filter(is_hidden=False)
+        profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
+        users = []
+        for profile in profileSerializer.data:
+            users.append({
+                'id': str(profile['id']),
+                'name': str(profile['nickname']),
+                'image': profile['image']['image'] if profile['image'] and profile['image']['image'] else ""
+            })
+        return Response({"success" : False, "users": users}, status=status.HTTP_200_OK)
+
 class UserRegister(APIView):
     def post(self, request, format='json'):
         try:
