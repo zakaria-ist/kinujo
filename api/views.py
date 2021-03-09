@@ -509,7 +509,7 @@ class OrderList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        orders = Order.objects.filter(purchaser=userId)
+        orders = Order.objects.filter(purchaser=userId, is_hidden=False)
         orderSerializer = OrderSerializer(orders, many=True, context=getContext())
         updateOrders = []
         for order in orderSerializer.data:
@@ -521,8 +521,8 @@ class OrderProductList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        orders = Order.objects.filter(purchaser=userId)
-        orderProducts = OrderProduct.objects.filter(order__in=orders)
+        orders = Order.objects.filter(purchaser=userId, is_hidden=False)
+        orderProducts = OrderProduct.objects.filter(order__in=orders, is_hidden=False)
         orderProductSerializer = OrderProductSerializer(orderProducts, many=True, context=getContext())
         # janCodes = ProductJancode.objects.filter(id__in=orderProducts).values_list('horizontal_id', flat=True)
         # productVarietySelections = ProductVarietySelection.objects.filter(id__in=janCodes).values_list('product_variety_id', flat=True)
@@ -536,8 +536,8 @@ class SaleProductList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        orders = Order.objects.filter(seller=userId).values_list('id', flat=True)
-        orderProducts = OrderProduct.objects.filter(order__in=orders)
+        orders = Order.objects.filter(seller=userId, is_hidden=False).values_list('id', flat=True)
+        orderProducts = OrderProduct.objects.filter(order__in=orders, is_hidden=False)
         orderProductSerializer = OrderProductSerializer(orderProducts, many=True, context=getContext())
         # janCodes = ProductJancode.objects.filter(id__in=orderProducts).values_list('horizontal_id', flat=True)
         # productVarietySelections = ProductVarietySelection.objects.filter(id__in=janCodes).values_list('product_variety_id', flat=True)
@@ -550,8 +550,8 @@ class CommissionProductList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        orders = Order.objects.filter(seller=userId).values_list('id', flat=True)
-        orderProducts = OrderProduct.objects.filter(order__in=orders).values_list('id', flat=True)
+        orders = Order.objects.filter(seller=userId, is_hidden=False).values_list('id', flat=True)
+        orderProducts = OrderProduct.objects.filter(order__in=orders, is_hidden=False).values_list('id', flat=True)
         orderProductsCommission = OrderProductCommission.objects.filter(order_product__in=orderProducts)
         orderProductsCommissionSerializer = OrderProductCommissionSerializer(orderProductsCommission, many=True, context=getContext())
         # janCodes = ProductJancode.objects.filter(id__in=orderProducts).values_list('horizontal_id', flat=True)
@@ -565,7 +565,7 @@ class AddressList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        addresses = Address.objects.filter(user=userId)
+        addresses = Address.objects.filter(user=userId, is_hidden=False)
         addressSerializer = AddressSerializer(addresses, many=True, context=getContext())
         updatedAddress = []
         for address in addressSerializer.data:
@@ -577,7 +577,7 @@ class CustomerList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        profiles = Profile.objects.filter(introducer_id=userId)
+        profiles = Profile.objects.filter(introducer_id=userId, is_hidden=False)
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
         return Response({"success" : True, "customers" : profileSerializer.data}, status=status.HTTP_200_OK)
 
@@ -585,7 +585,7 @@ class FinancialAccountGet(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        financialAccount = FinancialAccount.objects.filter(user=userId)
+        financialAccount = FinancialAccount.objects.filter(user=userId, is_hidden=False)
         if len(financialAccount) > 0:
             financialAccount = financialAccount[0]
         else:
@@ -597,7 +597,7 @@ class ProductByIds(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, format='json'):
-        products = Product.objects.filter(id__in=request.GET.getlist('ids[]'))
+        products = Product.objects.filter(id__in=request.GET.getlist('ids[]'), is_hidden=False)
         productSerializer = ProductSerializer(products, many=True, context=getContext())
         return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
 
