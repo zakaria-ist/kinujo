@@ -550,16 +550,16 @@ class CommissionProductList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
-        orders = Order.objects.filter(seller=userId, is_hidden=False).values_list('id', flat=True)
+        orders = Order.objects.filter(is_hidden=False).values_list('id', flat=True)
         orderProducts = OrderProduct.objects.filter(order__in=orders, is_hidden=False).values_list('id', flat=True)
-        orderProductsCommission = OrderProductCommission.objects.filter(order_product__in=orderProducts, is_hidden=False)
+        orderProductsCommission = OrderProductCommission.objects.filter(user_id=userId, order_product__in=orderProducts, is_hidden=False)
         orderProductsCommissionSerializer = OrderProductCommissionSerializer(orderProductsCommission, many=True, context=getContext())
         # janCodes = ProductJancode.objects.filter(id__in=orderProducts).values_list('horizontal_id', flat=True)
         # productVarietySelections = ProductVarietySelection.objects.filter(id__in=janCodes).values_list('product_variety_id', flat=True)
         # productVarieties = ProductVariety.objects.filter(id__in=productVarietySelections).values_list('product_id', flat=True)
         # products = Product.objects.filter(id__in=productVarieties)
         # productSerializer = ProductSerializer(products, many=True, context=getContext())
-        return Response({"success" : True, "orders" : orders, "orderProducts" : orderProducts, "commissionProducts" : orderProductsCommissionSerializer.data}, status=status.HTTP_200_OK)
+        return Response({"success" : True, "commissionProducts" : orderProductsCommissionSerializer.data}, status=status.HTTP_200_OK)
 
 class AddressList(APIView):
     serializer_class = ProductSerializer
