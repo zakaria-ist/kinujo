@@ -559,7 +559,7 @@ class CommissionProductList(APIView):
         # productVarieties = ProductVariety.objects.filter(id__in=productVarietySelections).values_list('product_id', flat=True)
         # products = Product.objects.filter(id__in=productVarieties)
         # productSerializer = ProductSerializer(products, many=True, context=getContext())
-        return Response({"success" : True, "commissionProducts" : orderProductsCommissionSerializer.data}, status=status.HTTP_200_OK)
+        return Response({"success" : True, "orders" : orders, "orderProducts" : orderProducts, "commissionProducts" : orderProductsCommissionSerializer.data}, status=status.HTTP_200_OK)
 
 class AddressList(APIView):
     serializer_class = ProductSerializer
