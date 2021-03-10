@@ -550,9 +550,13 @@ class CommissionProductList(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
+        profile = Profile.objects.get(pk=userId)
         orders = Order.objects.filter(is_hidden=False).values_list('id', flat=True)
         orderProducts = OrderProduct.objects.filter(order__in=orders, is_hidden=False).values_list('id', flat=True)
-        orderProductsCommission = OrderProductCommission.objects.filter(user_id=userId, order_product__in=orderProducts, is_hidden=False)
+        if profile.authority_id == AUTHORITY_TYPE['MASTER']:
+            orderProductsCommission = OrderProductCommission.objects.filter(user__authority_id=AUTHORITY_TYPE['MASTER'], order_product__in=orderProducts, is_hidden=False)
+        else:
+            orderProductsCommission = OrderProductCommission.objects.filter(user_id=userId, order_product__in=orderProducts, is_hidden=False)
         orderProductsCommissionSerializer = OrderProductCommissionSerializer(orderProductsCommission, many=True, context=getContext())
         # janCodes = ProductJancode.objects.filter(id__in=orderProducts).values_list('horizontal_id', flat=True)
         # productVarietySelections = ProductVarietySelection.objects.filter(id__in=janCodes).values_list('product_variety_id', flat=True)
