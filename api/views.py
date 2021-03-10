@@ -240,7 +240,7 @@ class TaxRateViewSet(viewsets.ModelViewSet):
 
 class UserImages(APIView):
     def post(self, request, format='json'):
-        profiles = Profile.objects.filter(id__in=request.data['users'])
+        profiles = Profile.objects.filter(id__in=request.data['users'], is_hidden=False)
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
         images = []
         for profile in profileSerializer.data:
@@ -294,7 +294,7 @@ class UserRegister(APIView):
                 if request.data['introducer']:
                     introducerProfile = None
                     try:
-                        introducerProfile = Profile.objects.get(id=int(request.data['introducer']))
+                        introducerProfile = Profile.objects.get(id=int(request.data['introducer']), is_hidden=False)
                     except Exception as e:
                         print(e)
                     if introducerProfile:
@@ -303,7 +303,7 @@ class UserRegister(APIView):
                 else:
                     introducerProfile = None
                     try:
-                        introducerProfile = Profile.objects.get(is_master=1)
+                        introducerProfile = Profile.objects.get(is_master=1, is_hidden=False)
                     except Exception as e:
                         print(e)
                     if introducerProfile:
@@ -360,7 +360,7 @@ class UserLogin(APIView):
         if user:
             profile = None
             try:
-                profile = Profile.objects.get(user_id=user.id)
+                profile = Profile.objects.get(user_id=user.id, is_hidden=False)
             except Exception as e:
                 print(e)
 
@@ -387,19 +387,19 @@ class PasswordReset(APIView):
     def post(self, request, format='json'):
         profile = None
         try:
-            profile = Profile.objects.get(tel=request.data['tel_code'] + request.data['tel'])
+            profile = Profile.objects.get(tel=request.data['tel_code'] + request.data['tel'], is_hidden=False)
         except Exception as e:
             print(e)
 
         if profile is None:
             try:
-                profile = Profile.objects.get(tel = "+" + request.data['tel_code'] + request.data['tel'])
+                profile = Profile.objects.get(tel = "+" + request.data['tel_code'] + request.data['tel'], is_hidden=False)
             except Exception as e:
                 print(e)
 
         if profile is None:
             try:
-                profile = Profile.objects.get(tel = request.data['tel'])
+                profile = Profile.objects.get(tel = request.data['tel'], is_hidden=False)
             except Exception as e:
                 print(e)
 
@@ -426,13 +426,13 @@ class ChangeEmail(APIView):
     def post(self, request, format='json'):
         profile = None
         try:
-            profile = Profile.objects.get(tel=request.data['tel'])
+            profile = Profile.objects.get(tel=request.data['tel'], is_hidden=False)
         except Exception as e:
             print(e)
 
         if profile is None:
             try:
-                profile = Profile.objects.get(tel = "+" + request.data['tel'])
+                profile = Profile.objects.get(tel = "+" + request.data['tel'], is_hidden=False)
             except Exception as e:
                 print(e)
 
@@ -458,13 +458,13 @@ class ChangePhone(APIView):
     def post(self, request, format='json'):
         profile = None
         try:
-            profile = Profile.objects.get(tel=request.data['tel'])
+            profile = Profile.objects.get(tel=request.data['tel'], is_hidden=False)
         except Exception as e:
             print(e)
 
         if profile is None:
             try:
-                profile = Profile.objects.get(tel = "+" + request.data['tel'])
+                profile = Profile.objects.get(tel = "+" + request.data['tel'], is_hidden=False)
             except Exception as e:
                 print(e)
 
@@ -614,23 +614,23 @@ class UserByIds(APIView):
             ids = request.GET.getlist('ids[]')
             if 'type' in request.GET and request.GET['type'] == 'contact':
                 if 'userId' in request.GET and request.GET['userId']:
-                    profile = Profile.objects.get(id=request.GET['userId'])
+                    profile = Profile.objects.get(id=request.GET['userId'], is_hidden=False)
                     sProfileSerializer = ProfileSerializer(profile, context=getContext())
 
                     masters = Profile.objects.filter(is_master=1)
                     ids.extend(masters.values_list('id', flat=True))
 
                     if sProfileSerializer.data['authority']['id'] == 1:
-                        profiles = Profile.objects.all()
-                        ids.extend(Profile.objects.all().values_list('id', flat=True))
+                        profiles = Profile.objects.filter(is_hidden=False)
+                        ids.extend(Profile.objects.filter(is_hidden=False).values_list('id', flat=True))
                     elif sProfileSerializer.data['introducer'] is not None:
                         introducers = sProfileSerializer.data['introducer'].split("/")
                         introducer = introducers[len(introducers)-2]
                         ids.append(introducer)
-                        ids.extend(Profile.objects.filter(introducer_id=sProfileSerializer.data['id']).values_list('id', flat=True))
+                        ids.extend(Profile.objects.filter(introducer_id=sProfileSerializer.data['id'], is_hidden=False).values_list('id', flat=True))
 
 
-            profiles = Profile.objects.filter(id__in=ids)
+            profiles = Profile.objects.filter(id__in=ids, is_hidden=False)
             if len(profiles) == 0:
                 return Response({"success" : True, "users" : profiles}, status=status.HTTP_200_OK)
 
@@ -884,10 +884,10 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
 
 class ProductJanCodes(APIView):
     def get(self, request, productId, format='json'):
-        productVarieties = ProductVariety.objects.filter(product_id=productId).values_list('id', flat=True)
-        productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties).values_list('id', flat=True)
-        horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections)
-        vertical = ProductJancode.objects.filter(vertical_id__in=productVarietySelections)
+        productVarieties = ProductVariety.objects.filter(product_id=productId, is_hidden=False).values_list('id', flat=True)
+        productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties, is_hidden=False).values_list('id', flat=True)
+        horizontal = ProductJancode.objects.filter(horizontal_id__in=productVarietySelections, is_hidden=False)
+        vertical = ProductJancode.objects.filter(vertical_id__in=productVarietySelections, is_hidden=False)
         horizontalSerializer = ProductJancodeSerializer(horizontal, many=True, context=getContext())
         verticalSerializer = ProductJancodeSerializer(vertical, many=True, context=getContext())
         return Response({"success" : True, "verticals" : verticalSerializer.data, "horizontals" : horizontalSerializer.data}, status=status.HTTP_200_OK)
@@ -896,7 +896,7 @@ class RemoveReferral(APIView):
     def post(self, request, format='json'):
         user = request.data['userId']
         parent = request.data['parentId']
-        profiles = Profile.objects.filter(id=user).filter(introducer_id=parent)
+        profiles = Profile.objects.filter(id=user, is_hidden=False).filter(introducer_id=parent)
         profile = profiles[0]
         profile.introducer = None
         profile.save()
@@ -906,7 +906,7 @@ class OrderReceipt(APIView):
     def post(self, request, orderId, format='json'):
         user = request.data['userId']
         parent = request.data['parentId']
-        profiles = Profile.objects.filter(id=user).filter(introducer_id=parent)
+        profiles = Profile.objects.filter(id=user, is_hidden=False).filter(introducer_id=parent)
         profile = profiles[0]
         profile.introducer = None
         profile.save()
@@ -928,8 +928,8 @@ class Pay(APIView):
                 },
             )
             sellers = []
-            profile = Profile.objects.get(id=userId)
-            tax = TaxRate.objects.get(id=request.data['tax'])
+            profile = Profile.objects.get(id=userId, is_hidden=False)
+            tax = TaxRate.objects.get(id=request.data['tax'], is_hidden=False)
             token_id = token.id
             customer_id = None
 
@@ -1137,7 +1137,7 @@ class Pay(APIView):
 
 class UpdateProfileImage(APIView):
     def post(self, request, userId, format='json'):
-        profile = Profile.objects.get(id=userId)
+        profile = Profile.objects.get(id=userId, is_hidden=False)
         image = Image.objects.get(id=request.data['image_id'])
         if request.data['type'] == 'image':
             profile.image = image
@@ -1206,7 +1206,7 @@ class CreateProduct(APIView):
                             return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 2
 
-            profile = Profile.objects.get(id=userId)
+            profile = Profile.objects.get(id=userId, is_hidden=False)
             profileSerializer = ProfileSerializer(profile, context=getContext())
 
             productData = {
@@ -1395,7 +1395,7 @@ class CreateProduct(APIView):
 
 class GetProductByVariety(APIView):
     def get(self, request, format='json'):
-        product = Product.objects.get(id=request.GET['productId'])
+        product = Product.objects.get(id=request.GET['productId'], is_hidden=False)
         productSerializer = ProductSerializer(product, context=getContext())
         janCodes = []
         for productVariety in productSerializer.data['productVarieties']:
@@ -1404,18 +1404,18 @@ class GetProductByVariety(APIView):
                     janCodes.append(horizontal['jan_code'])
                 for vertical in productVarietySelection['jancode_vertical']:
                     janCodes.append(vertical['jan_code'])
-        productJancodes = ProductJancode.objects.filter(jan_code__in=janCodes)
+        productJancodes = ProductJancode.objects.filter(jan_code__in=janCodes, is_hidden=False)
         productJancodesSerializer = ProductJancodeSerializer(productJancodes, many=True, context=getContext())
 
 
-        horizontals = ProductJancode.objects.filter(jan_code__in=janCodes).values_list('horizontal_id', flat=True)
-        verticals = ProductJancode.objects.filter(jan_code__in=janCodes).values_list('vertical_id', flat=True)
+        horizontals = ProductJancode.objects.filter(jan_code__in=janCodes, is_hidden=False).values_list('horizontal_id', flat=True)
+        verticals = ProductJancode.objects.filter(jan_code__in=janCodes, is_hidden=False).values_list('vertical_id', flat=True)
         janCodeIds = []
         janCodeIds.extend(horizontals)
         janCodeIds.extend(verticals)
-        productVarietyIDs = ProductVarietySelection.objects.filter(id__in=janCodeIds).values_list("product_variety_id", flat=True)
-        productIDs = ProductVariety.objects.filter(id__in=productVarietyIDs).values_list("product_id", flat=True)
-        products = Product.objects.filter(id__in=productIDs)
+        productVarietyIDs = ProductVarietySelection.objects.filter(id__in=janCodeIds, is_hidden=False).values_list("product_variety_id", flat=True)
+        productIDs = ProductVariety.objects.filter(id__in=productVarietyIDs, is_hidden=False).values_list("product_id", flat=True)
+        products = Product.objects.filter(id__in=productIDs, is_hidden=False)
         productSerializer = SimpleProductSerializer(products, many=True, context=getContext())
         return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
 
@@ -1482,7 +1482,7 @@ class EditProduct(APIView):
                             return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 2
 
-            profile = Profile.objects.get(id=userId)
+            profile = Profile.objects.get(id=userId, is_hidden=False)
             profileSerializer = ProfileSerializer(profile, context=getContext())
 
 
