@@ -11,6 +11,7 @@ from rest_framework.validators import UniqueValidator
 from rest_framework.test import APIRequestFactory
 from rest_framework.request import Request
 from .insertSerializers import InsertImageSerializer, InsertFinancialAccountSerialier, InsertUserSerializer, InsertGroupSerializer, InsertOrderSerializer, InsertOrderProductSerializer, InsertOrderProductCommissionSerializer, InsertOrderReceiptSerializer, InsertTotalSaleSerializer, InsertTotalCommissionSerializer, InsertPolicySerializer, InsertPrefectureSerializer, InsertProductCategorySerializer, InsertProductSerializer, InsertProductImageSerializer, InsertProductVarietySerializer, InsertProductVarietySelectionSerializer, InsertProductJancodeSerializer, InsertAuthoritySerializer, InsertProfileSerializer, InsertUserSaleSerializer, InsertUserCommisionSerializer, InsertMonthlyPaymentSerializer, InsertAddressSerializer, InsertTaxRateSerializer
+from utilities.constants import AUTHORITY_TYPE
 
 def getContext():
     factory = APIRequestFactory()
@@ -67,15 +68,18 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         model = Profile
         fields = ['is_master', 'tel_code', 'background_img', 'id', 'profit', 'url', 'user','authority','is_seller','shop_name','tel','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
     def get_profit(self, instance):
-        orders = Order.objects.filter(seller=instance.id).values_list('id', flat=True)
-        orderProducts = OrderProduct.objects.all().filter(order__in=orders)
-        orderProductsCommission = OrderProductCommission.objects.all().filter(order_product__in=orderProducts.values_list('id', flat=True))
+        orders = Order.objects.filter(is_hidden=False).values_list('id', flat=True)
+        orderProducts = OrderProduct.objects.filter(order__in=orders, is_hidden=False).values_list('id', flat=True)
+        if instance.authority_id == AUTHORITY_TYPE['MASTER']:
+            orderProductsCommission = OrderProductCommission.objects.filter(order_product__in=orderProducts, is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'])
+        else:
+            orderProductsCommission = OrderProductCommission.objects.filter(order_product__in=orderProducts, is_hidden=False, user_id=instance.id)
 
         total = 0
         for item in orderProductsCommission:
             total = total + item.amount
-        for item in orderProducts:
-            total = total + item.unit_price
+        # for item in orderProducts:
+        #     total = total + item.unit_price
         return total
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
