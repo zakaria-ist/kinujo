@@ -919,18 +919,18 @@ class Pay(APIView):
             if(len(request.data['products']) == 0):
                 return Response({"success" : False, "errors": {"no_products" : "No products"}}, status=status.HTTP_200_OK)
 
-            token = stripe.Token.create(
-                card={
-                    "number": request.data['card']['number'].replace(" ", ""),
-                    "exp_month": request.data['card']['expiry'].split("/")[0],
-                    "exp_year": "20" + request.data['card']['expiry'].split("/")[1],
-                    "cvc": request.data['card']['cvc'],
-                },
-            )
+            # token = stripe.Token.create(
+            #     card={
+            #         "number": request.data['card']['number'].replace(" ", ""),
+            #         "exp_month": request.data['card']['expiry'].split("/")[0],
+            #         "exp_year": "20" + request.data['card']['expiry'].split("/")[1],
+            #         "cvc": request.data['card']['cvc'],
+            #     },
+            # )
             sellers = []
             profile = Profile.objects.get(id=userId, is_hidden=False)
             tax = TaxRate.objects.get(id=request.data['tax'], is_hidden=False)
-            token_id = token.id
+            # token_id = token.id
             customer_id = None
 
             ids = []
@@ -978,12 +978,12 @@ class Pay(APIView):
                     #     groupProducts[product['user']['url']] = [product]
                 
                 total_amount = int(amount) + int(total_shipping_fee)
-                charge = stripe.Charge.create(
-                    amount=int(float(total_amount)),
-                    currency="jpy",
-                    source=token_id,
-                    description="Order by " + str(profileSerializer.data['id']),
-                )
+                # charge = stripe.Charge.create(
+                #     amount=int(float(total_amount)),
+                #     currency="jpy",
+                #     source=token_id,
+                #     description="Order by " + str(profileSerializer.data['id']),
+                # )
 
                 address2 = addressSerializer.data['address2']
                 if address2 is None:
@@ -1028,7 +1028,7 @@ class Pay(APIView):
                         'shop_name' : shop_name,
                         'address' : addressSerializer.data['address1'],
                         'order' : orderSerializer.data['url'],
-                        'payment' : charge['id']
+                        'payment' : request.data['checkoutSessionId']
                     }
                     orderReceiptSerializer = OrderReceiptSerializer(data=orderReceipt, context=getContext())
                     if orderReceiptSerializer.is_valid():

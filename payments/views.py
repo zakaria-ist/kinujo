@@ -20,7 +20,7 @@ class CancelledView(TemplateView):
 def create_checkout_session(request):
     if request.method == 'POST':
         domain_url = request.build_absolute_uri('/').strip("/")
-        print('domain_url', domain_url)
+        total = request.data['amount']
         stripe.api_key = 'sk_test_51INa46G0snPTYlWjdSzH5xxz70p7FZwcWbO37zos9U6jg1WXOMeNCtPrbOA3BXZWavBz7N67wLiYP5ZSQPp2QonF00VbEj1Gfc'
         try:
             # Create new Checkout Session for the order
@@ -41,9 +41,9 @@ def create_checkout_session(request):
                     'price_data': {
                         'currency': 'jpy',
                         'product_data': {
-                        'name': 'T-shirt',
+                        'name': 'Kinujo',
                         },
-                        'unit_amount': 2000,
+                        'unit_amount': total,
                     },
                     'quantity': 1,
                 }],
