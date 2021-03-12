@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^products/', include('products.urls')),
     url(r'^profiles/', include('profiles.urls')),
     url(r'^salons/', include('salons.urls')),
+    url(r'^payments/', include('payments.urls')),
     # url(r'^taxes/', include('taxes.urls')),
     url(r'^$', views.home_load, name='home_load'),
     url(r'^listing_home_load/$', views.listing_home_load, name='listing_home_load'),
