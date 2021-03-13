@@ -916,7 +916,9 @@ class Pay(APIView):
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
         try:
-            if(len(request.data['products']) == 0):
+            body = json.loads(request.body)
+            # if(len(request.data['products']) == 0):
+            if(len(body['products']) == 0):
                 return Response({"success" : False, "errors": {"no_products" : "No products"}}, status=status.HTTP_200_OK)
 
             # token = stripe.Token.create(
@@ -929,7 +931,8 @@ class Pay(APIView):
             # )
             sellers = []
             profile = Profile.objects.get(id=userId, is_hidden=False)
-            tax = TaxRate.objects.get(id=request.data['tax'], is_hidden=False)
+            # tax = TaxRate.objects.get(id=request.data['tax'], is_hidden=False)
+            tax = TaxRate.objects.get(id=body['tax'], is_hidden=False)
             # token_id = token.id
             customer_id = None
 
@@ -937,13 +940,15 @@ class Pay(APIView):
             quantities = {}
             varieties = {}
 
-            for product in request.data['products']:
+            # for product in request.data['products']:
+            for product in body['products']:
                 quantities['item_' + str(product['product_id'])] = product['quantity']
                 varieties['item_' + str(product['product_id'])] = product['varietyId']
                 ids.append(product['product_id'])
 
             products = Product.objects.filter(id__in=ids)
-            address = Address.objects.get(id=request.data['address'])
+            # address = Address.objects.get(id=request.data['address'])
+            address = Address.objects.get(id=body['address'])
 
             groupProducts = {}
             orderIds = []
@@ -1028,7 +1033,8 @@ class Pay(APIView):
                         'shop_name' : shop_name,
                         'address' : addressSerializer.data['address1'],
                         'order' : orderSerializer.data['url'],
-                        'payment' : request.data['checkoutSessionId']
+                        # 'payment' : request.data['checkoutSessionId']
+                        'payment' : body['checkoutSessionId']
                     }
                     orderReceiptSerializer = OrderReceiptSerializer(data=orderReceipt, context=getContext())
                     if orderReceiptSerializer.is_valid():
