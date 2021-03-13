@@ -20,7 +20,8 @@ class CancelledView(TemplateView):
 def create_checkout_session(request):
     if request.method == 'POST':
         domain_url = request.build_absolute_uri('/').strip("/")
-        total = request.data['amount']
+        body = json.loads(request.body)
+        total = body['amount']
         stripe.api_key = 'sk_test_51INa46G0snPTYlWjdSzH5xxz70p7FZwcWbO37zos9U6jg1WXOMeNCtPrbOA3BXZWavBz7N67wLiYP5ZSQPp2QonF00VbEj1Gfc'
         try:
             # Create new Checkout Session for the order
