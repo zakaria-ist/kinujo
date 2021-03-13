@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.urls import include, path
 from profiles import views
+from payments import views as payment_views
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -34,6 +35,8 @@ urlpatterns = [
     url(r'^payments/', include('payments.urls')),
     # url(r'^taxes/', include('taxes.urls')),
     url(r'^$', views.home_load, name='home_load'),
+    url(r'^success$', payment_views.SuccessView.as_view(), name='payment_success'),
+    url(r'^cancel$', payment_views.CancelledView.as_view(), name='payment_cancelled'),
     url(r'^listing_home_load/$', views.listing_home_load, name='listing_home_load'),
     url(r'^pass_reset/$', views.pass_reset, name='pass_reset'),
     url(r'^reset_password/$', views.reset_password, name='reset_password'),

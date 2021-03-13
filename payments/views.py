@@ -78,7 +78,19 @@ def stripe_webhook(request):
 
     # Handle the checkout.session.completed event
     if event['type'] == 'checkout.session.completed':
-        print("Payment was successful.")
+        session = event['data']['object']
+        if session.payment_status == "paid":
+            # Fulfill the purchase
+            print("Payment was successful.")
+            # TODO: run some custom code here
+    elif event['type'] == 'checkout.session.async_payment_succeeded':
+        session = event['data']['object']
+        if session.payment_status == "paid":
+            # Fulfill the purchase
+            print("Payment was successful.")
+            # TODO: run some custom code here
+    elif event['type'] == 'checkout.session.async_payment_failed':
         # TODO: run some custom code here
+        print('Failed')
 
     return HttpResponse(status=200)
