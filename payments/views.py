@@ -7,8 +7,13 @@ from django.views.generic import TemplateView
 
 # Create your views here.
 
-class PayView(TemplateView):
-    template_name = 'pay.html'
+def pay(request):
+    """
+    Method to redirect to stripe checkout page.
+    """
+    amount = request.GET.get('amount', 0)
+    return render(request, 'pay.html', {'amount': amount})
+
 
 class SuccessView(TemplateView):
     template_name = 'success.html'

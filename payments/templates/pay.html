@@ -1,20 +1,22 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kinujo Pay</title>
+    <title>Kinujo Payment</title>
     <script src="https://js.stripe.com/v3/"></script>
   </head>
   <body>
   <section class="section">
     <div class="container">
-      <button id="checkout-button">Checkout</button>
+      <button id="checkout-button" style="display: none">Checkout</button>
     </div>
+    <div id="loading"><img src="{% static 'img/loading.gif' %}" /></div>
   </section>
     <script type="text/javascript">
-      // Create an instance of the Stripe object with your publishable API key
-      var stripe = Stripe('pk_test_51INa46G0snPTYlWjPqYzBnU4XeWZhXLtduZx5F1A02YnShGIvAGqRuK0J6uPECj6DME62dKsNlUb3JXQlq9zaBf300Z1eNWPIP');
+      var amount = parseInt('{{amount}}');
+      var stripe = Stripe('pk_test_51HKjPHIvJqFxVlDAE98cKW9H5ugaXDHTkuR18QPSw8yM3NOjYvX4V2SQzLzUb6MMqOmTTRUB2FCxjWeyv3hIUZa700ApA0gjSN');
       var checkoutButton = document.getElementById('checkout-button');
       var baseUrl = window.location.origin;
 
@@ -23,6 +25,13 @@
         // created in step 3.
         fetch(baseUrl + '/payments/create-checkout-session/', {
           method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+           body: JSON.stringify({
+              amount: amount,
+           })
         })
         .then(function(response) {
           return response.json();
@@ -42,6 +51,12 @@
           console.error('Error:', error);
         });
       });
+
+      (function() {
+        var checkoutButton = document.getElementById('checkout-button');
+        checkoutButton.click();
+      })();
+
     </script>
   </body>
 </html>
