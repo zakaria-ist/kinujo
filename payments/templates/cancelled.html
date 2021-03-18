@@ -15,6 +15,15 @@
       <h1>Your payment is cancelled.</h1>
     </div>
   </section>
+  <section class="section">
+    <div class="container text-center">
+      <a href="net.c2sg.kinujo://" class="btn btn-info">Return</a>
+    </div>
+  </section>
+  <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script type="text/javascript">
+    window.sessionStorage.setItem('stripe_session', '');
+  </script>
   </body>
 </html>

@@ -15,6 +15,40 @@
       <h1>Your payment succeed.</h1>
     </div>
   </section>
+  <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script type="text/javascript">
+    var baseUrl = window.location.origin;
+    var session_id = "{{session_id}}";
+    var stripe_session = JSON.parse(window.sessionStorage.getItem('stripe_session'));
+    console.log('session_id', session_id);
+    console.log('stripe_session', stripe_session);
+    if (stripe_session && stripe_session != '' && stripe_session.sessionId == session_id) {
+      fetch(baseUrl + '/api/pay/' + stripe_session.userId + "/", {
+          method: 'POST',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+                  checkoutSessionId: session_id,
+                  products: stripe_session.products,
+                  address: stripe_session.address,
+                  tax: stripe_session.tax,
+              })
+          })
+          .then(function(response) {
+              return response.json();
+          })
+          .then(function(response) {
+              window.sessionStorage.setItem('stripe_session', '');
+              seller = response.sellers;
+              console.log('seller', seller);
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
+    }
+  </script>
   </body>
 </html>

@@ -5,7 +5,7 @@ from payments import views
 
 urlpatterns = [
     url(r'^pay$', views.pay, name='pay'),
-    url(r'^success$', views.SuccessView.as_view(), name='success'),
+    url(r'^success$', views.success, name='success'),
     url(r'^cancelled$', views.CancelledView.as_view(), name='cancelled'),
     url(r'^create-checkout-session/$', views.create_checkout_session, name='create_checkout_session'),
     # url(r'^webhook/$', views.stripe_webhook, name='stripe_webhook'),

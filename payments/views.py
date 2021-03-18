@@ -12,11 +12,29 @@ def pay(request):
     Method to redirect to stripe checkout page.
     """
     amount = request.GET.get('amount', 0)
-    return render(request, 'pay.html', {'amount': amount})
+    tax = request.GET.get('tax', 0)
+    address = request.GET.get('address', 0)
+    userId = request.GET.get('userId', 0)
+    products_len = int(request.GET.get('products_len', 0))
+    products = []
+    i = 0
+    while (i < products_len):
+        products.append([
+            int(request.GET.get('prod_'+str(i)+'id', "")),
+            int(request.GET.get('prod_'+str(i)+'p_id', "")),
+            int(request.GET.get('prod_'+str(i)+'v_id', "")),
+            int(request.GET.get('prod_'+str(i)+'qty', "")),
+        ])
+        i = i + 1
+    return render(request, 'pay.html', {'amount': amount, 'tax': tax, 'address': address, 'userId': userId, 'products': products})
 
 
-class SuccessView(TemplateView):
-    template_name = 'success.html'
+def success(request):
+    """
+    Method to redirect to stripe success page.
+    """
+    session_id = request.GET.get('sc_sid', "")
+    return render (request, 'success.html', {'session_id': session_id})
 
 class CancelledView(TemplateView):
     template_name = 'cancelled.html'

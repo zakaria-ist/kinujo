@@ -938,9 +938,12 @@ class Pay(APIView):
             varieties = {}
 
             for product in body['products']:
-                quantities['item_' + str(product['product_id'])] = product['quantity']
-                varieties['item_' + str(product['product_id'])] = product['varietyId']
-                ids.append(product['product_id'])
+                # quantities['item_' + str(product['product_id'])] = product['quantity']
+                # varieties['item_' + str(product['product_id'])] = product['varietyId']
+                # ids.append(product['product_id'])
+                quantities['item_' + str(product[0][1])] = product[0][3]
+                varieties['item_' + str(product[0][1])] = product[0][2]
+                ids.append(product[0][1])
 
             products = Product.objects.filter(id__in=ids)
             address = Address.objects.get(id=body['address'])
@@ -1133,6 +1136,7 @@ class Pay(APIView):
 
             return Response({"success" : True, "sellers" : sellers})
         except Exception as e:
+            print('error', e)
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
 class UpdateProfileImage(APIView):
