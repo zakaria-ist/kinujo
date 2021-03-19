@@ -17,7 +17,7 @@
   </section>
   <section class="section">
     <div class="container text-center">
-      <a href="net.c2sg.kinujo://cart?sc_checkout=success" class="btn btn-info">Return</a>
+      <a id="app_link" class="btn btn-info">Return</a>
     </div>
   </section>
   <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
@@ -46,9 +46,11 @@
               return response.json();
           })
           .then(function(response) {
-              window.sessionStorage.setItem('stripe_session', '');
               seller = response.sellers;
               console.log('seller', seller);
+              $('#app_link').attr('href', 'net.c2sg.kinujo://complete/success/' + stripe_session.seller + '/' + seller);
+              $('#app_link').trigger('click');
+              window.sessionStorage.setItem('stripe_session', '');
           })
           .catch(function (error) {
               console.log(error);

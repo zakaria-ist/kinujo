@@ -15,6 +15,7 @@ def pay(request):
     tax = request.GET.get('tax', 0)
     address = request.GET.get('address', 0)
     userId = request.GET.get('userId', 0)
+    seller = request.GET.get('seller', "")
     products_len = int(request.GET.get('products_len', 0))
     products = []
     i = 0
@@ -26,7 +27,13 @@ def pay(request):
             int(request.GET.get('prod_'+str(i)+'qty', "")),
         ])
         i = i + 1
-    return render(request, 'pay.html', {'amount': amount, 'tax': tax, 'address': address, 'userId': userId, 'products': products})
+    return render(request, 'pay.html', {
+                                        'amount': amount, 
+                                        'tax': tax, 
+                                        'address': address, 
+                                        'userId': userId, 
+                                        'seller': seller, 
+                                        'products': products})
 
 
 def success(request):
