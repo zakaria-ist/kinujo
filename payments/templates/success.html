@@ -49,10 +49,12 @@
               seller = response.sellers;
               console.log('seller', seller);
               $('#app_link').attr('href', 'net.c2sg.kinujo://complete/success/' + stripe_session.seller + '/' + seller);
-              $('#app_link')[0].click();
               window.sessionStorage.setItem('stripe_session', '');
-              window.open('','_self');
-              window.close();
+              setTimeout(() => {
+                $('#app_link')[0].click();
+                window.open('','_self');
+                window.close();
+              }, 5000);
           })
           .catch(function (error) {
               console.log(error);
