@@ -49,7 +49,8 @@
               seller = response.sellers;
               console.log('seller', seller);
               $('#app_link').attr('href', 'net.c2sg.kinujo://complete/success/' + stripe_session.seller + '/' + seller);
-              $('#app_link').trigger('click');
+              $('#app_link').click();
+              close();
               window.sessionStorage.setItem('stripe_session', '');
           })
           .catch(function (error) {

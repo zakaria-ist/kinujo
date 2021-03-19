@@ -24,7 +24,8 @@
   <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
   <script type="text/javascript">
     $('#app_link').attr('href', 'net.c2sg.kinujo://complete/cancel/_/_');
-    $('#app_link').trigger('click');
+    $('#app_link').click();
+    close();
     window.sessionStorage.setItem('stripe_session', '');
   </script>
   </body>
