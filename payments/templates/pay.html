@@ -19,7 +19,6 @@
       var address = '{{address}}';
       var tax = '{{tax}}';
       var userId = '{{userId}}';
-      var seller = '{{seller}}';
       var products = [];
       {% for product in products %}
         products.push([{{product}}]);
@@ -53,7 +52,6 @@
                 address: address,
                 tax: tax,
                 userId: userId,
-                seller: seller
               }
             )
           );

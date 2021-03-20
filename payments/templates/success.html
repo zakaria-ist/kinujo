@@ -52,7 +52,6 @@
               })
               snap_ids = snap_ids.slice(0, -1)
               let seller = response.sellers;
-              //let href = 'net.c2sg.kinujo://complete/success/' + stripe_session.seller + '/' + seller;
               let href = 'net.c2sg.kinujo://complete/success/' + snap_ids + '/' + seller;
               $('#app_link').attr('href', href);
               window.sessionStorage.setItem('stripe_session', '');
