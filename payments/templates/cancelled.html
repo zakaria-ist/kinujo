@@ -27,10 +27,13 @@
     window.sessionStorage.setItem('stripe_session', '');
     setTimeout(() => {
       $('#app_link')[0].click();
+    }, 5000);
+
+    $('#app_link').on('click', function() {
+      window.sessionStorage.setItem('stripe_session', '');
       window.open('','_self');
       window.close();
-    }, 5000);
-    
+    })
   </script>
   </body>
 </html>
