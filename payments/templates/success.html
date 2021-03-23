@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load i18n %}
 <html>
   <head>
     <meta charset="utf-8">
@@ -11,13 +12,15 @@
   </head>
   <body>
   <section class="section">
-    <div class="container text-center">
-      <h1>Your payment succeed.</h1>
+    <div class="container text-center" style="font-size: 14px">
+      <h4>{% trans 'Your payment succeed.' %}</h4>
+      <p>{% trans 'Thank you for your order!' %}</p>
+      <p>{% trans 'Please wait for a while until delivery.' %}</p>
     </div>
   </section>
   <section class="section">
     <div class="container text-center">
-      <a id="app_link" class="btn btn-info">Return</a>
+      <a id="app_link" class="btn btn-info">{% trans 'Return' %}</a>
     </div>
   </section>
   <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
