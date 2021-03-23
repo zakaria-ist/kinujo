@@ -97,7 +97,7 @@ class TotalCommissionSerializer(serializers.HyperlinkedModelSerializer):
 class PolicySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Policy
-        fields = ['privacy_policy','is_hidden','created','modified']
+        fields = ['privacy_policy', 'terms_of_use','is_hidden','created','modified']
 class PrefectureSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Prefecture

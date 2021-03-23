@@ -114,7 +114,7 @@ class PolicyViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Policy.objects.all()
+    queryset = Policy.objects.filter(is_hidden=0)
     serializer_class = PolicySerializer
 
 class PrefectureViewSet(viewsets.ModelViewSet):
