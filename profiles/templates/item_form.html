@@ -746,9 +746,9 @@
         }
       }else{
         if(tableItem === document.getElementById('variety-table')){
-          document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ Item / Option</button></div>`;
+          document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ ${get_translate('Item / Option')}</button></div>`;
         }else{
-          document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="two-items-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant" onclick="changeModalTwo();">+ Items / Options</button></div>`;
+          document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="two-items-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#twoItemsVariant" onclick="changeModalTwo();">+ ${get_translate('Items / Options')}</button></div>`;
         }
       }
     }
@@ -1208,7 +1208,6 @@
 
       let lastOfTwoNewContent = document.createElement('div');
       lastOfTwoNewContent.innerHTML = `<div class='form-group row'>
-                    <p style="width: 20px;" class="m-2"> </p>
                     <p class="m-2 last-of-two-variant-counter" style="width: 20px;">${lastOfTwoOptCounter}</p>
                     <input type="text" class="form-control last-of-two-items-choices" id="message-text" placeholder="" style="width: 280px;">
                     
@@ -1579,7 +1578,7 @@
       //function to check error of choices
       //error check empty field
       function checkError(classes, errorMsgId, errLine){
-        for(let i = 0; i <td classes.length; i++){
+        for(let i = 0; i < classes.length; i++){
           if(classes[i].value === '' || classes[i].value === ' ' || classes[i].value === undefined){
             errorMsgId.innerHTML = get_translate("Choices field") + ` (<span id="${errLine}">${i + 1}</span>) ` + get_translate("can't be empty");
             classes[i].focus();
