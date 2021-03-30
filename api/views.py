@@ -1081,7 +1081,7 @@ class Pay(APIView):
                                 productJancode.stock = int(productJancode.stock) - int(quantity)
                                 productJancode.save()
 
-                            errors = calculateCommission(kinujo_product, float(product['price']), orderProductSerializer.data['url'], 
+                            errors = calculateCommission(kinujo_product, groupTotal, orderProductSerializer.data['url'], 
                                         profileSerializer.data['id'], groupShippingFee, groupTotal, seller)
                             if errors:
                                 return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
