@@ -1153,61 +1153,65 @@ class UpdateProfileImage(APIView):
 class CreateProduct(APIView):
     def post(self, request, userId, format='json'):
         try:
-            if request.data['productName'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in product name."]}, status=status.HTTP_200_OK)
-            if request.data['brandName'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in brand name."]}, status=status.HTTP_200_OK)
-            if request.data['pr'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in PR statement."]}, status=status.HTTP_200_OK)
-            if request.data['productId'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in product ID."]}, status=status.HTTP_200_OK)
-            if request.data['productCategory'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in product category."]}, status=status.HTTP_200_OK)
-            if request.data['productVariation'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in product variation."]}, status=status.HTTP_200_OK)
-            if request.data['publishState'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in publish state."]}, status=status.HTTP_200_OK)
-            if request.data['publishDate'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in publish date."]}, status=status.HTTP_200_OK)
-            if request.data['price'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in price."]}, status=status.HTTP_200_OK)
-            if request.data['storePrice'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in store price."]}, status=status.HTTP_200_OK)
-            if request.data['shipping'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in shipping."]}, status=status.HTTP_200_OK)
-            if request.data['productPageDisplayMethod'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in product page display method."]}, status=status.HTTP_200_OK)
-            if request.data['productDescription'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in product description."]}, status=status.HTTP_200_OK)
+            if request.data['draft'] != 1:
+                if request.data['productName'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in product name."]}, status=status.HTTP_200_OK)
+                if request.data['brandName'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in brand name."]}, status=status.HTTP_200_OK)
+                if request.data['pr'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in PR statement."]}, status=status.HTTP_200_OK)
+                if request.data['productId'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in product ID."]}, status=status.HTTP_200_OK)
+                if request.data['productCategory'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in product category."]}, status=status.HTTP_200_OK)
+                if request.data['productVariation'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in product variation."]}, status=status.HTTP_200_OK)
+                if request.data['publishState'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in publish state."]}, status=status.HTTP_200_OK)
+                if request.data['publishDate'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in publish date."]}, status=status.HTTP_200_OK)
+                if request.data['price'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in price."]}, status=status.HTTP_200_OK)
+                if request.data['storePrice'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in store price."]}, status=status.HTTP_200_OK)
+                if request.data['shipping'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in shipping."]}, status=status.HTTP_200_OK)
+                if request.data['productPageDisplayMethod'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in product page display method."]}, status=status.HTTP_200_OK)
+                if request.data['productDescription'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in product description."]}, status=status.HTTP_200_OK)
 
             variety = 0
 
             if request.data['productVariation'] == 'none':
-                noneVariationItems = request.data['noneVariationItems']
-                if noneVariationItems['janCode'] == "" and 'delete' in noneVariationItems and not noneVariationItems['delete']:
-                    return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
-                if noneVariationItems['stock'] == "" and 'delete' in noneVariationItems and not noneVariationItems['delete']:
-                    return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
+                if request.data['draft'] != 1:
+                    noneVariationItems = request.data['noneVariationItems']
+                    if noneVariationItems['janCode'] == "" and 'delete' in noneVariationItems and not noneVariationItems['delete']:
+                        return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                    if noneVariationItems['stock'] == "" and 'delete' in noneVariationItems and not noneVariationItems['delete']:
+                        return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 0
             if request.data['productVariation'] == 'one':
-                oneVariationItems = request.data['oneVariationItems']
-                for item in oneVariationItems['items']:
-                    if item['janCode'] == "" and 'delete' in item and not item['delete']:
-                        return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
-                    if item['stock'] == "" and 'delete' in item and not item['delete']:
-                        return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
+                if request.data['draft'] != 1:
+                    oneVariationItems = request.data['oneVariationItems']
+                    for item in oneVariationItems['items']:
+                        if item['janCode'] == "" and 'delete' in item and not item['delete']:
+                            return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                        if item['stock'] == "" and 'delete' in item and not item['delete']:
+                            return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 1
             if request.data['productVariation'] == 'two':
-                twoVariationItems = request.data['twoVariationItems']
-                mappingValues = twoVariationItems['mappingValue']
-                firstItem = twoVariationItems['items'][0]
-                secondItem = twoVariationItems['items'][1]
-                for choice1 in firstItem['choices']:
-                    for choice2 in secondItem['choices']:
-                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'] == "" and 'delete' in mappingValues[choice1['choiceItem']][choice2['choiceItem']] and not mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
-                            return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
-                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'] == "" and 'delete' in mappingValues[choice1['choiceItem']][choice2['choiceItem']] and not mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
-                            return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
+                if request.data['draft'] != 1:
+                    twoVariationItems = request.data['twoVariationItems']
+                    mappingValues = twoVariationItems['mappingValue']
+                    firstItem = twoVariationItems['items'][0]
+                    secondItem = twoVariationItems['items'][1]
+                    for choice1 in firstItem['choices']:
+                        for choice2 in secondItem['choices']:
+                            if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'] == "" and 'delete' in mappingValues[choice1['choiceItem']][choice2['choiceItem']] and not mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
+                                return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                            if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'] == "" and 'delete' in mappingValues[choice1['choiceItem']][choice2['choiceItem']] and not mappingValues[choice1['choiceItem']][choice2['choiceItem']]['delete']:
+                                return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 2
 
             profile = Profile.objects.get(id=userId, is_hidden=False)
@@ -1227,6 +1231,10 @@ class CreateProduct(APIView):
                 "category" : request.data['productCategory'],
                 "user" : profileSerializer.data['url']
             }
+            if request.data['draft'] == 1:
+                productData['is_draft'] = 1
+            else:
+                productData['is_draft'] = 0
             if request.data['publishState'] == 'published':
                 productData['is_opened'] = 1
             else:
@@ -1427,63 +1435,67 @@ class GetProductByVariety(APIView):
 class EditProduct(APIView):
     def post(self, request, userId, format='json'):
         try:
-            if request.data['id'] == "":
-                return Response({"success" : False, "errors" : ["Invalid update."]}, status=status.HTTP_200_OK)
-            if request.data['productName'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in product name."]}, status=status.HTTP_200_OK)
-            if request.data['brandName'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in brand name."]}, status=status.HTTP_200_OK)
-            if request.data['pr'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in PR statement."]}, status=status.HTTP_200_OK)
-            if request.data['productId'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in product ID."]}, status=status.HTTP_200_OK)
-            if request.data['productCategory'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in product category."]}, status=status.HTTP_200_OK)
-            if request.data['productVariation'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in product variation."]}, status=status.HTTP_200_OK)
-            if request.data['publishState'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in publish state."]}, status=status.HTTP_200_OK)
-            if request.data['publishDate'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in publish date."]}, status=status.HTTP_200_OK)
-            if request.data['price'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in price."]}, status=status.HTTP_200_OK)
-            if request.data['storePrice'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in store price."]}, status=status.HTTP_200_OK)
-            if request.data['shipping'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in shipping."]}, status=status.HTTP_200_OK)
-            if request.data['productPageDisplayMethod'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in product page display method."]}, status=status.HTTP_200_OK)
-            if request.data['productDescription'] == "":
-                return Response({"success" : False, "errors" : ["Please fill in product description."]}, status=status.HTTP_200_OK)
+            if request.data['draft'] != 1:
+                if request.data['id'] == "":
+                    return Response({"success" : False, "errors" : ["Invalid update."]}, status=status.HTTP_200_OK)
+                if request.data['productName'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in product name."]}, status=status.HTTP_200_OK)
+                if request.data['brandName'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in brand name."]}, status=status.HTTP_200_OK)
+                if request.data['pr'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in PR statement."]}, status=status.HTTP_200_OK)
+                if request.data['productId'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in product ID."]}, status=status.HTTP_200_OK)
+                if request.data['productCategory'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in product category."]}, status=status.HTTP_200_OK)
+                if request.data['productVariation'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in product variation."]}, status=status.HTTP_200_OK)
+                if request.data['publishState'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in publish state."]}, status=status.HTTP_200_OK)
+                if request.data['publishDate'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in publish date."]}, status=status.HTTP_200_OK)
+                if request.data['price'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in price."]}, status=status.HTTP_200_OK)
+                if request.data['storePrice'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in store price."]}, status=status.HTTP_200_OK)
+                if request.data['shipping'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in shipping."]}, status=status.HTTP_200_OK)
+                if request.data['productPageDisplayMethod'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in product page display method."]}, status=status.HTTP_200_OK)
+                if request.data['productDescription'] == "":
+                    return Response({"success" : False, "errors" : ["Please fill in product description."]}, status=status.HTTP_200_OK)
 
             variety = 0
 
             if request.data['productVariation'] == 'none':
-                noneVariationItems = request.data['noneVariationItems']
-                if noneVariationItems['janCode'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
-                if noneVariationItems['stock'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
+                if request.data['draft'] != 1:
+                    noneVariationItems = request.data['noneVariationItems']
+                    if noneVariationItems['janCode'] == "":
+                        return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                    if noneVariationItems['stock'] == "":
+                        return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 0
             if request.data['productVariation'] == 'one':
-                oneVariationItems = request.data['oneVariationItems']
-                for item in oneVariationItems['items']:
-                    if item['janCode'] == "":
-                        return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
-                    if item['stock'] == "":
-                        return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
+                if request.data['draft'] != 1:
+                    oneVariationItems = request.data['oneVariationItems']
+                    for item in oneVariationItems['items']:
+                        if item['janCode'] == "":
+                            return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                        if item['stock'] == "":
+                            return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 1
             if request.data['productVariation'] == 'two':
-                twoVariationItems = request.data['twoVariationItems']
-                mappingValues = twoVariationItems['mappingValue']
-                firstItem = twoVariationItems['items'][0]
-                secondItem = twoVariationItems['items'][1]
-                for choice1 in firstItem['choices']:
-                    for choice2 in secondItem['choices']:
-                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'] == "":
-                            return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
-                        if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'] == "":
-                            return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
+                if request.data['draft'] != 1:
+                    twoVariationItems = request.data['twoVariationItems']
+                    mappingValues = twoVariationItems['mappingValue']
+                    firstItem = twoVariationItems['items'][0]
+                    secondItem = twoVariationItems['items'][1]
+                    for choice1 in firstItem['choices']:
+                        for choice2 in secondItem['choices']:
+                            if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'] == "":
+                                return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                            if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'] == "":
+                                return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
                 variety = 2
 
             profile = Profile.objects.get(id=userId, is_hidden=False)
@@ -1507,6 +1519,10 @@ class EditProduct(APIView):
             productCategory = ProductCategory.objects.get(id=productCategoryId)
 
             product.category = productCategory
+            if request.data['draft'] == 1:
+                product.is_draft = 1
+            else:
+                product.is_draft = 0
             if request.data['publishState'] == 'published':
                 product.is_opened = 1
             else:
@@ -1517,10 +1533,10 @@ class EditProduct(APIView):
             else:
                 product.is_used = 1
 
-            if request.data['draft']:
-                product.is_draft = 1
-            else:
-                product.is_draft = 0
+            # if request.data['draft']:
+            #     product.is_draft = 1
+            # else:
+            #     product.is_draft = 0
 
             if request.data['targetUser'] == 'allUser':
                 product.target = 0
