@@ -1224,9 +1224,9 @@ class CreateProduct(APIView):
                 "url_str" : request.data['productId'],
                 "variety" : variety,
                 "opened_date" : request.data['publishDate'],
-                "price" : request.data['price'],
-                "store_price" : request.data['storePrice'],
-                "shipping_fee": request.data['shipping'],
+                "price" : 0 if request.data['price'] == '' or request.data['price'] == None else request.data['price'],
+                "store_price" : 0 if request.data['storePrice'] == '' or request.data['storePrice'] == None else request.data['storePrice'],
+                "shipping_fee": 0 if request.data['shipping'] == '' or request.data['shipping'] == None else request.data['shipping'],
                 "description" : request.data['productDescription'],
                 "category" : request.data['productCategory'],
                 "user" : profileSerializer.data['url']
@@ -1509,9 +1509,9 @@ class EditProduct(APIView):
             product.url_str = request.data["productId"]
             product.variety = variety
             product.opened_date = request.data["publishDate"]
-            product.price = request.data["price"]
-            product.store_price = request.data["storePrice"]
-            product.shipping_fee = request.data["shipping"]
+            product.price = 0 if request.data['price'] == '' or request.data['price'] == None else request.data['price']
+            product.store_price = 0 if request.data['storePrice'] == '' or request.data['storePrice'] == None else request.data['storePrice']
+            product.shipping_fee = 0 if request.data['shipping'] == '' or request.data['shipping'] == None else request.data['shipping']
             product.description = request.data["productDescription"]
 
             productCategories = request.data['productCategory'].split("/")
