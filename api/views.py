@@ -1274,6 +1274,8 @@ class CreateProduct(APIView):
 
                 if request.data['productVariation'] == 'none':
                     noneVariationItems = request.data['noneVariationItems']
+                    if not noneVariationItems:
+                        noneVariationItems = {'janCode': "", 'stock': 0}
                     insertProductVarietySerializer = InsertProductVarietySerializer(data={
                         "name" : "none",
                         "product" : productSerializer.data['url'],

@@ -47,7 +47,7 @@ class ProductImage(models.Model):
 
 
 class ProductVariety(models.Model):
-    name = models.CharField(max_length=100, default='')
+    name = models.CharField(max_length=100, default='', blank=True, null=True)
     product = models.ForeignKey(Product, related_name='productVarieties', on_delete=models.CASCADE)
     vertical_and_horizontal = models.SmallIntegerField(null=True, choices=PRODUCT_VARIETY)
 
@@ -58,7 +58,7 @@ class ProductVariety(models.Model):
 
 class ProductVarietySelection(models.Model):
     product_variety = models.ForeignKey(ProductVariety, related_name='productVarietySelections', on_delete=models.CASCADE, null=True)
-    selection = models.CharField(max_length=255, default='')
+    selection = models.CharField(max_length=255, default='', blank=True, null=True)
 
     is_hidden = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
@@ -68,7 +68,7 @@ class ProductVarietySelection(models.Model):
 class ProductJancode(models.Model):
     horizontal = models.ForeignKey(ProductVarietySelection, on_delete=models.CASCADE, related_name='jancode_horizontal', null=True)
     vertical = models.ForeignKey(ProductVarietySelection, on_delete=models.CASCADE, related_name='jancode_vertical', null=True)
-    jan_code = models.CharField(max_length=255, default='')
+    jan_code = models.CharField(max_length=255, default='', blank=True, null=True)
     stock = models.BigIntegerField(validators=[MaxValueValidator(99999999999)], default=0)
 
     is_hidden = models.BooleanField(default=False)
