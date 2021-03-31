@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'user/alluser/data', views.AllUserImages.as_view(), name='alluser-images'),
     url(r'user/change-email', views.ChangeEmail.as_view(), name='user-change-email'),
     url(r'user/change-phone', views.ChangePhone.as_view(), name='user-cahnge-phone'),
+    url(r'user/check-phone', views.CheckPhone.as_view(), name='user-check-phone'),
     url(r'password/reset', views.PasswordReset.as_view(), name='password-reset'),
     url(r'user/login', views.UserLogin.as_view(), name='user-login'),
     url(r'product/byIds', views.ProductByIds.as_view(), name='product-by-ids'),

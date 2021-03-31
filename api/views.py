@@ -487,6 +487,19 @@ class ChangePhone(APIView):
         else:
             return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
 
+class CheckPhone(APIView):
+    def post(self, request, format='json'):
+        profile = None
+        try:
+            profile = Profile.objects.get(tel=request.data['tel'], tel_code=request.data['tel_code'], is_hidden=False)
+        except Exception as e:
+            print(e)
+
+        if profile is None:
+            return Response({"success" : True}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success" : False, "error" : "phone_exists"}, status=status.HTTP_200_OK)
+
 class AppConfig(APIView):
     def post(self, request, format='json'):
         return Response({"success" : True}, status=status.HTTP_200_OK)
