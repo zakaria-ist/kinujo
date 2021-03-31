@@ -1186,6 +1186,8 @@ class CreateProduct(APIView):
             if request.data['productVariation'] == 'none':
                 if request.data['draft'] != 1:
                     noneVariationItems = request.data['noneVariationItems']
+                    if not noneVariationItems:
+                        noneVariationItems = {'janCode': "", 'stock': 0}
                     if noneVariationItems['janCode'] == "" and 'delete' in noneVariationItems and not noneVariationItems['delete']:
                         return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
                     if noneVariationItems['stock'] == "" and 'delete' in noneVariationItems and not noneVariationItems['delete']:
@@ -1473,6 +1475,8 @@ class EditProduct(APIView):
             if request.data['productVariation'] == 'none':
                 if request.data['draft'] != 1:
                     noneVariationItems = request.data['noneVariationItems']
+                    if not noneVariationItems:
+                        noneVariationItems = {'janCode': "", 'stock': 0}
                     if noneVariationItems['janCode'] == "":
                         return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
                     if noneVariationItems['stock'] == "":
@@ -1565,6 +1569,8 @@ class EditProduct(APIView):
 
             if request.data['productVariation'] == 'none':
                 noneVariationItems = request.data['noneVariationItems']
+                if not noneVariationItems:
+                    noneVariationItems = {'janCode': "", 'stock': 0}
                 if "id" in noneVariationItems:
                     productJancode = ProductJancode.objects.get(id=noneVariationItems["id"])
                     productJancode.jan_code = noneVariationItems['janCode']
