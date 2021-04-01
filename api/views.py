@@ -1544,7 +1544,10 @@ class EditProduct(APIView):
 
             productCategories = request.data['productCategory'].split("/")
             productCategoryId = productCategories[len(productCategories)-2]
-            productCategory = ProductCategory.objects.get(id=productCategoryId)
+            if productCategoryId and productCategoryId != "":
+                productCategory = ProductCategory.objects.get(id=productCategoryId)
+            else:
+                productCategory = None
 
             product.category = productCategory
             if request.data['draft'] == 1:
