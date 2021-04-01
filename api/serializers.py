@@ -58,6 +58,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     image = ImageSerializer(required=False)
     background_img = ImageSerializer(required=False)
     authority = AuthoritySerializer()
+    bank = serializers.SerializerMethodField()
     email = serializers.CharField(
         allow_blank=True,
         allow_null=True
@@ -66,7 +67,10 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['is_master', 'tel_code', 'background_img', 'id', 'profit', 'url', 'user','authority','is_seller','shop_name','tel','nickname','user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1','address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone','allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload']
+        fields = ['is_master', 'tel_code', 'background_img', 'id', 'profit', 'url', 'user','authority','is_seller','shop_name','tel','nickname',
+                'user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1',
+                'address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone',
+                'allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload', 'bank']
     def get_profit(self, instance):
         orders = Order.objects.filter(is_hidden=False).values_list('id', flat=True)
         orderProducts = OrderProduct.objects.filter(order__in=orders, is_hidden=False).values_list('id', flat=True)
@@ -81,6 +85,13 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         # for item in orderProducts:
         #     total = total + item.unit_price
         return total
+    def get_bank(self, instance):
+        bank_account = FinancialAccount.objects.filter(is_hidden=False, user_id=instance.id)
+        if bank_account.exists():
+            return 1
+        else:
+            return 0
+        
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
