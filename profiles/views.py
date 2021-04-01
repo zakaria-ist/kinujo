@@ -26,7 +26,7 @@ from products.views import get_jan_products
 from utilities.constants import AUTHORITY_TYPE
 
 
-@login_required    
+@login_required
 def home_load(request):
     """
     Method to redirect to home/dashboard.
@@ -41,7 +41,7 @@ def home_load(request):
         # return render(request, 'base.html')
         return render(request, 'listing_sales_list.html')
 
-@login_required 
+@login_required
 def listing_home_load(request):
     """
     Method to redirect to listing home/dashboard.
@@ -49,7 +49,7 @@ def listing_home_load(request):
     # return render(request, 'base.html')
     return render(request, 'listing_sales_list.html')
 
-@login_required 
+@login_required
 def sales_listing_site(request):
     """
     Method to redirect to listing home/dashboard.
@@ -136,7 +136,7 @@ def login_sales(request):
     """
     Method to sales login.
     """
-    
+
     state = ""
     tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
     default_code = CountryCode.objects.filter(is_hidden=False, tel_code='+81').first().id
@@ -213,11 +213,11 @@ def ProfileList__asJson(request):
             profile_list = profile_list.filter(is_approved=False)
         else:
             profile_list = Profile.objects.filter(is_approved=False, is_hidden=False).order_by('authority_id')
-        
+
     records_total = profile_list.count()
 
     if search:  # Filter data base on search
-        profile_list = profile_list.filter(Q(real_name__icontains=search) | Q(nickname__icontains=search)).order_by('-real_name')
+        profile_list = profile_list.filter(Q(real_name__icontains=search) | Q(tel__icontains=search) | Q(nickname__icontains=search)).order_by('-real_name')
 
     # All data
     records_filtered = profile_list.count()
@@ -226,7 +226,7 @@ def ProfileList__asJson(request):
     column_name = ""
     if order_column == "2":
         column_name = "real_name"
-    
+
     order_dir = request.GET['order[0][dir]']
     list = []
     if order_dir == "asc":
@@ -247,7 +247,8 @@ def ProfileList__asJson(request):
                 # "real_name": field.real_name,
                 "real_name": field.real_name + '(' + field.nickname + ')',
                 "store_total": str(store_total),
-                "user_total": str(user_total)
+                "user_total": str(user_total),
+                "tel": str(field.tel)
                 }
         array.append(data)
 
@@ -274,7 +275,7 @@ def ClientList__asJson(request):
 
     if(len(auth_type)):
         profile_list = profile_list.filter(authority_id__in=auth_type)
-        
+
     records_total = profile_list.count()
 
     if search:  # Filter data base on search
@@ -289,7 +290,7 @@ def ClientList__asJson(request):
         column_name = "real_name"
     if order_column == "3":
         column_name = "created"
-    
+
     order_dir = request.GET['order[0][dir]']
     list = []
     if order_dir == "asc":
@@ -348,7 +349,7 @@ def profile_add(request):
                     #     profile.password = request.POST.get('password')
                     if request.POST.get('birthday'):
                         profile.birthday = request.POST.get('birthday')
-                    
+
                     profile.tel_code = request.POST.get('tel_code')
 
                     if request.POST.get('corporate_tel_code') and request.POST.get('corporate_tel_code') != '' and request.POST.get('corporate_tel_code') != None:
@@ -364,11 +365,11 @@ def profile_add(request):
                         profile.is_approved = True
                     else:
                         profile.is_approved = False
-                    
+
                     if profile.authority_id == AUTHORITY_TYPE['AMBASSADOR']:
                         if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
                             profile.introducer_id = int(request.POST.get('general_store'))
-                    
+
                     elif profile.authority_id in (AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']):
                         if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
                             profile.introducer_id = int(request.POST.get('introducer'))
@@ -394,16 +395,16 @@ def profile_add(request):
                     messages.add_message(request, messages.ERROR, e, extra_tags='profile_add')
         else:
             form = ProfileForm()
-        
+
         store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['SPECIAL']).values('id', 'real_name')
         profile_list = list(Profile.objects.filter(is_hidden=False).values_list('id', 'real_name', 'authority_id'))
         tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
         default_code = '+81'
-        return render(request, 'profile_form.html', {'form': form, 
-                                                    'media_url': s.MEDIA_URL, 
+        return render(request, 'profile_form.html', {'form': form,
+                                                    'media_url': s.MEDIA_URL,
                                                     'store_list': store_list,
                                                     'profile_list': profile_list,
-                                                    'tel_code_list': tel_code_list, 
+                                                    'tel_code_list': tel_code_list,
                                                     'default_code': default_code})
     else:
         return render(request, '404.html')
@@ -444,7 +445,7 @@ def profile_edit(request, profile_id):
                             user.first_name = request.POST.get('real_name')
                             user.last_name = request.POST.get('nickname')
                             user.save()
-                    
+
                     profile = form.save(commit=False)
                     profile.tel_code = request.POST.get('tel_code')
 
@@ -455,13 +456,13 @@ def profile_edit(request, profile_id):
                         profile.user_id = user.id
                     else:
                         profile.user_id = request.POST.get('user_id')
-                    
+
                     if profile.authority_id == AUTHORITY_TYPE['AMBASSADOR']:
                         if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:
                             profile.introducer_id = int(request.POST.get('general_store'))
                         else:
                             profile.introducer_id = None
-                    
+
                     elif profile.authority_id in (AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']):
                         if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
                             profile.introducer_id = int(request.POST.get('introducer'))
@@ -477,13 +478,13 @@ def profile_edit(request, profile_id):
                         profile.is_approved = True
                     else:
                         profile.is_approved = False
-                    
+
                     # if request.POST.get('password') != '' and request.POST.get('password') != None:
                     #     profile.password = request.POST.get('password')
 
                     profile.modified = datetime.datetime.now()
                     profile.save()
-                    
+
                     profile_image = request.FILES.get('profile_image', False)
                     if profile_image:
                         if profile.image:
@@ -502,7 +503,7 @@ def profile_edit(request, profile_id):
                     active = request.POST.get('active_checkbox', '') == 'on'
                     if not active:
                         profile.is_hidden = True
-                    
+
                     profile.save()
 
                     return redirect('/profiles/profile_list/')
@@ -514,21 +515,21 @@ def profile_edit(request, profile_id):
 
         profile = Profile.objects.get(pk=profile_id)
         form = ProfileForm(instance=profile)
-        
+
         store_list = Profile.objects.filter(is_hidden=False, authority_id=AUTHORITY_TYPE['SPECIAL']).exclude(id=profile_id).values('id', 'real_name')
         profile_list = list(Profile.objects.filter(is_hidden=False).exclude(id=profile_id).values_list('id', 'real_name', 'authority_id'))
         prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
         category_list = list(ProductCategory.objects.filter(is_hidden=False).order_by('id').values_list('id', 'name'))
         tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
         default_code = '+81'
-        return render(request, 'profile_form.html', {'form': form, 
-                                                    'media_url': s.MEDIA_URL, 
+        return render(request, 'profile_form.html', {'form': form,
+                                                    'media_url': s.MEDIA_URL,
                                                     'store_list': store_list,
                                                     'profile_list': profile_list,
                                                     'profile': profile,
                                                     'category_list': category_list,
                                                     'prefecture_list': prefecture_list,
-                                                    'tel_code_list': tel_code_list, 
+                                                    'tel_code_list': tel_code_list,
                                                     'default_code': default_code})
     else:
         return render(request, '404.html')
@@ -547,7 +548,7 @@ def profile_delete(request, profile_id):
             profile.is_hidden = 1
             profile.modified = datetime.datetime.now()
             profile.save()
-            
+
             if profile.image:
                 image = Image.objects.get(pk=profile.image_id)
                 image.is_hidden = True
@@ -565,7 +566,7 @@ def profile_delete(request, profile_id):
     else:
         return render(request, '404.html')
 
-    
+
 # @login_required
 @csrf_exempt
 def get_financial_info(request):
@@ -748,7 +749,7 @@ def update_shipping_info(request):
                 shipping_info.is_default = is_default
 
                 shipping_info.save()
-            
+
             # if it is default then remove other from default
             if shipping_info.is_default:
                 Address.objects.filter(user_id=profile_id).exclude(id=shipping_info.id).update(is_default=False)
@@ -799,7 +800,7 @@ def ShippingList__asJson(request):
     user_id = request.GET.get('user_id')
 
     shipping_list = Address.objects.filter(user_id=user_id, is_hidden=False).order_by('name')
-        
+
     records_total = shipping_list.count()
 
     if search:  # Filter data base on search
@@ -816,7 +817,7 @@ def ShippingList__asJson(request):
         column_name = "name"
     if order_column == "4":
         column_name = "tel"
-    
+
     order_dir = request.GET['order[0][dir]']
     list = []
     if order_dir == "asc":
@@ -1034,7 +1035,7 @@ def PaymentList__asJson(request):
         payment_list = payment_list.filter(user__authority_id__in=auth_type)
     if len(status_type):
         payment_list = payment_list.filter(status__in=status_type)
-        
+
     records_total = payment_list.count()
 
     if search:  # Filter data base on search
@@ -1047,7 +1048,7 @@ def PaymentList__asJson(request):
     column_name = ""
     if order_column == "1":
         column_name = "name"
-    
+
     # order_dir = request.GET['order[0][dir]']
     # list = []
     # if order_dir == "asc":
@@ -1164,7 +1165,7 @@ def get_dashboard_data(request, year, month):
             data['ambassadors'] = specials.order_by('order_product__order_id').distinct().count()
             ambassadors_amount = ambassadors.aggregate(ambassadors_amount=Coalesce(Sum('amount'), Value(0)))
             data['ambassadors_amount'] = ambassadors_amount.get('ambassadors_amount', 0)
-        
+
     except Exception as e:
         print(e)
 
@@ -1194,7 +1195,7 @@ def PopularProductList__asJson(request):
     orders = Order.objects.filter(is_hidden=False, order_date__lte=today, order_date__gte=last_day).values_list('id', flat=True)
     order_products = OrderProduct.objects.filter(order_id__in=orders)
     sorted_order_products = order_products.values('product_jan_code_id').annotate(Count('product_jan_code_id')).order_by('-product_jan_code_id__count')
-    
+
     # records_total = payment_list.count()
 
     # if search:  # Filter data base on search
@@ -1207,7 +1208,7 @@ def PopularProductList__asJson(request):
     # column_name = ""
     # if order_column == "1":
     #     column_name = "name"
-    
+
     # order_dir = request.GET['order[0][dir]']
     # list = []
     # if order_dir == "asc":
@@ -1232,7 +1233,7 @@ def PopularProductList__asJson(request):
         total_commsission = OrderProductCommission.objects.filter(order_product_id__in=this_order_prod_ids, is_sales=False)\
             .aggregate(commission=Coalesce(Sum('amount'), Value(0)))
         gross_amount = total_price.get('price', 0) - total_commsission.get('commission', 0)
-        
+
         data = {
             "product_name": product_name,
             "total_quantity": total_quantity,
