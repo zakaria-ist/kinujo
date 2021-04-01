@@ -3,6 +3,8 @@ import json
 import stripe
 import ast
 import uuid
+import string
+import random
 from django.conf import settings
 from datetime import date
 from rest_framework import viewsets, status
@@ -281,12 +283,18 @@ class UserRegister(APIView):
                     is_seller = 1
 
                 authoritySerializer = AuthoritySerializer(authority, context=getContext())
-
+                yetToComplete = True
+                user_code = ""
+                while yetToComplete:
+                    user_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=12))
+                    existing_profile = Profile.objects.filter(is_hidden=False, user_code=user_code)
+                    if not existing_profile.count():
+                        yetToComplete = False
                 profileItem = {
                     'user' : userSerializer.data['url'],
                     'tel' : request.data['username'].replace("+" + request.data['callingCode'], ""),
                     'nickname' : request.data['nickname'],
-                    'user_code' : user.id,
+                    'user_code' : user_code,
                     'authority' : authoritySerializer.data['url'],
                     'is_seller' : is_seller,
                     'tel_code': "+" + request.data['callingCode']
