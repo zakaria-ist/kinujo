@@ -453,7 +453,7 @@ def order_add(request):
                             orderProduct.product_jan_code_id = item['jan_id']
                             orderProduct.order_id = order.id
                             orderProduct.quantity = item['qty']
-                            if orderer_auth_type == AUTHORITY_TYPE['STORE']:
+                            if orderer_auth_type == AUTHORITY_TYPE['STORE'] and order.purchaser.is_approved:
                                 orderProduct.unit_price = j_product.store_price
                             else:
                                 orderProduct.unit_price = j_product.price
@@ -472,7 +472,7 @@ def order_add(request):
                             # commissoion block
                             if kinujo_product:
                                 remaining_amount = int(j_product.price) * int(orderProduct.quantity)
-                                if orderer_auth_type == AUTHORITY_TYPE['STORE']:
+                                if orderer_auth_type == AUTHORITY_TYPE['STORE'] and order.purchaser.is_approved:
                                     remaining_amount = int(j_product.store_price) * int(orderProduct.quantity)
                                 # others commission
                                 for commission_holder in commission_holder_list:
@@ -519,7 +519,7 @@ def order_add(request):
                                 seller_commission = 0.65
                                 seller_amount = int(j_product.price * seller_commission) * int(orderProduct.quantity)
                                 remaining_amount = int(j_product.price) * int(orderProduct.quantity)
-                                if orderer_auth_type == AUTHORITY_TYPE['STORE']:
+                                if orderer_auth_type == AUTHORITY_TYPE['STORE'] and order.purchaser.is_approved:
                                     remaining_amount = int(j_product.store_price) * int(orderProduct.quantity)
                                 remaining_amount = remaining_amount - seller_amount
                                 # create seller commission
@@ -697,7 +697,7 @@ def order_edit(request, order_id):
                                 # commissoion block
                                 if kinujo_product:
                                     remaining_amount = int(j_product.price) * int(orderProduct.quantity)
-                                    if orderer_auth_type == AUTHORITY_TYPE['STORE']:
+                                    if orderer_auth_type == AUTHORITY_TYPE['STORE'] and order.purchaser.is_approved:
                                         remaining_amount = int(j_product.store_price) * int(orderProduct.quantity)
                                     # others commission
                                     for commission_holder in commission_holder_list:
@@ -732,7 +732,7 @@ def order_edit(request, order_id):
                                     seller_commission = 0.65
                                     seller_amount = int(j_product.price * seller_commission) * int(orderProduct.quantity)
                                     remaining_amount = int(j_product.price) * int(orderProduct.quantity)
-                                    if orderer_auth_type == AUTHORITY_TYPE['STORE']:
+                                    if orderer_auth_type == AUTHORITY_TYPE['STORE'] and order.purchaser.is_approved:
                                         remaining_amount = int(j_product.store_price) * int(orderProduct.quantity)
                                     remaining_amount = remaining_amount - seller_amount
                                     # create seller commission

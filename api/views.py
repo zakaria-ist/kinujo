@@ -987,7 +987,7 @@ class Pay(APIView):
                     one_product = product
                     product_name = product['name']
                     quantity = quantities['item_' + str(product['id'])]
-                    if profileSerializer.data['is_seller']:
+                    if profileSerializer.data['is_seller'] and profileSerializer.data['is_approved']:
                         amount = int(float(amount) + (float(product['store_price']) * float(quantity)))
                     else:
                         amount = int(float(amount) + (float(product['price']) * float(quantity)))
@@ -1067,7 +1067,7 @@ class Pay(APIView):
                         groupTotal = 0
                         groupShippingFee = float(product['shipping_fee'])
 
-                        if profileSerializer.data['is_seller']:
+                        if profileSerializer.data['is_seller'] and profileSerializer.data['is_approved']:
                             price= float(product['store_price'])
                             groupTotal = int(float(product['store_price']) * float(quantity))
                         else:
