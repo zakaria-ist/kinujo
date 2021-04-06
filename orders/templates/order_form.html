@@ -307,6 +307,8 @@
         // seller_id will be the login id
         var seller_id = "{{seller_id}}";
         var orderer_auth_type = '5';
+        var orderer_is_seller = false;
+        var orderer_is_approved = false;
 
         var product_list = [];
         var order_id = "{{order.id}}";
@@ -323,7 +325,7 @@
 
         var orderer_list = []
         {% for item in orderer_list %}
-            orderer_list.push(["{{ item.0 }}", "{{ item.1 }}", "{{ item.2 }}"]);
+            orderer_list.push(["{{ item.0 }}", "{{ item.1 }}", "{{ item.2 }}", "{{ item.3 }}", "{{ item.4 }}", "{{ item.5 }}"]);
         {% endfor %}
 
         $(document).ready(function() {
@@ -391,6 +393,16 @@
             $.each(orderer_list, function(indx, item) {
                 if (item[0] == orderer) {
                     orderer_auth_type = item[2];
+                    if (item[4] == 'True') {
+                        orderer_is_seller = true;
+                    } else {
+                        orderer_is_seller = false;
+                    }
+                    if (item[5] == 'True') {
+                        orderer_is_approved = true;
+                    } else {
+                        orderer_is_approved = false;
+                    }
                 }
             });
             calculateAmount();
@@ -500,10 +512,10 @@
                         return el.jan_id == s_val;
                     });
                     if (product.length) {
-                        if (orderer_auth_type == '5') { // General authority
-                            amount += parseInt(qty) * parseInt(product[0].price)
-                        } else {  // Store authority
+                        if (orderer_auth_type == '4' && orderer_is_approved) { // Store authority
                             amount += parseInt(qty) * parseInt(product[0].store_price)
+                        } else {  // General authority
+                            amount += parseInt(qty) * parseInt(product[0].price)
                         }
                     }
                 }

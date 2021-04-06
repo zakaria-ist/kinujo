@@ -578,7 +578,7 @@ def order_add(request):
         orderer_list = list(Profile.objects.filter(is_hidden=False, 
                     authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']])\
             .exclude(id=seller_id)\
-            .values_list('id', 'real_name', 'authority_id', 'nickname'))
+            .values_list('id', 'real_name', 'authority_id', 'nickname', 'is_seller', 'is_approved'))
         prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
         tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
         if request.LANGUAGE_CODE == 'en':
@@ -813,7 +813,7 @@ def order_edit(request, order_id):
             orderer_list = list(Profile.objects.filter(is_hidden=False, 
                         authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']])\
                 .exclude(id=seller_id)\
-                .values_list('id', 'real_name', 'authority_id', 'nickname'))
+                .values_list('id', 'real_name', 'authority_id', 'nickname', 'is_seller', 'is_approved'))
             prefecture_list = list(Prefecture.objects.filter(is_hidden=False, is_enable=True).order_by('id').values_list('id', 'name'))
             if request.LANGUAGE_CODE == 'en':
                 status_list = ORDER_STATUS
