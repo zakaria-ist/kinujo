@@ -147,7 +147,7 @@ def login_sales(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 profile = Profile.objects.filter(is_hidden=False, user_id=user.id).first()
-                if profile.is_seller:
+                if profile.is_seller and profile.is_approved:
                     login(request, user)
                     request.session['login_profile_id'] = profile.id
                     request.session['login_authority_id'] = profile.authority_id
