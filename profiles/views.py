@@ -1147,6 +1147,7 @@ def get_dashboard_data(request, year, month):
             data['non_kinujo_orders_amount'] = non_kinujo_orders_amount.get('non_kinujo_orders_amount', 0)
 
         order_commissions = OrderProductCommission.objects.filter(is_hidden=False, is_sales=False,
+                                order_product__order__is_hidden=False, order_product__is_hidden=False,
                                 order_product__order__order_date__year=year,
                                 order_product__order__order_date__month=month)\
                     .order_by('order_product__order__order_date')
@@ -1162,7 +1163,7 @@ def get_dashboard_data(request, year, month):
             data['specials_amount'] = specials_amount.get('specials_amount', 0)
 
             ambassadors = order_commissions.filter(user__authority_id=AUTHORITY_TYPE['AMBASSADOR'])
-            data['ambassadors'] = specials.order_by('order_product__order_id').distinct().count()
+            data['ambassadors'] = ambassadors.order_by('order_product__order_id').distinct().count()
             ambassadors_amount = ambassadors.aggregate(ambassadors_amount=Coalesce(Sum('amount'), Value(0)))
             data['ambassadors_amount'] = ambassadors_amount.get('ambassadors_amount', 0)
 

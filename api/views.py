@@ -1021,7 +1021,7 @@ class Pay(APIView):
                     'total_amount': total_amount + total_tax,
                     'name': addressSerializer.data['name'],
                     'zip1': addressSerializer.data['zip1'],
-                    'tel_code': addressSerializer.data['tel_code'],
+                    'tel_code': str(addressSerializer.data['tel_code']).replace("++", "+"),
                     'address1': addressSerializer.data['address1'],
                     'address2': address2,
                     'tel': addressSerializer.data['tel'],
