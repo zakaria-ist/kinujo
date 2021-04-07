@@ -462,6 +462,21 @@ class ChangeEmail(APIView):
         else:
             return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
 
+class GetEmail(APIView):
+    def post(self, request, format='json'):
+        profile = None
+        try:
+            profile = Profile.objects.get(pk=request.data['id'], is_hidden=False)
+        except Exception as e:
+            print(e)
+
+        if profile:
+            email = profile.email
+            return Response({"success" : True, "email": email, "id": profile.id}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+
+
 class ChangePhone(APIView):
     def post(self, request, format='json'):
         profile = None

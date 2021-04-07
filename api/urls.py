@@ -39,6 +39,7 @@ urlpatterns = [
     url(r'user/images', views.UserImages.as_view(), name='user-images'),
     url(r'user/alluser/data', views.AllUserImages.as_view(), name='alluser-images'),
     url(r'user/change-email', views.ChangeEmail.as_view(), name='user-change-email'),
+    url(r'user/get-email', views.GetEmail.as_view(), name='user-get-email'),
     url(r'user/change-phone', views.ChangePhone.as_view(), name='user-cahnge-phone'),
     url(r'user/check-phone', views.CheckPhone.as_view(), name='user-check-phone'),
     url(r'password/reset', views.PasswordReset.as_view(), name='password-reset'),
