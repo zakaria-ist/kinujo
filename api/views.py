@@ -1074,6 +1074,7 @@ class Pay(APIView):
                             price= float(product['price'])
                             groupTotal = int(float(product['price']) * float(quantity))
                         groupTax = int(float(groupTotal) * float(tax.tax_rate))
+                        normalTotal = int(float(product['price']) * float(quantity))
 
                         varietyId = varieties['item_' + str(product['id'])]
 
@@ -1102,7 +1103,7 @@ class Pay(APIView):
                                 productJancode.stock = int(productJancode.stock) - int(quantity)
                                 productJancode.save()
 
-                            errors = calculateCommission(kinujo_product, groupTotal, orderProductSerializer.data['url'], 
+                            errors = calculateCommission(kinujo_product, normalTotal, orderProductSerializer.data['url'], 
                                         profileSerializer.data['id'], groupShippingFee, groupTotal, seller)
                             if errors:
                                 return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
