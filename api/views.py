@@ -476,6 +476,41 @@ class GetEmail(APIView):
         else:
             return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
 
+class SendEmail(APIView):
+    def post(self, request, format='json'):
+        profile = None
+        try:
+            profile = Profile.objects.get(pk=request.data['id'], is_hidden=False)
+        except Exception as e:
+            print(e)
+
+        if profile:
+            email = profile.email
+            if email:
+                send_mail(
+                    '[KINUJOからのお知らせ」出品中の商品が購入されました',
+                    "",
+                    settings.EMAIL_HOST_USER,
+                    [email],
+                    fail_silently=False,
+                    html_message=
+                    'いつもKINUJOをご利用いただきありがとうございます。' + "<br><br>" +
+                    '出品中の下記の商品が購入されまUた。' +  "<br>" +
+                    '商品の発送をお願いいたします。' + "<br><br>" +
+                    '商品情報' + "<br>" +
+                    'オーダーID:' + str("orderSerializer.data['id']") + "<br>" +
+                    '商品名:' + "product['name']" + "<br>" +
+                    '商品価格:' + str("float(groupTotal)") + "<br>" +
+                    '購入者様:' + "addressSerializer.data['name']" + "<br>" + "<br>" +
+                    '発送を終えたら' + "<br>" +
+                    '管理サイトから注文の状態を発送完了に変更し、発送日とお問い合わせ番号を入力Uて更新Uてください。' + "<br>" +
+                    '発送した日、配送方法やお問い合わせ番号をチャットでお伝えいただくと、購入者様も喜ばれます。' + "<br><br>" +
+                    "お問い合わせは、アプリ内のチャットをご利用＜ださい。",
+                )
+            return Response({"success" : True, "email": email, "id": profile.id}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
+
 
 class ChangePhone(APIView):
     def post(self, request, format='json'):
@@ -1128,22 +1163,23 @@ class Pay(APIView):
                         if product['user']['email']:
                             send_mail(
                                 '[KINUJOからのお知らせ」出品中の商品が購入されました',
-                                'いつもKINUJOをご利用いただきありがとうございます。' + "<br><br>" +
-                                '出品中の下記の商品が購入されまUた。' +  "<br>" +
-                                '商品の発送をお願いいたします。' + "<br><br>" +
-                                '商品情報' + "<br>" +
-                                'オーダーID:' + str(orderSerializer.data['id']) + "<br>" +
-                                '商品名:' + product['name'] + "<br>" +
-                                '商品価格:' + str(float(groupTotal)) + "<br>" +
-                                '購入者様:' + addressSerializer.data['name'] + "<br>" + "<br>" +
-                                '発送を終えたら' + "<br>" +
-                                '管理サイトから注文の状態を発送完了に変更し、発送日とお問い合わせ番号を入力Uて更新Uてください。' + "<br>" +
-                                '発送した日、配送方法やお問い合わせ番号をチャットでお伝えいただくと、購入者様も喜ばれます。' + "<br><br>" +
-                                "お問い合わせは、アプリ内のチャットをご利用＜ださい。",
-                                # 'support@kinujo.app',
+                                "",
                                 settings.EMAIL_HOST_USER,
                                 [product['user']['email']],
                                 fail_silently=False,
+                                html_message=
+                                    'いつもKINUJOをご利用いただきありがとうございます。' + "<br><br>" +
+                                    '出品中の下記の商品が購入されまUた。' +  "<br>" +
+                                    '商品の発送をお願いいたします。' + "<br><br>" +
+                                    '商品情報' + "<br>" +
+                                    'オーダーID:' + str(orderSerializer.data['id']) + "<br>" +
+                                    '商品名:' + product['name'] + "<br>" +
+                                    '商品価格:' + str(float(groupTotal)) + "<br>" +
+                                    '購入者様:' + addressSerializer.data['name'] + "<br>" + "<br>" +
+                                    '発送を終えたら' + "<br>" +
+                                    '管理サイトから注文の状態を発送完了に変更し、発送日とお問い合わせ番号を入力Uて更新Uてください。' + "<br>" +
+                                    '発送した日、配送方法やお問い合わせ番号をチャットでお伝えいただくと、購入者様も喜ばれます。' + "<br><br>" +
+                                    "お問い合わせは、アプリ内のチャットをご利用＜ださい。",
                             )
 
                         sellers.append(product['user']['id'])
