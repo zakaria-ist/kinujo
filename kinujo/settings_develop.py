@@ -173,3 +173,10 @@ WEB_URL = MEDIA_URL
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 MEDIA_LOCAL = os.path.join(BASE_DIR, 'media')
+
+# EMAIL SETTINGS
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'c2sg2020@gmail.com'
+EMAIL_HOST_PASSWORD = 'C2sg@2020IP'
+EMAIL_PORT = 587

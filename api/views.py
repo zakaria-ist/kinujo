@@ -1140,7 +1140,8 @@ class Pay(APIView):
                                 '管理サイトから注文の状態を発送完了に変更し、発送日とお問い合わせ番号を入力Uて更新Uてください。' + "<br>" +
                                 '発送した日、配送方法やお問い合わせ番号をチャットでお伝えいただくと、購入者様も喜ばれます。' + "<br><br>" +
                                 "お問い合わせは、アプリ内のチャットをご利用＜ださい。",
-                                'support@kinujo.app',
+                                # 'support@kinujo.app',
+                                settings.EMAIL_HOST_USER,
                                 [product['user']['email']],
                                 fail_silently=False,
                             )
