@@ -155,5 +155,5 @@ CORS_ORIGIN_ALLOW_ALL = True  # If this is used then `CORS_ORIGIN_WHITELIST` wil
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'c2sg2020@gmail.com'
-EMAIL_HOST_PASSWORD = 'C2sg@2020IP'
+EMAIL_HOST_PASSWORD = 'weyrusjdaenxdohr'
 EMAIL_PORT = 587
