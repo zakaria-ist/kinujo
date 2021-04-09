@@ -29,7 +29,7 @@ class SimpleProduct_ProfileSerializer(serializers.HyperlinkedModelSerializer):
     authority = AuthoritySerializer()
     class Meta:
         model = Profile
-        fields = ['authority', 'shop_name']
+        fields = ['authority', 'shop_name', 'nickname']
 
 class SimpleProduct_ImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
