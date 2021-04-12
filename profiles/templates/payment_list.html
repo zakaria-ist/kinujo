@@ -38,6 +38,8 @@
                                 </div>
                             </div>
                             <div class="form-group form-check text-center">
+                                <input type="checkbox" class="form-check-input checkbox-2x" id="special_check">
+                                <label class="form-check-label" for="special_check">{% trans 'Special' %}</label>
                                 <input type="checkbox" class="form-check-input checkbox-2x" id="ambassador_check">
                                 <label class="form-check-label" for="ambassador_check">{% trans 'Ambassador' %}</label>
                                 <input type="checkbox" class="form-check-input checkbox-2x" id="store_check">
@@ -79,7 +81,7 @@
 
     var selected_year;
     var selected_month;
-    var auth_list = [3, 4];
+    var auth_list = [2, 3, 4];
     var status_list = [1, 0];
 
     $(document).ready(function () {
@@ -163,6 +165,9 @@
 
     $('input[type="checkbox"]').click(function(){
         auth_list.length = 0;
+        if($('#special_check').prop("checked") == true){
+            auth_list.push(2); // 2 is special authority id 
+        }
         if($('#ambassador_check').prop("checked") == true){
             auth_list.push(3); // 3 is ambassador authority id 
         }
@@ -170,7 +175,7 @@
             auth_list.push(4); // 4 is store authority id 
         }
         if (auth_list.length == 0) {
-            auth_list = [3, 4]
+            auth_list = [2, 3, 4]
         }
 
         status_list.length = 0;
