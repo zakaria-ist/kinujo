@@ -107,13 +107,14 @@ def ProductList__asJson(request):
                 else:
                     very_str = 'None'
             i = i + 1
+            print(vars(field))
             data = {
                 "no": str(i),
                 "jan_id": str(p_jan.id),
                 "id": str(field.id),
                 "name": str(field.name),
                 "price": field.price,
-                "opened_date": field.opened_date.strftime("%Y-%m-%d"),
+                "opened_date": field.opened_date.strftime("%Y-%m-%d") if field.opened_date else '',
                 "image_path": str(image_path),
                 "jan_code": str(p_jan.jan_code),
                 "stock": str(p_jan.stock),
@@ -207,7 +208,7 @@ def get_jan_products(productJancode):
     """
 
     product = None
-    try: 
+    try:
         if productJancode.horizontal_id:
             productVarietySelection = ProductVarietySelection.objects.get(
                 pk=productJancode.horizontal_id)
@@ -356,7 +357,7 @@ def product_add(request):
         seller_auth_id = Profile.objects.get(pk=seller_id).authority_id
         category_list = list(ProductCategory.objects.filter(
             is_hidden=False).values_list('id', 'name'))
-        return render(request, 'product_form.html', {'category_list': category_list, 
+        return render(request, 'product_form.html', {'category_list': category_list,
                                                     'media_url': s.MEDIA_URL,
                                                     'seller_auth_id': seller_auth_id})
     else:
@@ -406,7 +407,7 @@ def product_edit(request, product_id):
                         update_product_image(request.FILES.get('product_image3'), 4, product.id)
                     if request.FILES.get('product_image4', False):
                         update_product_image(request.FILES.get('product_image4'), 5, product.id)
-                    
+
                     # remove selected image
                     deleted_images_list = json.loads(request.POST.get('image_delete'))
                     if len(deleted_images_list):
@@ -416,14 +417,14 @@ def product_edit(request, product_id):
                     # if so then delete 0ld data
                     if last_variety_type != product.variety:
                         deleteOldVarieties(product)
-                    
+
                     # save product new varieties
                     varieties = json.loads(request.POST.get('varieties'))
                     old_varieties = json.loads(request.POST.get('old_varieties'))
                     if last_variety_type != product.variety:
                         old_varieties = []
                     updateProductVarieties(product, product.variety, varieties, old_varieties)
-                
+
                     return redirect('/products/product_list/')
             except Exception as e:
                 print(e)
@@ -470,7 +471,7 @@ def product_edit(request, product_id):
             #         "stock": str(productJancode.stock),
             #         "varieties": varieties
             #     })
-            
+
             seller_auth_id = Profile.objects.get(pk=seller_id).authority_id
             category_list = list(ProductCategory.objects.filter(
                 is_hidden=False).values_list('id', 'name'))
@@ -574,7 +575,7 @@ def updateProductVarieties(product, prdct_variety, varieties, old_varieties):
     """
     common Method to add or update a product variety.
     """
-    
+
     try:
         if prdct_variety == 0:  # None
             obj = varieties[0]
@@ -777,7 +778,7 @@ def update_varieties(request):
                 if last_variety_type != prdct_variety:
                     old_varieties = []
                 updateProductVarieties(product, prdct_variety, varieties, old_varieties)
-                
+
                 message = 'Success'
         except Exception as e:
             print('update_varieties', e)
@@ -786,7 +787,7 @@ def update_varieties(request):
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
-                                
+
 @csrf_exempt
 def add_update_product(request):
     """
@@ -839,7 +840,7 @@ def add_update_product(request):
                 # if so then delete old data
                 if last_variety_type != product.variety:
                     deleteOldVarieties(product)
-                
+
                 # save product new varieties
                 varieties = json.loads(request.POST.get('varieties'))
                 old_varieties = json.loads(request.POST.get('old_varieties'))
@@ -882,7 +883,7 @@ def add_update_product(request):
                 # save product varieties
                 varieties = json.loads(request.POST.get('varieties'))
                 saveNewVareities(product, varieties)
-                
+
 
             message = 'Success'
         except Exception as e:
@@ -1046,7 +1047,7 @@ def save_product_image(image, image_no, product_id):
         productImage.image_no = image_no
         productImage.product_id = product_id
         productImage.save()
-    
+
     except Exception as e:
         print('save_product_image', e)
 
@@ -1252,6 +1253,6 @@ def export_product_list_as_csv(request):
             writer.writerow([str(i), field.name, str(p_jan.jan_code), very_str,
                             str(p_jan.stock), intcomma("%.0f" % field.price),
                             field.opened_date.strftime("%Y-%m-%d")])
-        
+
 
     return response

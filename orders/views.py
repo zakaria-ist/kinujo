@@ -101,7 +101,7 @@ def OrderList__asJson(request):
     order_list = Order.objects.filter(is_hidden=False, seller_id=seller_id)
     if len(filter_str):
         order_list = order_list.filter(status__in=filter_str)
-        
+
     records_total = order_list.count()
 
     if search:  # Filter data base on search
@@ -116,7 +116,7 @@ def OrderList__asJson(request):
         column_name = "id"
     if order_column == "1":
         column_name = "name"
-    
+
     order_dir = request.GET['order[0][dir]']
     list = []
     if order_dir == "asc":
@@ -155,7 +155,7 @@ def OrderList__asJson(request):
             "image_path": image_path,
             "product_name": j_product.name,
             "name": field.name,
-            "address": _("Zip:") + ' ' + field.zip1 + '  ' + field.address1,
+            "address": _("Zip:") + ' ' + field.zip1 + '  ' + field.address1 + field.address2,
             "amount": field.total_amount,
             "status": status,
             "shipped_date": field.shipped_date.strftime("%Y-%m-%d") if field.shipped_date else '',
@@ -273,15 +273,15 @@ def update_monthly_commission_data(affected_user_list, order_date):
         month = order_date.month
         for user in affected_user_list:
             user_commission_data = OrderProductCommission.objects.filter(user_id=user,
-                                    is_hidden=False, 
+                                    is_hidden=False,
                                     order_product__is_hidden=False,
                                     order_product__order__is_hidden=False,
                                     order_product__order__order_date__month=month,
                                     order_product__order__order_date__year=year)
-            
+
             user_sales_count = user_commission_data.filter(is_sales=True).count()
             user_sales_total = user_commission_data.filter(is_sales=True)\
-                    .aggregate(sales_amount=Coalesce(Sum('amount'), Value(0)), 
+                    .aggregate(sales_amount=Coalesce(Sum('amount'), Value(0)),
                                 shipping=Coalesce(Sum('shipping_fee'), Value(0)))
             user_commission_count = user_commission_data.filter(is_sales=False).count()
             user_commission_total = user_commission_data.filter(is_sales=False)\
@@ -344,16 +344,16 @@ def update_monthly_commission_data(affected_user_list, order_date):
             payment.amount = float(user_commission.total_amount) + float(user_sale.total_amount)
             payment.modified = datetime.datetime.now()
             payment.save()
-        
+
         # update total sales
         total_sales_total = UserSale.objects.filter(is_hidden=False, year=year, month=month)\
-                    .aggregate(total_sales_amount=Coalesce(Sum('sales_amount'), Value(0)), 
+                    .aggregate(total_sales_amount=Coalesce(Sum('sales_amount'), Value(0)),
                                 total_tax=Coalesce(Sum('tax'), Value(0)),
                                 total_amount_tax_included=Coalesce(Sum('amount_tax_included'), Value(0)),
                                 total_shipping_fee=Coalesce(Sum('shipping_fee'), Value(0)),
                                 total_total_amount=Coalesce(Sum('total_amount'), Value(0)),
                                 total_order_count=Coalesce(Sum('order_count'), Value(0)))
-                    
+
         total_sales = TotalSale.objects.filter(is_hidden=False, year=year, month=month)
         if total_sales:
             total_sales = total_sales.first()
@@ -442,7 +442,7 @@ def order_add(request):
                 kinujo_product = if_kinujo_product(order.seller_id)
                 commission_holder_list = get_commission_holder_list(order.purchaser_id, kinujo_product)
                 orderer_auth_type = Profile.objects.get(pk=order.purchaser_id).authority_id
-                
+
                 affected_user_list = []
                 for item in product_list:
                     product_jan = ProductJancode.objects.filter(pk=item['jan_id']).first()
@@ -514,7 +514,7 @@ def order_add(request):
                                     orderProductCommission.save()
                                     if orderProductCommission.user_id not in affected_user_list:
                                         affected_user_list.append(orderProductCommission.user_id)
-                            
+
                             else: # Non Kinujo Products
                                 seller_commission = 0.65
                                 seller_amount = int(j_product.price * seller_commission) * int(orderProduct.quantity)
@@ -549,7 +549,7 @@ def order_add(request):
                                         if orderProductCommission.user_id not in affected_user_list:
                                             affected_user_list.append(orderProductCommission.user_id)
                                 if remaining_amount > 0:
-                                    last_user = Profile.objects.filter(is_hidden=False, is_master=True, 
+                                    last_user = Profile.objects.filter(is_hidden=False, is_master=True,
                                             authority_id=AUTHORITY_TYPE['MASTER']).first()
                                     if last_user:
                                         orderProductCommission = OrderProductCommission()
@@ -562,12 +562,12 @@ def order_add(request):
                                         orderProductCommission.save()
                                         if orderProductCommission.user_id not in affected_user_list:
                                             affected_user_list.append(orderProductCommission.user_id)
-                            
+
 
 
                 # Update users monthly commission & total commission
                 update_users_monthly_commission_t = threading.Thread(name='update_monthly_commission_t',
-                                                            target=update_monthly_commission_data, 
+                                                            target=update_monthly_commission_data,
                                                             args=(affected_user_list, order.order_date,  ), daemon=True)
                 update_users_monthly_commission_t.start()
 
@@ -575,7 +575,7 @@ def order_add(request):
             except Exception as e:
                 print(e)
 
-        orderer_list = list(Profile.objects.filter(is_hidden=False, 
+        orderer_list = list(Profile.objects.filter(is_hidden=False,
                     authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']])\
             .exclude(id=seller_id)\
             .values_list('id', 'real_name', 'authority_id', 'nickname', 'is_seller', 'is_approved'))
@@ -665,7 +665,7 @@ def order_edit(request, order_id):
                             if orderProductCommission.user_id not in affected_user_list:
                                 affected_user_list.append(orderProductCommission.user_id)
 
-                        
+
 
                     product_list = json.loads(request.POST.get('product_list'))
                     kinujo_product = if_kinujo_product(order.seller_id)
@@ -693,7 +693,7 @@ def order_edit(request, order_id):
                                 product_jan.stock = product_jan.stock - int(item['qty'])
                                 product_jan.modified = datetime.datetime.now()
                                 product_jan.save()
-                            
+
                                 # commissoion block
                                 if kinujo_product:
                                     remaining_amount = int(j_product.price) * int(orderProduct.quantity)
@@ -714,7 +714,7 @@ def order_edit(request, order_id):
                                             orderProductCommission.save()
                                             if orderProductCommission.user_id not in affected_user_list:
                                                 affected_user_list.append(orderProductCommission.user_id)
-                                        
+
                                     # create master seller commission
                                     if remaining_amount > 0:
                                         orderProductCommission = OrderProductCommission()
@@ -727,7 +727,7 @@ def order_edit(request, order_id):
                                         orderProductCommission.save()
                                         if orderProductCommission.user_id not in affected_user_list:
                                             affected_user_list.append(orderProductCommission.user_id)
-                                
+
                                 else: # Non Kinujo Products
                                     seller_commission = 0.65
                                     seller_amount = int(j_product.price * seller_commission) * int(orderProduct.quantity)
@@ -762,7 +762,7 @@ def order_edit(request, order_id):
                                             if orderProductCommission.user_id not in affected_user_list:
                                                 affected_user_list.append(orderProductCommission.user_id)
                                     if remaining_amount > 0:
-                                        last_user = Profile.objects.filter(is_hidden=False, is_master=True, 
+                                        last_user = Profile.objects.filter(is_hidden=False, is_master=True,
                                                 authority_id=AUTHORITY_TYPE['MASTER']).first()
                                         if last_user:
                                             orderProductCommission = OrderProductCommission()
@@ -775,12 +775,12 @@ def order_edit(request, order_id):
                                             orderProductCommission.save()
                                             if orderProductCommission.user_id not in affected_user_list:
                                                 affected_user_list.append(orderProductCommission.user_id)
-                                
+
 
 
                     # Update users monthly commission & total commission
                     update_users_monthly_commission_te = threading.Thread(name='update_monthly_commission_te',
-                                                                target=update_monthly_commission_data, 
+                                                                target=update_monthly_commission_data,
                                                                 args=(affected_user_list, order.order_date,  ), daemon=True)
                     update_users_monthly_commission_te.start()
 
@@ -810,7 +810,7 @@ def order_edit(request, order_id):
                 # order_product_list.append([order_product.product_jan_code_id, order_product.quantity, image_path])
                 order_product_list.append([order_product.product_jan_code_id, order_product.quantity])
 
-            orderer_list = list(Profile.objects.filter(is_hidden=False, 
+            orderer_list = list(Profile.objects.filter(is_hidden=False,
                         authority_id__in=[AUTHORITY_TYPE['STORE'], AUTHORITY_TYPE['GENERAL']])\
                 .exclude(id=seller_id)\
                 .values_list('id', 'real_name', 'authority_id', 'nickname', 'is_seller', 'is_approved'))
@@ -854,7 +854,7 @@ def order_delete(request, order_id):
                     product_jan.stock = product_jan.stock + old_product.quantity # restore qty
                     product_jan.modified = datetime.datetime.now()
                     product_jan.save()
-                
+
                 old_product.is_hidden = True
                 old_product.modified = datetime.datetime.now()
                 old_product.save()
@@ -870,7 +870,7 @@ def order_delete(request, order_id):
 
             # Update users monthly commission & total commission
             update_users_monthly_commission_td = threading.Thread(name='update_monthly_commission_td',
-                                                        target=update_monthly_commission_data, 
+                                                        target=update_monthly_commission_data,
                                                         args=(affected_user_list, order.order_date,  ), daemon=True)
             update_users_monthly_commission_td.start()
 
@@ -930,7 +930,7 @@ def UserSalesList__asJson(request):
                                 user_id=profile_id, is_sales=True,
                                 order_product__order__order_date__year=year,
                                 order_product__order__order_date__month=month,).order_by('order_product__order__order_date')
-        
+
 
     array = []
     for field in sales_list:
@@ -984,7 +984,7 @@ def UserCommissionList__asJson(request):
                                 user_id=profile_id, is_sales=False,
                                 order_product__order__order_date__year=year,
                                 order_product__order__order_date__month=month,).order_by('order_product__order__order_date')
-        
+
 
     array = []
     for field in sales_list:
