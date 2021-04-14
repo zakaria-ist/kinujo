@@ -626,15 +626,26 @@ class CommissionProductList(APIView):
         orderProducts = OrderProduct.objects.filter(order__in=orders, is_hidden=False).values_list('id', flat=True)
         if profile.authority_id == AUTHORITY_TYPE['MASTER']:
             orderProductsCommission = OrderProductCommission.objects.filter(user__authority_id=AUTHORITY_TYPE['MASTER'], order_product__in=orderProducts, is_hidden=False)
+            userSale = UserSale.objects.filter(is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'])
+            userCommission = UserCommision.objects.filter(is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'])
         else:
             orderProductsCommission = OrderProductCommission.objects.filter(user_id=userId, order_product__in=orderProducts, is_hidden=False)
+            userSale = UserSale.objects.filter(is_hidden=False, user_id=userId)
+            userCommission = UserCommision.objects.filter(is_hidden=False, user_id=userId)
         orderProductsCommissionSerializer = OrderProductCommissionSerializer(orderProductsCommission, many=True, context=getContext())
+        
+        userSaleSerializer = UserSaleSerializer(userSale, many=True, context=getContext())
+        userCommissionSerializer = UserCommisionSerializer(userCommission, many=True, context=getContext())
         # janCodes = ProductJancode.objects.filter(id__in=orderProducts).values_list('horizontal_id', flat=True)
         # productVarietySelections = ProductVarietySelection.objects.filter(id__in=janCodes).values_list('product_variety_id', flat=True)
         # productVarieties = ProductVariety.objects.filter(id__in=productVarietySelections).values_list('product_id', flat=True)
         # products = Product.objects.filter(id__in=productVarieties)
         # productSerializer = ProductSerializer(products, many=True, context=getContext())
-        return Response({"success" : True, "commissionProducts" : orderProductsCommissionSerializer.data}, status=status.HTTP_200_OK)
+        return Response({"success" : True, 
+                            "commissionProducts" : orderProductsCommissionSerializer.data, 
+                            "userSales": userSaleSerializer.data,
+                            "userCommissions": userCommissionSerializer.data}, 
+                            status=status.HTTP_200_OK)
 
 class AddressList(APIView):
     serializer_class = ProductSerializer
