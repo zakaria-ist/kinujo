@@ -874,8 +874,8 @@ def updateUserCommission(introducer, amount, tax):
         monthlyPayment = monthlyPayment.last()
     else:
         monthlyPayment = MonthlyPayment()
-    monthlyPayment.amount = int(monthlyPayment.amount) + int(amount) + int(tax) \
-        if monthlyPayment.amount else int(amount) + int(tax)
+    monthlyPayment.amount = int(monthlyPayment.amount) + int(userCommission.total_amount) \
+        if monthlyPayment.amount else int(userCommission.total_amount)
     monthlyPayment.year = year
     monthlyPayment.month = month
     monthlyPayment.paid_date = None
@@ -940,8 +940,8 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
         monthlyPayment = monthlyPayment.last()
     else:
         monthlyPayment = MonthlyPayment()
-    monthlyPayment.amount = int(monthlyPayment.amount) + int(tax) + int(seller_amount) + int(float(shipping_fee)) \
-        if monthlyPayment.amount else int(tax) + int(seller_amount) + int(float(shipping_fee))
+    monthlyPayment.amount = int(monthlyPayment.amount) + int(userSale.total_amount) \
+        if monthlyPayment.amount else int(userSale.total_amount)
     monthlyPayment.user_id = seller.id
     monthlyPayment.year = year
     monthlyPayment.month = month
