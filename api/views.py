@@ -187,7 +187,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
     API endpoint that allows groups to be viewed or edited.
     """
     queryset = Profile.objects.all()
-    search_fields = ['nickname', 'user_code']
+    # search_fields = ['nickname', 'user_code']
+    search_fields = ['user_code']
     filter_backends = [filters.SearchFilter]
     serializer_class = ProfileSerializer
 
