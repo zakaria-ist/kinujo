@@ -152,8 +152,13 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 CORS_ORIGIN_ALLOW_ALL = True  # If this is used then `CORS_ORIGIN_WHITELIST` will not have any effect
 
 # EMAIL SETTINGS
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'c2sg2020@gmail.com'
-EMAIL_HOST_PASSWORD = 'weyrusjdaenxdohr'
-EMAIL_PORT = 587
+# EMAIL_HOST_PASSWORD = 'weyrusjdaenxdohr'
+# EMAIL_PORT = 587
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_ACCESS_KEY_ID = 'AKIA4YVCJSZFRIFD44QQ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_SES_REGION_NAME = 'ap-southeast-1'
+AWS_SES_REGION_ENDPOINT ='email.ap-southeast-1.amazonaws.com'

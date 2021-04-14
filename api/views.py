@@ -490,7 +490,7 @@ class SendEmail(APIView):
                 send_mail(
                     '[KINUJOからのお知らせ」出品中の商品が購入されました',
                     "",
-                    settings.EMAIL_HOST_USER,
+                    '"Kinujo" <' + settings.EMAIL_HOST_USER + '>',
                     [email],
                     fail_silently=False,
                     html_message=
@@ -1164,7 +1164,7 @@ class Pay(APIView):
                             send_mail(
                                 '[KINUJOからのお知らせ」出品中の商品が購入されました',
                                 "",
-                                settings.EMAIL_HOST_USER,
+                                '"Kinujo" <' + settings.EMAIL_HOST_USER + '>',
                                 [product['user']['email']],
                                 fail_silently=False,
                                 html_message=

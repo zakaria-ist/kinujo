@@ -157,8 +157,11 @@ STATIC_ROOT = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # s3 settings
+EMAIL_BACKEND = 'django_ses.SESBackend'
 AWS_ACCESS_KEY_ID = 'AKIA4YVCJSZFRIFD44QQ'
 AWS_SECRET_ACCESS_KEY = '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'
+AWS_SES_REGION_NAME = 'ap-southeast-1'
+AWS_SES_REGION_ENDPOINT ='email.ap-southeast-1.amazonaws.com'
 AWS_STORAGE_BUCKET_NAME = 'c2sg-kinujo'
 S3_URL = 'https://%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
@@ -174,8 +177,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_LOCAL = os.path.join(BASE_DIR, 'media')
 
 # EMAIL SETTINGS
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'c2sg2020@gmail.com'
-EMAIL_HOST_PASSWORD = 'weyrusjdaenxdohr'
-EMAIL_PORT = 587
+# EMAIL_HOST_PASSWORD = ''
+# EMAIL_PORT = 587
