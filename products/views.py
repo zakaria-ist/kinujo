@@ -165,7 +165,7 @@ def SellerProductList__asJson(request):
                 "jan_id": str(p_jan.id),
                 "id": str(field.id),
                 "name": str(field.name),
-                "opened_date": field.opened_date.strftime("%Y-%m-%d"),
+                "opened_date": field.opened_date.strftime("%Y-%m-%d") if field.opened_date else '',
                 "image_path": str(image_path),
                 "jan_code": str(p_jan.jan_code),
                 "stock": str(p_jan.stock),
@@ -1095,7 +1095,7 @@ def get_product_info(request):
                     'price': str(product.price),
                     'store_price': str(product.store_price),
                     'shipping_fee': str(product.shipping_fee),
-                    'opened_date': product.opened_date.strftime('%Y-%m-%d'),
+                    'opened_date': product.opened_date.strftime('%Y-%m-%d') if product.opened_date else '',
                     'is_opened': '1' if product.is_opened else '0',
                     'is_used': '1' if product.is_used else '0',
                     'is_draft': '1' if product.is_draft else '0',
@@ -1252,7 +1252,7 @@ def export_product_list_as_csv(request):
             i = i + 1
             writer.writerow([str(i), field.name, str(p_jan.jan_code), very_str,
                             str(p_jan.stock), intcomma("%.0f" % field.price),
-                            field.opened_date.strftime("%Y-%m-%d")])
+                            field.opened_date.strftime("%Y-%m-%d") if field.opened_date else ''])
 
 
     return response
