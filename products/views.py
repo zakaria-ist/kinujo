@@ -89,7 +89,7 @@ def ProductList__asJson(request):
         image_path = ''
         if productImage:
             image_path = productImage.image.image.url
-            image_path = image_path.split('?')[0]
+            # image_path = image_path.split('?')[0]
 
         jancode_ids = get_products_jancodes(field.id, type='id')
         productJancodes = ProductJancode.objects.filter(id__in=jancode_ids)
