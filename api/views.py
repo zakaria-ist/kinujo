@@ -298,7 +298,12 @@ class UserRegister(APIView):
                     'user_code' : user_code,
                     'authority' : authoritySerializer.data['url'],
                     'is_seller' : is_seller,
-                    'tel_code': "+" + request.data['callingCode']
+                    'tel_code': "+" + request.data['callingCode'],
+                    'other_notification_mail': 1,
+                    'other_notification_phone': 1,
+                    'message_notification_phone': 1,
+                    'allowed_by_id': 1,
+                    'allowed_by_tel': 1
                 }
                 if request.data['introducer']:
                     introducerProfile = None
