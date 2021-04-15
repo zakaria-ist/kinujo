@@ -1326,7 +1326,7 @@ class CreateProduct(APIView):
             }
             if request.data['draft'] == 1:
                 productData['is_draft'] = 1
-                productData['opened_date'] = None
+                # productData['opened_date'] = None
             else:
                 productData['is_draft'] = 0
             if request.data['publishState'] == 'published':
@@ -1622,7 +1622,7 @@ class EditProduct(APIView):
             product.category = productCategory
             if request.data['draft'] == 1:
                 product.is_draft = 1
-                product.opened_date = None
+                # product.opened_date = None
             else:
                 product.is_draft = 0
             if request.data['publishState'] == 'published':
