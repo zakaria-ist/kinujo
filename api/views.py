@@ -1355,10 +1355,13 @@ class CreateProduct(APIView):
             if productSerializer.is_valid():
                 productSerializer.save()
                 productImages = request.data['productImages']
+                imageCount = 0
                 for productImage in productImages:
+                    imageCount += 1
                     productImageSerializer = InsertProductImageSerializer(data={
                         'image': productImage['url'],
-                        'product' : productSerializer.data['url']
+                        'product' : productSerializer.data['url'],
+                        'image_no': imageCount
                     }, context=getContext())
                     if productImageSerializer.is_valid():
                         productImageSerializer.save()
@@ -1650,11 +1653,17 @@ class EditProduct(APIView):
 
             productSerializer = InsertProductSerializer(product, context=getContext())
             productImages = request.data['productImages']
+            imageCount = 0
+            for productImage in productImages:
+                if 'is_old' in productImage:
+                    imageCount += 1
             for productImage in productImages:
                 if 'is_old' not in productImage:
+                    imageCount += 1
                     productImageSerializer = InsertProductImageSerializer(data={
                         'image': productImage['url'],
-                        'product' : productSerializer.data['url']
+                        'product' : productSerializer.data['url'],
+                        'image_no': imageCount
                     }, context=getContext())
                     if productImageSerializer.is_valid():
                         productImageSerializer.save()

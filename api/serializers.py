@@ -75,13 +75,19 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         orders = Order.objects.filter(is_hidden=False).values_list('id', flat=True)
         orderProducts = OrderProduct.objects.filter(order__in=orders, is_hidden=False).values_list('id', flat=True)
         if instance.authority_id == AUTHORITY_TYPE['MASTER']:
-            orderProductsCommission = OrderProductCommission.objects.filter(order_product__in=orderProducts, is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'])
+            # orderProductsCommission = OrderProductCommission.objects.filter(order_product__in=orderProducts, is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'])
+            userSale = UserSale.objects.filter(is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'])
+            userCommission = UserCommision.objects.filter(is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'])
         else:
-            orderProductsCommission = OrderProductCommission.objects.filter(order_product__in=orderProducts, is_hidden=False, user_id=instance.id)
+            # orderProductsCommission = OrderProductCommission.objects.filter(order_product__in=orderProducts, is_hidden=False, user_id=instance.id)
+            userSale = UserSale.objects.filter(is_hidden=False, user_id=instance.id)
+            userCommission = UserCommision.objects.filter(is_hidden=False, user_id=instance.id)
 
         total = 0
-        for item in orderProductsCommission:
-            total = total + item.amount
+        for item in userSale:
+            total = total + item.total_amount
+        for item in userCommission:
+            total = total + item.total_amount
         # for item in orderProducts:
         #     total = total + item.unit_price
         return total
@@ -121,7 +127,7 @@ class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
     image = ImageSerializer()
     class Meta:
         model = ProductImage
-        fields = ['product','image','is_hidden','created','modified',]
+        fields = ['product','image','is_hidden','created','modified', 'image_no']
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     user = ProfileSerializer()
     category = ProductCategorySerializer()

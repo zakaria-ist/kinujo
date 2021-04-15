@@ -88,7 +88,7 @@ class InsertProductCategorySerializer(serializers.HyperlinkedModelSerializer):
 class InsertProductImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ['product','image','is_hidden','created','modified',]
+        fields = ['product','image','is_hidden','created','modified', 'image_no']
 class InsertProductSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Product

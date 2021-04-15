@@ -91,7 +91,6 @@ def ProductList__asJson(request):
             image_path = productImage.image.image.url
             image_path = image_path.split('?')[0]
 
-        print(field.id, image_path)
         jancode_ids = get_products_jancodes(field.id, type='id')
         productJancodes = ProductJancode.objects.filter(id__in=jancode_ids)
         for p_jan in productJancodes:
