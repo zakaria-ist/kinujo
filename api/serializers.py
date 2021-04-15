@@ -161,7 +161,7 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
     shipped_date = serializers.DateField(allow_null=True)
     class Meta:
         model = Order
-        fields = ['orderReceipts', 'seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment',
+        fields = ['id', 'orderReceipts', 'seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment',
                 'customer_remark','remark','is_hidden','created','modified', 'tel_code', 'shipped_date', 'status']
 class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
     order = OrderSerializer()
@@ -173,7 +173,7 @@ class OrderProductCommissionSerializer(serializers.HyperlinkedModelSerializer):
     order_product = OrderProductSerializer()
     class Meta:
         model = OrderProductCommission
-        fields = ['order_product','user','amount','is_sales','is_food','shipping_fee','is_hidden','created','modified']
+        fields = ['id', 'order_product','user','amount','is_sales','is_food','shipping_fee','is_hidden','created','modified']
 
 class FinancialAccountSerialier(serializers.HyperlinkedModelSerializer):
     class Meta:
