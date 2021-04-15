@@ -89,7 +89,9 @@ def ProductList__asJson(request):
         image_path = ''
         if productImage:
             image_path = productImage.image.image.url
+            image_path = image_path.split('?')[0]
 
+        print(field.id, image_path)
         jancode_ids = get_products_jancodes(field.id, type='id')
         productJancodes = ProductJancode.objects.filter(id__in=jancode_ids)
         for p_jan in productJancodes:
@@ -107,7 +109,7 @@ def ProductList__asJson(request):
                 else:
                     very_str = 'None'
             i = i + 1
-            print(vars(field))
+            # print(vars(field))
             data = {
                 "no": str(i),
                 "jan_id": str(p_jan.id),
