@@ -644,8 +644,8 @@ class CommissionProductList(APIView):
         orderProductsCommission = OrderProductCommission.objects.filter(is_hidden=False)
         orderProductsCommissionSerializer = OrderProductCommissionSerializer(orderProductsCommission, many=True, context=getContext())
         
-        userSaleSerializer = UserSaleSerializer(userSale, context=getContext())
-        userCommissionSerializer = UserCommisionSerializer(userCommission, context=getContext())
+        userSaleSerializer = UserSaleSerializer(userSale, many=True, context=getContext())
+        userCommissionSerializer = UserCommisionSerializer(userCommission, many=True, context=getContext())
         # janCodes = ProductJancode.objects.filter(id__in=orderProducts).values_list('horizontal_id', flat=True)
         # productVarietySelections = ProductVarietySelection.objects.filter(id__in=janCodes).values_list('product_variety_id', flat=True)
         # productVarieties = ProductVariety.objects.filter(id__in=productVarietySelections).values_list('product_id', flat=True)
