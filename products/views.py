@@ -1230,7 +1230,11 @@ def export_product_list_as_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="ProductList.csv"'
     writer = csv.writer(response)
-    writer.writerow(['#', 'product_name', 'jan_code', 'varieties', 'stock', 'price', 'opened_date'])
+    language = translation.get_language()
+    if language == 'ja':
+        writer.writerow(['#', '商品名', 'JANコード', 'バリエーション', '在庫', '価格', '公開日'])
+    else:
+        writer.writerow(['#', 'Product Name', 'JAN code', 'Varieties', 'Stock', 'Price', 'Published Date'])
 
     i = 0
     for field in product_list:
@@ -1245,7 +1249,6 @@ def export_product_list_as_csv(request):
             if len(very_str):
                 very_str = very_str[:-1]
             else:
-                language = translation.get_language()
                 if language == 'ja':
                     very_str = '無し'
                 else:
