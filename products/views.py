@@ -81,6 +81,7 @@ def ProductList__asJson(request):
     elif order_dir == "desc":
         list = product_list.order_by('-' + column_name)[int(start):(int(start) + int(length))]
 
+    language = translation.get_language()
     array = []
     i = 0
     for field in list:
@@ -94,15 +95,20 @@ def ProductList__asJson(request):
         jancode_ids = get_products_jancodes(field.id, type='id')
         productJancodes = ProductJancode.objects.filter(id__in=jancode_ids)
         for p_jan in productJancodes:
-            veries = get_jan_varieties(p_jan)
-            very_str = ''
-            for item in veries:
-                if item['name']:
-                    very_str += item['name'] + ' : ' + item['selection'] + ','
-            if len(very_str):
-                very_str = very_str[:-1]
+            if field.variety != 0:
+                veries = get_jan_varieties(p_jan)
+                very_str = ''
+                for item in veries:
+                    if item['name']:
+                        very_str += item['name'] + ' : ' + item['selection'] + ','
+                if len(very_str):
+                    very_str = very_str[:-1]
+                else:
+                    if language == 'ja':
+                        very_str = '無し'
+                    else:
+                        very_str = 'None'
             else:
-                language = translation.get_language()
                 if language == 'ja':
                     very_str = '無し'
                 else:
@@ -141,6 +147,7 @@ def SellerProductList__asJson(request):
         profile_id = request.session['login_profile_id']
     product_list = Product.objects.filter(is_hidden=False, user_id=profile_id, is_opened=True).order_by('name')
 
+    language = translation.get_language()
     array = []
     i = 0
     for field in product_list:
@@ -153,13 +160,24 @@ def SellerProductList__asJson(request):
         jancode_ids = get_products_jancodes(field.id, type='id')
         productJancodes = ProductJancode.objects.filter(id__in=jancode_ids).exclude(stock__isnull=True).exclude(stock__lte=0)
         for p_jan in productJancodes:
-            veries = get_jan_varieties(p_jan)
-            very_str = ''
-            for item in veries:
-                if item['name']:
-                    very_str += item['selection'] + ','
-            if len(very_str):
-                very_str = very_str[:-1]
+            if field.variety != 0:
+                veries = get_jan_varieties(p_jan)
+                very_str = ''
+                for item in veries:
+                    if item['name']:
+                        very_str += item['selection'] + ','
+                if len(very_str):
+                    very_str = very_str[:-1]
+                else:
+                    if language == 'ja':
+                        very_str = '無し'
+                    else:
+                        very_str = 'None'
+            else:
+                if language == 'ja':
+                    very_str = '無し'
+                else:
+                    very_str = 'None'
             i = i + 1
             data = {
                 "no": str(i),
@@ -1241,13 +1259,19 @@ def export_product_list_as_csv(request):
         jancode_ids = get_products_jancodes(field.id, type='id')
         productJancodes = ProductJancode.objects.filter(id__in=jancode_ids)
         for p_jan in productJancodes:
-            veries = get_jan_varieties(p_jan)
-            very_str = ''
-            for item in veries:
-                if item['name']:
-                    very_str += item['name'] + ' : ' + item['selection'] + ','
-            if len(very_str):
-                very_str = very_str[:-1]
+            if field.variety != 0:
+                veries = get_jan_varieties(p_jan)
+                very_str = ''
+                for item in veries:
+                    if item['name']:
+                        very_str += item['name'] + ' : ' + item['selection'] + ','
+                if len(very_str):
+                    very_str = very_str[:-1]
+                else:
+                    if language == 'ja':
+                        very_str = '無し'
+                    else:
+                        very_str = 'None'
             else:
                 if language == 'ja':
                     very_str = '無し'
