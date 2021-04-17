@@ -58,7 +58,7 @@ def ProductList__asJson(request):
         if 2 not in filter_array:
             product_list = product_list.exclude(is_opened=False)
         if 3 not in filter_array:
-            product_list = product_list.exclude(is_draft=True)
+            product_list = product_list.exclude(is_draft=False)
 
     records_total = product_list.count()
 
