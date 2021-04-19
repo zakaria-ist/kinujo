@@ -1240,13 +1240,16 @@ def export_product_list_as_csv(request):
     profile_id = request.session['login_profile_id']
     product_list = Product.objects.filter(is_hidden=False, user_id=profile_id).order_by('name')
     filter_array = eval(request.POST.get('param0'))
+    products_ids = []
     if len(filter_array):
-        if 1 not in filter_array:
-            product_list = product_list.exclude(is_opened=True)
-        if 2 not in filter_array:
-            product_list = product_list.exclude(is_opened=False)
-        if 3 not in filter_array:
-            product_list = product_list.exclude(is_draft=True)
+        if 1 in filter_array:
+            products_ids.extend(product_list.filter(is_opened=True).values_list('id', flat=True))
+        if 2 in filter_array:
+            products_ids.extend(product_list.filter(is_opened=False).values_list('id', flat=True))
+        if 3 in filter_array:
+            products_ids.extend(product_list.filter(is_draft=True).values_list('id', flat=True))
+
+        product_list = product_list.filter(id__in=products_ids)
 
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="ProductList.csv"'
