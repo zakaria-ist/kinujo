@@ -53,4 +53,4 @@ class SimpleProductSerializer(serializers.HyperlinkedModelSerializer):
     productImages = SimpleProduct_ProductImageSerializer(many=True, required=False)
     class Meta:
         model = Product
-        fields = ['url', 'id', 'name','brand_name','category','is_used','is_opened','opened_date','price','store_price','shipping_fee','is_draft','is_food','is_hidden','created','modified','user','productImages']
+        fields = ['url', 'id', 'name','brand_name','category','is_used', 'target', 'is_opened','opened_date','price','store_price','shipping_fee','is_draft','is_food','is_hidden','created','modified','user','productImages']
