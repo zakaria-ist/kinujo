@@ -360,11 +360,14 @@ def profile_add(request):
                     else:
                         profile.is_seller = False
 
-                    if profile.authority_id in (AUTHORITY_TYPE['AMBASSADOR'], AUTHORITY_TYPE['GENERAL'],
-                        AUTHORITY_TYPE['MASTER'], AUTHORITY_TYPE['SPECIAL']):
+                    if request.POST.get('is_approved') == '1':
                         profile.is_approved = True
                     else:
-                        profile.is_approved = False
+                        if profile.authority_id in (AUTHORITY_TYPE['AMBASSADOR'], AUTHORITY_TYPE['GENERAL'],
+                            AUTHORITY_TYPE['MASTER'], AUTHORITY_TYPE['SPECIAL']):
+                            profile.is_approved = True
+                        else:
+                            profile.is_approved = False
 
                     if profile.authority_id == AUTHORITY_TYPE['AMBASSADOR']:
                         if request.POST.get('general_store') and request.POST.get('general_store') != '' and request.POST.get('general_store') != None:

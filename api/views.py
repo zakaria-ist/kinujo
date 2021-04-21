@@ -53,63 +53,63 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 class ImageViewSet(viewsets.ModelViewSet):
-    queryset = Image.objects.all()
+    queryset = Image.objects.filter(is_hidden=0)
     serializer_class = ImageSerializer
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Group.objects.all()
+    queryset = Group.objects.filter(is_hidden=0)
     serializer_class = GroupSerializer
 
 class CountryCodeViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = CountryCode.objects.all()
+    queryset = CountryCode.objects.filter(is_hidden=0)
     serializer_class = CountryCodeSerializer
 
 class OrderViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Order.objects.all()
+    queryset = Order.objects.filter(is_hidden=0)
     serializer_class = OrderSerializer
 
 class OrderProductViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = OrderProduct.objects.all()
+    queryset = OrderProduct.objects.filter(is_hidden=0)
     serializer_class = OrderProductSerializer
 
 class OrderProductCommissionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = OrderProductCommission.objects.all()
+    queryset = OrderProductCommission.objects.filter(is_hidden=0)
     serializer_class = OrderProductCommissionSerializer
 
 class OrderReceiptViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = OrderReceipt.objects.all()
+    queryset = OrderReceipt.objects.filter(is_hidden=0)
     serializer_class = OrderReceiptSerializer
 
 class TotalSaleViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = TotalSale.objects.all()
+    queryset = TotalSale.objects.filter(is_hidden=0)
     serializer_class = TotalSaleSerializer
 
 class TotalCommissionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = TotalCommission.objects.all()
+    queryset = TotalCommission.objects.filter(is_hidden=0)
     serializer_class = TotalCommissionSerializer
 
 class PolicyViewSet(viewsets.ModelViewSet):
@@ -123,70 +123,70 @@ class PrefectureViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Prefecture.objects.all()
+    queryset = Prefecture.objects.filter(is_hidden=0)
     serializer_class = PrefectureSerializer
 
 class ProductCategoryViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = ProductCategory.objects.all()
+    queryset = ProductCategory.objects.filter(is_hidden=0)
     serializer_class = ProductCategorySerializer
 
 class ProductViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(is_hidden=0)
     serializer_class = ProductSerializer
 
 class SimpleProductViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(is_hidden=0)
     serializer_class = SimpleProductSerializer
 
 class ProductImageViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = ProductImage.objects.all()
+    queryset = ProductImage.objects.filter(is_hidden=0)
     serializer_class = ProductImageSerializer
 
 class ProductVarietyViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = ProductVariety.objects.all()
+    queryset = ProductVariety.objects.filter(is_hidden=0)
     serializer_class = ProductVarietySerializer
 
 class ProductVarietySelectionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = ProductVarietySelection.objects.all()
+    queryset = ProductVarietySelection.objects.filter(is_hidden=0)
     serializer_class = ProductVarietySelectionSerializer
 
 class ProductJancodeViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = ProductJancode.objects.all()
+    queryset = ProductJancode.objects.filter(is_hidden=0)
     serializer_class = ProductJancodeSerializer
 
 class AuthorityViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Authority.objects.all()
+    queryset = Authority.objects.filter(is_hidden=0)
     serializer_class = AuthoritySerializer
 
 class ProfileViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Profile.objects.all()
+    queryset = Profile.objects.filter(is_hidden=0)
     # search_fields = ['nickname', 'user_code']
     search_fields = ['user_code']
     filter_backends = [filters.SearchFilter]
@@ -196,49 +196,49 @@ class FinancialAccountViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = FinancialAccount.objects.all()
+    queryset = FinancialAccount.objects.filter(is_hidden=0)
     serializer_class = FinancialAccountSerialier
 
 class UserSaleViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = UserSale.objects.all()
+    queryset = UserSale.objects.filter(is_hidden=0)
     serializer_class = UserSaleSerializer
 
 class UserCommisionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = UserCommision.objects.all()
+    queryset = UserCommision.objects.filter(is_hidden=0)
     serializer_class = UserCommisionSerializer
 
 class MonthlyPaymentViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = MonthlyPayment.objects.all()
+    queryset = MonthlyPayment.objects.filter(is_hidden=0)
     serializer_class = MonthlyPaymentSerializer
 
 class AddressViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Address.objects.all()
+    queryset = Address.objects.filter(is_hidden=0)
     serializer_class = AddressSerializer
 
 class InsertAddressViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Address.objects.all()
+    queryset = Address.objects.filter(is_hidden=0)
     serializer_class = InsertAddressSerializer
 
 class TaxRateViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = TaxRate.objects.all()
+    queryset = TaxRate.objects.filter(is_hidden=0)
     serializer_class = TaxRateSerializer
 
 class UserImages(APIView):
