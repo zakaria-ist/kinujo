@@ -424,13 +424,16 @@ class PasswordReset(APIView):
             except Exception as e:
                 print(e)
             if user:
-                if request.data['password'] == request.data['confirm_password']:
-                    user.set_password(request.data['password'])
-                    user.save()
+                if len(request.data['password']) >= 8:
+                    if request.data['password'] == request.data['confirm_password']:
+                        user.set_password(request.data['password'])
+                        user.save()
 
-                    return Response({"success" : True}, status=status.HTTP_200_OK)
+                        return Response({"success" : True}, status=status.HTTP_200_OK)
+                    else:
+                        return Response({"success" : False, "error" : "password_mismatch"}, status=status.HTTP_200_OK)
                 else:
-                    return Response({"success" : False, "error" : "password_mismatch"}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "error" : "register-(password)"}, status=status.HTTP_200_OK)
             else:
                 return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
         else:
