@@ -497,7 +497,7 @@ class SendEmail(APIView):
             email = profile.email
             if email:
                 send_mail(
-                    '[KINUJOからのお知らせ」出品中の商品が購入されました',
+                    '【KINUJOからのお知らせ】出品中の商品が購入されました',
                     "",
                     '"Kinujo" <' + settings.EMAIL_HOST_USER + '>',
                     [email],
@@ -1186,7 +1186,7 @@ class Pay(APIView):
 
                         if product['user']['email']:
                             send_mail(
-                                '[KINUJOからのお知らせ」出品中の商品が購入されました',
+                                '【KINUJOからのお知らせ】出品中の商品が購入されました',
                                 "",
                                 '"Kinujo" <' + settings.EMAIL_HOST_USER + '>',
                                 [product['user']['email']],
