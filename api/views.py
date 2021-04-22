@@ -497,7 +497,7 @@ class SendEmail(APIView):
             email = profile.email
             if email:
                 send_mail(
-                    '[KINUJOからのお知らせ」出品中の商品が購入されました',
+                    '【KINUJOからのお知らせ】出品中の商品が購入されました',
                     "",
                     '"Kinujo" <' + settings.EMAIL_HOST_USER + '>',
                     [email],
@@ -646,7 +646,7 @@ class CommissionProductList(APIView):
             userCommission = UserCommision.objects.filter(is_hidden=False, user_id=userId)
         orderProductsCommission = OrderProductCommission.objects.filter(is_hidden=False)
         orderProductsCommissionSerializer = OrderProductCommissionSerializer(orderProductsCommission, many=True, context=getContext())
-        
+
         userSaleSerializer = UserSaleSerializer(userSale, many=True, context=getContext())
         userCommissionSerializer = UserCommisionSerializer(userCommission, many=True, context=getContext())
         # janCodes = ProductJancode.objects.filter(id__in=orderProducts).values_list('horizontal_id', flat=True)
@@ -654,10 +654,10 @@ class CommissionProductList(APIView):
         # productVarieties = ProductVariety.objects.filter(id__in=productVarietySelections).values_list('product_id', flat=True)
         # products = Product.objects.filter(id__in=productVarieties)
         # productSerializer = ProductSerializer(products, many=True, context=getContext())
-        return Response({"success" : True, "isMaster": isMaster, 
-                            "commissionProducts" : orderProductsCommissionSerializer.data, 
+        return Response({"success" : True, "isMaster": isMaster,
+                            "commissionProducts" : orderProductsCommissionSerializer.data,
                             "userSales": userSaleSerializer.data,
-                            "userCommissions": userCommissionSerializer.data}, 
+                            "userCommissions": userCommissionSerializer.data},
                             status=status.HTTP_200_OK)
 
 class AddressList(APIView):
@@ -750,7 +750,7 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
         # if profileSerializer.data['introducer']:
         #     introducers = profileSerializer.data['introducer'].split("/")
         #     introducer = introducers[len(introducers)-2]
-        
+
         if introducer:
             introducer = Profile.objects.filter(is_hidden=False, id=introducer)
             if introducer.exists():
@@ -779,11 +779,11 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
                     return orderProductCommissionSerializer.errors
                 tax = int(float(amount) * float(tax_rate))
                 result = updateUserCommission(introducer, amount, tax)
-                # new remaining_amount   
+                # new remaining_amount
                 remaining_amount = int(remaining_amount) - int(float(price) * float(commission))
                 return calculateCommission(kinujo_product, price, orderProduct, introducer.id, shipping_fee, remaining_amount, seller)
-                
-                
+
+
             return calculateCommission(kinujo_product, price, orderProduct, introducer.id, shipping_fee, remaining_amount, seller)
         else:
             if remaining_amount > 0:
@@ -811,7 +811,7 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
                     result = updateUserSales(seller, seller_amount, tax, float(shipping_fee))
 
                     if remaining_amount > 0:
-                        master_user = Profile.objects.filter(is_hidden=False, is_master=True, 
+                        master_user = Profile.objects.filter(is_hidden=False, is_master=True,
                                 authority_id=AUTHORITY_TYPE['MASTER']).first()
                         if master_user:
                             sellerSerializer = ProfileSerializer(master_user, context=getContext())
@@ -891,8 +891,8 @@ def updateUserCommission(introducer, amount, tax):
     userCommission.user_id = introducer.id
     userCommission.modified = today_date
     userCommission.save()
-    
-    
+
+
     monthlyPayment = MonthlyPayment.objects.filter(is_hidden=False, year=year, month=month, user_id=introducer.id)
     if monthlyPayment.exists():
         monthlyPayment = monthlyPayment.last()
@@ -907,7 +907,7 @@ def updateUserCommission(introducer, amount, tax):
     monthlyPayment.user_id = introducer.id
     monthlyPayment.modified = today_date
     monthlyPayment.save()
-    
+
     return True
 
 
@@ -936,7 +936,7 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
     totalSale.modified = today_date
     totalSale.save()
 
-    
+
     userSale = UserSale.objects.filter(is_hidden=False, year=year, month=month, user_id=seller.id)
     if userSale.exists():
         userSale = userSale.last()
@@ -958,7 +958,7 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
     userSale.modified = today_date
     userSale.save()
 
-    
+
     monthlyPayment = MonthlyPayment.objects.filter(is_hidden=False, year=year, month=month, user_id=seller.id)
     if monthlyPayment.exists():
         monthlyPayment = monthlyPayment.last()
@@ -973,7 +973,7 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
     monthlyPayment.paid_date = None
     monthlyPayment.status = False
     monthlyPayment.save()
-    
+
     return True
 
 
@@ -1074,7 +1074,7 @@ class Pay(APIView):
                     #     groupProducts[product['user']['url']] = tmpProducts
                     # else:
                     #     groupProducts[product['user']['url']] = [product]
-                
+
                 total_amount = int(amount) + int(total_shipping_fee)
                 # charge = stripe.Charge.create(
                 #     amount=int(float(total_amount)),
@@ -1177,7 +1177,7 @@ class Pay(APIView):
                                 productJancode.stock = int(productJancode.stock) - int(quantity)
                                 productJancode.save()
 
-                            errors = calculateCommission(kinujo_product, normalTotal, orderProductSerializer.data['url'], 
+                            errors = calculateCommission(kinujo_product, normalTotal, orderProductSerializer.data['url'],
                                         profileSerializer.data['id'], groupShippingFee, groupTotal, seller)
                             if errors:
                                 return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
@@ -1186,7 +1186,7 @@ class Pay(APIView):
 
                         if product['user']['email']:
                             send_mail(
-                                '[KINUJOからのお知らせ」出品中の商品が購入されました',
+                                '【KINUJOからのお知らせ】出品中の商品が購入されました',
                                 "",
                                 '"Kinujo" <' + settings.EMAIL_HOST_USER + '>',
                                 [product['user']['email']],
@@ -1770,7 +1770,7 @@ class EditProduct(APIView):
                         productVarietySelection = ProductVarietySelection.objects.get(id=choice['id'])
                         productVarietySelection.is_hidden = 1
                         productVarietySelection.save()
-                        
+
                     if 'id' in choice:
                         productVarietySelection = ProductVarietySelection.objects.get(id=choice['id'])
                         productVarietySelection.selection = choice['choiceItem']
