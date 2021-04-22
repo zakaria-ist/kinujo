@@ -60,7 +60,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Group.objects.filter(is_hidden=0)
+    queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
 class CountryCodeViewSet(viewsets.ModelViewSet):
