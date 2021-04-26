@@ -22,6 +22,7 @@
     <div class="container text-center" style="margin-top: 25px">
       <a id="app_link" class="btn btn-info">{% trans 'Return' %}</a>
     </div>
+    <div id="loading"><img style="left: 25%; position: absolute; top: 25%;" src="{% static 'img/loading.gif' %}" /></div>
   </section>
   <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
@@ -37,21 +38,25 @@
               xhr.setRequestHeader("Authorization", "Bearer " + stripe_pk)
           }, success: function(data){
               let payment_intent = data.payment_intent;
+              alert(payment_intent);
               $.ajax({
                 url: 'https://api.stripe.com/v1/payment_intents/' + payment_intent,
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader("Authorization", "Bearer " + stripe_pk)
                 }, success: function(data){
+                    alert(data.charges.data[0].payment_method_details.card.brand);
                     card_no = data.charges.data[0].payment_method_details.card.brand + '****_****' + data.charges.data[0].payment_method_details.card.last4;
                     alert(card_no);
                     callPaymentAPI(card_no);
                     //process the JSON data etc
                 }, error: function (e){
+                  alert('session error');
                   callPaymentAPI("");
                 }
             })
               //process the JSON data etc
           }, error: function (e){
+            alert('paymentIntent error');
             callPaymentAPI("");
           }
       })
@@ -64,6 +69,7 @@
     })
 
     function callPaymentAPI(card_no) {
+      $('#loading').hide();
       fetch(baseUrl + '/api/pay/' + stripe_session.userId + "/", {
           method: 'POST',
           headers: {
