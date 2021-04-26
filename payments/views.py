@@ -40,7 +40,7 @@ def success(request):
     Method to redirect to stripe success page.
     """
     session_id = request.GET.get('sc_sid', "")
-    return render (request, 'success.html', {'session_id': session_id, 'stripe_pk': settings.STRIPE_PUBLIC_KEY})
+    return render (request, 'success.html', {'session_id': session_id, 'stripe_sk': settings.STRIPE_SECRET_KEY})
 
 class CancelledView(TemplateView):
     template_name = 'cancelled.html'

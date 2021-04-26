@@ -28,21 +28,21 @@
   <script type="text/javascript">
     var baseUrl = window.location.origin;
     var session_id = "{{session_id}}";
-    var stripe_pk = '{{stripe_pk}}';
+    var stripe_sk = '{{stripe_sk}}';
     var stripe_session = JSON.parse(window.sessionStorage.getItem('stripe_session'));
     if (stripe_session && stripe_session != '' && stripe_session.sessionId == session_id) {
       
       $.ajax({
           url: 'https://api.stripe.com/v1/checkout/sessions/' + stripe_session.sessionId,
           beforeSend: function(xhr) {
-              xhr.setRequestHeader("Authorization", "Bearer " + stripe_pk)
+              xhr.setRequestHeader("Authorization", "Bearer " + stripe_sk)
           }, success: function(data){
               let payment_intent = data.payment_intent;
               alert(payment_intent);
               $.ajax({
                 url: 'https://api.stripe.com/v1/payment_intents/' + payment_intent,
                 beforeSend: function(xhr) {
-                    xhr.setRequestHeader("Authorization", "Bearer " + stripe_pk)
+                    xhr.setRequestHeader("Authorization", "Bearer " + stripe_sk)
                 }, success: function(data){
                     alert(data.charges.data[0].payment_method_details.card.brand);
                     card_no = data.charges.data[0].payment_method_details.card.brand + '****_****' + data.charges.data[0].payment_method_details.card.last4;
@@ -56,7 +56,7 @@
             })
               //process the JSON data etc
           }, error: function (e){
-            alert('session error', 'https://api.stripe.com/v1/checkout/sessions/' + stripe_session.sessionId, "Bearer " + stripe_pk);
+            alert('session error');
             callPaymentAPI("");
           }
       })
@@ -96,9 +96,9 @@
               let href = 'net.c2sg.kinujo://complete/success/' + snap_ids + '/' + seller;
               $('#app_link').attr('href', href);
               window.sessionStorage.setItem('stripe_session', '');
-              //setTimeout(() => {
-                //$('#app_link')[0].click();
-              //}, 5000);
+              setTimeout(() => {
+                $('#app_link')[0].click();
+              }, 5000);
           })
           .catch(function (error) {
               console.log(error);
