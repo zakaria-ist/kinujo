@@ -28,10 +28,42 @@
   <script type="text/javascript">
     var baseUrl = window.location.origin;
     var session_id = "{{session_id}}";
+    var stripe_pk = '{{stripe_pk}}';
     var stripe_session = JSON.parse(window.sessionStorage.getItem('stripe_session'));
-    console.log('session_id', session_id);
-    console.log('stripe_session', stripe_session);
     if (stripe_session && stripe_session != '' && stripe_session.sessionId == session_id) {
+      $.ajax({
+          url: 'https://api.stripe.com/v1/checkout/sessions/' + stripe_session.sessionId,
+          beforeSend: function(xhr) {
+              xhr.setRequestHeader("Authorization", "Bearer " + stripe_pk)
+          }, success: function(data){
+              let payment_intent = data.payment_intent;
+              $.ajax({
+                url: 'https://api.stripe.com/v1/payment_intents/' + payment_intent,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + stripe_pk)
+                }, success: function(data){
+                    card_no = data.charges.data[0].payment_method_details.card.brand + '****_****' + data.charges.data[0].payment_method_details.card.last4;
+                    alert(card_no);
+                    callPaymentAPI(card_no);
+                    //process the JSON data etc
+                }, error: function (e){
+                  callPaymentAPI("");
+                }
+            })
+              //process the JSON data etc
+          }, error: function (e){
+            callPaymentAPI("");
+          }
+      })
+      
+    }
+    $('#app_link').on('click', function() {
+      window.sessionStorage.setItem('stripe_session', '');
+      window.open('','_self');
+      window.close();
+    })
+
+    function callPaymentAPI(card_no) {
       fetch(baseUrl + '/api/pay/' + stripe_session.userId + "/", {
           method: 'POST',
           headers: {
@@ -43,6 +75,7 @@
                   products: stripe_session.products,
                   address: stripe_session.address,
                   tax: stripe_session.tax,
+                  card_no: card_no,
               })
           })
           .then(function(response) {
@@ -66,11 +99,6 @@
               console.log(error);
           });
     }
-    $('#app_link').on('click', function() {
-      window.sessionStorage.setItem('stripe_session', '');
-      window.open('','_self');
-      window.close();
-    })
   </script>
   </body>
 </html>

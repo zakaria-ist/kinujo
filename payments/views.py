@@ -3,6 +3,7 @@ import stripe
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.conf import settings
 from django.views.generic import TemplateView
 
 # Create your views here.
@@ -26,7 +27,7 @@ def pay(request):
             int(request.GET.get('prod_'+str(i)+'qty', "")),
         ])
         i = i + 1
-    return render(request, 'pay.html', {
+    return render(request, 'pay.html', {'stripe_pk': settings.STRIPE_PUBLIC_KEY,
                                         'amount': amount, 
                                         'tax': tax, 
                                         'address': address, 
@@ -51,8 +52,7 @@ def create_checkout_session(request):
         domain_url = request.build_absolute_uri('/').strip("/")
         body = json.loads(request.body)
         total = body['amount']
-        # stripe.api_key = 'sk_test_51INa46G0snPTYlWjdSzH5xxz70p7FZwcWbO37zos9U6jg1WXOMeNCtPrbOA3BXZWavBz7N67wLiYP5ZSQPp2QonF00VbEj1Gfc'
-        stripe.api_key = 'sk_test_51HKjPHIvJqFxVlDAV0kJVoq8oXNuwUukI6r6rjaUnjQdJJwFRUpi04AC2m4LmTV7NQEpICIa2vgWr982UVkY8Qyr00TJuir4I7'
+        stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
             # Create new Checkout Session for the order
             # Other optional params include:
@@ -89,7 +89,7 @@ def create_checkout_session(request):
 
 @csrf_exempt
 def stripe_webhook(request):
-    stripe.api_key = 'sk_test_51HKjPHIvJqFxVlDAV0kJVoq8oXNuwUukI6r6rjaUnjQdJJwFRUpi04AC2m4LmTV7NQEpICIa2vgWr982UVkY8Qyr00TJuir4I7'
+    stripe.api_key = settings.STRIPE_SECRET_KEY
     # endpoint_secret = 'whsec_ZAuQoadHEP4xL2w37AmaBSgnQDj5EUVr'
     endpoint_secret = 'whsec_9EgKdzB2A0ydf87EBbJrpQBMeiDAwE0V'
     payload = request.body

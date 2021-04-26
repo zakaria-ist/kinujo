@@ -26,6 +26,7 @@ class Order(models.Model):
     order_date = models.DateTimeField(auto_now_add=True, null=True)
     shipped_date = models.DateField(default=None, null=True, blank=True)
     payment = models.CharField(max_length=255, default='')
+    card_no = models.CharField(max_length=255, default='', null=True, blank=True)
     customer_remark = models.TextField(default='')
     remark = models.TextField(default='')
 
