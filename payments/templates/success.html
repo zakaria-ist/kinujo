@@ -22,7 +22,6 @@
     <div class="container text-center" style="margin-top: 25px">
       <a id="app_link" class="btn btn-info">{% trans 'Return' %}</a>
     </div>
-    <div id="loading"><img style="left: 25%; position: absolute; top: 25%;" src="{% static 'img/loading.gif' %}" /></div>
   </section>
   <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
@@ -32,6 +31,7 @@
     var stripe_pk = '{{stripe_pk}}';
     var stripe_session = JSON.parse(window.sessionStorage.getItem('stripe_session'));
     if (stripe_session && stripe_session != '' && stripe_session.sessionId == session_id) {
+      
       $.ajax({
           url: 'https://api.stripe.com/v1/checkout/sessions/' + stripe_session.sessionId,
           beforeSend: function(xhr) {
@@ -50,13 +50,13 @@
                     callPaymentAPI(card_no);
                     //process the JSON data etc
                 }, error: function (e){
-                  alert('session error');
+                  alert('paymentIntent error');
                   callPaymentAPI("");
                 }
             })
               //process the JSON data etc
           }, error: function (e){
-            alert('paymentIntent error');
+            alert('session error', 'https://api.stripe.com/v1/checkout/sessions/' + stripe_session.sessionId, "Bearer " + stripe_pk);
             callPaymentAPI("");
           }
       })
@@ -69,7 +69,6 @@
     })
 
     function callPaymentAPI(card_no) {
-      $('#loading').hide();
       fetch(baseUrl + '/api/pay/' + stripe_session.userId + "/", {
           method: 'POST',
           headers: {
@@ -97,9 +96,9 @@
               let href = 'net.c2sg.kinujo://complete/success/' + snap_ids + '/' + seller;
               $('#app_link').attr('href', href);
               window.sessionStorage.setItem('stripe_session', '');
-              setTimeout(() => {
-                $('#app_link')[0].click();
-              }, 5000);
+              //setTimeout(() => {
+                //$('#app_link')[0].click();
+              //}, 5000);
           })
           .catch(function (error) {
               console.log(error);
