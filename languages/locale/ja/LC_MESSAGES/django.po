@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-23 07:21+0000\n"
+"POT-Creation-Date: 2021-04-26 13:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,7 +66,7 @@ msgid "Amount"
 msgstr "金額(税別)"
 
 #: orders/templates/order_form.html:120
-#: profiles/templates/basic_info_tab.html:210
+#: profiles/templates/basic_info_tab.html:211
 #: profiles/templates/salon_form.html:28
 #: profiles/templates/shipping_form.html:28
 msgid "Zip Code"
@@ -92,7 +92,7 @@ msgid "Shipping Fee"
 msgstr "送料"
 
 #: orders/templates/order_form.html:168
-#: profiles/templates/basic_info_tab.html:200
+#: profiles/templates/basic_info_tab.html:201
 #: profiles/templates/salon_form.html:50
 #: profiles/templates/shipping_form.html:47
 msgid "Address One"
@@ -103,7 +103,7 @@ msgid "Total Amount"
 msgstr "合計金額"
 
 #: orders/templates/order_form.html:187
-#: profiles/templates/basic_info_tab.html:204
+#: profiles/templates/basic_info_tab.html:205
 #: profiles/templates/salon_form.html:60
 #: profiles/templates/shipping_form.html:57
 msgid "Address Two"
@@ -117,7 +117,7 @@ msgstr "状態"
 
 #: orders/templates/order_form.html:209 orders/templates/order_form.html:273
 #: profiles/templates/basic_info_tab.html:110
-#: profiles/templates/basic_info_tab.html:214
+#: profiles/templates/basic_info_tab.html:215
 #: profiles/templates/salon_form.html:70
 #: profiles/templates/salon_info_tab.html:24
 #: profiles/templates/shipping_form.html:66
@@ -141,9 +141,9 @@ msgstr "問い合わせ番号"
 #: products/templates/product_form.html:718
 #: products/templates/product_form.html:1460
 #: profiles/templates/account_info_tab.html:89
-#: profiles/templates/basic_info_tab.html:236
+#: profiles/templates/basic_info_tab.html:237
 #: profiles/templates/item_form.html:492 profiles/templates/item_form.html:582
-#: profiles/templates/item_form.html:663 profiles/templates/item_form.html:1399
+#: profiles/templates/item_form.html:663 profiles/templates/item_form.html:1398
 #: profiles/templates/salon_form.html:81
 #: profiles/templates/shipping_form.html:85
 msgid "Save"
@@ -152,7 +152,7 @@ msgstr "保存する"
 #: orders/templates/order_form.html:240
 #: products/templates/product_form.html:520
 #: profiles/templates/account_info_tab.html:90
-#: profiles/templates/basic_info_tab.html:237
+#: profiles/templates/basic_info_tab.html:238
 #: profiles/templates/item_form.html:493 profiles/templates/salon_form.html:82
 #: profiles/templates/shipping_form.html:86
 msgid "Cancel"
@@ -212,7 +212,7 @@ msgid "Destination"
 msgstr "送付先"
 
 #: orders/templates/order_list.html:64 orders/views.py:53
-#: profiles/templates/payment_list.html:62
+#: profiles/templates/payment_list.html:64
 msgid "Amount Include Tax"
 msgstr "金額(税込)"
 
@@ -452,7 +452,7 @@ msgstr ""
 #: products/templates/product_form.html:556
 #: products/templates/product_form.html:1459
 #: profiles/templates/item_form.html:506 profiles/templates/item_form.html:518
-#: profiles/templates/item_form.html:530 profiles/templates/item_form.html:1398
+#: profiles/templates/item_form.html:530 profiles/templates/item_form.html:1397
 msgid "Go back"
 msgstr "キャンセル"
 
@@ -549,9 +549,9 @@ msgstr "縦軸"
 #: products/templates/product_form.html:1488
 #: products/templates/product_form.html:1664
 #: products/templates/product_form.html:1680
-#: profiles/templates/item_form.html:1428
-#: profiles/templates/item_form.html:1602
-#: profiles/templates/item_form.html:1618
+#: profiles/templates/item_form.html:1427
+#: profiles/templates/item_form.html:1601
+#: profiles/templates/item_form.html:1617
 msgid "This field is required"
 msgstr "この項目は必須です"
 
@@ -575,7 +575,7 @@ msgstr "追加"
 #: profiles/templates/basic_info_tab.html:71
 #: profiles/templates/client_info_tab.html:24
 #: profiles/templates/item_info_tab.html:24
-#: profiles/templates/payment_list.html:57
+#: profiles/templates/payment_list.html:59
 #: profiles/templates/profile_list.html:62
 msgid "Name"
 msgstr "名前"
@@ -633,12 +633,12 @@ msgid "Savings"
 msgstr "貯蓄"
 
 #: profiles/templates/account_info_tab.html:66
-#: profiles/templates/payment_list.html:60
+#: profiles/templates/payment_list.html:62
 msgid "Account Number"
 msgstr "口座番号"
 
 #: profiles/templates/account_info_tab.html:77
-#: profiles/templates/payment_list.html:61
+#: profiles/templates/payment_list.html:63
 msgid "Account Holder"
 msgstr "口座名義人"
 
@@ -690,39 +690,44 @@ msgstr "パスワードを認証する"
 
 #: profiles/templates/basic_info_tab.html:150
 msgid "If the password is blank it will not be changed"
-msgstr "パスワードは空欄の場合は変更されません"
+msgstr ""
+"新規登録画面には「パスワードは空欄の場合は変更されません」を表示しない。"
 
-#: profiles/templates/basic_info_tab.html:155
+#: profiles/templates/basic_info_tab.html:151
+msgid "Password does not match"
+msgstr "パスワードが一致しません"
+
+#: profiles/templates/basic_info_tab.html:156
 msgid "Introducer"
 msgstr "紹介者"
 
-#: profiles/templates/basic_info_tab.html:164
+#: profiles/templates/basic_info_tab.html:165
 msgid "Approval"
 msgstr "承認"
 
-#: profiles/templates/basic_info_tab.html:172
+#: profiles/templates/basic_info_tab.html:173
 msgid "General Store"
 msgstr "スペシャルアカウント"
 
-#: profiles/templates/basic_info_tab.html:188
+#: profiles/templates/basic_info_tab.html:189
 msgid "Corporate Information"
 msgstr "法人情報"
 
-#: profiles/templates/basic_info_tab.html:190
+#: profiles/templates/basic_info_tab.html:191
 msgid "Corporate Name"
 msgstr "法人名"
 
-#: profiles/templates/basic_info_tab.html:194
+#: profiles/templates/basic_info_tab.html:195
 #: profiles/templates/salon_form.html:19
 #: profiles/templates/salon_info_tab.html:22
 msgid "Representative's Name"
 msgstr "代表者名"
 
-#: profiles/templates/basic_info_tab.html:222
+#: profiles/templates/basic_info_tab.html:223
 msgid "Active"
 msgstr "アクティブ"
 
-#: profiles/templates/basic_info_tab.html:228
+#: profiles/templates/basic_info_tab.html:229
 msgid "Representative Account"
 msgstr "代表アカウント"
 
@@ -736,7 +741,7 @@ msgid "General"
 msgstr "一般"
 
 #: profiles/templates/client_info_tab.html:11
-#: profiles/templates/payment_list.html:44
+#: profiles/templates/payment_list.html:46
 #: profiles/templates/profile_list.html:37
 msgid "Store"
 msgstr "ストア"
@@ -827,27 +832,31 @@ msgid "Payment Management"
 msgstr "支払管理"
 
 #: profiles/templates/payment_list.html:42
+msgid "Special"
+msgstr ""
+
+#: profiles/templates/payment_list.html:44
 #: profiles/templates/profile_list.html:45
 msgid "Ambassador"
 msgstr "アンバサダー"
 
-#: profiles/templates/payment_list.html:46
+#: profiles/templates/payment_list.html:48
 msgid "Paid"
 msgstr "済"
 
-#: profiles/templates/payment_list.html:48
+#: profiles/templates/payment_list.html:50
 msgid "Not Yet"
 msgstr "未"
 
-#: profiles/templates/payment_list.html:58
+#: profiles/templates/payment_list.html:60
 msgid "Bank"
 msgstr "金融機関"
 
-#: profiles/templates/payment_list.html:59
+#: profiles/templates/payment_list.html:61
 msgid "Branch"
 msgstr "支店"
 
-#: profiles/templates/payment_list.html:63
+#: profiles/templates/payment_list.html:65
 msgid "Payment Date"
 msgstr "支払日"
 
@@ -1055,34 +1064,34 @@ msgstr "認証コードを送付します。"
 msgid "Please enter your phone number and press send."
 msgstr "電話番号を入力して送信を押してください。"
 
-#: templates/password-reset.html:66
+#: templates/password-reset.html:70
 msgid "cell phone number"
 msgstr "携帯電話番号"
 
-#: templates/password-reset.html:71
+#: templates/password-reset.html:75
 msgid "Send"
 msgstr "送信"
 
-#: templates/password-reset.html:74
+#: templates/password-reset.html:78
 msgid " until resendable"
 msgstr "再送信可能まで"
 
-#: templates/password-reset.html:77
+#: templates/password-reset.html:81
 msgid "Please enter the verification code"
 msgstr "認証コードを入力してください"
 
-#: templates/password-reset.html:81
+#: templates/password-reset.html:85
 msgid "New password setting"
 msgstr "新しいパスワード設定"
 
-#: templates/password-reset.html:83
+#: templates/password-reset.html:87
 msgid "new password"
 msgstr "新しいパスワード"
 
-#: templates/password-reset.html:86
+#: templates/password-reset.html:90
 msgid "New password (re-enter)"
 msgstr "新しいパスワード(再入力)"
 
-#: templates/password-reset.html:89
+#: templates/password-reset.html:93
 msgid "Change the password"
 msgstr "パスワードを変更する"

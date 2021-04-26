@@ -401,23 +401,23 @@
             var pass = $('#id_password').val();
             var conf_pass = $('#conf_pass').val();
             if (pass != conf_pass) {
-                $('#pass-error').text("Password doesn't match");
+                $('#pass-match-error').css("display", "block");
                 $('#btnSave').prop('dsabled', true);
                 e.preventDefault();
             } else {
-                $('#pass-error').text("");
+                $('#pass-match-error').css("display", "none");
                 $('#btnSave').prop('dsabled', false);
             }
         })
 
-        $('#conf_pass').on('change', function(){
+        $('#conf_pass, #id_password').on('change', function(){
             var pass = $('#id_password').val();
-            var conf_pass = $(this).val();
+            var conf_pass = $('#conf_pass').val();
             if (pass != conf_pass) {
-                $('#pass-error').text("Password doesn't match");
+                $('#pass-match-error').css("display", "block");
                 $('#btnSave').prop('dsabled', true);
             } else {
-                $('#pass-error').text("");
+                $('#pass-match-error').css("display", "none");
                 $('#btnSave').prop('dsabled', false);
             }
         })
@@ -619,7 +619,7 @@
                     $('#salon_info_tab_li').removeAttr('style');
                     $('#shipping_info_tab_li').removeAttr('style');
                 } else {
-                    $('#id_is_seller').val('0').trigger('change');
+                    $('#id_is_seller').val('1').trigger('change');
                 }
             }
             else if ($(this).val() == '5') { //general
