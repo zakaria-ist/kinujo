@@ -38,25 +38,20 @@
               xhr.setRequestHeader("Authorization", "Bearer " + stripe_sk)
           }, success: function(data){
               let payment_intent = data.payment_intent;
-              alert(payment_intent);
               $.ajax({
                 url: 'https://api.stripe.com/v1/payment_intents/' + payment_intent,
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader("Authorization", "Bearer " + stripe_sk)
                 }, success: function(data){
-                    alert(data.charges.data[0].payment_method_details.card.brand);
-                    card_no = data.charges.data[0].payment_method_details.card.brand + '****_****' + data.charges.data[0].payment_method_details.card.last4;
-                    alert(card_no);
+                    card_no = data.charges.data[0].payment_method_details.card.brand + '_****_****_' + data.charges.data[0].payment_method_details.card.last4;
                     callPaymentAPI(card_no);
                     //process the JSON data etc
                 }, error: function (e){
-                  alert('paymentIntent error');
                   callPaymentAPI("");
                 }
             })
               //process the JSON data etc
           }, error: function (e){
-            alert('session error');
             callPaymentAPI("");
           }
       })
