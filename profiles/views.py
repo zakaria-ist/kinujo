@@ -210,9 +210,9 @@ def ProfileList__asJson(request):
     profile_list = Profile.objects.filter(authority_id__in=auth_type, is_hidden=False).order_by('authority_id')
     if 0 in auth_type:
         if profile_list:
-            profile_list = profile_list.filter(is_approved=False)
+            profile_list = profile_list.filter(is_approved=False, authority_id=4)
         else:
-            profile_list = Profile.objects.filter(is_approved=False, is_hidden=False).order_by('authority_id')
+            profile_list = Profile.objects.filter(is_approved=False, is_hidden=False, authority_id=4).order_by('authority_id')
 
     records_total = profile_list.count()
 
