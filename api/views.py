@@ -188,7 +188,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
     """
     queryset = Profile.objects.filter(is_hidden=0)
     # search_fields = ['nickname', 'user_code']
-    search_fields = ['user_code']
+    search_fields = ['=user_code']
     filter_backends = [filters.SearchFilter]
     serializer_class = ProfileSerializer
 
