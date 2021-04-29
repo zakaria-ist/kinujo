@@ -1137,6 +1137,8 @@ class Pay(APIView):
                         return Response({"success" : False, "errors" : orderReceiptSerializer.errors}, status=status.HTTP_200_OK)
 
                     kinujo_product = if_kinujo_product(seller.id)
+                    mailProducts = "" 
+                    userEmail = ""
                     for product in productSerializer.data:
                         quantity = quantities['item_' + str(product['id'])]
                         price = 0
@@ -1185,30 +1187,32 @@ class Pay(APIView):
                                 return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
                         else:
                             return Response({"success" : False, "errors" : orderProductSerializer.errors}, status=status.HTTP_200_OK)
-
-                        if product['user']['email']:
-                            send_mail(
-                                '【KINUJOからのお知らせ】出品中の商品が購入されました',
-                                "",
-                                '"Kinujo" <' + settings.EMAIL_HOST_USER + '>',
-                                [product['user']['email']],
-                                fail_silently=False,
-                                html_message=
-                                    'いつもKINUJOをご利用いただきありがとうございます。' + "<br><br>" +
-                                    '出品中の下記の商品が購入されました。' +  "<br>" +
-                                    '商品の発送をお願いいたします。' + "<br><br>" +
-                                    '商品情報' + "<br>" +
-                                    'オーダーID:' + str(orderSerializer.data['id']) + "<br>" +
-                                    '商品名:' + product['name'] + "<br>" +
-                                    '商品価格:' + str(int(groupTotal)) + "<br>" +
-                                    '購入者様:' + addressSerializer.data['name'] + "<br>" + "<br>" +
-                                    '発送を終えたら' + "<br>" +
-                                    '管理サイトから注文の状態を発送完了に変更し、発送日とお問い合わせ番号を入力して更新してください。' + "<br>" +
-                                    '発送した日、配送方法やお問い合わせ番号をチャットでお伝えいただくと、購入者様も喜ばれます。' + "<br><br>" +
-                                    "お問い合わせは、アプリ内のチャットをご利用＜ださい。",
-                            )
-
+                        
+                        mailProducts += product['name'] + ", "
+                        userEmail = product['user']['email']
                         sellers.append(product['user']['id'])
+
+                    if userEmail and userEmail != "":
+                        send_mail(
+                            '【KINUJOからのお知らせ】出品中の商品が購入されました',
+                            "",
+                            '"Kinujo" <' + settings.EMAIL_HOST_USER + '>',
+                            [userEmail],
+                            fail_silently=False,
+                            html_message=
+                                'いつもKINUJOをご利用いただきありがとうございます。' + "<br><br>" +
+                                '出品中の下記の商品が購入されました。' +  "<br>" +
+                                '商品の発送をお願いいたします。' + "<br><br>" +
+                                '商品情報' + "<br>" +
+                                'オーダーID:' + str(orderSerializer.data['id']) + "<br>" +
+                                '商品名:' + mailProducts + "<br>" +
+                                '商品価格:' + str(orderSerializer.data['total_amount']) + "<br>" +
+                                '購入者様:' + addressSerializer.data['name'] + "<br>" + "<br>" +
+                                '発送を終えたら' + "<br>" +
+                                '管理サイトから注文の状態を発送完了に変更し、発送日とお問い合わせ番号を入力して更新してください。' + "<br>" +
+                                '発送した日、配送方法やお問い合わせ番号をチャットでお伝えいただくと、購入者様も喜ばれます。' + "<br><br>" +
+                                "お問い合わせは、アプリ内のチャットをご利用＜ださい。",
+                        )
                 else:
                     return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
 
