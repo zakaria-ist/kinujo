@@ -1023,7 +1023,7 @@ class Pay(APIView):
             #         "cvc": request.data['card']['cvc'],
             #     },
             # )
-            sellers = []
+            sellers = ""
             profile = Profile.objects.get(id=userId, is_hidden=False)
             tax = TaxRate.objects.get(id=body['tax'], is_hidden=False)
             customer_id = None
@@ -1190,7 +1190,7 @@ class Pay(APIView):
                         
                         mailProducts += product['name'] + ", "
                         userEmail = product['user']['email']
-                        sellers.append(product['user']['id'])
+                        sellers = product['user']['id']
 
                     if userEmail and userEmail != "":
                         send_mail(
