@@ -14,6 +14,7 @@ from rest_framework.views import APIView
 from django.http import HttpResponseRedirect
 from django.utils import translation
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils.translation import activate, deactivate_all
 from .serializers import CountryCodeSerializer, ImageSerializer, FinancialAccountSerialier, UserSerializer, GroupSerializer,  OrderSerializer, OrderProductSerializer, OrderProductCommissionSerializer, OrderReceiptSerializer, TotalSaleSerializer, TotalCommissionSerializer, PolicySerializer, PrefectureSerializer, ProductCategorySerializer, ProductSerializer, ProductImageSerializer, ProductVarietySerializer, ProductVarietySelectionSerializer, ProductJancodeSerializer, AuthoritySerializer, ProfileSerializer, UserSaleSerializer, UserCommisionSerializer, MonthlyPaymentSerializer, AddressSerializer, TaxRateSerializer
 from .insertSerializers import InsertImageSerializer, InsertFinancialAccountSerialier, InsertUserSerializer, InsertGroupSerializer, InsertOrderSerializer, InsertOrderProductSerializer, InsertOrderProductCommissionSerializer, InsertOrderReceiptSerializer, InsertTotalSaleSerializer, InsertTotalCommissionSerializer, InsertPolicySerializer, InsertPrefectureSerializer, InsertProductCategorySerializer, InsertProductSerializer, InsertProductImageSerializer, InsertProductVarietySerializer, InsertProductVarietySelectionSerializer, InsertProductJancodeSerializer, InsertAuthoritySerializer, InsertProfileSerializer, InsertUserSaleSerializer, InsertUserCommisionSerializer, InsertMonthlyPaymentSerializer, InsertAddressSerializer, InsertTaxRateSerializer
@@ -1204,10 +1205,10 @@ class Pay(APIView):
                                 '出品中の下記の商品が購入されました。' +  "<br>" +
                                 '商品の発送をお願いいたします。' + "<br><br>" +
                                 '商品情報' + "<br>" +
-                                'オーダーID:' + str(orderSerializer.data['id']) + "<br>" +
-                                '商品名:' + mailProducts + "<br>" +
-                                '商品価格:' + str(orderSerializer.data['total_amount']) + "<br>" +
-                                '購入者様:' + addressSerializer.data['name'] + "<br>" + "<br>" +
+                                'オーダーID: ' + str(orderSerializer.data['id']) + "<br>" +
+                                '商品名: ' + mailProducts + "<br>" +
+                                '商品価格: ' + '\u00A5' + intcomma("%.0f" % orderSerializer.data['total_amount']) + "<br>" +
+                                '購入者様: ' + addressSerializer.data['name'] + "<br>" + "<br>" +
                                 '発送を終えたら' + "<br>" +
                                 '管理サイトから注文の状態を発送完了に変更し、発送日とお問い合わせ番号を入力して更新してください。' + "<br>" +
                                 '発送した日、配送方法やお問い合わせ番号をチャットでお伝えいただくと、購入者様も喜ばれます。' + "<br><br>" +
