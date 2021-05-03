@@ -1207,7 +1207,8 @@ class Pay(APIView):
                                 '商品情報' + "<br>" +
                                 'オーダーID: ' + str(orderSerializer.data['id']) + "<br>" +
                                 '商品名: ' + mailProducts + "<br>" +
-                                '商品価格: ' + '\u00A5' + intcomma("%.0f" % orderSerializer.data['total_amount']) + "<br>" +
+                                # '商品価格: ' + '\u00A5' + intcomma("%.0f" % orderSerializer.data['total_amount']) + "<br>" +
+                                '商品価格: ' + '\u00A5' + f"{orderSerializer.data['total_amount']:,}" + "<br>" +
                                 '購入者様: ' + addressSerializer.data['name'] + "<br>" + "<br>" +
                                 '発送を終えたら' + "<br>" +
                                 '管理サイトから注文の状態を発送完了に変更し、発送日とお問い合わせ番号を入力して更新してください。' + "<br>" +
