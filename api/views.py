@@ -1706,14 +1706,14 @@ class EditProduct(APIView):
                         print(e)
 
                     insertProductVarietySerializer = InsertProductVarietySerializer(data={
-                        "name" : "",
+                        "name" : "none",
                         "product" : productSerializer.data['url'],
                         "vertical_and_horizontal" : 0
                     }, context=getContext())
                     if insertProductVarietySerializer.is_valid():
                         insertProductVarietySerializer.save()
                         insertProductVarietySelectionSerializer = InsertProductVarietySelectionSerializer(data={
-                            "selection" : "",
+                            "selection" : "none",
                             "product_variety" : insertProductVarietySerializer.data['url']
                         }, context=getContext())
                         if insertProductVarietySelectionSerializer.is_valid():
