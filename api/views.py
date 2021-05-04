@@ -1261,31 +1261,31 @@ class CreateProduct(APIView):
         try:
             if request.data['draft'] != 1:
                 if request.data['productName'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in product name."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_product_name"]}, status=status.HTTP_200_OK)
                 if request.data['brandName'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in brand name."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_brand_name"]}, status=status.HTTP_200_OK)
                 if request.data['pr'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in PR statement."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_PR_statement"]}, status=status.HTTP_200_OK)
                 if request.data['productId'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in product ID."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_product_ID"]}, status=status.HTTP_200_OK)
                 if request.data['productCategory'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in product category."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_product_category"]}, status=status.HTTP_200_OK)
                 if request.data['productVariation'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in product variation."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_product_variation"]}, status=status.HTTP_200_OK)
                 if request.data['publishState'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in publish state."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_publish_state"]}, status=status.HTTP_200_OK)
                 if request.data['publishDate'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in publish date."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_publish_date"]}, status=status.HTTP_200_OK)
                 if request.data['price'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in price."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_price"]}, status=status.HTTP_200_OK)
                 if request.data['storePrice'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in store price."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_store_price"]}, status=status.HTTP_200_OK)
                 if request.data['shipping'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in shipping."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_shipping"]}, status=status.HTTP_200_OK)
                 if request.data['productPageDisplayMethod'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in product page display method."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_product_page_display_method"]}, status=status.HTTP_200_OK)
                 if request.data['productDescription'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in product description."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_product_description"]}, status=status.HTTP_200_OK)
 
             variety = 0
 
@@ -1553,31 +1553,31 @@ class EditProduct(APIView):
                 if request.data['id'] == "":
                     return Response({"success" : False, "errors" : ["Invalid update."]}, status=status.HTTP_200_OK)
                 if request.data['productName'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in product name."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_product_name"]}, status=status.HTTP_200_OK)
                 if request.data['brandName'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in brand name."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_brand_name"]}, status=status.HTTP_200_OK)
                 if request.data['pr'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in PR statement."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_PR_statement"]}, status=status.HTTP_200_OK)
                 if request.data['productId'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in product ID."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_product_ID"]}, status=status.HTTP_200_OK)
                 if request.data['productCategory'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in product category."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_product_category"]}, status=status.HTTP_200_OK)
                 if request.data['productVariation'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in product variation."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_product_variation"]}, status=status.HTTP_200_OK)
                 if request.data['publishState'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in publish state."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_publish_state"]}, status=status.HTTP_200_OK)
                 if request.data['publishDate'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in publish date."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_publish_date"]}, status=status.HTTP_200_OK)
                 if request.data['price'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in price."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_price"]}, status=status.HTTP_200_OK)
                 if request.data['storePrice'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in store price."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_store_price"]}, status=status.HTTP_200_OK)
                 if request.data['shipping'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in shipping."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_shipping"]}, status=status.HTTP_200_OK)
                 if request.data['productPageDisplayMethod'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in product page display method."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_product_page_display_method"]}, status=status.HTTP_200_OK)
                 if request.data['productDescription'] == "":
-                    return Response({"success" : False, "errors" : ["Please fill in product description."]}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors" : ["Please_fill_in_product_description"]}, status=status.HTTP_200_OK)
 
             variety = 0
 
