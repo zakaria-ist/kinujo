@@ -1695,6 +1695,16 @@ class EditProduct(APIView):
                     productJancode.stock = noneVariationItems['stock']
                     productJancode.save()
                 else:
+                    try:
+                        productVarieties = ProductVariety.objects.filter(product_id=product.id)
+                        for productVariety in productVarieties:
+                            productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id=productVariety.id)
+                            for productVarietySelection in productVarietySelections:
+                                productVarietySelection.delete()
+                            productVariety.delete()
+                    except Exception as e:
+                        print(e)
+
                     insertProductVarietySerializer = InsertProductVarietySerializer(data={
                         "name" : "",
                         "product" : productSerializer.data['url'],
