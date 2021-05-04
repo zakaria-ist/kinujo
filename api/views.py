@@ -1587,18 +1587,18 @@ class EditProduct(APIView):
                     if not noneVariationItems:
                         noneVariationItems = {'janCode': "", 'stock': 0}
                     if noneVariationItems['janCode'] == "":
-                        return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                        return Response({"success" : False, "errors" : ["Please_fill_in_Jan_Code"]}, status=status.HTTP_200_OK)
                     if noneVariationItems['stock'] == "":
-                        return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
+                        return Response({"success" : False, "errors" : ["Please_fill_in_stock"]}, status=status.HTTP_200_OK)
                 variety = 0
             if request.data['productVariation'] == 'one':
                 if request.data['draft'] != 1:
                     oneVariationItems = request.data['oneVariationItems']
                     for item in oneVariationItems['items']:
                         if item['janCode'] == "":
-                            return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                            return Response({"success" : False, "errors" : ["Please_fill_in_Jan_Code"]}, status=status.HTTP_200_OK)
                         if item['stock'] == "":
-                            return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
+                            return Response({"success" : False, "errors" : ["Please_fill_in_stock"]}, status=status.HTTP_200_OK)
                 variety = 1
             if request.data['productVariation'] == 'two':
                 if request.data['draft'] != 1:
@@ -1609,9 +1609,9 @@ class EditProduct(APIView):
                     for choice1 in firstItem['choices']:
                         for choice2 in secondItem['choices']:
                             if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['janCode'] == "":
-                                return Response({"success" : False, "errors" : ["Please fill in Jan Code."]}, status=status.HTTP_200_OK)
+                                return Response({"success" : False, "errors" : ["Please_fill_in_Jan_Code"]}, status=status.HTTP_200_OK)
                             if mappingValues[choice1['choiceItem']][choice2['choiceItem']]['stock'] == "":
-                                return Response({"success" : False, "errors" : ["Please fill in stock."]}, status=status.HTTP_200_OK)
+                                return Response({"success" : False, "errors" : ["Please_fill_in_stock"]}, status=status.HTTP_200_OK)
                 variety = 2
 
             profile = Profile.objects.get(id=userId, is_hidden=False)
