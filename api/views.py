@@ -1694,33 +1694,33 @@ class EditProduct(APIView):
                     productJancode.jan_code = noneVariationItems['janCode']
                     productJancode.stock = noneVariationItems['stock']
                     productJancode.save()
-                # else:
-                #     insertProductVarietySerializer = InsertProductVarietySerializer(data={
-                #         "name" : "",
-                #         "product" : productSerializer.data['url'],
-                #         "vertical_and_horizontal" : 0
-                #     }, context=getContext())
-                #     if insertProductVarietySerializer.is_valid():
-                #         insertProductVarietySerializer.save()
-                #         insertProductVarietySelectionSerializer = InsertProductVarietySelectionSerializer(data={
-                #             "selection" : "",
-                #             "product_variety" : insertProductVarietySerializer.data['url']
-                #         }, context=getContext())
-                #         if insertProductVarietySelectionSerializer.is_valid():
-                #             insertProductVarietySelectionSerializer.save()
-                #             insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
-                #                 "jan_code" : noneVariationItems['janCode'],
-                #                 "stock" : noneVariationItems['stock'],
-                #                 "horizontal" : insertProductVarietySelectionSerializer.data['url']
-                #             }, context=getContext())
-                #             if insertProductJancodeSerializer.is_valid():
-                #                 insertProductJancodeSerializer.save()
-                #             else:
-                #                 return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK)
-                #         else:
-                #             return Response({"success" : False, "errors": insertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK)
-                #     else:
-                #         return Response({"success" : False, "errors": insertProductVarietySerializer.errors}, status=status.HTTP_200_OK)
+                else:
+                    insertProductVarietySerializer = InsertProductVarietySerializer(data={
+                        "name" : "",
+                        "product" : productSerializer.data['url'],
+                        "vertical_and_horizontal" : 0
+                    }, context=getContext())
+                    if insertProductVarietySerializer.is_valid():
+                        insertProductVarietySerializer.save()
+                        insertProductVarietySelectionSerializer = InsertProductVarietySelectionSerializer(data={
+                            "selection" : "",
+                            "product_variety" : insertProductVarietySerializer.data['url']
+                        }, context=getContext())
+                        if insertProductVarietySelectionSerializer.is_valid():
+                            insertProductVarietySelectionSerializer.save()
+                            insertProductJancodeSerializer = InsertProductJancodeSerializer(data={
+                                "jan_code" : noneVariationItems['janCode'],
+                                "stock" : noneVariationItems['stock'],
+                                "horizontal" : insertProductVarietySelectionSerializer.data['url']
+                            }, context=getContext())
+                            if insertProductJancodeSerializer.is_valid():
+                                insertProductJancodeSerializer.save()
+                            else:
+                                return Response({"success" : False, "errors": insertProductJancodeSerializer.errors}, status=status.HTTP_200_OK)
+                        else:
+                            return Response({"success" : False, "errors": insertProductVarietySelectionSerializer.errors}, status=status.HTTP_200_OK)
+                    else:
+                        return Response({"success" : False, "errors": insertProductVarietySerializer.errors}, status=status.HTTP_200_OK)
             elif request.data['productVariation'] == 'one':
                 oneVariationItems = request.data['oneVariationItems']
                 productVariety = ProductVariety.objects.get(id=oneVariationItems['id'])
