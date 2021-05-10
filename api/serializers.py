@@ -70,7 +70,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['is_master', 'tel_code', 'background_img', 'id', 'profit', 'url', 'user','authority','is_seller','shop_name','tel','nickname',
                 'user_code','email','introducer','is_approved','image','real_name','gender','birthday','zipcode','prefecture','city','address1',
                 'address2','corporate_name','message_notification_phone','message_notification_mail','other_notification_mail','other_notification_phone',
-                'allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload', 'bank', 'representative_name']
+                'allowed_by_id','allowed_by_tel','word','salon_category','is_hidden','created','modified','payload', 'bank', 'representative_name', 'corporate_tel', 'corporate_tel_code']
     def get_profit(self, instance):
         orders = Order.objects.filter(is_hidden=False).values_list('id', flat=True)
         orderProducts = OrderProduct.objects.filter(order__in=orders, is_hidden=False).values_list('id', flat=True)
