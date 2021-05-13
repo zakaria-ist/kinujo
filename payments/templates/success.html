@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/style-responsive.css' %}"/>
   </head>
   <body>
+  <div id="loading"><img style="left: 25%; position: absolute; top: 25%;" src="{% static 'img/loading.gif' %}" /></div>
   <section class="section">
     <div class="container text-center" style="font-size: 14px; margin-top: 25%">
       <h5>{% trans 'Your payment succeed.' %}</h5>
@@ -93,10 +94,12 @@
               window.sessionStorage.setItem('stripe_session', '');
               setTimeout(() => {
                 $('#app_link')[0].click();
-              }, 5000);
+              }, 1000);
+              $('#loading').hide();
           })
           .catch(function (error) {
               console.log(error);
+              $('#loading').hide();
           });
     }
   </script>
