@@ -179,7 +179,7 @@ class OrderProductCommissionSerializer(serializers.HyperlinkedModelSerializer):
     order_product = OrderProductSerializer()
     class Meta:
         model = OrderProductCommission
-        fields = ['id', 'order_product','user','amount','is_sales','is_food','shipping_fee','is_hidden','created','modified']
+        fields = ['id', 'order_product','user','user_id','amount','is_sales','is_food','shipping_fee','is_hidden','created','modified']
 
 class FinancialAccountSerialier(serializers.HyperlinkedModelSerializer):
     class Meta:
