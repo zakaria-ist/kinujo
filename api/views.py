@@ -1666,24 +1666,10 @@ class EditProduct(APIView):
                 product.target = 2
             product.save()
 
-            # remove old images
-            # pImages = ProductImage.objects.filter(is_hidden=False, product_id=product.id)
-            # for pImage in pImages:
-            #     if pImage:
-            #         iImage = pImage.image
-            #         iImage.image.delete()
-            #         iImage.is_hidden = True
-            #         iImage.save()
-
-            #         pImage.delete()
-
 
             productSerializer = InsertProductSerializer(product, context=getContext())
             productImages = request.data['productImages']
             imageCount = 0
-            # for productImage in productImages:
-            #     if 'is_old' in productImage:
-            #         imageCount += 1
             for productImage in productImages:
                 if 'is_delete' not in productImage:
                     imageCount += 1
