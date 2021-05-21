@@ -1667,17 +1667,15 @@ class EditProduct(APIView):
             product.save()
 
             # remove old images
-            pImages = ProductImage.objects.filter(is_hidden=False, product_id=product.id)
-            for pImage in pImages:
-                if pImage:
-                    iImage = pImage.image
-                    iImage.image.delete()
-                    iImage.is_hidden = True
-                    iImage.save()
+            # pImages = ProductImage.objects.filter(is_hidden=False, product_id=product.id)
+            # for pImage in pImages:
+            #     if pImage:
+            #         iImage = pImage.image
+            #         iImage.image.delete()
+            #         iImage.is_hidden = True
+            #         iImage.save()
 
-                    # pImage.is_hidden = True
-                    # pImage.save()
-                    pImage.delete()
+            #         pImage.delete()
 
 
             productSerializer = InsertProductSerializer(product, context=getContext())
@@ -1687,16 +1685,34 @@ class EditProduct(APIView):
             #     if 'is_old' in productImage:
             #         imageCount += 1
             for productImage in productImages:
-                imageCount += 1
-                productImageSerializer = InsertProductImageSerializer(data={
-                    'image': productImage['url'],
-                    'product' : productSerializer.data['url'],
-                    'image_no': imageCount
-                }, context=getContext())
-                if productImageSerializer.is_valid():
-                    productImageSerializer.save()
+                if 'is_delete' not in productImage:
+                    imageCount += 1
+                    if 'is_old' in productImage:
+                        productImageSerializer = InsertProductImageSerializer(data={
+                            'image': productImage['url'],
+                            'product' : productSerializer.data['url'],
+                            'image_no': imageCount
+                        }, context=getContext())
+                        if productImageSerializer.is_valid():
+                            productImageSerializer.save()
+                        else:
+                            return Response({"success" : False, "errors": productImageSerializer.errors}, status=status.HTTP_200_OK)
+                    else:
+                        pImage = ProductImage.objects.filter(is_hidden=False, image_id=productImage['id'])
+                        if pImage:
+                            pImage = pImage.first()
+                            pImage.image_no = imageCount
+                            pImage.save()
                 else:
-                    return Response({"success" : False, "errors": productImageSerializer.errors}, status=status.HTTP_200_OK)
+                    pImage = ProductImage.objects.filter(is_hidden=False, image_id=productImage['id'])
+                    if pImage:
+                        pImage = pImage.first()
+                        iImage = pImage.image
+                        iImage.image.delete()
+                        iImage.is_hidden = True
+                        iImage.save()
+
+                        pImage.delete()
 
             if request.data['productVariation'] == 'none':
                 noneVariationItems = request.data['noneVariationItems']
