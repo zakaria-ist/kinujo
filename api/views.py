@@ -1703,6 +1703,16 @@ class EditProduct(APIView):
                             pImage = pImage.first()
                             pImage.image_no = imageCount
                             pImage.save()
+                        else:
+                            productImageSerializer = InsertProductImageSerializer(data={
+                                'image': productImage['url'],
+                                'product' : productSerializer.data['url'],
+                                'image_no': imageCount
+                            }, context=getContext())
+                            if productImageSerializer.is_valid():
+                                productImageSerializer.save()
+                            else:
+                                return Response({"success" : False, "errors": productImageSerializer.errors}, status=status.HTTP_200_OK)
                 else:
                     pImage = ProductImage.objects.filter(is_hidden=False, image_id=productImage['id'])
                     if pImage:
