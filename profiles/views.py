@@ -1032,8 +1032,14 @@ def PaymentList__asJson(request):
     status_type = eval(request.GET.get('status_str'))
     month = request.GET.get('month')
     year = request.GET.get('year')
+    today = datetime.date.today()
 
     payment_list = MonthlyPayment.objects.filter(is_hidden=False, year=year, month=month).order_by('user__real_name')
+    for payment in payment_list:
+        if payment.paid_date and payment.paid_date <= today:
+            payment.status = True
+            payment.save()
+
     if len(auth_type):
         payment_list = payment_list.filter(user__authority_id__in=auth_type)
     if len(status_type):
@@ -1068,9 +1074,11 @@ def PaymentList__asJson(request):
             bank_info = bank_info.last()
         else:
             bank_info = None
+        real_name = field.user.real_name if field.user.real_name else ""
+        nick_name = field.user.nickname if field.user.nickname else ""
         data = {
             "no": str(i),
-            "name": field.user.real_name,
+            "name": real_name + " (" + nick_name + ")",
             "bank_name": bank_info.financial_code + ' ' + bank_info.financial_name if bank_info else '',
             "branch_name": bank_info.branch_code + ' ' + bank_info.branch_name if bank_info else '',
             "account_number": bank_info.account_number if bank_info else '',
@@ -1096,12 +1104,18 @@ def update_payment(request):
     if request.method == 'POST':
         payment_id = request.POST.get('payment_id')
         date = request.POST.get('payment_date')
+        today = datetime.date.today()
         try:
             payment = MonthlyPayment.objects.get(pk=payment_id)
             payment.paid_date = date
             payment.status = True
             payment.modified = datetime.datetime.now()
             payment.save()
+
+            payment = MonthlyPayment.objects.get(pk=payment_id)
+            if payment.paid_date > today:
+                payment.status = False
+                payment.save()
 
             message = 'Success'
         except Exception as e:

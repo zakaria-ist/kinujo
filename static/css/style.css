@@ -556,13 +556,13 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
     left: auto;
 }
 
-.dropdown-menu.extended.logout > li {
+/* .dropdown-menu.extended.logout > li {
     float: left;
     text-align: center;
     width: 50%;
-}
+} */
 
-.dropdown-menu.extended.logout > li:last-child {
+.dropdown-menu.extended.logout > li{
     float: left;
     text-align: center;
     width: 100%;
@@ -570,18 +570,19 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
     border-radius: 0 0 3px 3px;
 }
 
-.dropdown-menu.extended.logout > li:last-child > a, .dropdown-menu.extended.logout > li:last-child > a:hover {
+.dropdown-menu.extended.logout > li > a, .dropdown-menu.extended.logout > li > a:hover {
     color: #fff;
     border-bottom: none !important;
     text-transform: uppercase;
 }
 
-.dropdown-menu.extended.logout > li:last-child > a:hover > i {
+.dropdown-menu.extended.logout > li > a:hover > i {
     color: #fff;
 }
 
 .dropdown-menu.extended.logout > li > a {
-    color: #a4abbb;
+    /* color: #a4abbb; */
+    width: 100%;
     border-bottom: none !important;
 }
 
@@ -594,15 +595,15 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
     background: none !important;
 }
 
-.dropdown-menu.extended.logout > li > a:hover i {
+.dropdown-menu.extended.logout > li > a.fa:hover {
     color: #50c8ea;
 }
 
-.dropdown-menu.extended.logout > li > a i {
+.dropdown-menu.extended.logout > li > a.fa {
     font-size: 17px;
 }
 
-.dropdown-menu.extended.logout > li > a > i {
+.dropdown-menu.extended.logout > li > a.fa {
     display: block;
 }
 

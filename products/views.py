@@ -1284,9 +1284,12 @@ def export_product_list_as_csv(request):
                 else:
                     very_str = 'None'
             i = i + 1
-            writer.writerow([str(i), field.name, str(p_jan.jan_code), very_str,
-                            str(p_jan.stock), intcomma("%.0f" % field.price),
-                            field.opened_date.strftime("%Y-%m-%d") if field.opened_date else ''])
+            try:
+                writer.writerow([str(i), field.name.replace('～', '~'), str(p_jan.jan_code), very_str,
+                                str(p_jan.stock), intcomma("%.0f" % field.price),
+                                field.opened_date.strftime("%Y-%m-%d") if field.opened_date else ''])
+            except:
+                pass
 
 
     return response

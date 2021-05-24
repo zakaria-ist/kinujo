@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-26 13:16+0000\n"
+"POT-Creation-Date: 2021-05-24 06:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -186,7 +186,7 @@ msgid "Options"
 msgstr "オプション"
 
 #: orders/templates/order_list.html:8 orders/templates/order_list.html:31
-#: templates/base.html:173 templates/listing_base.html:126
+#: templates/base.html:174 templates/listing_base.html:126
 msgid "Order List"
 msgstr "注文一覧"
 
@@ -254,19 +254,19 @@ msgstr "〒"
 msgid "Your payment is cancelled."
 msgstr "決済はキャンセルされました。"
 
-#: payments/templates/cancelled.html:21 payments/templates/success.html:23
+#: payments/templates/cancelled.html:21 payments/templates/success.html:24
 msgid "Return"
 msgstr "戻る"
 
-#: payments/templates/success.html:16
+#: payments/templates/success.html:17
 msgid "Your payment succeed."
 msgstr "決済が完了しました。"
 
-#: payments/templates/success.html:17
+#: payments/templates/success.html:18
 msgid "Thank you for your order!"
 msgstr "ご注文ありがとうございます！"
 
-#: payments/templates/success.html:18
+#: payments/templates/success.html:19
 msgid "Please wait for a while until delivery."
 msgstr "お届けまで、もうしばらくお待ちください。"
 
@@ -878,7 +878,7 @@ msgstr "出品管理サイトへ"
 msgid "Basic Information"
 msgstr "基本情報"
 
-#: profiles/templates/profile_form.html:57 templates/base.html:159
+#: profiles/templates/profile_form.html:57 templates/base.html:160
 #: templates/listing_base.html:112
 msgid "Item List"
 msgstr "出品一覧"
@@ -950,49 +950,53 @@ msgstr "英語"
 msgid "JAPANESE"
 msgstr "日本語"
 
-#: templates/base.html:96 templates/listing_base.html:90
+#: templates/base.html:96
+msgid "Change Password"
+msgstr "パスワード変更"
+
+#: templates/base.html:97 templates/listing_base.html:90
 msgid "Log Out"
 msgstr "ログアウト"
 
-#: templates/base.html:115 templates/dashboard.html:44
+#: templates/base.html:116 templates/dashboard.html:44
 #: templates/dashboard.html:63
 msgid "Dashboard"
 msgstr "Dashboard"
 
-#: templates/base.html:121
+#: templates/base.html:122
 msgid "Account Management"
 msgstr "アカウント管理"
 
-#: templates/base.html:125
+#: templates/base.html:126
 msgid "Account List"
 msgstr "アカウント一覧"
 
-#: templates/base.html:128
+#: templates/base.html:129
 msgid "Account Registration"
 msgstr "アカウント登録"
 
-#: templates/base.html:135 templates/base.html:184
+#: templates/base.html:136 templates/base.html:185
 #: templates/listing_base.html:136
 msgid "Sales Management"
 msgstr "売上管理"
 
-#: templates/base.html:139
+#: templates/base.html:140
 msgid "Sales list"
 msgstr "売上一覧"
 
-#: templates/base.html:142
+#: templates/base.html:143
 msgid "Payment list"
 msgstr "支払一覧"
 
-#: templates/base.html:155 templates/listing_base.html:108
+#: templates/base.html:156 templates/listing_base.html:108
 msgid "Item Management"
 msgstr "出品管理"
 
-#: templates/base.html:162 templates/listing_base.html:115
+#: templates/base.html:163 templates/listing_base.html:115
 msgid "Item Registration"
 msgstr "出品登録"
 
-#: templates/base.html:169 templates/listing_base.html:122
+#: templates/base.html:170 templates/listing_base.html:122
 msgid "Order Management"
 msgstr "注文管理"
 
@@ -1073,7 +1077,9 @@ msgid "Send"
 msgstr "送信"
 
 #: templates/password-reset.html:78
-msgid " until resendable"
+#, fuzzy
+#| msgid " until resendable"
+msgid "until resendable"
 msgstr "再送信可能まで"
 
 #: templates/password-reset.html:81

@@ -54,29 +54,33 @@ def export_order_list_as_csv(request):
 
         for field in order_list:
             product = OrderProduct.objects.filter(order_id=field.id).first()
-            product_jan = ProductJancode.objects.get(pk=product.product_jan_code_id)
-            j_product = get_jan_products(product_jan)
-            status = ''
-            if request.LANGUAGE_CODE == 'en':
-                if field.status == 0:
-                    status = 'NEW'
-                elif field.status == 1:
-                    status = 'IN PROCESSING'
-                elif field.status == 2:
-                    status = 'SHIPMENT COMPLETE'
-            else:
-                if field.status == 0:
-                    status = '新着'
-                elif field.status == 1:
-                    status = '準備中'
-                elif field.status == 2:
-                    status = '発送完了'
-            writer.writerow([str(field.id), field.order_date.strftime("%Y-%m-%d") if field.order_date else '',
-                            j_product.name, field.name,
-                            _("Zip:") + ' ' + field.zip1 + '  ' + field.address1,
-                            intcomma("%.0f" % field.total_amount), status,
-                            field.shipped_date.strftime("%Y-%m-%d") if field.shipped_date else '',
-                            field.inquiry_number if field.inquiry_number else ''])
+            if product:
+                product_jan = ProductJancode.objects.get(pk=product.product_jan_code_id)
+                j_product = get_jan_products(product_jan)
+                status = ''
+                if request.LANGUAGE_CODE == 'en':
+                    if field.status == 0:
+                        status = 'NEW'
+                    elif field.status == 1:
+                        status = 'IN PROCESSING'
+                    elif field.status == 2:
+                        status = 'SHIPMENT COMPLETE'
+                else:
+                    if field.status == 0:
+                        status = '新着'
+                    elif field.status == 1:
+                        status = '準備中'
+                    elif field.status == 2:
+                        status = '発送完了'
+                try:
+                    writer.writerow([str(field.id), field.order_date.strftime("%Y-%m-%d") if field.order_date else '',
+                                    j_product.name.replace('～', '~'), field.name,
+                                    _("Zip:") + ' ' + field.zip1 + '  ' + field.address1,
+                                    intcomma("%.0f" % field.total_amount), status,
+                                    field.shipped_date.strftime("%Y-%m-%d") if field.shipped_date else '',
+                                    field.inquiry_number if field.inquiry_number else ''])
+                except:
+                    pass
 
     except Exception as e:
         print(e)
@@ -128,41 +132,42 @@ def OrderList__asJson(request):
     for field in list:
         image_path = ''
         product = OrderProduct.objects.filter(order_id=field.id).first()
-        product_jan = ProductJancode.objects.get(pk=product.product_jan_code_id)
-        j_product = get_jan_products(product_jan)
-        if j_product:
-            productImage = ProductImage.objects.filter(product_id=j_product.id, is_hidden=False)\
-                .order_by('image_no').exclude(image_no__isnull=True).first()
-            if productImage:
-                image_path = productImage.image.image.url
-        status = ''
-        if request.LANGUAGE_CODE == 'en':
-            if field.status == 0:
-                status = 'NEW'
-            elif field.status == 1:
-                status = 'IN PROCESSING'
-            elif field.status == 2:
-                status = 'SHIPMENT COMPLETE'
-        else:
-            if field.status == 0:
-                status = '新着'
-            elif field.status == 1:
-                status = '準備中'
-            elif field.status == 2:
-                status = '発送完了'
-        data = {
-            "id": str(field.id),
-            "image_path": image_path,
-            "product_name": j_product.name,
-            "name": field.name,
-            "address": _("Zip:") + ' ' + field.zip1 + '  ' + field.address1 + field.address2,
-            "amount": field.total_amount,
-            "status": status,
-            "shipped_date": field.shipped_date.strftime("%Y-%m-%d") if field.shipped_date else '',
-            "order_date": field.order_date.strftime("%Y-%m-%d") if field.order_date else '',
-            "inquiry_number": field.inquiry_number
-        }
-        array.append(data)
+        if product:
+            product_jan = ProductJancode.objects.get(pk=product.product_jan_code_id)
+            j_product = get_jan_products(product_jan)
+            if j_product:
+                productImage = ProductImage.objects.filter(product_id=j_product.id, is_hidden=False)\
+                    .order_by('image_no').exclude(image_no__isnull=True).first()
+                if productImage:
+                    image_path = productImage.image.image.url
+            status = ''
+            if request.LANGUAGE_CODE == 'en':
+                if field.status == 0:
+                    status = 'NEW'
+                elif field.status == 1:
+                    status = 'IN PROCESSING'
+                elif field.status == 2:
+                    status = 'SHIPMENT COMPLETE'
+            else:
+                if field.status == 0:
+                    status = '新着'
+                elif field.status == 1:
+                    status = '準備中'
+                elif field.status == 2:
+                    status = '発送完了'
+            data = {
+                "id": str(field.id),
+                "image_path": image_path,
+                "product_name": j_product.name,
+                "name": field.name,
+                "address": _("Zip:") + ' ' + field.zip1 + '  ' + field.address1 + field.address2,
+                "amount": field.total_amount,
+                "status": status,
+                "shipped_date": field.shipped_date.strftime("%Y-%m-%d") if field.shipped_date else '',
+                "order_date": field.order_date.strftime("%Y-%m-%d") if field.order_date else '',
+                "inquiry_number": field.inquiry_number
+            }
+            array.append(data)
 
     content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
     json_content = json.dumps(content, ensure_ascii=False)

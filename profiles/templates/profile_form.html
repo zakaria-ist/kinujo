@@ -249,6 +249,9 @@
                 var target_tab = permanentStorage.getItem("target_tab", null);
                 if (target_tab) {
                     $('.nav-tabs a[href="' + target_tab + '"]').tab('show');
+                } else {
+                    permanentStorage.setItem("target_tab", '#basic_tab');
+                    $('.nav-tabs a[href="#basic_tab"]').tab('show');
                 }
             }
             changeLang();
