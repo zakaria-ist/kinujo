@@ -646,11 +646,17 @@ class CommissionProductList(APIView):
             userSale = UserSale.objects.filter(is_hidden=False, user_id=userId, year=year, month=month)
             userCommission = UserCommision.objects.filter(is_hidden=False, user_id=userId, year=year, month=month)
             
-        orderProductsCommission = OrderProductCommission.objects.filter(is_hidden=False, 
+        orderProductsCommission = OrderProductCommission.objects.filter(is_hidden=False, order_product__is_hidden=False,
+                    order_product__order__is_hidden=False,
                     order_product__order__order_date__year=year, 
                     order_product__order__order_date__month=month)
         orderProductsCommissionSerializer = OrderProductCommissionSerializer(orderProductsCommission, many=True, context=getContext())
-        orderIds = list(orderProductsCommission.values_list('order_product__order_id', flat=True).order_by('order_product__order_id').distinct())
+        if isMaster:
+            orderIds = list(orderProductsCommission.filter(order_product__order__seller__authority_id=AUTHORITY_TYPE['MASTER'])\
+                            .values_list('order_product__order_id', flat=True).order_by('order_product__order_id').distinct())
+        else:
+            orderIds = list(orderProductsCommission.filter(order_product__order__seller_id=userId)\
+                            .values_list('order_product__order_id', flat=True).order_by('order_product__order_id').distinct())
 
         userSaleSerializer = UserSaleSerializer(userSale, many=True, context=getContext())
         userCommissionSerializer = UserCommisionSerializer(userCommission, many=True, context=getContext())
