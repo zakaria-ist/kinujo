@@ -632,21 +632,23 @@ class CommissionProductList(APIView):
 
     def get(self, request, userId, year, month, format='json'):
         isMaster = 0
-        profile = Profile.objects.get(pk=userId)
+        profile_authority_id = Profile.objects.get(pk=userId).authority_id
         # orders = Order.objects.filter(is_hidden=False, order_date__year=year, order_date__month=month).values_list('id', flat=True)
         # orderProducts = OrderProduct.objects.filter(order__in=orders, is_hidden=False).values_list('id', flat=True)
-        if profile.authority_id == AUTHORITY_TYPE['MASTER']:
+        if profile_authority_id == AUTHORITY_TYPE['MASTER']:
             isMaster = 1
             # orderProductsCommission = OrderProductCommission.objects.filter(user__authority_id=AUTHORITY_TYPE['MASTER'], order_product__in=orderProducts, is_hidden=False)
-            userSale = UserSale.objects.filter(is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'], year=year, month=month)
-            userCommission = UserCommision.objects.filter(is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'], year=year, month=month)
+            userSale = list(UserSale.objects.filter(is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'], year=year, month=month).values_list('total_amount', flat=True))
+            userCommission = list(UserCommision.objects.filter(is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'], year=year, month=month).values_list('total_amount', flat=True))
         else:
             # orderProductsCommission = OrderProductCommission.objects.filter(user_id=userId, order_product__in=orderProducts, is_hidden=False)
             # orderProductsCommission = OrderProductCommission.objects.filter(is_hidden=False)
-            userSale = UserSale.objects.filter(is_hidden=False, user_id=userId, year=year, month=month)
-            userCommission = UserCommision.objects.filter(is_hidden=False, user_id=userId, year=year, month=month)
+            userSale = list(UserSale.objects.filter(is_hidden=False, user_id=userId, year=year, month=month).values_list('total_amount', flat=True))
+            userCommission = list(UserCommision.objects.filter(is_hidden=False, user_id=userId, year=year, month=month).values_list('total_amount', flat=True))
             
-        orderProductsCommission = OrderProductCommission.objects.filter(is_hidden=False, order_product__is_hidden=False,
+        orderProductsCommission = OrderProductCommission.objects\
+            .select_related('order_product', 'order_product__order', 'order_product__order__seller')\
+            .filter(is_hidden=False, order_product__is_hidden=False,
                     order_product__order__is_hidden=False,
                     order_product__order__order_date__year=year, 
                     order_product__order__order_date__month=month)
@@ -658,13 +660,15 @@ class CommissionProductList(APIView):
             orderIds = list(orderProductsCommission.filter(order_product__order__seller_id=userId)\
                             .values_list('order_product__order_id', flat=True).order_by('order_product__order_id').distinct())
 
-        userSaleSerializer = UserSaleSerializer(userSale, many=True, context=getContext())
-        userCommissionSerializer = UserCommisionSerializer(userCommission, many=True, context=getContext())
+        # userSaleSerializer = UserSaleSerializer(userSale, many=True, context=getContext())
+        # userCommissionSerializer = UserCommisionSerializer(userCommission, many=True, context=getContext())
         
         return Response({"success" : True, "isMaster": isMaster, "orderIds": orderIds,
                             "commissionProducts" : orderProductsCommissionSerializer.data,
-                            "userSales": userSaleSerializer.data,
-                            "userCommissions": userCommissionSerializer.data},
+                            # "userSales": userSaleSerializer.data,
+                            # "userCommissions": userCommissionSerializer.data},
+                            "userSales": userSale,
+                            "userCommissions": userCommission},
                             status=status.HTTP_200_OK)
 
 class AddressList(APIView):
