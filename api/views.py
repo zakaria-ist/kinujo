@@ -16,7 +16,7 @@ from django.utils import translation
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils.translation import activate, deactivate_all
-from .serializers import CountryCodeSerializer, ImageSerializer, FinancialAccountSerialier, UserSerializer, GroupSerializer,  OrderSerializer, OrderProductSerializer, OrderProductCommissionSerializer, OrderReceiptSerializer, TotalSaleSerializer, TotalCommissionSerializer, PolicySerializer, PrefectureSerializer, ProductCategorySerializer, ProductSerializer, ProductImageSerializer, ProductVarietySerializer, ProductVarietySelectionSerializer, ProductJancodeSerializer, AuthoritySerializer, ProfileSerializer, UserSaleSerializer, UserCommisionSerializer, MonthlyPaymentSerializer, AddressSerializer, TaxRateSerializer
+from .serializers import CountryCodeSerializer, ImageSerializer, FinancialAccountSerialier, UserSerializer, GroupSerializer, OrderSerializer, OrderProductSerializer, OrderProductCommissionSerializer, OrderReceiptSerializer, TotalSaleSerializer, TotalCommissionSerializer, PolicySerializer, PrefectureSerializer, ProductCategorySerializer, ProductSerializer, ProductImageSerializer, ProductVarietySerializer, ProductVarietySelectionSerializer, ProductJancodeSerializer, AuthoritySerializer, ProfileSerializer, UserSaleSerializer, UserCommisionSerializer, MonthlyPaymentSerializer, AddressSerializer, TaxRateSerializer, OrderProductCommissionSerializerMinimum
 from .insertSerializers import InsertImageSerializer, InsertFinancialAccountSerialier, InsertUserSerializer, InsertGroupSerializer, InsertOrderSerializer, InsertOrderProductSerializer, InsertOrderProductCommissionSerializer, InsertOrderReceiptSerializer, InsertTotalSaleSerializer, InsertTotalCommissionSerializer, InsertPolicySerializer, InsertPrefectureSerializer, InsertProductCategorySerializer, InsertProductSerializer, InsertProductImageSerializer, InsertProductVarietySerializer, InsertProductVarietySelectionSerializer, InsertProductJancodeSerializer, InsertAuthoritySerializer, InsertProfileSerializer, InsertUserSaleSerializer, InsertUserCommisionSerializer, InsertMonthlyPaymentSerializer, InsertAddressSerializer, InsertTaxRateSerializer
 from .simpleProductSerializers import SimpleProductSerializer
 from rest_framework.test import APIRequestFactory
@@ -652,7 +652,7 @@ class CommissionProductList(APIView):
                     order_product__order__is_hidden=False,
                     order_product__order__order_date__year=year, 
                     order_product__order__order_date__month=month)
-        orderProductsCommissionSerializer = OrderProductCommissionSerializer(orderProductsCommission, many=True, context=getContext())
+        orderProductsCommissionSerializer = OrderProductCommissionSerializerMinimum(orderProductsCommission, many=True, context=getContext())
         if isMaster:
             orderIds = list(orderProductsCommission.filter(order_product__order__seller__authority_id=AUTHORITY_TYPE['MASTER'])\
                             .values_list('order_product__order_id', flat=True).order_by('order_product__order_id').distinct())

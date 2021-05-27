@@ -128,6 +128,10 @@ class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductImage
         fields = ['product','image','is_hidden','created','modified', 'image_no']
+class ProductSerializerMinimum(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['name']
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     user = ProfileSerializer()
     category = ProductCategorySerializer()
@@ -136,16 +140,32 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Product
         fields = ['category', 'productVarieties', 'url', 'id', 'name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified', 'user', 'productImages']
+class ProductVarietySerializerMinimum(serializers.HyperlinkedModelSerializer):
+    product = ProductSerializerMinimum()
+    class Meta:
+        model = ProductVariety
+        fields = ['product','is_hidden']
 class ProductVarietySerializer(serializers.HyperlinkedModelSerializer):
     product = ProductSerializer()
     class Meta:
         model = ProductVariety
-        fields = ['url', 'name','product','vertical_and_horizontal','is_hidden','created','modified']
+        fields = ['url','name','product','vertical_and_horizontal','is_hidden','created','modified']
+class ProductVarietySelectionSerializerMinimum(serializers.HyperlinkedModelSerializer):
+    product_variety = ProductVarietySerializerMinimum()
+    class Meta:
+        model = ProductVarietySelection
+        fields = ['product_variety','is_hidden']
 class ProductVarietySelectionSerializer(serializers.HyperlinkedModelSerializer):
     product_variety = ProductVarietySerializer()
     class Meta:
         model = ProductVarietySelection
         fields = ['product_variety','selection','is_hidden','created','modified']
+class ProductJancodeSerializerMinimum(serializers.HyperlinkedModelSerializer):
+    horizontal = ProductVarietySelectionSerializerMinimum()
+    vertical = ProductVarietySelectionSerializerMinimum()
+    class Meta:
+        model = ProductJancode
+        fields = ['horizontal','vertical','is_hidden']
 class ProductJancodeSerializer(serializers.HyperlinkedModelSerializer):
     horizontal = ProductVarietySelectionSerializer()
     vertical = ProductVarietySelectionSerializer()
@@ -156,6 +176,12 @@ class OrderReceiptSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = OrderReceipt
         fields = ['url', 'id', 'is_copy','to_name','amount','output_date','order_date','product_name','shop_name','order','address','payment','is_hidden','created','modified']
+class OrderSerializerMinimum(serializers.HyperlinkedModelSerializer):
+    seller = ProfileSerializer(read_only=True)
+   
+    class Meta:
+        model = Order
+        fields = ['id','seller','amount','tax','shipping_fee','total_amount','is_hidden']
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     seller = ProfileSerializer(read_only=True)
     purchaser = ProfileSerializer(read_only=True)
@@ -169,12 +195,24 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
         model = Order
         fields = ['id', 'orderReceipts', 'seller','purchaser','amount','tax','shipping_fee','total_amount','name','zip1','prefecture','address1','address2','tel','payment',
                 'customer_remark','remark','is_hidden','created','modified', 'tel_code', 'shipped_date', 'status', 'card_no']
+class OrderProductSerializerMinimum(serializers.HyperlinkedModelSerializer):
+    order = OrderSerializerMinimum()
+    product_jan_code = ProductJancodeSerializerMinimum()
+    class Meta:
+        model = OrderProduct
+        fields = ['product_jan_code', 'order', 'unit_price','is_hidden']
 class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
     order = OrderSerializer()
     product_jan_code = ProductJancodeSerializer()
     class Meta:
         model = OrderProduct
         fields = ['id', 'url', 'product_jan_code', 'order', 'quantity','unit_price','total_price','tax','total_amount','is_hidden','created','modified']
+class OrderProductCommissionSerializerMinimum(serializers.HyperlinkedModelSerializer):
+    user = ProfileSerializer(read_only=True)
+    order_product = OrderProductSerializerMinimum()
+    class Meta:
+        model = OrderProductCommission
+        fields = ['order_product','user','user_id','amount','is_sales','is_food','is_hidden']
 class OrderProductCommissionSerializer(serializers.HyperlinkedModelSerializer):
     user = ProfileSerializer(read_only=True)
     order_product = OrderProductSerializer()
