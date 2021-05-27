@@ -176,6 +176,7 @@ class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
         model = OrderProduct
         fields = ['id', 'url', 'product_jan_code', 'order', 'quantity','unit_price','total_price','tax','total_amount','is_hidden','created','modified']
 class OrderProductCommissionSerializer(serializers.HyperlinkedModelSerializer):
+    user = ProfileSerializer(read_only=True)
     order_product = OrderProductSerializer()
     class Meta:
         model = OrderProductCommission
