@@ -638,13 +638,13 @@ class CommissionProductList(APIView):
         if profile.authority_id == AUTHORITY_TYPE['MASTER']:
             isMaster = 1
             # orderProductsCommission = OrderProductCommission.objects.filter(user__authority_id=AUTHORITY_TYPE['MASTER'], order_product__in=orderProducts, is_hidden=False)
-            userSale = UserSale.objects.filter(is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'])
-            userCommission = UserCommision.objects.filter(is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'])
+            userSale = UserSale.objects.filter(is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'], year=year, month=month)
+            userCommission = UserCommision.objects.filter(is_hidden=False, user__authority_id=AUTHORITY_TYPE['MASTER'], year=year, month=month)
         else:
             # orderProductsCommission = OrderProductCommission.objects.filter(user_id=userId, order_product__in=orderProducts, is_hidden=False)
             # orderProductsCommission = OrderProductCommission.objects.filter(is_hidden=False)
-            userSale = UserSale.objects.filter(is_hidden=False, user_id=userId)
-            userCommission = UserCommision.objects.filter(is_hidden=False, user_id=userId)
+            userSale = UserSale.objects.filter(is_hidden=False, user_id=userId, year=year, month=month)
+            userCommission = UserCommision.objects.filter(is_hidden=False, user_id=userId, year=year, month=month)
             
         orderProductsCommission = OrderProductCommission.objects.filter(is_hidden=False, 
                     order_product__order__order_date__year=year, 
