@@ -650,15 +650,12 @@ class CommissionProductList(APIView):
                     order_product__order__order_date__year=year, 
                     order_product__order__order_date__month=month)
         orderProductsCommissionSerializer = OrderProductCommissionSerializer(orderProductsCommission, many=True, context=getContext())
+        orderIds = list(orderProductsCommission.values_list('order_product__order_id', flat=True).order_by('order_product__order_id').distinct())
 
         userSaleSerializer = UserSaleSerializer(userSale, many=True, context=getContext())
         userCommissionSerializer = UserCommisionSerializer(userCommission, many=True, context=getContext())
-        # janCodes = ProductJancode.objects.filter(id__in=orderProducts).values_list('horizontal_id', flat=True)
-        # productVarietySelections = ProductVarietySelection.objects.filter(id__in=janCodes).values_list('product_variety_id', flat=True)
-        # productVarieties = ProductVariety.objects.filter(id__in=productVarietySelections).values_list('product_id', flat=True)
-        # products = Product.objects.filter(id__in=productVarieties)
-        # productSerializer = ProductSerializer(products, many=True, context=getContext())
-        return Response({"success" : True, "isMaster": isMaster,
+        
+        return Response({"success" : True, "isMaster": isMaster, "orderIds": orderIds,
                             "commissionProducts" : orderProductsCommissionSerializer.data,
                             "userSales": userSaleSerializer.data,
                             "userCommissions": userCommissionSerializer.data},
