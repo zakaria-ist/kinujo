@@ -53,6 +53,13 @@ class AuthoritySerializer(serializers.HyperlinkedModelSerializer):
         model = Authority
         fields = ['id', 'url', 'name','commission_rate','official_commission_rate','is_hidden','created','modified']
 
+class ProfileSerializerMinimum(serializers.HyperlinkedModelSerializer):
+    authority = AuthoritySerializer()
+
+    class Meta:
+        model = Profile
+        fields = ['is_master','id','url','authority','is_seller','nickname','is_approved','real_name','is_hidden']
+        
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     profit = serializers.SerializerMethodField()
     image = ImageSerializer(required=False)
@@ -177,11 +184,11 @@ class OrderReceiptSerializer(serializers.HyperlinkedModelSerializer):
         model = OrderReceipt
         fields = ['url', 'id', 'is_copy','to_name','amount','output_date','order_date','product_name','shop_name','order','address','payment','is_hidden','created','modified']
 class OrderSerializerMinimum(serializers.HyperlinkedModelSerializer):
-    seller = ProfileSerializer(read_only=True)
+    seller = ProfileSerializerMinimum(read_only=True)
    
     class Meta:
         model = Order
-        fields = ['id','seller','amount','tax','shipping_fee','total_amount','is_hidden']
+        fields = ['id','seller','amount','tax','shipping_fee','total_amount','is_hidden','order_date']
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     seller = ProfileSerializer(read_only=True)
     purchaser = ProfileSerializer(read_only=True)
@@ -208,7 +215,7 @@ class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
         model = OrderProduct
         fields = ['id', 'url', 'product_jan_code', 'order', 'quantity','unit_price','total_price','tax','total_amount','is_hidden','created','modified']
 class OrderProductCommissionSerializerMinimum(serializers.HyperlinkedModelSerializer):
-    user = ProfileSerializer(read_only=True)
+    user = ProfileSerializerMinimum(read_only=True)
     order_product = OrderProductSerializerMinimum()
     class Meta:
         model = OrderProductCommission
