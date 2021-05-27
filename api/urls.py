@@ -61,7 +61,7 @@ urlpatterns = [
     url('^addressList/(?P<userId>.+)/$', views.AddressList.as_view()),
     url('^orderProducts/(?P<userId>.+)/$', views.OrderProductList.as_view()),
     url('^saleProducts/(?P<userId>.+)/$', views.SaleProductList.as_view()),
-    url('^commissionProducts/(?P<userId>.+)/$', views.CommissionProductList.as_view()),
+    url('^commissionProducts/(?P<userId>.+)/(?P<year>.+)/(?P<month>.+)/$', views.CommissionProductList.as_view()),
     url('^financial-account/(?P<userId>.+)/$', views.FinancialAccountGet.as_view()),
     url('^pay/(?P<userId>.+)/$', views.Pay.as_view()),
     url(r'^change-language/$', views.change_language, name='change_language'),

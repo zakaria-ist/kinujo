@@ -630,10 +630,10 @@ class SaleProductList(APIView):
 class CommissionProductList(APIView):
     serializer_class = ProductSerializer
 
-    def get(self, request, userId, format='json'):
+    def get(self, request, userId, year, month, format='json'):
         isMaster = 0
         profile = Profile.objects.get(pk=userId)
-        orders = Order.objects.filter(is_hidden=False).values_list('id', flat=True)
+        orders = Order.objects.filter(is_hidden=False, order_date__year=year, order_date__month=month).values_list('id', flat=True)
         orderProducts = OrderProduct.objects.filter(order__in=orders, is_hidden=False).values_list('id', flat=True)
         if profile.authority_id == AUTHORITY_TYPE['MASTER']:
             isMaster = 1
