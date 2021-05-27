@@ -633,8 +633,8 @@ class CommissionProductList(APIView):
     def get(self, request, userId, year, month, format='json'):
         isMaster = 0
         profile = Profile.objects.get(pk=userId)
-        orders = Order.objects.filter(is_hidden=False, order_date__year=year, order_date__month=month).values_list('id', flat=True)
-        orderProducts = OrderProduct.objects.filter(order__in=orders, is_hidden=False).values_list('id', flat=True)
+        # orders = Order.objects.filter(is_hidden=False, order_date__year=year, order_date__month=month).values_list('id', flat=True)
+        # orderProducts = OrderProduct.objects.filter(order__in=orders, is_hidden=False).values_list('id', flat=True)
         if profile.authority_id == AUTHORITY_TYPE['MASTER']:
             isMaster = 1
             # orderProductsCommission = OrderProductCommission.objects.filter(user__authority_id=AUTHORITY_TYPE['MASTER'], order_product__in=orderProducts, is_hidden=False)
@@ -645,7 +645,10 @@ class CommissionProductList(APIView):
             # orderProductsCommission = OrderProductCommission.objects.filter(is_hidden=False)
             userSale = UserSale.objects.filter(is_hidden=False, user_id=userId)
             userCommission = UserCommision.objects.filter(is_hidden=False, user_id=userId)
-        orderProductsCommission = OrderProductCommission.objects.filter(is_hidden=False)
+            
+        orderProductsCommission = OrderProductCommission.objects.filter(is_hidden=False, 
+                    order_product__order__order_date__year=year, 
+                    order_product__order__order_date__month=month)
         orderProductsCommissionSerializer = OrderProductCommissionSerializer(orderProductsCommission, many=True, context=getContext())
 
         userSaleSerializer = UserSaleSerializer(userSale, many=True, context=getContext())
