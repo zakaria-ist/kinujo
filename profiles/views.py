@@ -31,8 +31,10 @@ def home_load(request):
     """
     Method to redirect to home/dashboard.
     """
-
-    login_type_was = request.session['login_type']
+    if 'login_type' in request.session:
+        login_type_was = request.session['login_type']
+    else:
+        login_type_was = 'SELLER'
     if login_type_was == 'MASTER':
         request.session['login_type'] = 'MASTER'
         return render(request, 'dashboard.html')
@@ -90,6 +92,7 @@ def reset_password(request):
                     user = authenticate(username=username, password=password)
                     if user is not None:
                         login(request, user)
+                        request.session['login_type'] = 'SELLER'
                         return HttpResponsePermanentRedirect(reverse('home_load'))
         except Exception as e:
             print(e)

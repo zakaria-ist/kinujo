@@ -1077,8 +1077,6 @@ msgid "Send"
 msgstr "送信"
 
 #: templates/password-reset.html:78
-#, fuzzy
-#| msgid " until resendable"
 msgid "until resendable"
 msgstr "再送信可能まで"
 

@@ -138,7 +138,7 @@ class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
 class ProductSerializerMinimum(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Product
-        fields = ['name']
+        fields = ['name','is_hidden']
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     user = ProfileSerializer()
     category = ProductCategorySerializer()

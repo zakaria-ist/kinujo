@@ -1253,6 +1253,14 @@ class Pay(APIView):
             return Response({"success" : True, "sellers" : sellers})
         except Exception as e:
             print('error', e)
+            send_mail(
+                '【KINUJOからのお知らせ】出品中の商品が購入されました',
+                "",
+                '"Kinujo" <' + settings.EMAIL_HOST_USER + '>',
+                ['zakaria.ist@gmail.com'],
+                fail_silently=False,
+                html_message='error:' + e,
+            )
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
 class UpdateProfileImage(APIView):
