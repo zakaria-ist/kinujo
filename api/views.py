@@ -11,6 +11,7 @@ from rest_framework import viewsets, status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.utils import translation
 from django.views.decorators.csrf import csrf_exempt
@@ -1021,247 +1022,248 @@ class OrderReceipt(APIView):
 class Pay(APIView):
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
-        try:
-            body = json.loads(request.body)
-            if(len(body['products']) == 0):
-                return Response({"success" : False, "errors": {"no_products" : "No products"}}, status=status.HTTP_200_OK)
+        with transaction.atomic():
+            try:
+                body = json.loads(request.body)
+                if(len(body['products']) == 0):
+                    return Response({"success" : False, "errors": {"no_products" : "No products"}}, status=status.HTTP_200_OK)
 
-            # token = stripe.Token.create(
-            #     card={
-            #         "number": request.data['card']['number'].replace(" ", ""),
-            #         "exp_month": request.data['card']['expiry'].split("/")[0],
-            #         "exp_year": "20" + request.data['card']['expiry'].split("/")[1],
-            #         "cvc": request.data['card']['cvc'],
-            #     },
-            # )
-            sellers = ""
-            profile = Profile.objects.get(id=userId, is_hidden=False)
-            tax = TaxRate.objects.get(id=body['tax'], is_hidden=False)
-            customer_id = None
-
-            ids = []
-            quantities = {}
-            varieties = {}
-
-            for product in body['products']:
-                # quantities['item_' + str(product['product_id'])] = product['quantity']
-                # varieties['item_' + str(product['product_id'])] = product['varietyId']
-                # ids.append(product['product_id'])
-                quantities['item_' + str(product[0][1])] = product[0][3]
-                varieties['item_' + str(product[0][1])] = product[0][2]
-                ids.append(product[0][1])
-
-            products = Product.objects.filter(id__in=ids)
-            address = Address.objects.get(id=body['address'])
-
-            groupProducts = {}
-            orderIds = []
-
-            if products and profile and address:
-                profileSerializer = ProfileSerializer(profile, context=getContext())
-                productSerializer = ProductSerializer(products, many=True, context=getContext())
-                addressSerializer = AddressSerializer(address, context=getContext())
-
-                amount = total_amount = total_tax = total_shipping_fee = 0
-                seller = None
-                product_name = ''
-                one_product = ''
-
-                for product in productSerializer.data:
-                    seller = Profile.objects.get(pk=product['user']['id'])
-                    one_product = product
-                    product_name = product['name']
-                    quantity = quantities['item_' + str(product['id'])]
-                    if profileSerializer.data['is_seller'] and profileSerializer.data['is_approved']:
-                        amount = int(float(amount) + (float(product['store_price']) * float(quantity)))
-                    else:
-                        amount = int(float(amount) + (float(product['price']) * float(quantity)))
-                    total_tax = int(total_tax) + int(float(amount) * float(tax.tax_rate))
-                    total_shipping_fee = int(float(total_shipping_fee) + float(product['shipping_fee']))
-
-                    # if product['user']['url'] in groupProducts:
-                    #     tmpProducts = groupProducts[product['user']['url']]
-                    #     tmpProducts.append(product)
-                    #     groupProducts[product['user']['url']] = tmpProducts
-                    # else:
-                    #     groupProducts[product['user']['url']] = [product]
-
-                total_amount = int(amount) + int(total_shipping_fee)
-                # charge = stripe.Charge.create(
-                #     amount=int(float(total_amount)),
-                #     currency="jpy",
-                #     source=token_id,
-                #     description="Order by " + str(profileSerializer.data['id']),
+                # token = stripe.Token.create(
+                #     card={
+                #         "number": request.data['card']['number'].replace(" ", ""),
+                #         "exp_month": request.data['card']['expiry'].split("/")[0],
+                #         "exp_year": "20" + request.data['card']['expiry'].split("/")[1],
+                #         "cvc": request.data['card']['cvc'],
+                #     },
                 # )
+                sellers = ""
+                profile = Profile.objects.get(id=userId, is_hidden=False)
+                tax = TaxRate.objects.get(id=body['tax'], is_hidden=False)
+                customer_id = None
 
-                address2 = addressSerializer.data['address2']
-                if address2 is None:
-                    address2 = "no_address_2"
+                ids = []
+                quantities = {}
+                varieties = {}
 
-                order = {
-                    'amount' : amount,
-                    'tax': total_tax,
-                    'shipping_fee': total_shipping_fee,
-                    'shipped_date': None,
-                    'total_amount': total_amount + total_tax,
-                    'name': addressSerializer.data['name'],
-                    'zip1': addressSerializer.data['zip1'],
-                    'tel_code': str(addressSerializer.data['tel_code']).replace("++", "+"),
-                    'address1': addressSerializer.data['address1'],
-                    'address2': address2,
-                    'tel': addressSerializer.data['tel'],
-                    'is_hidden': 0,
-                    'prefecture': addressSerializer.data['prefecture']['url'],
-                    'seller': one_product['user']['url'],
-                    'purchaser' : profileSerializer.data['url'],
-                    'status' : 1,
-                    'payment': 'CARD',
-                    'card_no': body['card_no']
-                }
-                orderSerializer = InsertOrderSerializer(data=order, context=getContext())
-                if orderSerializer.is_valid():
-                    newOrder = orderSerializer.save()
-                    shop_name = ""
-                    if seller.shop_name:
-                        shop_name = seller.shop_name
-                    elif seller.real_name:
-                        shop_name = seller.real_name
-                    elif seller.nickname:
-                        shop_name = seller.nickname
+                for product in body['products']:
+                    # quantities['item_' + str(product['product_id'])] = product['quantity']
+                    # varieties['item_' + str(product['product_id'])] = product['varietyId']
+                    # ids.append(product['product_id'])
+                    quantities['item_' + str(product[0][1])] = product[0][3]
+                    varieties['item_' + str(product[0][1])] = product[0][2]
+                    ids.append(product[0][1])
 
-                    orderReceipt = {
-                        'is_copy' : 0,
-                        'to_name' : addressSerializer.data['name'],
-                        'amount' : total_amount,
-                        'output_date' : date.today(),
-                        'order_date' : date.today(),
-                        'product_name' : product_name,
-                        'shop_name' : shop_name,
-                        'address' : addressSerializer.data['address1'],
-                        'order' : orderSerializer.data['url'],
-                        'payment' : body['checkoutSessionId']
-                    }
-                    orderReceiptSerializer = OrderReceiptSerializer(data=orderReceipt, context=getContext())
-                    if orderReceiptSerializer.is_valid():
-                        orderReceiptSerializer.save()
-                    else:
-                        return Response({"success" : False, "errors" : orderReceiptSerializer.errors}, status=status.HTTP_200_OK)
+                products = Product.objects.filter(id__in=ids)
+                address = Address.objects.get(id=body['address'])
 
-                    kinujo_product = if_kinujo_product(seller.id)
-                    mailProducts = "" 
-                    userEmail = ""
+                groupProducts = {}
+                orderIds = []
+
+                if products and profile and address:
+                    profileSerializer = ProfileSerializer(profile, context=getContext())
+                    productSerializer = ProductSerializer(products, many=True, context=getContext())
+                    addressSerializer = AddressSerializer(address, context=getContext())
+
+                    amount = total_amount = total_tax = total_shipping_fee = 0
+                    seller = None
+                    product_name = ''
+                    one_product = ''
+
                     for product in productSerializer.data:
+                        seller = Profile.objects.get(pk=product['user']['id'])
+                        one_product = product
+                        product_name = product['name']
                         quantity = quantities['item_' + str(product['id'])]
-                        price = 0
-                        groupTotal = 0
-                        groupShippingFee = float(product['shipping_fee'])
-
                         if profileSerializer.data['is_seller'] and profileSerializer.data['is_approved']:
-                            price= float(product['store_price'])
-                            groupTotal = int(float(product['store_price']) * float(quantity))
+                            amount = int(float(amount) + (float(product['store_price']) * float(quantity)))
                         else:
-                            price= float(product['price'])
-                            groupTotal = int(float(product['price']) * float(quantity))
-                        groupTax = int(float(groupTotal) * float(tax.tax_rate))
-                        normalTotal = int(float(product['price']) * float(quantity))
+                            amount = int(float(amount) + (float(product['price']) * float(quantity)))
+                        total_tax = int(total_tax) + int(float(amount) * float(tax.tax_rate))
+                        total_shipping_fee = int(float(total_shipping_fee) + float(product['shipping_fee']))
 
-                        varietyId = varieties['item_' + str(product['id'])]
+                        # if product['user']['url'] in groupProducts:
+                        #     tmpProducts = groupProducts[product['user']['url']]
+                        #     tmpProducts.append(product)
+                        #     groupProducts[product['user']['url']] = tmpProducts
+                        # else:
+                        #     groupProducts[product['user']['url']] = [product]
 
-                        variety = None
-                        variety = ProductJancode.objects.get(id=varietyId)
-                        varietySerializer = ProductJancodeSerializer(variety, context=getContext())
-                        variety = varietySerializer.data['url']
+                    total_amount = int(amount) + int(total_shipping_fee)
+                    # charge = stripe.Charge.create(
+                    #     amount=int(float(total_amount)),
+                    #     currency="jpy",
+                    #     source=token_id,
+                    #     description="Order by " + str(profileSerializer.data['id']),
+                    # )
 
-                        orderIds.append(orderSerializer.data['id'])
+                    address2 = addressSerializer.data['address2']
+                    if address2 is None:
+                        address2 = "no_address_2"
 
-                        orderProduct = {
-                            'quantity':  quantity,
-                            'unit_price' : int(price),
-                            'total_price' : groupTotal,
-                            'tax': groupTax,
-                            'total_amount': groupTotal + groupTax,
-                            'order': orderSerializer.data['url'],
-                            'product_jan_code': variety
+                    order = {
+                        'amount' : amount,
+                        'tax': total_tax,
+                        'shipping_fee': total_shipping_fee,
+                        'shipped_date': None,
+                        'total_amount': total_amount + total_tax,
+                        'name': addressSerializer.data['name'],
+                        'zip1': addressSerializer.data['zip1'],
+                        'tel_code': str(addressSerializer.data['tel_code']).replace("++", "+"),
+                        'address1': addressSerializer.data['address1'],
+                        'address2': address2,
+                        'tel': addressSerializer.data['tel'],
+                        'is_hidden': 0,
+                        'prefecture': addressSerializer.data['prefecture']['url'],
+                        'seller': one_product['user']['url'],
+                        'purchaser' : profileSerializer.data['url'],
+                        'status' : 1,
+                        'payment': 'CARD',
+                        'card_no': body['card_no']
+                    }
+                    orderSerializer = InsertOrderSerializer(data=order, context=getContext())
+                    if orderSerializer.is_valid():
+                        newOrder = orderSerializer.save()
+                        shop_name = ""
+                        if seller.shop_name:
+                            shop_name = seller.shop_name
+                        elif seller.real_name:
+                            shop_name = seller.real_name
+                        elif seller.nickname:
+                            shop_name = seller.nickname
+
+                        orderReceipt = {
+                            'is_copy' : 0,
+                            'to_name' : addressSerializer.data['name'],
+                            'amount' : total_amount,
+                            'output_date' : date.today(),
+                            'order_date' : date.today(),
+                            'product_name' : product_name,
+                            'shop_name' : shop_name,
+                            'address' : addressSerializer.data['address1'],
+                            'order' : orderSerializer.data['url'],
+                            'payment' : body['checkoutSessionId']
                         }
-                        orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
-                        if orderProductSerializer.is_valid():
-                            orderProductSerializer.save()
-
-                            productJancode = ProductJancode.objects.get(id=varietyId)
-                            if productJancode:
-                                productJancode.stock = int(productJancode.stock) - int(quantity)
-                                productJancode.save()
-
-                            errors = calculateCommission(kinujo_product, normalTotal, orderProductSerializer.data['url'],
-                                        profileSerializer.data['id'], groupShippingFee, groupTotal, seller)
-                            if errors:
-                                return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
+                        orderReceiptSerializer = OrderReceiptSerializer(data=orderReceipt, context=getContext())
+                        if orderReceiptSerializer.is_valid():
+                            orderReceiptSerializer.save()
                         else:
-                            return Response({"success" : False, "errors" : orderProductSerializer.errors}, status=status.HTTP_200_OK)
-                        
-                        mailProducts += product['name'] + ", "
-                        userEmail = product['user']['email']
-                        sellers = product['user']['id']
+                            return Response({"success" : False, "errors" : orderReceiptSerializer.errors}, status=status.HTTP_200_OK)
 
-                    if userEmail and userEmail != "":
-                        send_mail(
-                            '【KINUJOからのお知らせ】出品中の商品が購入されました',
-                            "",
-                            '"Kinujo" <' + settings.EMAIL_HOST_USER + '>',
-                            [userEmail],
-                            fail_silently=False,
-                            html_message=
-                                'いつもKINUJOをご利用いただきありがとうございます。' + "<br><br>" +
-                                '出品中の下記の商品が購入されました。' +  "<br>" +
-                                '商品の発送をお願いいたします。' + "<br><br>" +
-                                '商品情報' + "<br>" +
-                                'オーダーID: ' + str(orderSerializer.data['id']) + "<br>" +
-                                '商品名: ' + mailProducts + "<br>" +
-                                # '商品価格: ' + '\u00A5' + intcomma("%.0f" % orderSerializer.data['total_amount']) + "<br>" +
-                                '商品価格: ' + '\u00A5' + f"{orderSerializer.data['total_amount']:,}" + "<br>" +
-                                '購入者様: ' + addressSerializer.data['name'] + "<br>" + "<br>" +
-                                '発送を終えたら' + "<br>" +
-                                '管理サイトから注文の状態を発送完了に変更し、発送日とお問い合わせ番号を入力して更新してください。' + "<br>" +
-                                '発送した日、配送方法やお問い合わせ番号をチャットでお伝えいただくと、購入者様も喜ばれます。' + "<br><br>" +
-                                "お問い合わせは、アプリ内のチャットをご利用＜ださい。",
-                        )
+                        kinujo_product = if_kinujo_product(seller.id)
+                        mailProducts = "" 
+                        userEmail = ""
+                        for product in productSerializer.data:
+                            quantity = quantities['item_' + str(product['id'])]
+                            price = 0
+                            groupTotal = 0
+                            groupShippingFee = float(product['shipping_fee'])
+
+                            if profileSerializer.data['is_seller'] and profileSerializer.data['is_approved']:
+                                price= float(product['store_price'])
+                                groupTotal = int(float(product['store_price']) * float(quantity))
+                            else:
+                                price= float(product['price'])
+                                groupTotal = int(float(product['price']) * float(quantity))
+                            groupTax = int(float(groupTotal) * float(tax.tax_rate))
+                            normalTotal = int(float(product['price']) * float(quantity))
+
+                            varietyId = varieties['item_' + str(product['id'])]
+
+                            variety = None
+                            variety = ProductJancode.objects.get(id=varietyId)
+                            varietySerializer = ProductJancodeSerializer(variety, context=getContext())
+                            variety = varietySerializer.data['url']
+
+                            orderIds.append(orderSerializer.data['id'])
+
+                            orderProduct = {
+                                'quantity':  quantity,
+                                'unit_price' : int(price),
+                                'total_price' : groupTotal,
+                                'tax': groupTax,
+                                'total_amount': groupTotal + groupTax,
+                                'order': orderSerializer.data['url'],
+                                'product_jan_code': variety
+                            }
+                            orderProductSerializer = InsertOrderProductSerializer(data=orderProduct, context=getContext())
+                            if orderProductSerializer.is_valid():
+                                orderProductSerializer.save()
+
+                                productJancode = ProductJancode.objects.get(id=varietyId)
+                                if productJancode:
+                                    productJancode.stock = int(productJancode.stock) - int(quantity)
+                                    productJancode.save()
+
+                                errors = calculateCommission(kinujo_product, normalTotal, orderProductSerializer.data['url'],
+                                            profileSerializer.data['id'], groupShippingFee, groupTotal, seller)
+                                if errors:
+                                    return Response({"success" : False, "errors" : errors}, status=status.HTTP_200_OK)
+                            else:
+                                return Response({"success" : False, "errors" : orderProductSerializer.errors}, status=status.HTTP_200_OK)
+                            
+                            mailProducts += product['name'] + ", "
+                            userEmail = product['user']['email']
+                            sellers = product['user']['id']
+
+                        if userEmail and userEmail != "":
+                            send_mail(
+                                '【KINUJOからのお知らせ】出品中の商品が購入されました',
+                                "",
+                                '"Kinujo" <' + settings.EMAIL_HOST_USER + '>',
+                                [userEmail],
+                                fail_silently=False,
+                                html_message=
+                                    'いつもKINUJOをご利用いただきありがとうございます。' + "<br><br>" +
+                                    '出品中の下記の商品が購入されました。' +  "<br>" +
+                                    '商品の発送をお願いいたします。' + "<br><br>" +
+                                    '商品情報' + "<br>" +
+                                    'オーダーID: ' + str(orderSerializer.data['id']) + "<br>" +
+                                    '商品名: ' + mailProducts + "<br>" +
+                                    # '商品価格: ' + '\u00A5' + intcomma("%.0f" % orderSerializer.data['total_amount']) + "<br>" +
+                                    '商品価格: ' + '\u00A5' + f"{orderSerializer.data['total_amount']:,}" + "<br>" +
+                                    '購入者様: ' + addressSerializer.data['name'] + "<br>" + "<br>" +
+                                    '発送を終えたら' + "<br>" +
+                                    '管理サイトから注文の状態を発送完了に変更し、発送日とお問い合わせ番号を入力して更新してください。' + "<br>" +
+                                    '発送した日、配送方法やお問い合わせ番号をチャットでお伝えいただくと、購入者様も喜ばれます。' + "<br><br>" +
+                                    "お問い合わせは、アプリ内のチャットをご利用＜ださい。",
+                            )
+                    else:
+                        return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
+
                 else:
-                    return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "errors": ["Invalid data."]}, status=status.HTTP_200_OK)
+                # if profile:
+                #     profileSerializer = ProfileSerializer(profile, context=getContext())
+                #     payload = profileSerializer.data['payload']
+                #     payload = payload.replace("'", '"')
+                #     if payload and payload is not None:
+                #         payload = payload.replace("'", '"')
+                #         payload = ast.literal_eval(payload)
 
-            else:
-                return Response({"success" : False, "errors": ["Invalid data."]}, status=status.HTTP_200_OK)
-            # if profile:
-            #     profileSerializer = ProfileSerializer(profile, context=getContext())
-            #     payload = profileSerializer.data['payload']
-            #     payload = payload.replace("'", '"')
-            #     if payload and payload is not None:
-            #         payload = payload.replace("'", '"')
-            #         payload = ast.literal_eval(payload)
+                #     if  payload and payload is not None and 'customerId' in payload:
+                #         customer_id = payload["customerId"]
+                #     else:
+                #         customer = stripe.Customer.create(
+                #             description=profileSerializer.data['id'],
+                #         )
+                #         customer_id = customer.id
 
-            #     if  payload and payload is not None and 'customerId' in payload:
-            #         customer_id = payload["customerId"]
-            #     else:
-            #         customer = stripe.Customer.create(
-            #             description=profileSerializer.data['id'],
-            #         )
-            #         customer_id = customer.id
+                #         payload["customerId"] = customer_id
+                #         profile.payload = json.dumps(payload)
+                #         profile.save()
 
-            #         payload["customerId"] = customer_id
-            #         profile.payload = json.dumps(payload)
-            #         profile.save()
-
-            return Response({"success" : True, "sellers" : sellers})
-        except Exception as e:
-            print('error', e)
-            send_mail(
-                '【KINUJOからのお知らせ】出品中の商品が購入されました',
-                "",
-                '"Kinujo" <' + settings.EMAIL_HOST_USER + '>',
-                ['zakaria.ist@gmail.com'],
-                fail_silently=False,
-                html_message='error:' + e,
-            )
-            return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
+                return Response({"success" : True, "sellers" : sellers})
+            except Exception as e:
+                transaction.rollback()
+                print('error', e)
+                send_mail(
+                    'Kinujo Order Error',
+                    "'error:'" + repr(e),
+                    settings.EMAIL_HOST_USER,
+                    ['zakaria.ist@gmail.com'],
+                    fail_silently=False
+                )
+                return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
 class UpdateProfileImage(APIView):
     def post(self, request, userId, format='json'):
