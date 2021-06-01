@@ -1022,6 +1022,7 @@ class OrderReceipt(APIView):
 class Pay(APIView):
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
+        userEmail = ""
         with transaction.atomic():
             try:
                 body = json.loads(request.body)
@@ -1106,12 +1107,12 @@ class Pay(APIView):
                         'shipping_fee': total_shipping_fee,
                         'shipped_date': None,
                         'total_amount': total_amount + total_tax,
-                        'name': addressSerializer.data['name'],
-                        'zip1': addressSerializer.data['zip1'],
-                        'tel_code': str(addressSerializer.data['tel_code']).replace("++", "+"),
-                        'address1': addressSerializer.data['address1'],
+                        'name': addressSerializer.data['name'] if addressSerializer.data['name'] else "Unknown",
+                        'zip1': addressSerializer.data['zip1'] if addressSerializer.data['zip1'] else "500",
+                        'tel_code': str(addressSerializer.data['tel_code']).replace("++", "+") if addressSerializer.data['tel_code'] else "+81",
+                        'address1': addressSerializer.data['address1'] if addressSerializer.data['address1'] else "address1",
                         'address2': address2,
-                        'tel': addressSerializer.data['tel'],
+                        'tel': addressSerializer.data['tel'] if addressSerializer.data['tel'] else "0",
                         'is_hidden': 0,
                         'prefecture': addressSerializer.data['prefecture']['url'],
                         'seller': one_product['user']['url'],
@@ -1133,13 +1134,13 @@ class Pay(APIView):
 
                         orderReceipt = {
                             'is_copy' : 0,
-                            'to_name' : addressSerializer.data['name'],
+                            'to_name' : addressSerializer.data['name'] if addressSerializer.data['name'] else "Unknown",
                             'amount' : total_amount,
                             'output_date' : date.today(),
                             'order_date' : date.today(),
                             'product_name' : product_name,
                             'shop_name' : shop_name,
-                            'address' : addressSerializer.data['address1'],
+                            'address' : addressSerializer.data['address1'] if addressSerializer.data['address1'] else "address1",
                             'order' : orderSerializer.data['url'],
                             'payment' : body['checkoutSessionId']
                         }
@@ -1150,8 +1151,7 @@ class Pay(APIView):
                             return Response({"success" : False, "errors" : orderReceiptSerializer.errors}, status=status.HTTP_200_OK)
 
                         kinujo_product = if_kinujo_product(seller.id)
-                        mailProducts = "" 
-                        userEmail = ""
+                        mailProducts = ""
                         for product in productSerializer.data:
                             quantity = quantities['item_' + str(product['id'])]
                             price = 0
@@ -1228,21 +1228,23 @@ class Pay(APIView):
                                     "お問い合わせは、アプリ内のチャットをご利用＜ださい。",
                             )
                     else:
+                        transaction.rollback()
                         send_mail(
                             'Kinujo Order Error',
                             "'error:'" + str(orderSerializer.errors),
                             settings.EMAIL_HOST_USER,
-                            ['zakaria.ist@gmail.com'],
+                            ['zakaria.ist@gmail.com', userEmail],
                             fail_silently=False
                         )
                         return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
 
                 else:
+                    transaction.rollback()
                     send_mail(
                         'Kinujo Order Error',
                         "'error:'" + "Invalid data.",
                         settings.EMAIL_HOST_USER,
-                        ['zakaria.ist@gmail.com'],
+                        ['zakaria.ist@gmail.com', userEmail],
                         fail_silently=False
                     )
                     return Response({"success" : False, "errors": ["Invalid data."]}, status=status.HTTP_200_OK)
@@ -1274,7 +1276,7 @@ class Pay(APIView):
                     'Kinujo Order Error',
                     "'error:'" + repr(e),
                     settings.EMAIL_HOST_USER,
-                    ['zakaria.ist@gmail.com'],
+                    ['zakaria.ist@gmail.com', userEmail],
                     fail_silently=False
                 )
                 return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
