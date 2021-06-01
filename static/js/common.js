@@ -358,6 +358,14 @@ var translation_dict = {
     "Cancel": "キャンセル",
     "Item / Option": "項目・選択肢登録",
     "Items / Option": "項目・選択肢登録",
-
+    "Code is Sent!": "コードが送信されました。",
+    "A verification code is sent to your number.": "あなたの番号に認証コードが送信されます。",
+    "Wrong number!": "間違った番号です。",
+    "Please check your number and try again.": "番号をご確認の上、再度お試しください。",
+    "The user is not registered.": "ユーザーが登録されていません。",
+    "Vericication Successful": "検証成功",
+    "Please enter new password to log in.": "新しいパスワードを入力してログインしてください。",
+    "Wrong Code": "不正なコード",
+    "Please check your verification code again.": "もう一度認証コードを確認してください。"
 
 };
