@@ -1228,9 +1228,23 @@ class Pay(APIView):
                                     "お問い合わせは、アプリ内のチャットをご利用＜ださい。",
                             )
                     else:
+                        send_mail(
+                            'Kinujo Order Error',
+                            "'error:'" + str(orderSerializer.errors),
+                            settings.EMAIL_HOST_USER,
+                            ['zakaria.ist@gmail.com'],
+                            fail_silently=False
+                        )
                         return Response({"success" : False, "errors" : orderSerializer.errors}, status=status.HTTP_200_OK)
 
                 else:
+                    send_mail(
+                        'Kinujo Order Error',
+                        "'error:'" + "Invalid data.",
+                        settings.EMAIL_HOST_USER,
+                        ['zakaria.ist@gmail.com'],
+                        fail_silently=False
+                    )
                     return Response({"success" : False, "errors": ["Invalid data."]}, status=status.HTTP_200_OK)
                 # if profile:
                 #     profileSerializer = ProfileSerializer(profile, context=getContext())
