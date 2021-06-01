@@ -910,6 +910,58 @@ def check_for_duplicate(request, type, value):
 
 
 # @login_required
+# def UserSalesList__asJson(request):
+#     """
+#     Method to get user product sales list as JSON.
+#     """
+
+#     draw = request.GET['draw']
+#     start = request.GET['start']
+#     length = request.GET['length']
+#     # search = request.GET['search[value]']
+
+#     year = request.GET.get('year')
+#     month = request.GET.get('month')
+#     profile_id = request.session['login_profile_id']
+#     auth_type = request.session['login_authority_id']
+
+#     if auth_type == AUTHORITY_TYPE['MASTER']:
+#         sales_list = OrderProductCommission.objects.filter(is_hidden=False,
+#                                 user__authority_id=auth_type, is_sales=True,
+#                                 order_product__order__order_date__year=year,
+#                                 order_product__order__order_date__month=month,).order_by('order_product__order__order_date')
+#     else:
+#         sales_list = OrderProductCommission.objects.filter(is_hidden=False,
+#                                 user_id=profile_id, is_sales=True,
+#                                 order_product__order__order_date__year=year,
+#                                 order_product__order__order_date__month=month,).order_by('order_product__order__order_date')
+
+
+#     array = []
+#     for field in sales_list:
+#         product_jan = ProductJancode.objects.filter(pk=field.order_product.product_jan_code_id).first()
+#         if product_jan:
+#             j_product = get_jan_products(product_jan)
+#             productImage = ProductImage.objects.filter(product_id=j_product.id, is_hidden=False)\
+#                 .order_by('image_no').exclude(image_no__isnull=True).first()
+#             image_path = ''
+#             if productImage:
+#                 image_path = productImage.image.image.url
+#             data = {
+#                 "id": str(field.id),
+#                 "date": field.order_product.order.order_date.strftime("%Y-%m-%d"),
+#                 "image_path": image_path,
+#                 "name": j_product.name,
+#                 "amount": field.amount
+#             }
+#             array.append(data)
+
+#     records_total = len(array)
+#     records_filtered = len(array)
+#     content = {"draw": draw, "data": array, "recordsTotal": records_total, "recordsFiltered": records_filtered}
+#     json_content = json.dumps(content, ensure_ascii=False)
+#     return HttpResponse(json_content, content_type='application/json')
+
 def UserSalesList__asJson(request):
     """
     Method to get user product sales list as JSON.
@@ -922,37 +974,94 @@ def UserSalesList__asJson(request):
 
     year = request.GET.get('year')
     month = request.GET.get('month')
-    profile_id = request.session['login_profile_id']
+    userId = request.session['login_profile_id']
     auth_type = request.session['login_authority_id']
 
-    if auth_type == AUTHORITY_TYPE['MASTER']:
-        sales_list = OrderProductCommission.objects.filter(is_hidden=False,
-                                user__authority_id=auth_type, is_sales=True,
-                                order_product__order__order_date__year=year,
-                                order_product__order__order_date__month=month,).order_by('order_product__order__order_date')
-    else:
-        sales_list = OrderProductCommission.objects.filter(is_hidden=False,
-                                user_id=profile_id, is_sales=True,
-                                order_product__order__order_date__year=year,
-                                order_product__order__order_date__month=month,).order_by('order_product__order__order_date')
+    taxRate = 0
+    reducedTaxRate = 0
+    try:
+        taxRate = TaxRate.objects.filter(is_hidden=False, is_enable=True, end_date__isnull=True).last().tax_rate
+        reducedTaxRate = TaxRate.objects.filter(is_hidden=False, is_enable=True, end_date__isnull=True).last().reduced_tax_rate
+    except:
+        taxRate = 0
+        reducedTaxRate = 0
 
+    orderIds = []
+    orderProductsCommissions = OrderProductCommission.objects\
+        .select_related('order_product', 'order_product__order', 'order_product__order__seller')\
+        .filter(is_hidden=False, order_product__is_hidden=False,
+                order_product__order__is_hidden=False,
+                order_product__order__order_date__year=year, 
+                order_product__order__order_date__month=month)
+    if auth_type == AUTHORITY_TYPE['MASTER']:
+        orderIds = list(orderProductsCommissions.filter(order_product__order__seller__authority_id=AUTHORITY_TYPE['MASTER'])\
+                        .values_list('order_product__order_id', flat=True).order_by('order_product__order_id').distinct())
+    else:
+        orderIds = list(orderProductsCommissions.filter(order_product__order__seller_id=userId)\
+                        .values_list('order_product__order_id', flat=True).order_by('order_product__order_id').distinct())
+    
+    tmpCommissionProducts = []
+    tmpSaleProducts = []
+    if len(orderIds):
+        for orderProductsCommission in orderProductsCommissions:
+            if orderProductsCommission.is_sales:
+                tmpSaleProducts.append(orderProductsCommission)
+            if auth_type == AUTHORITY_TYPE['MASTER']:
+                if not orderProductsCommission.is_sales and orderProductsCommission.order_product.order.seller.authority.id == AUTHORITY_TYPE['MASTER']:
+                    tmpCommissionProducts.append([
+                        orderProductsCommission.order_product.order.id,
+                        orderProductsCommission.amount,
+                        orderProductsCommission.is_food
+                    ])
+            else:
+                if not orderProductsCommission.is_sales and orderProductsCommission.user.id != int(userId):
+                    tmpCommissionProducts.append([
+                        orderProductsCommission.order_product.order.id,
+                        orderProductsCommission.amount,
+                        orderProductsCommission.is_food
+                    ])
+                
 
     array = []
-    for field in sales_list:
-        product_jan = ProductJancode.objects.filter(pk=field.order_product.product_jan_code_id).first()
-        if product_jan:
-            j_product = get_jan_products(product_jan)
-            productImage = ProductImage.objects.filter(product_id=j_product.id, is_hidden=False)\
-                .order_by('image_no').exclude(image_no__isnull=True).first()
+    for orderId in orderIds:
+        tmpSale = []
+        for sale in tmpSaleProducts:
+            if orderId == sale.order_product.order.id:
+                tmpSale = sale
+        if tmpSale:
+            ttlCommission = 0
+            for tmpCommission in tmpCommissionProducts:
+                if tmpCommission[0] == orderId:
+                    if (tmpCommission[2]): # food
+                        ttlCommission += int(tmpCommission[1]) + int(float(tmpCommission[1]) * float(reducedTaxRate))
+                    else: # non food
+                        ttlCommission += int(tmpCommission[1]) + int(float(tmpCommission[1]) * float(taxRate))
+            
+            if not ttlCommission:
+                ttlCommission = 0
+            product_id = None
+            product_name = ""
             image_path = ''
-            if productImage:
-                image_path = productImage.image.image.url
+            if tmpSale.order_product.product_jan_code.horizontal:
+                product_id = tmpSale.order_product.product_jan_code.horizontal.product_variety.product.id
+                product_name = tmpSale.order_product.product_jan_code.horizontal.product_variety.product.name
+            elif tmpSale.order_product.product_jan_code.vertical:
+                product_id = tmpSale.order_product.product_jan_code.vertical.product_variety.product.id
+                product_name = tmpSale.order_product.product_jan_code.vertical.product_variety.product.name
+            if product_id:
+                productImage = ProductImage.objects.filter(product_id=product_id, is_hidden=False)\
+                    .order_by('image_no').exclude(image_no__isnull=True).first()
+                if productImage:
+                    image_path = productImage.image.image.url
             data = {
-                "id": str(field.id),
-                "date": field.order_product.order.order_date.strftime("%Y-%m-%d"),
+                "id": str(orderId),
+                "date": tmpSale.order_product.order.order_date.strftime("%Y-%m-%d"),
                 "image_path": image_path,
-                "name": j_product.name,
-                "amount": field.amount
+                "name": product_name,
+                "amount": int(tmpSale.order_product.order.amount) + int(tmpSale.order_product.order.tax),
+                "fee": int(ttlCommission),
+                "shipping": int(tmpSale.order_product.order.shipping_fee) if tmpSale.order_product.order.shipping_fee else 0,
+                "total_amount": int(int(tmpSale.order_product.order.amount) + int(tmpSale.order_product.order.tax) + int(tmpSale.order_product.order.shipping_fee) - int(ttlCommission))
             }
             array.append(data)
 

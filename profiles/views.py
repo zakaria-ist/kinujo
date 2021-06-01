@@ -917,7 +917,7 @@ def get_data(request, year, month):
             sales_list = UserSale.objects.filter(is_hidden=False,
                                     user__authority_id=auth_type,
                                     year=year, month=month)\
-                    .aggregate(sale_amount=Coalesce(Sum('sales_amount'), Value(0)))
+                    .aggregate(sale_amount=Coalesce(Sum('total_amount'), Value(0)))
             commission_list = UserCommision.objects.filter(is_hidden=False,
                                     user__authority_id=auth_type,
                                     year=year, month=month)\
@@ -926,7 +926,7 @@ def get_data(request, year, month):
             sales_list = UserSale.objects.filter(is_hidden=False,
                                     user_id=profile_id,
                                     year=year, month=month)\
-                    .aggregate(sale_amount=Coalesce(Sum('sales_amount'), Value(0)))
+                    .aggregate(sale_amount=Coalesce(Sum('total_amount'), Value(0)))
             commission_list = UserCommision.objects.filter(is_hidden=False,
                                     user_id=profile_id,
                                     year=year, month=month)\

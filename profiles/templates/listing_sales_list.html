@@ -151,7 +151,25 @@
                     "orderable": false,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        return comma_format(row.amount, 0) + JPCUR;
+                        var amount = comma_format(row.amount, 0) + JPCUR;
+                        var fee = "-" + comma_format(row.fee, 0) + JPCUR;
+                        return "<p>" + amount + "</br>" + fee + "</p>";
+                    }
+                },
+                {
+                    "sClass": "text-center",
+                    "orderable": false,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return comma_format(row.shipping, 0) + JPCUR;
+                    }
+                },
+                {
+                    "sClass": "text-center",
+                    "orderable": false,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return comma_format(row.total_amount, 0) + JPCUR;
                     }
                 },
             ]

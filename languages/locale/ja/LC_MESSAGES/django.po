@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-24 06:12+0000\n"
+"POT-Creation-Date: 2021-06-01 09:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -139,11 +139,11 @@ msgstr "問い合わせ番号"
 #: products/templates/product_form.html:519
 #: products/templates/product_form.html:623
 #: products/templates/product_form.html:718
-#: products/templates/product_form.html:1460
+#: products/templates/product_form.html:1464
 #: profiles/templates/account_info_tab.html:89
 #: profiles/templates/basic_info_tab.html:237
 #: profiles/templates/item_form.html:492 profiles/templates/item_form.html:582
-#: profiles/templates/item_form.html:663 profiles/templates/item_form.html:1398
+#: profiles/templates/item_form.html:663 profiles/templates/item_form.html:1401
 #: profiles/templates/salon_form.html:81
 #: profiles/templates/shipping_form.html:85
 msgid "Save"
@@ -246,7 +246,7 @@ msgstr "いいえ"
 msgid "Yes"
 msgstr "はい"
 
-#: orders/views.py:76 orders/views.py:158
+#: orders/views.py:78 orders/views.py:163
 msgid "Zip:"
 msgstr "〒"
 
@@ -450,9 +450,9 @@ msgstr ""
 #: products/templates/product_form.html:532
 #: products/templates/product_form.html:544
 #: products/templates/product_form.html:556
-#: products/templates/product_form.html:1459
+#: products/templates/product_form.html:1463
 #: profiles/templates/item_form.html:506 profiles/templates/item_form.html:518
-#: profiles/templates/item_form.html:530 profiles/templates/item_form.html:1397
+#: profiles/templates/item_form.html:530 profiles/templates/item_form.html:1400
 msgid "Go back"
 msgstr "キャンセル"
 
@@ -495,21 +495,30 @@ msgid "Color, Size, etc"
 msgstr "カラー・サイズ等"
 
 #: products/templates/product_form.html:584
+#: products/templates/product_form.html:595
 #: products/templates/product_form.html:657
 #: products/templates/product_form.html:689
-#: profiles/templates/item_form.html:556 profiles/templates/item_form.html:616
-#: profiles/templates/item_form.html:641
+#: products/templates/product_form.html:739
+#: profiles/templates/item_form.html:556 profiles/templates/item_form.html:565
+#: profiles/templates/item_form.html:616 profiles/templates/item_form.html:641
+#: profiles/templates/item_form.html:677
 msgid "Choices"
 msgstr "選択肢"
 
 #: products/templates/product_form.html:585
-#: profiles/templates/item_form.html:557
+#: products/templates/product_form.html:596
+#: products/templates/product_form.html:740
+#: profiles/templates/item_form.html:557 profiles/templates/item_form.html:566
+#: profiles/templates/item_form.html:678
 msgid "JAN Code"
 msgstr "JANコード"
 
 #: products/templates/product_form.html:586
+#: products/templates/product_form.html:597
+#: products/templates/product_form.html:741
 #: products/templates/product_list.html:71
-#: profiles/templates/item_form.html:558
+#: profiles/templates/item_form.html:558 profiles/templates/item_form.html:567
+#: profiles/templates/item_form.html:679
 #: profiles/templates/item_info_tab.html:27
 msgid "Stock"
 msgstr "在庫"
@@ -546,12 +555,12 @@ msgstr "項目名"
 msgid "Vertical axis"
 msgstr "縦軸"
 
-#: products/templates/product_form.html:1488
-#: products/templates/product_form.html:1664
-#: products/templates/product_form.html:1680
-#: profiles/templates/item_form.html:1427
-#: profiles/templates/item_form.html:1601
-#: profiles/templates/item_form.html:1617
+#: products/templates/product_form.html:1492
+#: products/templates/product_form.html:1668
+#: products/templates/product_form.html:1684
+#: profiles/templates/item_form.html:1430
+#: profiles/templates/item_form.html:1604
+#: profiles/templates/item_form.html:1620
 msgid "This field is required"
 msgstr "この項目は必須です"
 
@@ -792,6 +801,16 @@ msgstr "出品売上"
 
 #: profiles/templates/item_sale_info_tab.html:16
 #: profiles/templates/sales_info_tab.html:16
+msgid "Price/Fee"
+msgstr "代金/手数料"
+
+#: profiles/templates/item_sale_info_tab.html:17
+#: profiles/templates/sales_info_tab.html:17
+msgid "Shipping"
+msgstr "送料"
+
+#: profiles/templates/item_sale_info_tab.html:18
+#: profiles/templates/sales_info_tab.html:18
 msgid "Sales Amount"
 msgstr "出品売上額"
 
@@ -1060,42 +1079,41 @@ msgstr "管理システム"
 msgid "I forgot the password"
 msgstr "パスワードを忘れた方はこちら"
 
-#: templates/password-reset.html:54
+#: templates/password-reset.html:55
 msgid "We will send you an authorization code."
 msgstr "認証コードを送付します。"
 
-#: templates/password-reset.html:55
+#: templates/password-reset.html:56
 msgid "Please enter your phone number and press send."
 msgstr "電話番号を入力して送信を押してください。"
 
-#: templates/password-reset.html:70
+#: templates/password-reset.html:71
 msgid "cell phone number"
 msgstr "携帯電話番号"
 
-#: templates/password-reset.html:75
+#: templates/password-reset.html:76
 msgid "Send"
 msgstr "送信"
 
-#: templates/password-reset.html:78
-msgid "until resendable"
-msgstr "再送信可能まで"
-
-#: templates/password-reset.html:81
+#: templates/password-reset.html:86
 msgid "Please enter the verification code"
 msgstr "認証コードを入力してください"
 
-#: templates/password-reset.html:85
+#: templates/password-reset.html:90
 msgid "New password setting"
 msgstr "新しいパスワード設定"
 
-#: templates/password-reset.html:87
+#: templates/password-reset.html:92
 msgid "new password"
 msgstr "新しいパスワード"
 
-#: templates/password-reset.html:90
+#: templates/password-reset.html:95
 msgid "New password (re-enter)"
 msgstr "新しいパスワード(再入力)"
 
-#: templates/password-reset.html:93
+#: templates/password-reset.html:98
 msgid "Change the password"
 msgstr "パスワードを変更する"
+
+#~ msgid "until resendable"
+#~ msgstr "再送信可能まで"
