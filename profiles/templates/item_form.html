@@ -127,9 +127,9 @@
        #one-variant-title-row:first-child, #one-variant-info-row:first-child {
           font-weight: bold;
        }
-       #scrollable {
+       {% comment %} #scrollable {
           overflow: scroll;
-        }
+        } {% endcomment %}
       #variety-table-two {
         overflow: scroll;
         width: 100%;
@@ -1528,7 +1528,7 @@
         
 
       //make sure it's scroll able
-      document.getElementById("scrollable").style.overflow= 'scroll';
+      //document.getElementById("scrollable").style.overflow= 'scroll';
 
       //reset modal form
       document.getElementById('oneItemGroup').innerHTML = `

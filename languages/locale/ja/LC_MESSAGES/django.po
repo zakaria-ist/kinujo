@@ -852,7 +852,7 @@ msgstr "支払管理"
 
 #: profiles/templates/payment_list.html:42
 msgid "Special"
-msgstr ""
+msgstr "スペシャル"
 
 #: profiles/templates/payment_list.html:44
 #: profiles/templates/profile_list.html:45
