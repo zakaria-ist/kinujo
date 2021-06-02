@@ -109,7 +109,16 @@ def OrderList__asJson(request):
     records_total = order_list.count()
 
     if search:  # Filter data base on search
-        order_list = order_list.filter(Q(id__icontains=search)|Q(name__icontains=search)).order_by('-name')
+        try:
+            if str(search).isdigit():
+                order_list = order_list.filter(
+                    Q(id__icontains=search) | Q(name__icontains=search)).order_by('-name')
+            else:
+                order_list = order_list.filter(
+                    Q(name__icontains=search)).order_by('-name')
+        except:
+            order_list = order_list.filter(
+                Q(name__icontains=search)).order_by('-name')
 
     # All data
     records_filtered = order_list.count()
