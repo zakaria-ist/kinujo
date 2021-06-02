@@ -93,6 +93,8 @@ def reset_password(request):
                     user = authenticate(username=username, password=password)
                     if user is not None:
                         login(request, user)
+                        request.session['login_profile_id'] = profile.id
+                        request.session['login_authority_id'] = profile.authority_id
                         request.session['login_type'] = 'SELLER'
                         return HttpResponsePermanentRedirect(reverse('home_load'))
                     else:
