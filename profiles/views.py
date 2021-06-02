@@ -67,13 +67,14 @@ def pass_reset(request):
 
     default_code = CountryCode.objects.filter(is_hidden=False, tel_code='+81').first().id
     tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
-    return render(request, 'password-reset.html', {'tel_code_list': tel_code_list, 'default_code': default_code})
+    return render(request, 'password-reset.html', {'state': "", 'tel_code_list': tel_code_list, 'default_code': default_code})
 
 def reset_password(request):
     """
     Method to update new password.
     """
 
+    state = ""
     if request.method == 'POST':
         try:
             username = request.POST.get('user_phone')
@@ -94,10 +95,19 @@ def reset_password(request):
                         login(request, user)
                         request.session['login_type'] = 'SELLER'
                         return HttpResponsePermanentRedirect(reverse('home_load'))
+                    else:
+                        state = "User does not a Exixts"
+                else:
+                    state = "Password is empty"
+            else:
+                state = "User does not a Exixts"
         except Exception as e:
+            state = repr(e)
             print(e)
 
-    return render(request, 'password-reset.html')
+    default_code = CountryCode.objects.filter(is_hidden=False, tel_code='+81').first().id
+    tel_code_list = CountryCode.objects.filter(is_hidden=False).values('id', 'name', 'tel_code')
+    return render(request, 'password-reset.html', {'state': state, 'tel_code_list': tel_code_list, 'default_code': default_code})
 
 
 def login_master(request):
