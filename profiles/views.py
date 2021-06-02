@@ -96,11 +96,11 @@ def reset_password(request):
                         request.session['login_type'] = 'SELLER'
                         return HttpResponsePermanentRedirect(reverse('home_load'))
                     else:
-                        state = "User does not a Exixts"
+                        state = "User does not a Exists"
                 else:
                     state = "Password is empty"
             else:
-                state = "User does not a Exixts"
+                state = "User does not a Exists"
         except Exception as e:
             state = repr(e)
             print(e)
