@@ -294,7 +294,8 @@ def ClientList__asJson(request):
     records_total = profile_list.count()
 
     if search:  # Filter data base on search
-        profile_list = profile_list.filter(Q(real_name__icontains=search) | Q(created__icontains=search)).order_by('-real_name')
+        profile_list = profile_list.filter(Q(real_name__icontains=search) | Q(
+            nickname__icontains=search)).order_by('-real_name')
 
     # All data
     records_filtered = profile_list.count()
@@ -320,7 +321,7 @@ def ClientList__asJson(request):
         data = {"no": str(i),
                 "id": str(field.id),
                 "type": field.authority.name,
-                "real_name": field.real_name,
+                "real_name": field.real_name + '(' + field.nickname + ')',
                 "created": field.created.strftime("%Y-%m-%d")
                 }
         array.append(data)
