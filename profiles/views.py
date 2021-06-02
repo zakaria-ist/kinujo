@@ -90,19 +90,19 @@ def reset_password(request):
                         profile.password = password
                         profile.save()
 
-                    user = authenticate(username=username, password=password)
-                    if user is not None:
-                        login(request, user)
-                        request.session['login_profile_id'] = profile.id
-                        request.session['login_authority_id'] = profile.authority_id
-                        request.session['login_type'] = 'SELLER'
-                        return HttpResponsePermanentRedirect(reverse('home_load'))
+                        user = authenticate(username=username, password=password)
+                        if user is not None:
+                            login(request, user)
+                            request.session['login_profile_id'] = profile.id
+                            request.session['login_authority_id'] = profile.authority_id
+                            request.session['login_type'] = 'SELLER'
+                            return HttpResponsePermanentRedirect(reverse('home_load'))
                     else:
-                        state = "User does not a Exists"
+                        state = "Profile User does not a Exists or inactive"
                 else:
                     state = "Password is empty"
             else:
-                state = "User does not a Exists"
+                state = "Auth User does not a Exists"
         except Exception as e:
             state = repr(e)
             print(e)
