@@ -77,7 +77,7 @@ def reset_password(request):
     state = ""
     if request.method == 'POST':
         try:
-            username = request.POST.get('user_phone')
+            username = request.POST.get('tel_phone')
             password = request.POST.get('new_pass')
             user = User.objects.filter(username=username).first()
             if user:
