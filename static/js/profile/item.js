@@ -495,7 +495,7 @@ function prepareVarientOneTable(json){
 
     }
     //make sure it's scroll able
-    document.getElementById("scrollable").style.overflow= 'scroll';
+    //document.getElementById("scrollable").style.overflow= 'scroll';
 
     //change add item button
     document.getElementById('variety-content').innerHTML = `<div class="col-md-12"><button id="one-item-btn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#oneItemVariant" onclick="changeModalOne();">+ Item / Option</button></div>`;
