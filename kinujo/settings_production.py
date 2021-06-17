@@ -27,27 +27,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["testserver", 'app.kinujo.jp', 'kinujo-rds.c6vjpibetgki.ap-northeast-1.rds.amazonaws.com']
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'kinujo_db',
-#         'USER': 'kinujo',
-#         'PASSWORD': '*EP`Yj9!LN>,}e}.',
-#         'HOST': 'kinujo-rds.c6vjpibetgki.ap-northeast-1.rds.amazonaws.com',
-#         'PORT': '3306',
-#         'OPTIONS': {
-#             'charset': 'utf8mb4',
-#             'init_command': 'set collation_connection=utf8mb4_unicode_ci',
-#         },
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'kinujo_release_db',
-        'USER': 'kinujo_release',
-        'PASSWORD': 'Pa55w0rd',
-        'HOST': 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com',
+        'NAME': 'kinujo_db',
+        'USER': 'kinujo',
+        'PASSWORD': '*EP`Yj9!LN>,}e}.',
+        'HOST': 'kinujo-rds.c6vjpibetgki.ap-northeast-1.rds.amazonaws.com',
         'PORT': '3306',
         'OPTIONS': {
             'charset': 'utf8mb4',
@@ -55,6 +41,20 @@ DATABASES = {
         },
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'kinujo_release_db',
+#         'USER': 'kinujo_release',
+#         'PASSWORD': 'Pa55w0rd',
+#         'HOST': 'demo.cl91mjsmzfrn.ap-southeast-1.rds.amazonaws.com',
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'charset': 'utf8mb4',
+#             'init_command': 'set collation_connection=utf8mb4_unicode_ci',
+#         },
+#     }
+# }
 
 # Application definition
 
