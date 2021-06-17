@@ -92,9 +92,9 @@
                         <span class="username">{{ user.first_name }}{% if user.last_name %}[{{user.last_name}}]{% endif %}</span>
                         <b class="caret"></b>
                     </a>
-                    <ul class="dropdown-menu extended logout">
-                        <li><a href="{% url 'pass_reset' %}" class="fa fa-key">  {% trans "Change Password" %}</a></li>
-                        <li><a href="{% url 'logout_user' %}" class="fa fa-key">  {% trans 'Log Out' %}</a></li>
+                    <ul class="dropdown-menu dropdown-menu-login">
+                        <li style="width: 100%; padding-left: 5%;"><a href="{% url 'pass_reset' %}" class="">  {% trans "Change Password" %}</a></li>
+                        <li style="width: 100%; padding-left: 5%;"><a href="{% url 'logout_user' %}" class="">  {% trans 'Log Out' %}</a></li>
                     </ul>
                 </li>
                 <!-- user login dropdown end -->
