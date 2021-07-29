@@ -700,7 +700,7 @@ msgstr "パスワードを認証する"
 #: profiles/templates/basic_info_tab.html:150
 msgid "If the password is blank it will not be changed"
 msgstr ""
-"新規登録画面には「パスワードは空欄の場合は変更されません」を表示しない。"
+"空欄の場合はパスワードは変更されません"
 
 #: profiles/templates/basic_info_tab.html:151
 msgid "Password does not match"
