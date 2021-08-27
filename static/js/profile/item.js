@@ -871,7 +871,8 @@ function saveProductInfo() {
 }
 
 function cancelProductForm() {
-    $('#salon_info_tab').html('');
+    last_varieties = [];
+    $('#item_info_tab').html('');
     $.get("/profiles/templates/product_list_page/", function(data){
         $('#item_tab').html(data);
         loadItemTableData();
