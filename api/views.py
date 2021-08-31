@@ -30,7 +30,7 @@ from images.models import Image
 from rest_framework import filters
 from prefectures.models import Prefecture, CountryCode
 from products.models import ProductCategory, Product, ProductImage, ProductVariety, ProductVarietySelection, ProductJancode
-from profiles.models import FinancialAccount, Authority, Profile, UserSale, UserCommision, MonthlyPayment, Address
+from profiles.models import FinancialAccount, Authority, Profile, UserSale, UserCommision, MonthlyPayment, Address, ErrorLogs
 from taxes.models import TaxRate
 from orders.views import if_kinujo_product
 from utilities.constants import AUTHORITY_TYPE
@@ -267,6 +267,27 @@ class AllUserImages(APIView):
                 'image': profile['image']['image'] if profile['image'] and profile['image']['image'] else ""
             })
         return Response({"success" : False, "users": users}, status=status.HTTP_200_OK)
+
+
+class SMSErrorLogs(APIView):
+    def post(self, request, format='json'):
+        try:
+            errorItem = request.data
+
+            errorLogs = ErrorLogs()
+            errorLogs.phone_number = errorItem['phone_number']
+            errorLogs.carrier_name = errorItem['carrier_name']
+            errorLogs.brand_name = errorItem['brand_name']
+            errorLogs.device_id = errorItem['device_id']
+            errorLogs.os_version = errorItem['os_version']
+            errorLogs.errors = errorItem['errors']
+            errorLogs.user_id = errorItem['user_id']
+            errorLogs.save()
+
+            return Response({"success": True, "data": {}}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"success": False, "error": str(e)}, status=status.HTTP_200_OK)
+
 
 class UserRegister(APIView):
     def post(self, request, format='json'):

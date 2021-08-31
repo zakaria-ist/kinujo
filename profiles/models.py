@@ -141,7 +141,7 @@ class ErrorLogs(models.Model):
     device_id = models.CharField(max_length=128, default='', blank=True)
     os_version = models.CharField(max_length=128, default='', blank=True)
     errors = models.CharField(max_length=1024, default='', blank=True)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
 
     is_hidden = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
