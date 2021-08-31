@@ -135,10 +135,11 @@ class Address(models.Model):
 
 
 class ErrorLogs(models.Model):
+    phone_number = models.CharField(max_length=128, default='', blank=True)
     carrier_name = models.CharField(max_length=128, default='', blank=True)
-    brand_name = models.CharField(max_length=128, default='', blank=True) #let brand = DeviceInfo.getBrand();
-    device_id = models.CharField(max_length=128, default='', blank=True) #let deviceId = DeviceInfo.getDeviceId();
-    os_version = models.CharField(max_length=128, default='', blank=True) #let systemVersion = DeviceInfo.getSystemVersion(); + Platform
+    brand_name = models.CharField(max_length=128, default='', blank=True)
+    device_id = models.CharField(max_length=128, default='', blank=True)
+    os_version = models.CharField(max_length=128, default='', blank=True)
     errors = models.CharField(max_length=1024, default='', blank=True)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
