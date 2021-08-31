@@ -132,3 +132,16 @@ class Address(models.Model):
     is_hidden = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now_add=True)
+
+
+class ErrorLogs(models.Model):
+    carrier_name = models.CharField(max_length=128, default='', blank=True)
+    brand_name = models.CharField(max_length=128, default='', blank=True) #let brand = DeviceInfo.getBrand();
+    device_id = models.CharField(max_length=128, default='', blank=True) #let deviceId = DeviceInfo.getDeviceId();
+    os_version = models.CharField(max_length=128, default='', blank=True) #let systemVersion = DeviceInfo.getSystemVersion(); + Platform
+    errors = models.CharField(max_length=1024, default='', blank=True)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+    is_hidden = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
