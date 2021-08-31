@@ -65,5 +65,6 @@ urlpatterns = [
     url('^financial-account/(?P<userId>.+)/$', views.FinancialAccountGet.as_view()),
     url('^pay/(?P<userId>.+)/$', views.Pay.as_view()),
     url(r'^change-language/$', views.change_language, name='change_language'),
+    url(r'sms/errors/logs', views.SMSErrorLogs.as_view(), name='sms-errors-log'),
 ]
 urlpatterns += router.urls
