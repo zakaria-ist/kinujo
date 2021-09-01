@@ -281,6 +281,7 @@ class SMSErrorLogs(APIView):
             errorLogs.device_id = errorItem['device_id']
             errorLogs.os_version = errorItem['os_version']
             errorLogs.errors = errorItem['errors']
+            errorLogs.status = errorItem['status']
             errorLogs.user_id = errorItem['user_id']
             errorLogs.save()
 
