@@ -283,6 +283,8 @@ class SMSErrorLogs(APIView):
             errorLogs.errors = errorItem['errors']
             errorLogs.user_id = errorItem['user_id']
             errorLogs.save()
+            errorLogs.status = errorItem['status']
+            errorLogs.save()
 
             return Response({"success": True, "data": {}}, status=status.HTTP_201_CREATED)
         except Exception as e:
