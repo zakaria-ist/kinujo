@@ -55,6 +55,9 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 class ImageViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows images to be viewed or edited.
+    """
     queryset = Image.objects.filter(is_hidden=0)
     serializer_class = ImageSerializer
 
@@ -244,6 +247,9 @@ class TaxRateViewSet(viewsets.ModelViewSet):
     serializer_class = TaxRateSerializer
 
 class UserImages(APIView):
+    """
+    API endpoint to get a profile image.
+    """
     def post(self, request, format='json'):
         profiles = Profile.objects.filter(id__in=request.data['users'], is_hidden=False)
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
@@ -256,6 +262,9 @@ class UserImages(APIView):
         return Response({"success" : False, "images": images}, status=status.HTTP_200_OK)
 
 class AllUserImages(APIView):
+    """
+    API endpoint to get all profiles images.
+    """
     def post(self, request, format='json'):
         profiles = Profile.objects.filter(is_hidden=False)
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
@@ -270,6 +279,9 @@ class AllUserImages(APIView):
 
 
 class SMSErrorLogs(APIView):
+    """
+    API endpoint to store firebase authentication error logs.
+    """
     def post(self, request, format='json'):
         try:
             errorItem = request.data
@@ -292,6 +304,9 @@ class SMSErrorLogs(APIView):
 
 
 class UserRegister(APIView):
+    """
+    API endpoint to register a user profile.
+    """
     def post(self, request, format='json'):
         try:
             userItem = request.data
@@ -370,6 +385,9 @@ class UserRegister(APIView):
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
 class CheckRegister(APIView):
+    """
+    API endpoint to check if an user is registered or not.
+    """
     def post(self, request, format='json'):
         userSerializer = UserSerializer(data=request.data, context=getContext())
         if userSerializer.is_valid():
@@ -383,6 +401,9 @@ class CheckRegister(APIView):
             return Response({"success" : False, "errors" : userSerializer.errors}, status=status.HTTP_200_OK)
 
 class UserLogin(APIView):
+    """
+    API endpoint to login an user profile.
+    """
     def post(self, request, format='json'):
         user = None
         try:
@@ -423,6 +444,9 @@ class UserLogin(APIView):
             return Response({"success" : False, "error" : "Account Not Exists"}, status=status.HTTP_200_OK)
 
 class PasswordReset(APIView):
+    """
+    API endpoint to reset password of an user profile.
+    """
     def post(self, request, format='json'):
         profile = None
         try:
@@ -465,6 +489,9 @@ class PasswordReset(APIView):
             return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
 
 class ChangeEmail(APIView):
+    """
+    API endpoint to change email of an user profile.
+    """
     def post(self, request, format='json'):
         profile = None
         try:
@@ -497,6 +524,9 @@ class ChangeEmail(APIView):
             return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
 
 class GetEmail(APIView):
+    """
+    API endpoint to get email of an user profile.
+    """
     def post(self, request, format='json'):
         profile = None
         try:
@@ -511,6 +541,9 @@ class GetEmail(APIView):
             return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
 
 class SendEmail(APIView):
+    """
+    API endpoint to test email send feature.
+    """
     def post(self, request, format='json'):
         profile = None
         try:
@@ -547,6 +580,9 @@ class SendEmail(APIView):
 
 
 class ChangePhone(APIView):
+    """
+    API endpoint to change phone of an user profile.
+    """
     def post(self, request, format='json'):
         profile = None
         try:
@@ -580,6 +616,9 @@ class ChangePhone(APIView):
             return Response({"success" : False, "error" : "account_not_exists"}, status=status.HTTP_200_OK)
 
 class CheckPhone(APIView):
+    """
+    API endpoint to check if a phone is already registered to an user profile.
+    """
     def post(self, request, format='json'):
         profile = None
         try:
@@ -597,6 +636,9 @@ class AppConfig(APIView):
         return Response({"success" : True}, status=status.HTTP_200_OK)
 
 class ProductList(APIView):
+    """
+    API endpoint to get product list.
+    """
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
@@ -611,6 +653,9 @@ class ProductList(APIView):
         return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
 
 class OrderList(APIView):
+    """
+    API endpoint to get order list.
+    """
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
@@ -623,6 +668,9 @@ class OrderList(APIView):
         return Response({"success" : True, "orders" : updateOrders}, status=status.HTTP_200_OK)
 
 class OrderProductList(APIView):
+    """
+    API endpoint to get product list of the order purchaser.
+    """
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
@@ -638,6 +686,9 @@ class OrderProductList(APIView):
         return Response({"success" : True, "orderProducts" : orderProductSerializer.data}, status=status.HTTP_200_OK)
 
 class SaleProductList(APIView):
+    """
+    API endpoint to get product list of the order seller.
+    """
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
@@ -652,6 +703,9 @@ class SaleProductList(APIView):
         return Response({"success" : True, "saleProducts" : orderProductSerializer.data}, status=status.HTTP_200_OK)
 
 class CommissionProductList(APIView):
+    """
+    API endpoint to get user commission list.
+    """
     serializer_class = ProductSerializer
 
     def get(self, request, userId, year, month, format='json'):
@@ -696,6 +750,9 @@ class CommissionProductList(APIView):
                             status=status.HTTP_200_OK)
 
 class AddressList(APIView):
+    """
+    API endpoint to get user address list.
+    """
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
@@ -708,6 +765,9 @@ class AddressList(APIView):
         return Response({"success" : True, "addresses" : updatedAddress}, status=status.HTTP_200_OK)
 
 class CustomerList(APIView):
+    """
+    API endpoint to get intruducer list of an user.
+    """
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
@@ -716,6 +776,9 @@ class CustomerList(APIView):
         return Response({"success" : True, "customers" : profileSerializer.data}, status=status.HTTP_200_OK)
 
 class FinancialAccountGet(APIView):
+    """
+    API endpoint to get Finantial account of an user.
+    """
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
@@ -728,6 +791,9 @@ class FinancialAccountGet(APIView):
         return Response({"success" : True, "financialAccount" : financialAccountSerialier.data}, status=status.HTTP_200_OK)
 
 class ProductByIds(APIView):
+    """
+    API endpoint to get product info by product id.
+    """
     serializer_class = ProductSerializer
 
     def get(self, request, format='json'):
@@ -736,6 +802,9 @@ class ProductByIds(APIView):
         return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
 
 class UserByIds(APIView):
+    """
+    API endpoint to get users info by user ids.
+    """
     serializer_class = ProductSerializer
 
     def get(self, request, format='json'):
@@ -771,6 +840,9 @@ class UserByIds(APIView):
 
 
 def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fee, remaining_amount, seller):
+    """
+    Function to calculate user commission.
+    """
     try:
         tax_rate = TaxRate.objects.filter(is_hidden=False, is_enable=True, end_date__isnull=True).last().tax_rate
     except:
@@ -893,6 +965,9 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
     return ''
 
 def updateUserCommission(introducer, amount, tax):
+    """
+    Function to update user commission info.
+    """
     today_date = date.today()
     year = today_date.year
     month = today_date.month
@@ -947,6 +1022,9 @@ def updateUserCommission(introducer, amount, tax):
 
 
 def updateUserSales(seller, seller_amount, tax, shipping_fee):
+    """
+    Function to update user sales info.
+    """
     today_date = date.today()
     year = today_date.year
     month = today_date.month
@@ -1043,6 +1121,9 @@ class OrderReceipt(APIView):
         return Response({"success" : True}, status=status.HTTP_200_OK)
 
 class Pay(APIView):
+    """
+    API endpoint to save order and payment info to db and send email notification to seller.
+    """
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
         userEmail = ""
@@ -1305,6 +1386,9 @@ class Pay(APIView):
                 return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
 class UpdateProfileImage(APIView):
+    """
+    API endpoint to get update profile image.
+    """
     def post(self, request, userId, format='json'):
         profile = Profile.objects.get(id=userId, is_hidden=False)
         image = Image.objects.get(id=request.data['image_id'])
@@ -1316,6 +1400,9 @@ class UpdateProfileImage(APIView):
         return Response({"success" : True}, status=status.HTTP_200_OK)
 
 class CreateProduct(APIView):
+    """
+    API endpoint to create a new product.
+    """
     def post(self, request, userId, format='json'):
         try:
             if request.data['draft'] != 1:
@@ -1579,6 +1666,9 @@ class CreateProduct(APIView):
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
 
 class GetProductByVariety(APIView):
+    """
+    API endpoint to get a product variety ingo.
+    """
     def get(self, request, format='json'):
         product = Product.objects.get(id=request.GET['productId'], is_hidden=False)
         productSerializer = ProductSerializer(product, context=getContext())
@@ -1606,6 +1696,9 @@ class GetProductByVariety(APIView):
 
 
 class EditProduct(APIView):
+    """
+    API endpoint to edit/update a new product.
+    """
     def post(self, request, userId, format='json'):
         try:
             if request.data['draft'] != 1:
