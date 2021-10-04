@@ -7,6 +7,7 @@ from utilities.constants import PRODUCT_VARIETY, TARGET_TYPE
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=255)
+    name_en = models.CharField(max_length=255, default='')
 
     is_hidden = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
