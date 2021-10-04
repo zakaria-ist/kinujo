@@ -24,7 +24,7 @@ def getContext():
 class CountryCodeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CountryCode
-        fields = ['name', 'code', 'tel_code', 'is_hidden', 'created', 'modified']
+        fields = ['name', 'name_jp', 'code', 'tel_code', 'is_hidden', 'created', 'modified']
 
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
