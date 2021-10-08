@@ -443,7 +443,6 @@ class UserLogin(APIView):
     API endpoint to login an user profile.
     """
     def post(self, request, format='json'):
-        print(request.data)
         user = None
         try:
             user = User.objects.get(username = request.data['tel'])

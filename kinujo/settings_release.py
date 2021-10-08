@@ -78,8 +78,9 @@ REST_FRAMEWORK = {
     'NON_FIELD_ERRORS_KEY': 'detail',
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
+
 JWT_AUTH = {
-    'JWT_ALLOW_REFRESH ' : True,
+    'JWT_ALLOW_REFRESH' : True,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=365),
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=365),
 }
