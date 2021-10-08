@@ -1,3 +1,4 @@
+import datetime
 import requests
 import json
 import stripe
@@ -341,7 +342,6 @@ class UserRegister(APIView):
     """
     API endpoint to register a user profile.
     """
-    permission_classes = (IsAuthenticated,)
     def post(self, request, format='json'):
         try:
             userItem = request.data
