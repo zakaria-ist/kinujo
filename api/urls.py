@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from . import views
 from rest_framework import routers
+from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token, obtain_jwt_token
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
@@ -66,5 +67,8 @@ urlpatterns = [
     url('^pay/(?P<userId>.+)/$', views.Pay.as_view()),
     url(r'^change-language/$', views.change_language, name='change_language'),
     url(r'sms/errors/logs', views.SMSErrorLogs.as_view(), name='sms-errors-log'),
+    url(r'token-refresh/', refresh_jwt_token),
+    url(r'token-verify/', verify_jwt_token),
+    url(r'token-auth/', obtain_jwt_token),
 ]
 urlpatterns += router.urls

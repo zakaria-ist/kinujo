@@ -1,3 +1,4 @@
+import datetime
 import requests
 import json
 import stripe
@@ -34,6 +35,11 @@ from profiles.models import FinancialAccount, Authority, Profile, UserSale, User
 from taxes.models import TaxRate
 from orders.views import if_kinujo_product
 from utilities.constants import AUTHORITY_TYPE
+from rest_framework_jwt.settings import api_settings
+from rest_framework.permissions import IsAuthenticated
+
+jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 def getContext():
     factory = APIRequestFactory()
@@ -51,6 +57,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
 
@@ -58,6 +65,7 @@ class ImageViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows images to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = Image.objects.filter(is_hidden=0)
     serializer_class = ImageSerializer
 
@@ -65,6 +73,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
@@ -72,6 +81,7 @@ class CountryCodeViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = CountryCode.objects.filter(is_hidden=0)
     serializer_class = CountryCodeSerializer
 
@@ -79,6 +89,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = Order.objects.filter(is_hidden=0)
     serializer_class = OrderSerializer
 
@@ -86,6 +97,7 @@ class OrderProductViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = OrderProduct.objects.filter(is_hidden=0)
     serializer_class = OrderProductSerializer
 
@@ -93,6 +105,7 @@ class OrderProductCommissionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = OrderProductCommission.objects.filter(is_hidden=0)
     serializer_class = OrderProductCommissionSerializer
 
@@ -100,6 +113,7 @@ class OrderReceiptViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = OrderReceipt.objects.filter(is_hidden=0)
     serializer_class = OrderReceiptSerializer
 
@@ -107,6 +121,7 @@ class TotalSaleViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = TotalSale.objects.filter(is_hidden=0)
     serializer_class = TotalSaleSerializer
 
@@ -114,6 +129,7 @@ class TotalCommissionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = TotalCommission.objects.filter(is_hidden=0)
     serializer_class = TotalCommissionSerializer
 
@@ -135,6 +151,7 @@ class ProductCategoryViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = ProductCategory.objects.filter(is_hidden=0)
     serializer_class = ProductCategorySerializer
 
@@ -142,6 +159,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = Product.objects.filter(is_hidden=0)
     serializer_class = ProductSerializer
 
@@ -149,6 +167,7 @@ class SimpleProductViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = Product.objects.filter(is_hidden=0)
     serializer_class = SimpleProductSerializer
 
@@ -156,6 +175,7 @@ class ProductImageViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = ProductImage.objects.filter(is_hidden=0)
     serializer_class = ProductImageSerializer
 
@@ -163,6 +183,7 @@ class ProductVarietyViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = ProductVariety.objects.filter(is_hidden=0)
     serializer_class = ProductVarietySerializer
 
@@ -170,6 +191,7 @@ class ProductVarietySelectionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = ProductVarietySelection.objects.filter(is_hidden=0)
     serializer_class = ProductVarietySelectionSerializer
 
@@ -177,6 +199,7 @@ class ProductJancodeViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = ProductJancode.objects.filter(is_hidden=0)
     serializer_class = ProductJancodeSerializer
 
@@ -184,6 +207,7 @@ class AuthorityViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = Authority.objects.filter(is_hidden=0)
     serializer_class = AuthoritySerializer
 
@@ -191,6 +215,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = Profile.objects.filter(is_hidden=0)
     # search_fields = ['nickname', 'user_code']
     search_fields = ['=user_code']
@@ -201,6 +226,7 @@ class FinancialAccountViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = FinancialAccount.objects.filter(is_hidden=0)
     serializer_class = FinancialAccountSerialier
 
@@ -208,6 +234,7 @@ class UserSaleViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = UserSale.objects.filter(is_hidden=0)
     serializer_class = UserSaleSerializer
 
@@ -215,6 +242,7 @@ class UserCommisionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = UserCommision.objects.filter(is_hidden=0)
     serializer_class = UserCommisionSerializer
 
@@ -222,6 +250,7 @@ class MonthlyPaymentViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = MonthlyPayment.objects.filter(is_hidden=0)
     serializer_class = MonthlyPaymentSerializer
 
@@ -229,6 +258,7 @@ class AddressViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = Address.objects.filter(is_hidden=0)
     serializer_class = AddressSerializer
 
@@ -236,6 +266,7 @@ class InsertAddressViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = Address.objects.filter(is_hidden=0)
     serializer_class = InsertAddressSerializer
 
@@ -243,6 +274,7 @@ class TaxRateViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
+    permission_classes = (IsAuthenticated,)
     queryset = TaxRate.objects.filter(is_hidden=0)
     serializer_class = TaxRateSerializer
 
@@ -250,6 +282,7 @@ class UserImages(APIView):
     """
     API endpoint to get a profile image.
     """
+    permission_classes = (IsAuthenticated,)
     def post(self, request, format='json'):
         profiles = Profile.objects.filter(id__in=request.data['users'], is_hidden=False)
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
@@ -265,6 +298,7 @@ class AllUserImages(APIView):
     """
     API endpoint to get all profiles images.
     """
+    permission_classes = (IsAuthenticated,)
     def post(self, request, format='json'):
         profiles = Profile.objects.filter(is_hidden=False)
         profileSerializer = ProfileSerializer(profiles, many=True, context=getContext())
@@ -282,6 +316,7 @@ class SMSErrorLogs(APIView):
     """
     API endpoint to store firebase authentication error logs.
     """
+    permission_classes = (IsAuthenticated,)
     def post(self, request, format='json'):
         try:
             errorItem = request.data
@@ -372,7 +407,9 @@ class UserRegister(APIView):
                         data = profileSerializer.data
                         # data['authority'] = getObject(data['authority'])
                         # data['user'] = getObject(data['user'])
-                        return Response({"success": True, "data" : {
+                        # create JWT
+                        payload = jwt_payload_handler(user)
+                        return Response({"token": jwt_encode_handler(payload), "success": True, "data" : {
                             "user" : data
                         }}, status=status.HTTP_201_CREATED)
                 else:
@@ -388,6 +425,7 @@ class CheckRegister(APIView):
     """
     API endpoint to check if an user is registered or not.
     """
+    permission_classes = (IsAuthenticated,)
     def post(self, request, format='json'):
         userSerializer = UserSerializer(data=request.data, context=getContext())
         if userSerializer.is_valid():
@@ -416,7 +454,9 @@ class UserLogin(APIView):
                 user = User.objects.get(username = "+" + request.data['tel'])
             except Exception as e:
                 print(e)
+        
 
+        
         if user:
             profile = None
             try:
@@ -430,7 +470,10 @@ class UserLogin(APIView):
                     data = profileSerializer.data
                     # data['authority'] = getObject(data['authority'])
                     # data['user'] = getObject(data['user'])
-                    return Response({"success" : True, "data" : {
+
+                    # create JWT
+                    payload = jwt_payload_handler(user)
+                    return Response({"token": jwt_encode_handler(payload), "success" : True, "data" : {
                         "user" : data
                     }}, status=status.HTTP_200_OK)
                 else:
@@ -447,6 +490,7 @@ class PasswordReset(APIView):
     """
     API endpoint to reset password of an user profile.
     """
+    permission_classes = (IsAuthenticated,)
     def post(self, request, format='json'):
         profile = None
         try:
@@ -492,6 +536,7 @@ class ChangeEmail(APIView):
     """
     API endpoint to change email of an user profile.
     """
+    permission_classes = (IsAuthenticated,)
     def post(self, request, format='json'):
         profile = None
         try:
@@ -527,6 +572,7 @@ class GetEmail(APIView):
     """
     API endpoint to get email of an user profile.
     """
+    permission_classes = (IsAuthenticated,)
     def post(self, request, format='json'):
         profile = None
         try:
@@ -544,6 +590,7 @@ class SendEmail(APIView):
     """
     API endpoint to test email send feature.
     """
+    permission_classes = (IsAuthenticated,)
     def post(self, request, format='json'):
         profile = None
         try:
@@ -583,6 +630,7 @@ class ChangePhone(APIView):
     """
     API endpoint to change phone of an user profile.
     """
+    permission_classes = (IsAuthenticated,)
     def post(self, request, format='json'):
         profile = None
         try:
@@ -632,6 +680,7 @@ class CheckPhone(APIView):
             return Response({"success" : False, "error" : "phone_exists"}, status=status.HTTP_200_OK)
 
 class AppConfig(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self, request, format='json'):
         return Response({"success" : True}, status=status.HTTP_200_OK)
 
@@ -639,6 +688,7 @@ class ProductList(APIView):
     """
     API endpoint to get product list.
     """
+    permission_classes = (IsAuthenticated,)
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
@@ -656,6 +706,7 @@ class OrderList(APIView):
     """
     API endpoint to get order list.
     """
+    permission_classes = (IsAuthenticated,)
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
@@ -671,6 +722,7 @@ class OrderProductList(APIView):
     """
     API endpoint to get product list of the order purchaser.
     """
+    permission_classes = (IsAuthenticated,)
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
@@ -689,6 +741,7 @@ class SaleProductList(APIView):
     """
     API endpoint to get product list of the order seller.
     """
+    permission_classes = (IsAuthenticated,)
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
@@ -706,6 +759,7 @@ class CommissionProductList(APIView):
     """
     API endpoint to get user commission list.
     """
+    permission_classes = (IsAuthenticated,)
     serializer_class = ProductSerializer
 
     def get(self, request, userId, year, month, format='json'):
@@ -753,6 +807,7 @@ class AddressList(APIView):
     """
     API endpoint to get user address list.
     """
+    permission_classes = (IsAuthenticated,)
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
@@ -768,6 +823,7 @@ class CustomerList(APIView):
     """
     API endpoint to get intruducer list of an user.
     """
+    permission_classes = (IsAuthenticated,)
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
@@ -779,6 +835,7 @@ class FinancialAccountGet(APIView):
     """
     API endpoint to get Finantial account of an user.
     """
+    permission_classes = (IsAuthenticated,)
     serializer_class = ProductSerializer
 
     def get(self, request, userId, format='json'):
@@ -794,6 +851,7 @@ class ProductByIds(APIView):
     """
     API endpoint to get product info by product id.
     """
+    permission_classes = (IsAuthenticated,)
     serializer_class = ProductSerializer
 
     def get(self, request, format='json'):
@@ -805,6 +863,7 @@ class UserByIds(APIView):
     """
     API endpoint to get users info by user ids.
     """
+    permission_classes = (IsAuthenticated,)
     serializer_class = ProductSerializer
 
     def get(self, request, format='json'):
@@ -843,6 +902,7 @@ def calculateCommission(kinujo_product, price, orderProduct, userId, shipping_fe
     """
     Function to calculate user commission.
     """
+    permission_classes = (IsAuthenticated,)
     try:
         tax_rate = TaxRate.objects.filter(is_hidden=False, is_enable=True, end_date__isnull=True).last().tax_rate
     except:
@@ -968,6 +1028,7 @@ def updateUserCommission(introducer, amount, tax):
     """
     Function to update user commission info.
     """
+    permission_classes = (IsAuthenticated,)
     today_date = date.today()
     year = today_date.year
     month = today_date.month
@@ -1025,6 +1086,7 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
     """
     Function to update user sales info.
     """
+    permission_classes = (IsAuthenticated,)
     today_date = date.today()
     year = today_date.year
     month = today_date.month
@@ -1091,6 +1153,7 @@ def updateUserSales(seller, seller_amount, tax, shipping_fee):
 
 
 class ProductJanCodes(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self, request, productId, format='json'):
         productVarieties = ProductVariety.objects.filter(product_id=productId, is_hidden=False).values_list('id', flat=True)
         productVarietySelections = ProductVarietySelection.objects.filter(product_variety_id__in=productVarieties, is_hidden=False).values_list('id', flat=True)
@@ -1101,6 +1164,7 @@ class ProductJanCodes(APIView):
         return Response({"success" : True, "verticals" : verticalSerializer.data, "horizontals" : horizontalSerializer.data}, status=status.HTTP_200_OK)
 
 class RemoveReferral(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self, request, format='json'):
         user = request.data['userId']
         parent = request.data['parentId']
@@ -1111,6 +1175,7 @@ class RemoveReferral(APIView):
         return Response({"success" : True}, status=status.HTTP_200_OK)
 
 class OrderReceipt(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self, request, orderId, format='json'):
         user = request.data['userId']
         parent = request.data['parentId']
@@ -1124,6 +1189,7 @@ class Pay(APIView):
     """
     API endpoint to save order and payment info to db and send email notification to seller.
     """
+    permission_classes = (IsAuthenticated,)
     def post(self, request, userId, format='json'):
         stripe.api_key = "sk_test_siDHJkaiXknooQGf1pStMNWY"
         userEmail = ""
@@ -1389,6 +1455,7 @@ class UpdateProfileImage(APIView):
     """
     API endpoint to get update profile image.
     """
+    permission_classes = (IsAuthenticated,)
     def post(self, request, userId, format='json'):
         profile = Profile.objects.get(id=userId, is_hidden=False)
         image = Image.objects.get(id=request.data['image_id'])
@@ -1403,6 +1470,7 @@ class CreateProduct(APIView):
     """
     API endpoint to create a new product.
     """
+    permission_classes = (IsAuthenticated,)
     def post(self, request, userId, format='json'):
         try:
             if request.data['draft'] != 1:
@@ -1669,6 +1737,7 @@ class GetProductByVariety(APIView):
     """
     API endpoint to get a product variety ingo.
     """
+    permission_classes = (IsAuthenticated,)
     def get(self, request, format='json'):
         product = Product.objects.get(id=request.GET['productId'], is_hidden=False)
         productSerializer = ProductSerializer(product, context=getContext())
@@ -1699,6 +1768,7 @@ class EditProduct(APIView):
     """
     API endpoint to edit/update a new product.
     """
+    permission_classes = (IsAuthenticated,)
     def post(self, request, userId, format='json'):
         try:
             if request.data['draft'] != 1:
@@ -2047,6 +2117,7 @@ class EditProduct(APIView):
 
 
 class UserUpdateBackground(APIView):
+    permission_classes = (IsAuthenticated,)
     parser_classes = [MultiPartParser]
     def post(self, request, userId, format='json'):
         return Response({"success" : True})
@@ -2057,6 +2128,7 @@ def change_language(request):
     API to change language.
     """
 
+    permission_classes = (IsAuthenticated,)
     language = request.POST.get('language', 'ja')
     request_url = request.POST.get('req_url', '')
     deactivate_all()
