@@ -81,7 +81,6 @@ class CountryCodeViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    permission_classes = (IsAuthenticated,)
     queryset = CountryCode.objects.filter(is_hidden=0)
     serializer_class = CountryCodeSerializer
 
