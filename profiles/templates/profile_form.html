@@ -263,7 +263,6 @@
             } else {
                 $('#id_authority').trigger('change');
                 $('#id_authority').prop('disabled', true);
-                $('#id_user_code').prop('disabled', true);
             }
             if (profile_image && profile_image != '') {
                 var element = $('#img_profile_image').parent().parent();
@@ -455,8 +454,8 @@
                         if (type == 'id') {
                             $('#id_user_code').val('');
                             $.confirm({
-                                title: 'ID is duplicate',
-                                content: value + ' is in use. Try another ID. It must be unique',
+                                title: "",
+                                content: value + get_translate(' is in use. Try another ID. It must be unique'),
                                 buttons: {
                                     Ok: {
                                         btnClass: 'btn-success',
@@ -468,8 +467,8 @@
                         else if (type == 'tel') {
                             $('#id_tel').val('');
                             $.confirm({
-                                title: 'Phone number is duplicate',
-                                content: value + ' is in use. Try another phone number. It must be unique',
+                                title: "",
+                                content: value + get_translate(' is in use. Try another phone number. It must be unique'),
                                 buttons: {
                                     Ok: {
                                         btnClass: 'btn-success',
