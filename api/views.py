@@ -2154,7 +2154,7 @@ class EditProfile(APIView):
             fields = ['user_code', 'nickname', 'real_name', 'shop_name', 'word', 'gender', 'birthday', 'tel', 'email']
             for field in fields:
                 if field in request.data:
-                    profile.field = request.data[field]
+                    setattr(profile, field, request.data[field])
             profile.save()
             return Response({"success" : True}, status=status.HTTP_200_OK)
         except Exception as e:
