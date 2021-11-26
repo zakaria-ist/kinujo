@@ -2140,3 +2140,23 @@ def change_language(request):
         response = HttpResponseRedirect(request_url)
     response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
     return response
+
+class EditProfile(APIView):
+    """
+    API endpoint to edit/update a profile.
+    """
+    permission_classes = (IsAuthenticated,)
+    def post(self, request, userId, format='json'):
+        try:
+            if userId == "":
+                return Response({"success" : False, "errors" : ["Invalid update."]}, status=status.HTTP_200_OK)
+            profile = Profile.objects.get(id=userId)
+            fields = ['user_code', 'nickname', 'real_name', 'shop_name', 'word', 'gender', 'birthday', 'tel', 'email']
+            for field in fields:
+                if field in request.data:
+                    profile.field = request.data[field]
+            profile.save()
+            return Response({"success" : True}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)

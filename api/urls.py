@@ -53,6 +53,7 @@ urlpatterns = [
     url(r'getProductByVariety', views.GetProductByVariety.as_view(), name='app-config'),
     url('^createProduct/(?P<userId>.+)/$', views.CreateProduct.as_view()),
     url('^editProduct/(?P<userId>.+)/$', views.EditProduct.as_view()),
+    url('^editProfile/(?P<userId>.+)/$', views.EditProfile.as_view()),
     url('^latestOrderReceipt/(?P<orderId>.+)/$', views.OrderReceipt.as_view()),
     url('^updateProfileImage/(?P<userId>.+)/$', views.UpdateProfileImage.as_view()),
     url('^sellerProducts/(?P<userId>.+)/$', views.ProductList.as_view()),
