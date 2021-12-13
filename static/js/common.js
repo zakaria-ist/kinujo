@@ -369,6 +369,6 @@ var translation_dict = {
     "Please check your verification code again.": "もう一度認証コードを確認してください。",
     "Phone number is duplicate": "",
     " is in use. Try another phone number. It must be unique": "は既に使用されています。別の番号でお試しください。",
-    " is in use. Try another ID. It must be unique": "は既に使用されています。別のIDをお試しください。"
-
+    " is in use. Try another ID. It must be unique": "は既に使用されています。別のIDをお試しください。",
+    "Add Recommended Products": "おすすめに追加",
 };

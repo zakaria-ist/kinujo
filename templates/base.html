@@ -131,6 +131,17 @@
                     </ul>
                 </li>
                 <li class="sub-menu">
+                    <a href="javascript:;" class="{% block product_a_active %}{% endblock %}">
+                        <i class="fas fa-boxes fa-2x {% block product_i_active %}{% endblock %}"></i>
+                        {% trans 'Products Management' %}
+                    </a>
+                    <ul class="sub">
+                        <li class="{% block product_list_active %}{% endblock %}">
+                            <a href="{% url 'recommended_product_list' %}" >{% trans 'Recommended Products' %}</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sub-menu">
                     <a href="javascript:;" class="{% block sales_a_active %}{% endblock %}">
                         <i class="fas fa-dollar-sign fa-2x {% block sales_i_active %}{% endblock %}"></i>
                         {% trans 'Sales Management' %}

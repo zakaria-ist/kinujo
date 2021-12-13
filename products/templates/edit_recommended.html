@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block extrahead %}
+    {% load static %}
+    {% load i18n %}
+{% endblock %}
+
+{% block title %}{% trans 'Featured Products' %}{% endblock %}
+
+{% block item_a_active %}
+    active
+{% endblock %}
+
+{% block item_i_active %}
+    active
+{% endblock %}
+
+{% block item_list_active %}
+    active
+{% endblock %}
+
+{% block content %}
+    <br/>
+    <div class="row">
+        <div class="col-sm-12">
+            <section class="panel">
+                <header class="panel-heading" style="font-size: 25px">
+                        {% trans 'Featured Products' %}
+                </header>
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div class="panel-body">
+                            <div class="table-section white-bg">
+                                <div class="adv-table table-responsive">
+                                    <table class="display table table-bordered table-striped table-condensed"
+                                        id="recommended-product-table" style="width:100%">
+                                        <thead>
+                                        <tr>
+                                            <th>{% trans 'DOrder' %}</th>
+                                            <th></th>
+                                            <th style="min-width: 150px !important">{% trans 'Name' %}</th>
+                                            <th style="min-width: 85px !important">{% trans 'Seller' %}</th>
+                                            <th class="text-center"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="panel-body">
+                            <div class="table-section white-bg">
+                                <div class="adv-table table-responsive">
+                                    <table class="display table table-bordered table-striped table-condensed"
+                                        id="all-product-table" style="width:100%">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th class="text-center"></th>
+                                            <th style="min-width: 150px !important">{% trans 'Name' %}</th>
+                                            <th style="min-width: 85px !important">{% trans 'Seller' %}</th>
+                                            <th class="text-right" style="min-width: 70px !important">{% trans 'Price' %}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <form id="reportForm" target="frViewPDF"
+            method="post" action="" >
+            {% csrf_token %}
+            <input type="hidden" id="param0" name="param0">
+        </form>
+        <div id="divViewPDF">
+            <iframe id="frViewPDF" name="frViewPDF" width="0%" height="0%" style="max-width: 0px; max-height: 0px;"
+                    src=""></iframe>
+        </div>
+    </div>
+    {#Comfirm Delete#}
+    <div class="modal fade" id="comfirmDeleteProductModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><strong>{% trans 'Delete Confirm Dialog' %}</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body" style="padding-bottom: 0px!important; padding: 0 3%;">
+                    <form action="">
+                        <div class="form-group">
+                            <label>{% trans 'Are you sure want to delete?' %}</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">{% trans 'No' %}</button>
+                    <a id="comfirm-yes">
+                        <button class="btn btn-success" type="button">{% trans 'Yes' %}</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {#End Comfirm delete#}
+
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{% static 'assets/datatables/datatables.min.js' %}"></script>
+    <script type="text/javascript">
+
+    // var profile_id = "{{profile_id}}";
+    var pEditor;
+    var filter_list = [];
+    var filter_str = JSON.stringify([1, 2, 3]);
+
+    $(document).ready(function () {
+            loadFeaturedProduct();
+            loadAllProduct();
+    });
+
+    function loadAllProduct(){
+        recommended_product = get_translate('Add Recommended Products');
+        $('#all-product-table').DataTable({
+            "order": [[0, "asc"]],
+            "pageLength": 100,
+            "serverSide": true,
+            "scrollX": true,
+            stateSave: true,
+            "dom": '<"top"f>rt<"bottom"lp><"clear">',
+            "ajax": {
+                "url": "{% url 'smallProductList__asJson' %}",
+                "data": {
+                    "filter_str": '[]'
+                }
+            },
+            "columns": [
+                {"data": "no", "orderable": true},
+                {
+                    "sClass": "text-center",
+                    "orderable": false,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        var btn =
+                                '<div class="btn-group">' +
+                                '<a class="btn btn-sm btn-info" onclick="addFeatured(' + data.id + ')"><span>'+recommended_product+'</span></a>'
+                                '</div>';
+                        return btn;
+                    }
+                },
+                {"data": "name", "orderable": false},
+                {"data": "seller", "orderable": true},
+                {
+                    "sClass": "text-right",
+                    "data": "price", "orderable": true
+                },
+            ]
+        });
+    }
+    function loadFeaturedProduct(){
+        $('#recommended-product-table').DataTable({
+            "ordering": false, 
+            "paging": false, 
+            "lengthChange": false, 
+            "info": false, 
+            "pageLength": 100,
+            "serverSide": true,
+            "scrollX": true,
+            "searching": false,
+            stateSave: true,
+            "dom": '<"top"f>rt<"bottom"lp><"clear">',
+            "ajax": {
+                "url": "{% url 'recommendedProduct__asJson' %}",
+                "data": {
+                    "filter_str": '[]'
+                }
+            },
+            "columns": [
+                {"data": "recommended_sort_no", "orderable": false},
+                {
+                    "sClass": "text-center",
+                    "orderable": false,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        var btn =
+                                '<div class="btn-group">' +
+                                '<a class="btn-group-item pointer" onclick="sortProduct(' + data.id + ' ,' + data.recommended_sort_no + ', '+"'-1'"+')"><i class="fas fa-arrow-up text-warning"></i></a>' + 
+                                '<a class="btn-group-item pointer" onclick="sortProduct(' + data.id + ' ,' + data.recommended_sort_no + ', '+"'+1'"+')"><i class="fas fa-arrow-down text-warning"></i></a>' +
+                                '</div>';
+                        return btn;
+                    }
+                },
+                {"data": "name", "orderable": false},
+                {"data": "seller_name", "orderable": false},
+                {
+                    "sClass": "text-center",
+                    "orderable": false,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        var btn =
+                                '<div class="btn-group">' +
+                                '<a class="btn-group-item pointer" onclick="removeProduct(' + data.id + ')"><i class="fas fa-times text-danger"></i></a>' +
+                                '</div>';
+                        return btn;
+                    }
+                },
+            ]
+        });        
+    }
+
+    function removeProduct(product_id) {
+        $.ajax({
+            method: "POST",
+            url: "{% url 'remove_recommended_product' %}",
+            dataType: 'JSON',
+            data: {
+                'product_id': product_id,
+            },
+        })
+        .then(
+            function(json) {
+                if (json.message == 'Success') {
+                    $('#recommended-product-table').DataTable().ajax.reload();
+                }
+            },
+            function() {
+                alert('更新に失敗しました。')
+            }
+        )
+    }
+
+    //sort products
+    function sortProduct(product_id, sort_no, to) {
+        if(sort_no + Number(to) <= 0) {
+            alert("変更できません");
+            return;
+        }
+        $.ajax({
+            method: "POST",
+            url: "{% url 'sort_product' %}",
+            dataType: 'JSON',
+            data: {
+                'product_id': product_id,
+                'target_sort_no': Number(sort_no) + Number(to),
+            },
+        })
+        .then(
+            function(json) {
+                if (json.message == 'Success') {
+                    $('#recommended-product-table').DataTable().ajax.reload();
+                }
+            },
+            function() {
+                alert('更新に失敗しました。')
+            }
+        )
+    }
+
+    function addFeatured(product_id) {
+        $.ajax({
+            method: "POST",
+            url: "{% url 'add_recommended' %}",
+            dataType: 'JSON',
+            data: {
+                'product_id': product_id,
+            },
+        })
+        .then(
+            function(json) {
+                if (json.message == 'Success') {
+                    $('#recommended-product-table').DataTable().ajax.reload();
+                } else if(json.message == 'Exist') {
+                    alert('既に登録されています。')
+                }
+            },
+            function() {
+                alert('更新に失敗しました。')
+            }
+        )
+    }
+    $(document).click(function (event) {
+        //hide al‘l our dropdowns
+        $('.dropdown-menu[data-parent]').hide();
+    });
+
+    </script>
+{% endblock %}
