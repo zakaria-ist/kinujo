@@ -858,6 +858,41 @@ class ProductByIds(APIView):
         productSerializer = ProductSerializer(products, many=True, context=getContext())
         return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
 
+class ProductOfficial(APIView):
+    """
+    API endpoint to get official products.
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProductSerializer
+    def get(self, request, format='json'):
+        products = Product.objects.filter(user__is_master=True, is_hidden=False)
+        productSerializer = ProductSerializer(products, many=True, context=getContext())
+        return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
+
+
+class ProductRecommended(APIView):
+    """
+    API endpoint to get recommended products.
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProductSerializer
+    def get(self, request, format='json'):
+        products = Product.objects.filter(is_hidden=False).exclude(recommended_sort_no=0).order_by('recommended_sort_no')
+        productSerializer = ProductSerializer(products, many=True, context=getContext())
+        return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
+
+class ProductByCategory(APIView):
+    """
+    API endpoint to get products by category.
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProductSerializer
+    def get(self, request, categoryId, format='json'):
+        products = Product.objects.filter(category_id=categoryId, is_hidden=False)
+        productSerializer = ProductSerializer(products, many=True, context=getContext())
+        return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
+
+
 class UserByIds(APIView):
     """
     API endpoint to get users info by user ids.

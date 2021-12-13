@@ -146,7 +146,7 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
     productVarieties = InsertProductVarietySerializer(many=True, required=False)
     class Meta:
         model = Product
-        fields = ['category', 'productVarieties', 'url', 'id', 'name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified', 'user', 'productImages']
+        fields = ['category', 'productVarieties', 'url', 'id', 'name','brand_name','pr','url_str','category','variety','is_used','is_opened','opened_date','target','price','store_price','shipping_fee','description','is_draft','is_food','is_hidden','created','modified', 'user', 'productImages', 'recommended_sort_no']
 class ProductVarietySerializerMinimum(serializers.HyperlinkedModelSerializer):
     product = ProductSerializerMinimum()
     class Meta:
