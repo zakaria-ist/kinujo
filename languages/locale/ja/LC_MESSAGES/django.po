@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-13 21:01+0900\n"
+"POT-Creation-Date: 2021-12-14 14:17+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -221,7 +221,7 @@ msgid "Amount Include Tax"
 msgstr "金額(税込)"
 
 #: .\orders\templates\order_list.html:98
-#: .\products\templates\edit_featured.html:97
+#: .\products\templates\edit_recommended.html:97
 #: .\products\templates\product_list.html:104
 #: .\profiles\templates\profile_form.html:127
 #: .\profiles\templates\profile_form.html:153
@@ -230,7 +230,7 @@ msgid "Delete Confirm Dialog"
 msgstr "削除の確認"
 
 #: .\orders\templates\order_list.html:105
-#: .\products\templates\edit_featured.html:104
+#: .\products\templates\edit_recommended.html:104
 #: .\products\templates\product_list.html:111
 #: .\profiles\templates\profile_form.html:134
 #: .\profiles\templates\profile_list.html:91
@@ -238,7 +238,7 @@ msgid "Are you sure want to delete?"
 msgstr "削除してもよろしいですか？"
 
 #: .\orders\templates\order_list.html:110
-#: .\products\templates\edit_featured.html:109
+#: .\products\templates\edit_recommended.html:109
 #: .\products\templates\product_list.html:116
 #: .\profiles\templates\profile_form.html:139
 #: .\profiles\templates\profile_form.html:165
@@ -247,7 +247,7 @@ msgid "No"
 msgstr "いいえ"
 
 #: .\orders\templates\order_list.html:112
-#: .\products\templates\edit_featured.html:111
+#: .\products\templates\edit_recommended.html:111
 #: .\products\templates\product_list.html:118
 #: .\profiles\templates\profile_form.html:140
 #: .\profiles\templates\profile_form.html:166
@@ -279,19 +279,17 @@ msgstr "ご注文ありがとうございます！"
 msgid "Please wait for a while until delivery."
 msgstr "お届けまで、もうしばらくお待ちください。"
 
-#: .\products\templates\edit_featured.html:8
-#: .\products\templates\edit_featured.html:28
-#, fuzzy
-#| msgid "Other Products"
-msgid "Featured Products"
-msgstr "出品製品"
+#: .\products\templates\edit_recommended.html:8
+#: .\products\templates\edit_recommended.html:28 .\templates\base.html:140
+msgid "Recommended Products"
+msgstr "おすすめ商品"
 
-#: .\products\templates\edit_featured.html:39
+#: .\products\templates\edit_recommended.html:39
 msgid "DOrder"
 msgstr "表示順"
 
-#: .\products\templates\edit_featured.html:41
-#: .\products\templates\edit_featured.html:63
+#: .\products\templates\edit_recommended.html:41
+#: .\products\templates\edit_recommended.html:63
 #: .\products\templates\product_list.html:68
 #: .\profiles\templates\basic_info_tab.html:71
 #: .\profiles\templates\client_info_tab.html:24
@@ -301,13 +299,13 @@ msgstr "表示順"
 msgid "Name"
 msgstr "名前"
 
-#: .\products\templates\edit_featured.html:42
-#: .\products\templates\edit_featured.html:64
+#: .\products\templates\edit_recommended.html:42
+#: .\products\templates\edit_recommended.html:64
 #: .\profiles\templates\commission_info_tab.html:16
 msgid "Seller"
 msgstr "出品者"
 
-#: .\products\templates\edit_featured.html:65
+#: .\products\templates\edit_recommended.html:65
 #: .\products\templates\product_list.html:72
 #: .\profiles\templates\item_info_tab.html:28
 msgid "Price"
@@ -1035,10 +1033,6 @@ msgstr "アカウント登録"
 msgid "Products Management"
 msgstr "商品管理"
 
-#: .\templates\base.html:140
-msgid "Recommended Products"
-msgstr "おすすめ商品"
-
 #: .\templates\base.html:147 .\templates\base.html:196
 #: .\templates\listing_base.html:136
 msgid "Sales Management"
@@ -1159,6 +1153,11 @@ msgstr "新しいパスワード(再入力)"
 #: .\templates\password-reset.html:106
 msgid "Change the password"
 msgstr "パスワードを変更する"
+
+#, fuzzy
+#~| msgid "Other Products"
+#~ msgid "Featured Products"
+#~ msgstr "出品製品"
 
 #~ msgid "Add to Featured"
 #~ msgstr "おすすめに追加"
