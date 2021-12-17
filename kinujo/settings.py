@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import datetime
 from .shared_settings import *
+from datetime import timedelta
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -57,6 +60,22 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ),  
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),  
+    'NON_FIELD_ERRORS_KEY': 'detail',
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+}
+
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH' : True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=365),
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=365),
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

@@ -366,6 +366,9 @@ var translation_dict = {
     "Vericication Successful": "検証成功",
     "Please enter new password to log in.": "新しいパスワードを入力してログインしてください。",
     "Wrong Code": "不正なコード",
-    "Please check your verification code again.": "もう一度認証コードを確認してください。"
-
+    "Please check your verification code again.": "もう一度認証コードを確認してください。",
+    "Phone number is duplicate": "",
+    " is in use. Try another phone number. It must be unique": "は既に使用されています。別の番号でお試しください。",
+    " is in use. Try another ID. It must be unique": "は既に使用されています。別のIDをお試しください。",
+    "Add Recommended Products": "おすすめに追加",
 };

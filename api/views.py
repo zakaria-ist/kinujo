@@ -858,6 +858,41 @@ class ProductByIds(APIView):
         productSerializer = ProductSerializer(products, many=True, context=getContext())
         return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
 
+class ProductOfficial(APIView):
+    """
+    API endpoint to get official products.
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProductSerializer
+    def get(self, request, format='json'):
+        products = Product.objects.filter(user__is_master=True, is_hidden=False)
+        productSerializer = ProductSerializer(products, many=True, context=getContext())
+        return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
+
+
+class ProductRecommended(APIView):
+    """
+    API endpoint to get recommended products.
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProductSerializer
+    def get(self, request, format='json'):
+        products = Product.objects.filter(is_hidden=False).exclude(recommended_sort_no=0).order_by('recommended_sort_no')
+        productSerializer = ProductSerializer(products, many=True, context=getContext())
+        return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
+
+class ProductByCategory(APIView):
+    """
+    API endpoint to get products by category.
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProductSerializer
+    def get(self, request, categoryId, format='json'):
+        products = Product.objects.filter(category_id=categoryId, is_hidden=False)
+        productSerializer = ProductSerializer(products, many=True, context=getContext())
+        return Response({"success" : True, "products" : productSerializer.data}, status=status.HTTP_200_OK)
+
+
 class UserByIds(APIView):
     """
     API endpoint to get users info by user ids.
@@ -2140,3 +2175,27 @@ def change_language(request):
         response = HttpResponseRedirect(request_url)
     response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
     return response
+
+class EditProfile(APIView):
+    """
+    API endpoint to edit/update a profile.
+    """
+    permission_classes = (IsAuthenticated,)
+    def post(self, request, userId, format='json'):
+        try:
+            if userId == "":
+                return Response({"success" : False, "errors" : ["Invalid update."]}, status=status.HTTP_200_OK)
+            profile = Profile.objects.get(id=userId)
+            fields = [
+            'user_code', 'nickname', 'real_name', 'shop_name', 'word', 'gender', 'birthday', 'tel', 'email',
+            'message_notification_phone', 'message_notification_mail', 'other_notification_phone', 
+            'other_notification_mail','allowed_by_id', 'allowed_by_tel'
+            ]
+            for field in fields:
+                if field in request.data:
+                    setattr(profile, field, request.data[field])
+            profile.save()
+            return Response({"success" : True}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)

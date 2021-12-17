@@ -1293,3 +1293,166 @@ def export_product_list_as_csv(request):
 
 
     return response
+
+# recommended product list
+@login_required
+@csrf_exempt
+def recommended_product_list(request):
+    if request.session['login_type'] == 'MASTER':
+        return render(request, 'edit_recommended.html')
+    else:
+        return render(request, '404.html')
+
+
+# @login_required
+@csrf_exempt
+def recommendedProduct__asJson(request):
+    draw = request.GET['draw']
+    start = request.GET['start']
+    length = request.GET['length']
+    search = request.GET['search[value]']
+    products = Product.objects.filter(is_hidden=False).exclude(recommended_sort_no=0).order_by('recommended_sort_no')
+    array = []
+    for key, product in enumerate(products):
+        tmp_product = {}
+        tmp_product['recommended_sort_no'] = product.recommended_sort_no
+        tmp_product['id'] = product.id
+        tmp_product['seller_name'] = product.user.nickname
+
+        product_name = product.name
+        if len(product.name) > 45:
+            product_name = product.name[0:45] + "..."
+        tmp_product['price'] = "{:,}".format(product.price)
+        tmp_product = {
+            "id": product.id,
+            "recommended_sort_no": product.recommended_sort_no,
+            "seller_name": str(product.user.nickname),
+            "name": str(product_name),
+        }
+        array.append(tmp_product)
+    records_total = len(array)
+    records_filtered = len(array)
+    content = {"draw": draw, "data": array,
+               "recordsTotal": records_total, "recordsFiltered": records_filtered}
+    json_content = json.dumps(content, ensure_ascii=False)
+    return HttpResponse(json_content, content_type='application/json')
+
+
+# @login_required
+@csrf_exempt
+def smallProductList__asJson(request):
+    """
+    Method to get product list as JSON.
+    """
+    draw = request.GET['draw']
+    start = request.GET['start']
+    length = request.GET['length']
+    search = request.GET['search[value]']
+
+    product_list = Product.objects.filter(is_hidden=False, is_opened=True).order_by('name')
+    if search:  # Filter data base on search
+        product_list = product_list.filter(Q(name__icontains=search) | Q(user__nickname__icontains=search))
+
+    array = []
+    i = 0
+    for field in product_list:
+        productImage = ProductImage.objects.filter(
+            product_id=field.id, is_hidden=False).order_by('image_no').exclude(image_no__isnull=True).first()
+        image_path = ''
+        if productImage:
+            image_path = productImage.image.image.url
+        product_name = field.name
+        if len(field.name) > 45:
+            product_name = field.name[0:45] + "..."
+
+        i = i + 1
+
+        data = {
+            "no": str(i),
+            "id": field.id,
+            "name": str(product_name),
+            "seller": str(field.user.nickname),
+            "price": str( "{:,}".format(field.price)) + "円",
+        }
+
+        array.append(data)
+    records_total = len(array)
+    records_filtered = len(array)
+    content = {"draw": draw, "data": array,
+               "recordsTotal": records_total, "recordsFiltered": records_filtered}
+    json_content = json.dumps(content, ensure_ascii=False)
+    return HttpResponse(json_content, content_type='application/json')
+
+@csrf_exempt
+def sort_product(request):
+    """
+    ajax Method to sort recommended product.
+    """
+    message = 'Error'
+    if request.method == 'POST':
+        try:
+            product_id = request.POST.get('product_id')
+            target_sort_no = request.POST.get('target_sort_no')
+            product1 = Product.objects.get(pk=product_id)
+            product2 = Product.objects.filter(recommended_sort_no=target_sort_no).first()
+            product2.recommended_sort_no = product1.recommended_sort_no
+            product1.recommended_sort_no = target_sort_no
+            product2.save()
+            product1.save()
+            message = 'Success'
+        except Exception as e:
+                print(e)
+                message = 'Failed'
+
+
+    context = {'message': message}
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+@csrf_exempt
+def remove_recommended_product(request):
+    """
+    ajax Method to remove a product from recommended list.
+    """
+    message = 'Error'
+    if request.method == 'POST':
+        try:
+            removed_product = Product.objects.get(pk=request.POST.get('product_id'))
+            products = Product.objects.filter(is_hidden=False, recommended_sort_no__gt=removed_product.recommended_sort_no).exclude(recommended_sort_no=0).order_by('recommended_sort_no')
+            removed_product.recommended_sort_no = 0
+            removed_product.save()
+            for product in products:
+                product.recommended_sort_no -= 1
+                product.save()
+            message = 'Success'
+        except Exception as e:
+                print(e)
+                message = 'Failed'
+
+
+    context = {'message': message}
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+
+@csrf_exempt
+def add_recommended(request):
+    """
+    ajax Method to sort recommended product.
+    """
+    message = 'Error'
+    if request.method == 'POST':
+        try:
+            product = Product.objects.get(pk=request.POST.get('product_id'))
+            if product.recommended_sort_no == 0:
+                exist_num = Product.objects.filter(is_hidden=False).exclude(recommended_sort_no=0).order_by('recommended_sort_no').count()
+                product.recommended_sort_no = exist_num + 1;
+                product.save()
+                message = 'Success'
+            else:
+                message = 'Exist'
+        except Exception as e:
+                print(e)
+                message = 'Failed'
+
+    context = {'message': message}
+    return HttpResponse(json.dumps(context), content_type="application/json")
+

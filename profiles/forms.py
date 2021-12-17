@@ -32,6 +32,8 @@ class ProfileForm(forms.ModelForm):
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     real_name = forms.CharField(required=False,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
+    user_code = forms.CharField(required=True,
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '', 'id':'id_user_code', 'autocomplete':'newCode'}))
     representative_name = forms.CharField(required=False,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ''}))
     corporate_name = forms.CharField(required=False,
@@ -62,7 +64,7 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('tel', 'nickname', 'real_name', 'corporate_name', 'address1', 'address2', 'word', 'authority',
-                    'representative_name', 'corporate_tel', 'salon_category', 'zipcode', 'gender', 'shop_name')
+                    'representative_name', 'corporate_tel', 'salon_category', 'zipcode', 'gender', 'shop_name', 'user_code')
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
