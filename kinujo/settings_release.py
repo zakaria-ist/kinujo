@@ -176,6 +176,7 @@ AWS_SES_REGION_NAME = 'ap-southeast-1'
 AWS_SES_REGION_ENDPOINT ='email.ap-southeast-1.amazonaws.com'
 AWS_STORAGE_BUCKET_NAME = 'c2sg-kinujo'
 S3_URL = 'https://%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_QUERYSTRING_EXPIRE = '5400'
 
 DEFAULT_FILE_STORAGE = 'utilities.s3utils.MediaS3BotoStorageRelease'
 MEDIA_DIRECTORY = '/release/media/'
