@@ -2186,7 +2186,11 @@ class EditProfile(APIView):
             if userId == "":
                 return Response({"success" : False, "errors" : ["Invalid update."]}, status=status.HTTP_200_OK)
             profile = Profile.objects.get(id=userId)
-            fields = ['user_code', 'nickname', 'real_name', 'shop_name', 'word', 'gender', 'birthday', 'tel', 'email']
+            fields = [
+            'user_code', 'nickname', 'real_name', 'shop_name', 'word', 'gender', 'birthday', 'tel', 'email',
+            'message_notification_phone', 'message_notification_mail', 'other_notification_phone', 
+            'other_notification_mail','allowed_by_id', 'allowed_by_tel'
+            ]
             for field in fields:
                 if field in request.data:
                     setattr(profile, field, request.data[field])
