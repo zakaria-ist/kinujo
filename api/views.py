@@ -678,6 +678,22 @@ class CheckPhone(APIView):
         else:
             return Response({"success" : False, "error" : "phone_exists"}, status=status.HTTP_200_OK)
 
+class CheckUserCode(APIView):
+    """
+    API endpoint to check if a user_code is already registered to an user profile.
+    """
+    def post(self, request, format='json'):
+        profile = None
+        try:
+            profile = Profile.objects.get(user_code=request.data['user_code'], is_hidden=False)
+        except Exception as e:
+            print(e)
+
+        if profile is None:
+            return Response({"success" : True}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success" : False, "error" : "user_code_exists"}, status=status.HTTP_200_OK)
+
 class AppConfig(APIView):
     permission_classes = (IsAuthenticated,)
     def post(self, request, format='json'):

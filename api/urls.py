@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'user/send-email', views.SendEmail.as_view(), name='user-send-email'),
     url(r'user/change-phone', views.ChangePhone.as_view(), name='user-cahnge-phone'),
     url(r'user/check-phone', views.CheckPhone.as_view(), name='user-check-phone'),
+    url(r'user/check-userCode', views.CheckUserCode.as_view(), name='user-check-code'),
     url(r'password/reset', views.PasswordReset.as_view(), name='password-reset'),
     url(r'user/login', views.UserLogin.as_view(), name='user-login'),
     url(r'product/byIds', views.ProductByIds.as_view(), name='product-by-ids'),
