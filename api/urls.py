@@ -1,7 +1,8 @@
 from django.conf.urls import url
+from django.urls import path
 from . import views
 from rest_framework import routers
-from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token, obtain_jwt_token
+from rest_framework_simplejwt.views import TokenRefreshView
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
@@ -44,6 +45,7 @@ urlpatterns = [
     url(r'user/send-email', views.SendEmail.as_view(), name='user-send-email'),
     url(r'user/change-phone', views.ChangePhone.as_view(), name='user-cahnge-phone'),
     url(r'user/check-phone', views.CheckPhone.as_view(), name='user-check-phone'),
+    url(r'user/check-userCode', views.CheckUserCode.as_view(), name='user-check-code'),
     url(r'password/reset', views.PasswordReset.as_view(), name='password-reset'),
     url(r'user/login', views.UserLogin.as_view(), name='user-login'),
     url(r'product/byIds', views.ProductByIds.as_view(), name='product-by-ids'),
@@ -71,8 +73,6 @@ urlpatterns = [
     url('^pay/(?P<userId>.+)/$', views.Pay.as_view()),
     url(r'^change-language/$', views.change_language, name='change_language'),
     url(r'sms/errors/logs', views.SMSErrorLogs.as_view(), name='sms-errors-log'),
-    url(r'token-refresh/', refresh_jwt_token),
-    url(r'token-verify/', verify_jwt_token),
-    url(r'token-auth/', obtain_jwt_token),
+    path('token-refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 urlpatterns += router.urls
