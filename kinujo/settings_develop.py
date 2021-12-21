@@ -74,16 +74,17 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),  
     'NON_FIELD_ERRORS_KEY': 'detail',
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
-JWT_AUTH = {
-    'JWT_ALLOW_REFRESH' : True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=365),
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=365),
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=365),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=365),
+    'ROTATE_REFRESH_TOKENS': True,
 }
 
 MIDDLEWARE = [
