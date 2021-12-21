@@ -35,11 +35,16 @@ from profiles.models import FinancialAccount, Authority, Profile, UserSale, User
 from taxes.models import TaxRate
 from orders.views import if_kinujo_product
 from utilities.constants import AUTHORITY_TYPE
-from rest_framework_jwt.settings import api_settings
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 
-jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
 
 def getContext():
     factory = APIRequestFactory()
@@ -407,8 +412,8 @@ class UserRegister(APIView):
                         # data['authority'] = getObject(data['authority'])
                         # data['user'] = getObject(data['user'])
                         # create JWT
-                        payload = jwt_payload_handler(user)
-                        return Response({"token": jwt_encode_handler(payload), "success": True, "data" : {
+                        jwt_token = get_tokens_for_user(user) 
+                        return Response({"token": jwt_token['access'], "refresh":jwt_token["refresh"], "success": True, "data" : {
                             "user" : data
                         }}, status=status.HTTP_201_CREATED)
                 else:
@@ -471,8 +476,8 @@ class UserLogin(APIView):
                     # data['user'] = getObject(data['user'])
 
                     # create JWT
-                    payload = jwt_payload_handler(user)
-                    return Response({"token": jwt_encode_handler(payload), "success" : True, "data" : {
+                    jwt_token = get_tokens_for_user(user) 
+                    return Response({"token": jwt_token['access'], "refresh":jwt_token["refresh"], "success" : True, "data" : {
                         "user" : data
                     }}, status=status.HTTP_200_OK)
                 else:
