@@ -125,7 +125,7 @@ class PolicySerializer(serializers.HyperlinkedModelSerializer):
 class PrefectureSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Prefecture
-        fields = ['url', 'name', 'name_en', 'is_hidden','created','modified']
+        fields = ['id', 'url', 'name', 'name_en', 'is_hidden','created','modified']
 class ProductCategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductCategory
