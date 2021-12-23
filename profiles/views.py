@@ -222,7 +222,7 @@ def ProfileList__asJson(request):
 
     auth_type = eval(request.GET.get('filter_str'))
 
-    profile_list = Profile.objects.filter(authority_id__in=auth_type, is_hidden=False).order_by('authority_id')
+    profile_list = Profile.objects.filter(authority_id__in=auth_type, is_hidden=False, is_verified=True).order_by('authority_id')
     if 0 in auth_type:
         if profile_list:
             profile_list = profile_list.filter(is_approved=False, authority_id=4)
@@ -393,6 +393,7 @@ def profile_add(request):
                         if request.POST.get('introducer') and request.POST.get('introducer') != '' and request.POST.get('introducer') != None:
                             profile.introducer_id = int(request.POST.get('introducer'))
 
+                    profile.is_verified = True
                     profile.save()
 
                     profile_image = request.FILES.get('profile_image', False)

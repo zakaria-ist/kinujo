@@ -74,5 +74,7 @@ urlpatterns = [
     url(r'^change-language/$', views.change_language, name='change_language'),
     url(r'sms/errors/logs', views.SMSErrorLogs.as_view(), name='sms-errors-log'),
     path('token-refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    url(r'sendVerify/', views.SendVerify.as_view(), name='send-verify'),
+    url(r'checkVerify/', views.CheckVerify.as_view(), name='check-verify'),
 ]
 urlpatterns += router.urls
