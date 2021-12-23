@@ -65,16 +65,18 @@ REST_FRAMEWORK = {
     #     'rest_framework.permissions.IsAuthenticated',
     # ),  
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),  
     'NON_FIELD_ERRORS_KEY': 'detail',
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
 
-JWT_AUTH = {
-    'JWT_ALLOW_REFRESH' : True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=365),
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=365),
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=365),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=365),
+    'ROTATE_REFRESH_TOKENS': True,
 }
 
 # Internationalization
@@ -106,3 +108,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 SESSION_COOKIE_AGE = 946708560
 SESSION_SAVE_EVERY_REQUEST = True
+
+# twilio settings
+TWILIO_ACCOUNT_SID = "AC6a9ed653a21a1910cc9c6d5428d85658"
+TWILIO_AUTH_TOKEN = "09a4597d751301e43caf45897336c4cc"
+TWILIO_SERVICE_SID = "VAdab2bff2d8f0f062736ea0f8251aedc6"

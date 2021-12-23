@@ -55,6 +55,7 @@ class Profile(models.Model):
     salon_category = models.SmallIntegerField(null=True, choices=tuple([status[::-1] for status in SALON_TYPE]))
     is_master = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now_add=True)
 
