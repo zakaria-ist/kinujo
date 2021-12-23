@@ -37,6 +37,7 @@ from orders.views import if_kinujo_product
 from utilities.constants import AUTHORITY_TYPE
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from twilio.rest import Client
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -341,6 +342,112 @@ class SMSErrorLogs(APIView):
         except Exception as e:
             return Response({"success": False, "error": str(e)}, status=status.HTTP_200_OK)
 
+# using twilio to send the verify code by sms
+def send_verify(tel):
+    try:
+        account_sid = settings.TWILIO_ACCOUNT_SID
+        auth_token = settings.TWILIO_AUTH_TOKEN
+        client = Client(account_sid, auth_token)
+        # tel = request.data['tel']
+        verification = client.verify \
+                             .services(settings.TWILIO_SERVICE_SID) \
+                             .verifications \
+                             .create(to=tel, channel='sms')
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
+# using twilio to check the code is correct or not
+def check_verify(phone_number, code):
+    try:
+        account_sid = settings.TWILIO_ACCOUNT_SID
+        auth_token = settings.TWILIO_AUTH_TOKEN
+        client = Client(account_sid, auth_token)
+
+        verification_check = client.verify \
+                                   .services(settings.TWILIO_SERVICE_SID) \
+                                   .verification_checks \
+                                   .create(to=phone_number, code=code)
+
+        return verification_check.status
+    except Exception as e:
+        return False
+
+class CheckVerify(APIView):
+    """
+    API endpoint to verify the code.
+    """
+    def post(self, request, format='json'):
+        ret = check_verify(request.data['phone_number'], request.data['code'])
+        if ret == "approved":
+            user = None
+            # if type==register, return JWT token
+            if request.data['type'] == "register":
+                try:
+                    user = User.objects.get(username = request.data['phone_number'])
+                except Exception as e:
+                    print(e)
+                if user is None:
+                    try:
+                        user = User.objects.get(username = "+" + request.data['phone_number'])
+                    except Exception as e:
+                        print(e)
+                if user is None:
+                    return Response({"success" : False, "error" : "account not found アカウントが見つかりません"}, status=status.HTTP_200_OK)
+
+                    
+                # if request.data['profile'] has value, update profile and user
+                else :
+                    if 'profile' in request.data and request.data['profile']['password']:
+                        user.set_password(request.data['profile']['password'])
+                        user.save()
+                    profile = None
+                    try:
+                        profile = Profile.objects.get(user_id=user.id, is_hidden=False, is_verified=False)
+                    except Exception as e:
+                        print(e)
+                        # return Response({"success" : False, "error" : "account not found アカウントが見つかりません"}, status=status.HTTP_200_OK)
+                    if profile:
+                        if 'profile' in request.data and request.data['profile']:
+                            if request.data['profile']['nickname']:
+                                profile.nickname = request.data['profile']['nickname']
+                            if request.data['profile']['authority']:
+                                authority = Authority.objects.get(id=5)
+                                is_seller = 0
+                                if request.data['profile']['authority'] == 'store':
+                                    authority = Authority.objects.get(id=4)
+                                    is_seller = 1
+                                profile.authority = authority
+                                profile.is_seller = is_seller
+
+                        # update is_verified
+                        profile.is_verified = True
+                        profile.save()
+                        profileSerializer = ProfileSerializer(profile, context=getContext())
+                        data = profileSerializer.data
+
+                        # create JWT
+                        jwt_token = get_tokens_for_user(user) 
+                        return Response({"token": jwt_token['access'], "refresh":jwt_token["refresh"], "success" : True, "data" : {
+                            "user" : data
+                        }}, status=status.HTTP_200_OK)
+                    else :
+                        return Response({"success" : False, "error" : "account not found アカウントが見つかりません"}, status=status.HTTP_200_OK)
+
+            return Response({"success" : True}, status=status.HTTP_200_OK)
+        else :
+            return Response({"success" : False, "error" : "code is not correct コードが正しくありません"}, status=status.HTTP_200_OK)
+
+
+class SendVerify(APIView):
+    """
+    API endpoint to send verify code by sms .
+    """
+    def post(self, request, format='json'):
+        send_verify(request.data['phone_number'])
+        return Response({"success" : True}, status=status.HTTP_200_OK)
 
 class UserRegister(APIView):
     """
@@ -351,7 +458,6 @@ class UserRegister(APIView):
             userItem = request.data
             userItem['username'] = str("+") + str(userItem['username'])
             userItem['email'] = str("+") + str(userItem['username']) + str("-") + str(uuid.uuid4()) + "@tmp-kinujo.com"
-
             userSerializer = UserSerializer(data=userItem, context=getContext())
             if userSerializer.is_valid():
                 user = userSerializer.save()
@@ -382,7 +488,8 @@ class UserRegister(APIView):
                     'other_notification_phone': 1,
                     'message_notification_phone': 1,
                     'allowed_by_id': 1,
-                    'allowed_by_tel': 1
+                    'allowed_by_tel': 1,
+                    'is_verified': 0,
                 }
                 if request.data['introducer']:
                     introducerProfile = None
@@ -409,18 +516,23 @@ class UserRegister(APIView):
                     profile = profileSerializer.save()
                     if user:
                         data = profileSerializer.data
-                        # data['authority'] = getObject(data['authority'])
-                        # data['user'] = getObject(data['user'])
-                        # create JWT
-                        jwt_token = get_tokens_for_user(user) 
-                        return Response({"token": jwt_token['access'], "refresh":jwt_token["refresh"], "success": True, "data" : {
+                        send_verify(profile.tel_code + profile.tel)
+                        return Response({"success": True, "verify":"sent", "data" : {
                             "user" : data
                         }}, status=status.HTTP_201_CREATED)
                 else:
-                    print(profileSerializer.errors)
                     return Response({"success" : False, "errors" : profileSerializer.errors}, status=status.HTTP_200_OK)
             else:
-                print(userSerializer.errors)
+                try:
+                    # find profile is_verify==false if exist send new OTP message and return the profile data
+                    exist_profile = Profile.objects.get(username=str("+") + str(userItem['username']), is_hidden=False, is_verified=False)
+                    profileSerializer = ProfileSerializer(profile, context=getContext())
+                    send_verify(profile.tel_code + profile.tel)
+                    return Response({"success": True, "verify":"sent", "data" : {
+                        "user" : data
+                    }}, status=status.HTTP_200_OK)
+                except Exception as e:
+                    print(e)
                 return Response({"success" : False, "errors": userSerializer.errors}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"success" : False, "error": str(e)}, status=status.HTTP_200_OK)
@@ -458,9 +570,7 @@ class UserLogin(APIView):
                 user = User.objects.get(username = "+" + request.data['tel'])
             except Exception as e:
                 print(e)
-        
 
-        
         if user:
             profile = None
             try:
@@ -475,20 +585,21 @@ class UserLogin(APIView):
                     # data['authority'] = getObject(data['authority'])
                     # data['user'] = getObject(data['user'])
 
+                    # if is_verified==False, return error
+                    if profile.is_verified == False:
+                        return Response({"success" : False, "error" : "not verified 認証されていません"}, status=status.HTTP_200_OK)
+                    
                     # create JWT
                     jwt_token = get_tokens_for_user(user) 
                     return Response({"token": jwt_token['access'], "refresh":jwt_token["refresh"], "success" : True, "data" : {
                         "user" : data
                     }}, status=status.HTTP_200_OK)
                 else:
-                    return Response({"success" : False, "error" : "入力された情報が正しくありません"}, status=status.HTTP_200_OK)
-                    return Response({"success" : False, "error" : "Incorrect Password"}, status=status.HTTP_200_OK)
+                    return Response({"success" : False, "error" : "Incorrect Password 入力された情報が正しくありません"}, status=status.HTTP_200_OK)
             else:
-                return Response({"success" : False, "error" : "入力された情報が正しくありません"}, status=status.HTTP_200_OK)
-                return Response({"success" : False, "error" : "Account Not Exists"}, status=status.HTTP_200_OK)
+                return Response({"success" : False, "error" : "Account Not Exists 入力された情報が正しくありません"}, status=status.HTTP_200_OK)
         else:
-            return Response({"success" : False, "error" : "入力された情報が正しくありません"}, status=status.HTTP_200_OK)
-            return Response({"success" : False, "error" : "Account Not Exists"}, status=status.HTTP_200_OK)
+            return Response({"success" : False, "error" : "Account Not Exists 入力された情報が正しくありません"}, status=status.HTTP_200_OK)
 
 class PasswordReset(APIView):
     """
