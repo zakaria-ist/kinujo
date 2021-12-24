@@ -587,7 +587,7 @@ class UserLogin(APIView):
 
                     # if is_verified==False, return error
                     if profile.is_verified == False:
-                        return Response({"success" : False, "error" : "not verified 認証されていません"}, status=status.HTTP_200_OK)
+                        return Response({"success" : False, "error_code":406, "error" : "not verified 認証されていません"}, status=status.HTTP_200_OK)
                     
                     # create JWT
                     jwt_token = get_tokens_for_user(user) 
